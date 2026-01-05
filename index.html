@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="工時紀錄">
+    <title>工時紀錄</title>
+    <!-- iOS 系統字體優化 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <!-- 移除 Chart.js，加入 Tone.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans TC', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+                    },
+                    colors: {
+                        ios: {
+                            bg: '#F2F2F7', // iOS 系統背景色
+                            card: '#FFFFFF',
+                            separator: '#E5E5EA',
+                            blue: '#007AFF',
+                            green: '#34C759',
+                            red: '#FF3B30',
+                            orange: '#FF9500',
+                            gray: '#8E8E93',
+                            lightGray: '#D1D1D6',
+                        }
+                    },
+                    boxShadow: {
+                        'ios': '0 1px 2px rgba(0, 0, 0, 0.05)',
+                        'ios-floating': '0 4px 12px rgba(0, 0, 0, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F2F2F7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            color: #000;
+        }
+
+        /* iOS 風格的滑動開關與輸入框 */
+        .ios-input {
+            background: #F2F2F7;
+            border-radius: 10px;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .ios-input:focus {
+            background: #E5E5EA;
+            outline: none;
+        }
+
+        /* 隱藏滾動條但保持功能 */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 按鈕點擊效果 */
+        .active-scale:active {
+            transform: scale(0.96);
+            opacity: 0.9;
+        }
+
+        /* 模態窗動畫 */
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-enter {
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen pb-10">
+
+    <div class="max-w-md mx-auto min-h-screen flex flex-col">
+
+        <!-- Header: 大標題風格 -->
+        <header class="px-5 pt-8 pb-4 bg-[#F2F2F7] sticky top-0 z-20 backdrop-blur-xl bg-opacity-80">
+            <div class="flex justify-between items-start mb-1">
+                <div class="text-[13px] text-ios-gray font-semibold uppercase tracking-wide" id="currentDate">LOADING...
+                </div>
+                <div class="flex gap-3">
+                    <!-- 幫助/安裝按鈕 -->
+                    <button onclick="showInstallGuide()"
+                        class="w-8 h-8 rounded-full bg-white shadow-ios flex items-center justify-center text-ios-blue active-scale">
+                        <i class="fas fa-arrow-down text-sm"></i>
+                    </button>
+                    <!-- 設定按鈕 -->
+                    <button onclick="openSettings()"
+                        class="w-8 h-8 rounded-full bg-white shadow-ios flex items-center justify-center text-ios-blue active-scale">
+                        <i class="fas fa-cog text-sm"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="flex justify-between items-baseline">
+                <h1 class="text-[34px] font-bold tracking-tight text-black">工時紀錄</h1>
+                <div class="text-2xl font-mono font-medium text-black" id="currentTime">00:00</div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 px-4 space-y-5">
+
+            <!-- Summary Card: 簡潔白卡 -->
+            <div class="bg-white rounded-[20px] p-5 shadow-ios">
+                <div class="flex justify-between items-end mb-3">
+                    <span class="text-[15px] font-semibold text-gray-900">今日累計</span>
+                    <div class="flex items-baseline">
+                        <!-- 修正：移除 tracking-tight，增加 tracking-wide -->
+                        <span class="text-3xl font-bold font-mono tracking-wide" id="totalHours">
+                            0<span class="text-sm font-sans font-medium text-gray-400 ml-1.5 mr-2">h</span>
+                            0<span class="text-sm font-sans font-medium text-gray-400 ml-1.5">m</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Financial Reality Card (創新功能: 薪資跳動) -->
+
+
+                <!-- 極簡進度條 -->
+                <div class="w-full bg-[#F2F2F7] rounded-full h-2 mb-2 overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-700 ease-out bg-ios-blue" id="progressBar"
+                        style="width: 0%"></div>
+                </div>
+
+                <div class="flex justify-between text-[11px] font-medium text-ios-gray">
+                    <span id="progressText">目標 8h</span>
+                    <span id="ongoingHint" class="text-ios-blue opacity-0 transition-opacity">
+                        <i class="fas fa-circle text-[6px] animate-pulse mr-1"></i>計時中
+                    </span>
+                </div>
+                <div id="lifeSuggestion"
+                    class="mt-3 text-[12px] text-gray-500 font-medium text-center bg-gray-50 rounded-lg py-2 hidden transition-all">
+                </div>
+            </div>
+
+            <!-- Action Section: 狀態與操作 -->
+            <div class="space-y-3">
+                <!-- 狀態顯示 -->
+                <div class="bg-white rounded-[20px] p-4 shadow-ios flex items-center gap-4">
+                    <div id="statusIconBg"
+                        class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl transition-colors duration-300">
+                        <i id="statusIcon" class="fas fa-coffee text-gray-400"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-[11px] text-ios-gray uppercase font-semibold mb-0.5">Current Status</div>
+                        <div id="nextActionType" class="text-[15px] font-bold text-gray-900 truncate">準備開始</div>
+                    </div>
+                </div>
+
+                <!-- 任務輸入框 (動態顯示) -->
+                <div id="taskInputContainer" class="transition-all duration-300 overflow-hidden max-h-0 opacity-0">
+                    <input type="text" id="taskInput" placeholder="輸入工作內容 (選填)..."
+                        class="w-full px-4 py-3.5 rounded-[14px] bg-white text-[15px] text-gray-900 placeholder-gray-400 shadow-ios border-none focus:ring-2 focus:ring-ios-blue/20 outline-none">
+                </div>
+
+                <!-- 進行中任務 (動態顯示) -->
+                <div id="currentTaskDisplay" class="transition-all duration-300 overflow-hidden max-h-0 opacity-0">
+                    <div class="bg-ios-blue/10 rounded-[14px] px-4 py-3 flex items-center gap-2">
+                        <i class="fas fa-thumbtack text-ios-blue text-xs"></i>
+                        <span id="currentTaskName" class="text-[13px] font-medium text-ios-blue truncate">任務名稱</span>
+                    </div>
+                </div>
+
+                <!-- WLB Score Card (職場健康度) -->
+                <div id="wlbCard" class="bg-white rounded-[20px] p-4 shadow-ios hidden">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">職場健康度</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-500"
+                            id="wlbTag">計算中</span>
+                    </div>
+                    <div class="flex items-end gap-3">
+                        <div class="text-4xl font-black italic text-gray-900" id="wlbScore">--</div>
+                        <div class="text-[13px] font-medium text-gray-500 mb-1.5" id="wlbLevel">...</div>
+                    </div>
+                    <div class="mt-2 text-[11px] text-gray-400" id="wlbComment">保持工作與生活的平衡</div>
+                </div>
+
+                <!-- 主按鈕 -->
+                <button id="punchBtn" onclick="punch()"
+                    class="w-full py-4 rounded-[18px] text-[17px] font-semibold text-white shadow-ios-floating transition-all active-scale flex items-center justify-center gap-2 bg-black">
+                    <i class="fas fa-fingerprint"></i>
+                    <span id="btnText">上班</span>
+                </button>
+            </div>
+
+            <!-- Records List: iOS Inset Grouped Style -->
+            <div class="pt-2">
+                <div class="flex justify-between items-center px-2 mb-2">
+                    <h3 class="text-[13px] font-semibold text-ios-gray uppercase tracking-wide">打卡紀錄</h3>
+                    <div class="flex gap-3">
+                        <button id="undoBtn" onclick="undoLastPunch()"
+                            class="text-[13px] text-ios-blue font-medium disabled:opacity-30 active:opacity-50 transition">復原</button>
+                        <button id="clearBtn" onclick="clearAll()"
+                            class="text-[13px] text-ios-red font-medium active:opacity-50 transition flex items-center gap-1">
+                            <span>清除</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[18px] overflow-hidden shadow-ios" id="punchRecordsContainer">
+                    <div id="punchRecords" class="divide-y divide-ios-separator pl-4">
+                        <div class="py-4 pr-4 text-center text-ios-gray text-sm">尚無紀錄</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Section (取代了原本的 Analysis) -->
+            <div class="pt-2">
+                <h3 class="text-[13px] font-semibold text-ios-gray uppercase tracking-wide px-2 mb-2">休假設定</h3>
+                <div class="bg-white rounded-[18px] p-5 shadow-ios">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-[17px] font-bold text-gray-900" id="calendarTitle">Month Year</h3>
+                        <div class="flex gap-1">
+                            <button onclick="changeMonth(-1)"
+                                class="w-8 h-8 flex items-center justify-center rounded-full text-ios-blue active:bg-gray-100"><i
+                                    class="fas fa-chevron-left"></i></button>
+                            <button onclick="changeMonth(1)"
+                                class="w-8 h-8 flex items-center justify-center rounded-full text-ios-blue active:bg-gray-100"><i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Header -->
+                    <div class="grid grid-cols-7 mb-2 text-center">
+                        <span class="text-[11px] font-semibold text-gray-400">日</span>
+                        <span class="text-[11px] font-semibold text-gray-400">一</span>
+                        <span class="text-[11px] font-semibold text-gray-400">二</span>
+                        <span class="text-[11px] font-semibold text-gray-400">三</span>
+                        <span class="text-[11px] font-semibold text-gray-400">四</span>
+                        <span class="text-[11px] font-semibold text-gray-400">五</span>
+                        <span class="text-[11px] font-semibold text-gray-400">六</span>
+                    </div>
+
+                    <!-- Calendar Grid -->
+                    <div class="grid grid-cols-7 gap-y-2 place-items-center" id="calendarGrid">
+                        <!-- JS generated -->
+                    </div>
+
+                    <div
+                        class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-center gap-4 text-[11px] text-gray-400">
+                        <div class="flex items-center gap-1">
+                            <div class="w-2 h-2 rounded-full bg-ios-blue"></div>今日
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2 h-2 rounded-full bg-gray-200"></div>排休
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Insights Section (簡化版 - 僅保留文字洞察) -->
+            <div id="workSessionsContainer" class="hidden pt-2 pb-6">
+                <!-- 工作區段列表 -->
+                <div class="bg-white rounded-[18px] overflow-hidden shadow-ios mb-4 divide-y divide-ios-separator pl-4"
+                    id="workSessions">
+                </div>
+
+                <button id="insightBtn" onclick="generateAIContent()" disabled
+                    class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 p-4 rounded-[18px] shadow-lg shadow-purple-200 flex items-center justify-center gap-3 text-center active-scale disabled:opacity-50 mb-4 transition-all hover:shadow-xl">
+                    <i class="fas fa-robot text-white text-lg"></i>
+                    <div class="text-left">
+                        <div class="text-[15px] font-bold text-white">生成下班日報</div>
+                        <div class="text-[11px] text-purple-100 font-medium">AI 自動幫您寫匯報，準時下班！</div>
+                    </div>
+                </button>
+
+                <!-- AI 分析結果呈現 -->
+                <div id="aiResultArea" class="mt-4 bg-white rounded-[18px] p-5 shadow-ios hidden">
+                    <div id="aiResultTitle"
+                        class="text-[15px] font-bold text-gray-900 mb-3 flex items-center justify-between">
+                        <div class="flex items-center gap-2"><i class="fas fa-file-alt text-purple-600"></i> 今日工作日報
+                        </div>
+                        <button onclick="copyReport()"
+                            class="text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600 active:bg-gray-200">複製</button>
+                    </div>
+                    <div id="aiContent" class="text-[13px] leading-relaxed text-gray-600 space-y-2"></div>
+                    <div
+                        class="mt-3 pt-3 border-t border-gray-100 text-[11px] text-orange-400 text-center font-medium bg-orange-50 rounded-lg py-2">
+                        <i class="fas fa-exclamation-circle mr-1"></i> 提醒：此為 AI 模擬範本，請務必修改後再送出
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日曆按鈕 -->
+            <div id="calendarReminderContainer" class="pb-6">
+                <button id="addCalendarBtn" onclick="addCalendarReminder()" disabled
+                    class="w-full bg-white text-ios-red py-3.5 rounded-[14px] text-[15px] font-semibold shadow-ios active-scale disabled:opacity-50 disabled:bg-gray-100 disabled:text-gray-400 flex items-center justify-center gap-2">
+                    <i class="far fa-calendar-plus"></i>
+                    <span id="calendarBtnText">加入休息提醒</span>
+                </button>
+            </div>
+
+            <!-- Footer Credit (極簡化) -->
+            <div class="pb-8 text-center">
+                <p class="text-[10px] text-gray-300 font-medium tracking-widest uppercase">Time Tracker</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals: iOS Action Sheet Style -->
+
+    <!-- Install Guide -->
+    <div id="installGuideModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeInstallGuide()">
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 bg-[#F2F2F7] rounded-t-[24px] p-6 modal-enter max-w-md mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-gray-900">安裝到主畫面</h3>
+                <button onclick="closeInstallGuide()"
+                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4 mb-6">
+                <div class="flex items-center gap-4 bg-white p-4 rounded-xl">
+                    <i class="fas fa-share-square text-ios-blue text-xl"></i>
+                    <div class="text-sm text-gray-600">點擊 Safari 瀏覽器下方的<br><span
+                            class="font-bold text-black">分享按鈕</span></div>
+                </div>
+                <div class="flex items-center gap-4 bg-white p-4 rounded-xl">
+                    <i class="far fa-plus-square text-ios-blue text-xl"></i>
+                    <div class="text-sm text-gray-600">往下滑動並選擇<br><span class="font-bold text-black">加入主畫面</span></div>
+                </div>
+            </div>
+            <button onclick="closeInstallGuide()"
+                class="w-full py-3.5 bg-ios-blue text-white rounded-xl font-semibold">了解</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeSettings()"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-[#F2F2F7] rounded-t-[24px] p-6 modal-enter max-w-md mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-gray-900">提醒設定</h3>
+                <button onclick="closeSettings()"
+                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl overflow-hidden mb-6">
+                <div class="p-4 border-b border-ios-separator flex items-center justify-between">
+                    <label class="text-[15px] text-gray-900">上班後提醒 (分鐘)</label>
+                    <input type="number" id="workReminderInput"
+                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1 text-base" value="120">
+                </div>
+
+                <div class="p-4 flex items-center justify-between">
+                    <label class="text-[15px] text-gray-900">休息結束提醒 (分鐘)</label>
+                    <input type="number" id="restReminderInput"
+                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1 text-base" value="20">
+                </div>
+            </div>
+
+            <button onclick="saveSettings()"
+                class="w-full py-3.5 bg-black text-white rounded-xl font-semibold shadow-lg">儲存設定</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 邏輯部分 ---
+        let punchRecords = [];
+        let reminderTimer = null;
+        let appSettings = {
+            workReminderMinutes: 120,
+            restReminderMinutes: 20
+        };
+
+        // 月曆與休假相關變數
+        let currentCalendarDate = new Date();
+        let offDays = new Set(); // Stores "YYYY-MM-DD"
+
+        const apiKey = "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";
+        const PROXY_URL = "https://corsproxy.io/?";
+        const TARGET_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
+        const apiUrl = PROXY_URL + encodeURIComponent(TARGET_URL);
+        const modelName = "deepseek-ai/deepseek-r1";
+
+        function playSingleClickSound(frequency = "G4") {
+            try {
+                Tone.start();
+                const synth = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.001, decay: 0.05, sustain: 0.0, release: 0.1 }
+                }).toDestination();
+                synth.triggerAttackRelease(frequency, 0.05, Tone.now());
+            } catch (e) { console.error(e); }
+        }
+
+        function playSoundReminder() {
+            try {
+                if ("vibrate" in navigator) navigator.vibrate([500, 200, 500]);
+                Tone.start();
+                const synth = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.005, decay: 0.1, sustain: 0.0, release: 0.1 }
+                }).toDestination();
+                const now = Tone.now();
+                synth.triggerAttackAttackRelease("C5", 0.1, now);
+                synth.triggerAttackRelease("E5", 0.1, now + 0.2);
+                synth.triggerAttackRelease("G5", 0.1, now + 0.4);
+            } catch (e) { console.error(e); }
+        }
+
+        async function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                showReminder("此裝置不支援通知功能", 'rest');
+                return;
+            }
+            if (Notification.permission === "default") {
+                try {
+                    const permission = await Notification.requestPermission();
+                } catch (error) { console.error(error); }
+            }
+        }
+
+        function showReminder(message, type) {
+            const hint = document.getElementById('ongoingHint');
+            if (hint) {
+                playSoundReminder();
+                hint.classList.remove('opacity-0');
+                hint.innerHTML = `<i class="fas fa-bell animate-swing mr-1"></i> ${message}`;
+                setTimeout(() => {
+                    hint.classList.add('opacity-0');
+                }, 5000);
+            }
+        }
+
+        function formatDT(date) {
+            const pad = (num) => String(num).padStart(2, '0');
+            const year = date.getUTCFullYear();
+            const month = pad(date.getUTCMonth() + 1);
+            const day = pad(date.getUTCDate());
+            const hour = pad(date.getUTCHours());
+            const minute = pad(date.getUTCMinutes());
+            const second = pad(date.getUTCSeconds());
+            return `${year}${month}${day}T${hour}${minute}${second}Z`;
+        }
+
+        function addCalendarReminder() {
+            const lastRecord = punchRecords.findLast(r => r.type === 'in');
+            if (!lastRecord) {
+                showReminder("請先打卡上班！", 'rest');
+                return;
+            }
+            const taskName = lastRecord.task || '未命名任務';
+            const startTime = new Date(lastRecord.time);
+            const workReminderMinutes = appSettings.workReminderMinutes;
+            const reminderTime = new Date(startTime.getTime() + workReminderMinutes * 60000);
+            const endTime = new Date(reminderTime.getTime() + 15 * 60000);
+
+            const dtstamp = formatDT(new Date());
+            const dtstart = formatDT(reminderTime);
+            const dtend = formatDT(endTime);
+            const summary = `休息提醒：${taskName}`;
+            const description = `工作已進行 ${workReminderMinutes} 分鐘。任務：${taskName}。建議起身活動。`.replace(/(.{75})/g, '$1\r\n ');
+
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//TimeTrackerApp//WorkRestReminder//ZH
+BEGIN:VEVENT
+UID:${Date.now()}@timetracker.app
+DTSTAMP:${dtstamp}
+DTSTART:${dtstart}
+DTEND:${dtend}
+SUMMARY:${summary}
+DESCRIPTION:${description}
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:休息時間到囉！
+TRIGGER:-PT5M
+END:VALARM
+END:VEVENT
+END:VCALENDAR
+`;
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `reminder.ics`;
+            document.body.appendChild(link);
+            try { link.click(); } catch (e) { showReminder("無法自動下載", 'rest'); }
+            document.body.removeChild(link);
+            showReminder("日曆提醒已下載", 'rest');
+        }
+
+        function openSettings() {
+            document.getElementById('workReminderInput').value = appSettings.workReminderMinutes;
+            document.getElementById('restReminderInput').value = appSettings.restReminderMinutes;
+            document.getElementById('settingsModal').classList.remove('hidden');
+        }
+        function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
+        function saveSettings() {
+            const workVal = parseInt(document.getElementById('workReminderInput').value) || 120;
+            const restVal = parseInt(document.getElementById('restReminderInput').value) || 20;
+
+            appSettings.workReminderMinutes = workVal;
+            appSettings.restReminderMinutes = restVal;
+
+            localStorage.setItem('appSettings', JSON.stringify(appSettings));
+            closeSettings();
+            updateDisplay();
+            playSingleClickSound("C5");
+        }
+        function showInstallGuide() { document.getElementById('installGuideModal').classList.remove('hidden'); }
+        function closeInstallGuide() { document.getElementById('installGuideModal').classList.add('hidden'); }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed', err));
+            });
+        }
+
+        // --- 月曆功能邏輯 ---
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            // 更新標題
+            document.getElementById('calendarTitle').textContent = `${year}年 ${month + 1}月`;
+
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+
+            // 空白格 (上個月)
+            for (let i = 0; i < firstDay; i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            // 日期格
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const isOff = offDays.has(dateStr);
+                const isToday = (today.getFullYear() === year && today.getMonth() === month && today.getDate() === d);
+
+                const btn = document.createElement('button');
+
+                let className = "w-8 h-8 rounded-full text-[14px] font-medium flex items-center justify-center transition-all ";
+
+                if (isOff) {
+                    // 休假樣式：灰色背景 + 刪除線
+                    className += "bg-gray-100 text-gray-400 line-through decoration-gray-400";
+                } else if (isToday) {
+                    // 今日樣式：藍色實心
+                    className += "bg-ios-blue text-white shadow-md";
+                } else {
+                    // 一般日期
+                    className += "text-gray-900 hover:bg-gray-100";
+                }
+
+                btn.className = className;
+                btn.textContent = d;
+                btn.onclick = () => toggleOffDay(dateStr);
+
+                grid.appendChild(btn);
+            }
+        }
+
+        function toggleOffDay(dateStr) {
+            playSingleClickSound("E5"); // 輕微的回饋音效
+            if (offDays.has(dateStr)) {
+                offDays.delete(dateStr);
+            } else {
+                offDays.add(dateStr);
+            }
+            // 儲存休假設定
+            localStorage.setItem('offDays', JSON.stringify([...offDays]));
+            renderCalendar();
+        }
+
+        function changeMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        async function generateAIContent() {
+            const result = calculateHours();
+            const completedSessions = result.sessions; // 包含進行中
+            const btn = document.getElementById('insightBtn');
+            const originalHTML = btn.innerHTML;
+
+            if (completedSessions.length === 0) {
+                showReminder("沒有足夠的資料生成日報", 'work');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-xl text-white"></i> <span class="text-white font-bold ml-2">AI 正在撰寫日報中...</span>';
+            btn.className = "w-full bg-gray-800 p-4 rounded-[18px] flex items-center justify-center gap-2 transition-all";
+
+            // 準備資料
+            const recordsText = punchRecords.map(r =>
+                `[${formatTime(r.time)}] ${r.type === 'in' ? '開始' : '結束'} ${r.task ? ':' + r.task : ''}`
+            ).join('\n');
+
+            const promptText = `
+            【角色設定】
+            你是專業的「家電賣場/零售銷售人員」。
+            
+            【任務】
+            請根據以下打卡紀錄，撰寫一份「給店長/主管看的下班日報」。
+            
+            【當前時間】
+            ${new Date().toLocaleString('zh-TW')}
+            
+            【紀錄數據】
+            ${recordsText}
+            
+            【撰寫要求】
+            1. 語氣：積極、負責、充滿服務熱忱。
+            2. 用詞：請自動帶入零售業/家電銷售術語 (如：庫存盤點、客情維繫、檔期活動、展示機整理、成交追蹤...) 來潤飾模糊的任務。
+            3. 格式 (條列式 HTML)：
+               - ✅ <b>今日銷售/重點事務</b>：列出 3-5 點具體事項。
+               - 📊 <b>工時與排班</b>：簡述今日工時狀況。
+               - 🚀 <b>明日目標</b>：例如追蹤某位猶豫客、整理某區陳列等。
+            4. 內容需合理化填充：如果紀錄中沒有寫具體任務，請幫我「合理腦補」一些常見的賣場雜務，讓我看起來很忙碌且有效率。
+            `;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                    body: JSON.stringify({ model: modelName, messages: [{ role: "user", content: promptText }] })
+                });
+                const json = await response.json();
+                let content = json.choices?.[0]?.message?.content || '無回應';
+
+                // 簡單處理 markdown
+                content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                content = content.replace(/\n/g, '<br>');
+
+                document.getElementById('aiContent').innerHTML = content;
+                document.getElementById('aiResultArea').classList.remove('hidden');
+
+                // Scroll to result
+                document.getElementById('aiResultArea').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (e) {
+                console.error(e);
+                showReminder("AI 連線錯誤", 'work');
+            }
+
+            // Restore button
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+            btn.className = "w-full bg-gradient-to-r from-indigo-500 to-purple-600 p-4 rounded-[18px] shadow-lg shadow-purple-200 flex items-center justify-center gap-3 text-center active-scale disabled:opacity-50 mb-4 transition-all hover:shadow-xl";
+        }
+
+        function copyReport() {
+            const content = document.getElementById('aiContent').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                showReminder("日報已複製！", 'work');
+            });
+        }
+
+        // --- WLB 健康度計算 ---
+        function calculateWLB(result) {
+            let score = 100;
+            const hours = result.total / 60;
+            const target = 8;
+
+            // 1. 工時評分
+            if (hours > 9) score -= (hours - 9) * 10; // 加班扣分
+            else if (hours < 4 && hours > 0) score -= (4 - hours) * 5; // 太短也扣分(薪水小偷?)
+
+            // 2. 休息評分
+            // 檢查是否有連續工作超過 4 小時
+            let maxContinuous = 0;
+            for (let i = 0; i < punchRecords.length - 1; i += 2) {
+                const diff = (new Date(punchRecords[i + 1].time) - new Date(punchRecords[i].time)) / 60000 / 60;
+                if (diff > maxContinuous) maxContinuous = diff;
+            }
+            // 檢查當前進行中
+            if (punchRecords.length % 2 !== 0) {
+                const currentDiff = (new Date() - new Date(punchRecords[punchRecords.length - 1].time)) / 60000 / 60;
+                if (currentDiff > maxContinuous) maxContinuous = currentDiff;
+            }
+
+            if (maxContinuous > 4) score -= (maxContinuous - 4) * 15; // 沒休息扣重分
+
+            // 3. 限制範圍
+            score = Math.max(0, Math.min(100, Math.round(score)));
+
+            // 4. 等級判定
+            let level = "";
+            let tag = "";
+            let color = "";
+            let comment = "";
+
+            if (score >= 90) {
+                level = "自由人 (Free Man)"; tag = "S級"; color = "text-ios-green";
+                comment = "完美的工作節奏，令人羨慕！";
+            } else if (score >= 80) {
+                level = "優良員工"; tag = "A級"; color = "text-ios-blue";
+                comment = "表現良好，繼續保持。";
+            } else if (score >= 60) {
+                level = "標準社畜"; tag = "B級"; color = "text-yellow-500";
+                comment = "有點累了嗎？記得休息一下。";
+            } else if (score >= 40) {
+                level = "加班戰士"; tag = "C級"; color = "text-orange-500";
+                comment = "你的肝在哭泣，快點下班吧。";
+            } else {
+                level = "地縛靈"; tag = "D級"; color = "text-ios-red";
+                comment = "你還記得家裡的樣子嗎？";
+            }
+
+            return { score, level, tag, color, comment };
+        }
+
+        function loadData() {
+            const savedData = localStorage.getItem('timecardData');
+            if (savedData) punchRecords = JSON.parse(savedData).records || [];
+
+            const savedSettings = localStorage.getItem('appSettings');
+            if (savedSettings) {
+                appSettings = JSON.parse(savedSettings);
+                // 強制更新：若設定為舊值 (180 或 230)，自動調整為 120
+                if (appSettings.workReminderMinutes === 180 || appSettings.workReminderMinutes === 230) {
+                    appSettings.workReminderMinutes = 120;
+                    appSettings.restReminderMinutes = 20;
+                }
+                if (!appSettings.monthlySalary) appSettings.monthlySalary = 40000;
+            }
+
+            // 載入休假資料
+            const savedOffDays = localStorage.getItem('offDays');
+            if (savedOffDays) offDays = new Set(JSON.parse(savedOffDays));
+        }
+
+        function saveData() {
+            localStorage.setItem('timecardData', JSON.stringify({ records: punchRecords }));
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+        }
+
+        function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
+
+        function punch() {
+            if (punchRecords.length >= 20) { showReminder("已達今日紀錄上限", 'work'); return; }
+            playSingleClickSound("A4");
+            requestNotificationPermission();
+
+            const now = new Date();
+            const type = getNextPunchType();
+            const taskInput = document.getElementById('taskInput');
+            let taskName = "";
+
+            if (type === 'in' && taskInput) {
+                taskName = taskInput.value.trim();
+                taskInput.value = "";
+            }
+
+            punchRecords.push({ time: now.toISOString(), type: type, task: taskName });
+            saveData();
+            updateDisplay();
+        }
+
+        function undoLastPunch() {
+            if (punchRecords.length > 0) {
+                playSingleClickSound("G4");
+                punchRecords.pop();
+                saveData();
+                updateDisplay();
+            }
+        }
+
+        let clearConfirmTimer = null;
+        function clearAll() {
+            const btn = document.getElementById('clearBtn');
+            const span = btn.querySelector('span');
+
+            if (btn.dataset.confirm === 'true') {
+                playSingleClickSound("D4");
+                punchRecords = [];
+                saveData();
+                updateDisplay();
+                // Reset UI
+                btn.dataset.confirm = 'false';
+                span.textContent = '清除';
+                if (clearConfirmTimer) clearTimeout(clearConfirmTimer);
+            } else {
+                playSingleClickSound("C4");
+                btn.dataset.confirm = 'true';
+                span.textContent = '確定清除?';
+                clearConfirmTimer = setTimeout(() => {
+                    btn.dataset.confirm = 'false';
+                    span.textContent = '清除';
+                }, 3000);
+            }
+        }
+
+        function formatTime(isoString) {
+            return new Date(isoString).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+        }
+
+        function formatDurationFancy(minutes) {
+            return { h: Math.floor(minutes / 60), m: minutes % 60 };
+        }
+
+        function calculateHours() {
+            let totalMinutes = 0;
+            const sessions = [];
+            const len = punchRecords.length;
+
+            for (let i = 0; i < len - (len % 2); i += 2) {
+                const diff = (new Date(punchRecords[i + 1].time) - new Date(punchRecords[i].time)) / 60000;
+                if (diff > 0) {
+                    totalMinutes += diff;
+                    sessions.push({ start: formatTime(punchRecords[i].time), end: formatTime(punchRecords[i + 1].time), duration: diff });
+                }
+            }
+
+            let isOngoing = false;
+            if (len % 2 !== 0) {
+                const currentDiff = (new Date() - new Date(punchRecords[len - 1].time)) / 60000;
+                if (currentDiff > 0) {
+                    totalMinutes += currentDiff;
+                    isOngoing = true;
+                    sessions.push({ start: formatTime(punchRecords[len - 1].time), end: '現在', duration: currentDiff });
+                }
+            }
+            return { total: totalMinutes, sessions: sessions, isOngoing: isOngoing };
+        }
+
+        function updateDisplay() {
+            const nextType = getNextPunchType();
+            const result = calculateHours();
+            const lastRecord = punchRecords.findLast(r => r.type === 'in');
+
+            // --- 狀態更新 ---
+            const statusIcon = document.getElementById('statusIcon');
+            const statusIconBg = document.getElementById('statusIconBg');
+            const nextActionText = document.getElementById('nextActionType');
+            const punchBtn = document.getElementById('punchBtn');
+            const btnText = document.getElementById('btnText');
+            const taskInputContainer = document.getElementById('taskInputContainer');
+            const currentTaskDisplay = document.getElementById('currentTaskDisplay');
+            const calendarBtn = document.getElementById('addCalendarBtn');
+
+            if (nextType === 'in') {
+                // 狀態：休息中/準備上班
+                statusIconBg.className = "w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl transition-colors duration-300";
+                statusIcon.className = "fas fa-mug-hot text-gray-400";
+                nextActionText.innerHTML = "目前狀態：<span class='text-ios-gray'>休息中</span>";
+
+                punchBtn.className = "w-full py-4 rounded-[18px] text-[17px] font-semibold text-white shadow-ios-floating transition-all active-scale flex items-center justify-center gap-2 bg-black";
+                btnText.textContent = "上班";
+
+                taskInputContainer.style.maxHeight = '100px';
+                taskInputContainer.style.opacity = '1';
+                taskInputContainer.style.marginTop = '0.75rem';
+
+                currentTaskDisplay.style.maxHeight = '0';
+                currentTaskDisplay.style.opacity = '0';
+                currentTaskDisplay.style.marginTop = '0';
+
+                calendarBtn.disabled = true;
+                document.getElementById('calendarBtnText').textContent = "加入休息提醒 (上班後可用)";
+
+            } else {
+                // 狀態：工作中/準備下班
+                statusIconBg.className = "w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-xl transition-colors duration-300";
+                statusIcon.className = "fas fa-briefcase text-ios-blue";
+
+                // 計算預計休息時間
+                const lastInTime = new Date(lastRecord.time).getTime();
+                const targetTime = new Date(lastInTime + appSettings.workReminderMinutes * 60000);
+                const timeStr = targetTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+                // 4小時休息提醒邏輯
+                if (Date.now() > targetTime) {
+                    statusIconBg.className = "w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center text-xl animate-pulse";
+                    statusIcon.className = "fas fa-exclamation-triangle text-ios-red";
+                    nextActionText.innerHTML = `<span class='text-ios-red font-bold'>工作過久！請立即休息</span>`;
+                } else {
+                    nextActionText.innerHTML = `預計休息：<span class='text-ios-blue'>${timeStr}</span>`;
+                }
+
+                punchBtn.className = "w-full py-4 rounded-[18px] text-[17px] font-semibold text-white shadow-ios-floating transition-all active-scale flex items-center justify-center gap-2 bg-ios-red";
+                btnText.textContent = "下班";
+
+                taskInputContainer.style.maxHeight = '0';
+                taskInputContainer.style.opacity = '0';
+                taskInputContainer.style.marginTop = '0';
+
+                if (lastRecord.task) {
+                    document.getElementById('currentTaskName').textContent = lastRecord.task;
+                    currentTaskDisplay.style.maxHeight = '100px';
+                    currentTaskDisplay.style.opacity = '1';
+                    currentTaskDisplay.style.marginTop = '0.75rem';
+                }
+
+                calendarBtn.disabled = false;
+                document.getElementById('calendarBtnText').textContent = `加入休息提醒 (${appSettings.workReminderMinutes}分)`;
+            }
+
+            // --- 進度條與計時 ---
+            // 修正：在 updateDisplay 中也更新間距，確保動態更新時樣式一致
+            const timeObj = formatDurationFancy(result.total);
+            document.getElementById('totalHours').innerHTML = `
+                ${timeObj.h}<span class="text-sm font-sans font-medium text-gray-400 ml-1.5 mr-2">h</span>
+                ${Math.round(timeObj.m)}<span class="text-sm font-sans font-medium text-gray-400 ml-1.5">m</span>
+            `;
+
+            const targetMin = 8 * 60;
+            const remainingMin = targetMin - result.total;
+            const pct = Math.min((result.total / targetMin) * 100, 100);
+            const progressBar = document.getElementById('progressBar');
+
+            // 預計下班時間與 8小時提醒邏輯
+            let progressInfo = "目標 8h";
+            const lifeSuggestionEl = document.getElementById('lifeSuggestion');
+
+            if (result.total >= targetMin) {
+                progressBar.style.width = '100%';
+                progressBar.className = 'h-full rounded-full bg-purple-500 transition-all duration-700 ease-out';
+                progressInfo = `<span class="text-purple-600 font-bold"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，快下班！</span>`;
+
+                // Show generic after-work message for overtime
+                lifeSuggestionEl.textContent = "別加班了，回家泡個熱水澡吧！🛀";
+                lifeSuggestionEl.classList.remove('hidden');
+
+            } else {
+                progressBar.style.width = `${pct}%`;
+                progressBar.className = `h-full rounded-full transition-all duration-700 ease-out bg-ios-blue`;
+
+                // 計算預計時間
+                if (result.isOngoing) {
+                    const offTime = new Date(Date.now() + remainingMin * 60000);
+                    const offStr = offTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    progressInfo += ` (預計 ${offStr} 下班)`;
+
+                    // Life Suggestion Logic
+                    const h = offTime.getHours();
+                    let suggestion = "";
+                    if (h < 17) suggestion = "今晚想吃點什麼好料的？😋";
+                    else if (h < 18) suggestion = "下班後去逛個黃昏市場買菜吧？🥦";
+                    else if (h < 19) suggestion = "這時間剛好！去買杯手搖飲犒賞自己！🧋";
+                    else if (h < 20) suggestion = "晚餐時間到，去吃頓好的吧！🍜";
+                    else if (h < 21) suggestion = "辛苦了，巷口那間鹹酥雞這時候剛好不用排隊。🍗";
+                    else if (h < 22) suggestion = "健身房這時候人剛好變少，去動一動？💪";
+                    else suggestion = "太晚了，回家直接睡個好覺吧。💤";
+
+                    lifeSuggestionEl.innerHTML = `<i class="fas fa-mug-hot text-orange-400 mr-1"></i> ${suggestion}`;
+                    lifeSuggestionEl.classList.remove('hidden');
+
+                } else {
+                    const r = formatDurationFancy(remainingMin);
+                    progressInfo += ` (尚餘 ${r.h}h ${Math.round(r.m)}m)`;
+                    lifeSuggestionEl.classList.add('hidden');
+                }
+            }
+
+            document.getElementById('progressText').innerHTML = progressInfo;
+
+            if (result.isOngoing) {
+                document.getElementById('ongoingHint').classList.remove('opacity-0');
+            } else {
+                document.getElementById('ongoingHint').classList.add('opacity-0');
+            }
+
+            // --- WLB Card Update ---
+            const wlbData = calculateWLB(result);
+            if (result.total > 0) {
+                document.getElementById('wlbCard').classList.remove('hidden');
+                const scoreEl = document.getElementById('wlbScore');
+                scoreEl.textContent = wlbData.score;
+                scoreEl.className = `text-4xl font-black italic ${wlbData.color}`;
+
+                document.getElementById('wlbLevel').textContent = wlbData.level;
+                document.getElementById('wlbTag').textContent = wlbData.tag;
+                document.getElementById('wlbComment').textContent = wlbData.comment;
+            }
+
+            // --- 列表渲染 (iOS Inset Grouped Style) ---
+            const listContainer = document.getElementById('punchRecords');
+            listContainer.innerHTML = '';
+
+            const displayRecords = punchRecords.slice().reverse().slice(0, 10); // Copy & Reverse
+
+            if (displayRecords.length === 0) {
+                listContainer.innerHTML = '<div class="py-4 pr-4 text-center text-ios-gray text-sm">今天還沒開始工作</div>';
+            } else {
+                displayRecords.forEach((record, index) => {
+                    const originalIndex = punchRecords.indexOf(record);
+                    const isIn = record.type === 'in';
+                    const div = document.createElement('div');
+                    // 最後一個元素不顯示底線
+                    div.className = "py-3 pr-4 flex justify-between items-center";
+
+                    div.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full ${isIn ? 'bg-green-100 text-ios-green' : 'bg-orange-100 text-ios-orange'} flex items-center justify-center text-xs">
+                                <i class="fas ${isIn ? 'fa-arrow-right' : 'fa-arrow-left'}"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[15px] font-medium text-gray-900">${isIn ? '開始工作' : '結束工作'}</span>
+                                ${record.task ? `<span class="text-[11px] text-gray-500 truncate max-w-[150px]">${record.task}</span>` : ''}
+                            </div>
+                        </div>
+                        <span class="text-[15px] font-mono text-gray-500">${formatTime(record.time)}</span>
+                    `;
+                    listContainer.appendChild(div);
+                });
+            }
+
+            // --- Session List ---
+            const sessionContainer = document.getElementById('workSessions');
+            const sessionParent = document.getElementById('workSessionsContainer');
+
+            if (result.sessions.length > 0) {
+                sessionParent.classList.remove('hidden');
+                sessionContainer.innerHTML = '';
+                // 倒序顯示
+                [...result.sessions].reverse().forEach((session, i) => {
+                    const div = document.createElement('div');
+                    div.className = "py-3 pr-4 flex justify-between items-center";
+                    const durObj = formatDurationFancy(session.duration);
+
+                    div.innerHTML = `
+                        <div class="flex flex-col">
+                            <span class="text-[13px] font-semibold text-gray-900">工作時段 ${result.sessions.length - i}</span>
+                            <span class="text-[11px] text-gray-500">${session.start} - ${session.end}</span>
+                        </div>
+                        <span class="text-[13px] font-medium text-gray-900 bg-gray-100 px-2 py-1 rounded-md">
+                            ${durObj.h}h ${Math.round(durObj.m)}m
+                        </span>
+                   `;
+                    sessionContainer.appendChild(div);
+                });
+                document.getElementById('insightBtn').removeAttribute('disabled');
+            } else {
+                sessionParent.classList.add('hidden');
+            }
+
+            // Undo 按鈕狀態
+            document.getElementById('undoBtn').disabled = punchRecords.length === 0;
+
+            // Clear 按鈕狀態 (如果正在確認中，重置它)
+            if (punchRecords.length === 0) {
+                const clearBtn = document.getElementById('clearBtn');
+                clearBtn.classList.add('hidden');
+            } else {
+                document.getElementById('clearBtn').classList.remove('hidden');
+            }
+        }
+
+        // 初始化
+        loadData();
+        renderCalendar(); // 啟動時繪製月曆
+        updateDisplay();
+        updateCurrentTime();
+        setInterval(updateDisplay, 10000);
+        setInterval(updateCurrentTime, 1000);
+    </script>
+</body>
+
+</html>
