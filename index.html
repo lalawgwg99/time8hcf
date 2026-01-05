@@ -399,11 +399,14 @@
         // --- 邏輯部分 ---
         let punchRecords = [];
         let reminderTimer = null;
-        let alarmLoop = null; // Store the looping sound event
         let appSettings = {
             workReminderMinutes: 120,
             restReminderMinutes: 20
         };
+
+        // 月曆與休假相關變數
+        let currentCalendarDate = new Date();
+        let offDays = new Set(); // Stores "YYYY-MM-DD"
 
         // ... (API constants) ...
 
@@ -417,44 +420,7 @@
             // ... existing code ...
         }
 
-        // New Continuous Alarm Logic
-        function triggerContinuousAlarm(title, message) {
-            // Show Modal
-            const modal = document.getElementById('alarmModal');
-            document.getElementById('alarmTitle').textContent = title;
-            document.getElementById('alarmMessage').textContent = message;
-            modal.classList.remove('hidden');
 
-            // Play Looping Sound
-            try {
-                Tone.start();
-                if (alarmLoop) {
-                    alarmLoop.stop();
-                    alarmLoop.dispose();
-                }
-
-                const synth = new Tone.Synth().toDestination();
-                alarmLoop = new Tone.Loop(time => {
-                    synth.triggerAttackRelease("C6", "8n", time);
-                    synth.triggerAttackRelease("E6", "8n", time + 0.1);
-                }, "0.5s").start(0); // Loop every 0.5s
-
-                Tone.Transport.start();
-            } catch (e) { console.error("Audio Web API Error:", e); }
-        }
-
-        function stopAlarm() {
-            // Hide Modal
-            document.getElementById('alarmModal').classList.add('hidden');
-
-            // Stop Sound
-            if (alarmLoop) {
-                alarmLoop.stop();
-                alarmLoop.dispose();
-                alarmLoop = null;
-            }
-            Tone.Transport.stop();
-        }
 
         function playSingleClickSound(frequency = "G4") {
             try {
@@ -497,10 +463,7 @@
         function showReminder(message, type) {
             // "Type" controls severity: 'work' (soft hint) or 'alarm' (full modal)
 
-            if (type === 'alarm') {
-                triggerContinuousAlarm("注意！", message);
-                return;
-            }
+
 
             const hint = document.getElementById('ongoingHint');
             if (hint) {
@@ -973,17 +936,7 @@ END:VCALENDAR
                     statusIcon.className = "fas fa-exclamation-triangle text-ios-red";
                     nextActionText.innerHTML = `<span class='text-ios-red font-bold'>工作過久！請立即休息</span>`;
 
-                    // Trigger Alarm if not already asserted (simple check to avoid spamming, can be improved)
-                    // Note: In a real loop, we need a flag. For now, rely on user stopping it.
-                    // But since updateDisplay runs every 10s, we shouldn't re-trigger if modal is open.
-                    if (document.getElementById('alarmModal').classList.contains('hidden')) {
-                        // Only trigger if we just crossed the threshold? Or if it's high priority.
-                        // Let's rely on a separate specific specific check or just checking if time matches closely to avoid loop spam
-                        // For simplicity in this "stateless" refresh: 
-                        // Check if we are "just" past the time (within last 15 seconds) to trigger ONCE
-                        // OR, just use the visual alert here and let a separate timer handle the sound?
-                        // Better: We add a 'lastAlertTime' to prevent re-triggering every 10s.
-                    }
+
                 } else {
                     nextActionText.innerHTML = `預計休息：<span class='text-ios-blue'>${timeStr}</span>`;
                 }
@@ -1163,43 +1116,11 @@ END:VCALENDAR
         updateDisplay();
         updateCurrentTime();
 
-        // Main Timer Loop (Check for alarms)
-        setInterval(() => {
-            updateDisplay();
-            checkAlarms();
-        }, 10000); // UI update every 10s
+        setInterval(updateDisplay, 10000);
 
         setInterval(updateCurrentTime, 1000);
 
-        // Separate Alarm Check Logic
-        let lastWorkAlertTime = 0;
 
-        function checkAlarms() {
-            const nextType = getNextPunchType();
-            if (nextType === 'out') { // Working
-                const lastRecord = punchRecords.findLast(r => r.type === 'in');
-                if (!lastRecord) return;
-
-                const lastInTime = new Date(lastRecord.time).getTime();
-                const targetTime = lastInTime + appSettings.workReminderMinutes * 60000;
-                const now = Date.now();
-
-                // If we passed the target time, and haven't alerted in the last 5 minutes (to prevent infinite spam if user ignores)
-                // But user requested CONTINUOUS. So we trigger it if the modal is closed.
-                if (now > targetTime && document.getElementById('alarmModal').classList.contains('hidden')) {
-                    // Check if we are reasonably close to the time OR if user wants persistent nagging
-                    // Let's trigger it. But to avoid re-triggering immediately after user clicks stop (if they don't punch out),
-                    // we might need a cooldown. 
-                    // Current logic: If they click Stop, modal hides. 10s later, this runs again. 
-                    // If they still haven't punched out, it rings AGAIN. This is "Continuous/Nagging".
-                    // We will add a 60s snooze implicitly by checking lastAlertTime
-                    if (now - lastWorkAlertTime > 60000) {
-                        triggerContinuousAlarm("該休息了！", `您已工作超過 ${appSettings.workReminderMinutes} 分鐘。`);
-                        lastWorkAlertTime = now;
-                    }
-                }
-            }
-        }
     </script>
 </body>
 
