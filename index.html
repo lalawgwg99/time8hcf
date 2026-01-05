@@ -404,6 +404,49 @@
             restReminderMinutes: 20
         };
 
+        // Life Suggestions Data
+        const lifeSuggestions = {
+            early: [
+                "今晚想吃點什麼好料的？😋",
+                "下班後去逛個書店沉澱一下？📚",
+                "這時間去健身房剛剛好！💪",
+                "去買杯手搖飲犒賞自己！🧋",
+                "這天氣適合去公園散散步。🌳"
+            ],
+            dinner: [
+                "下班後去逛個黃昏市場買菜吧？🥦",
+                "晚餐時間到，去吃頓好的吧！🍜",
+                "這時間回去剛好趕上倒垃圾。🚛",
+                "超市現在生鮮在打折喔！🥩",
+                "去吃那間排隊名店剛好不用等？🥘"
+            ],
+            late: [
+                "辛苦了，巷口那間鹹酥雞這時候剛好不用排隊。🍗",
+                "便利商店的微波食品其實也不錯吃。🍱",
+                "回家路上順便買個滷味吧？🥚",
+                "這時間去洗個頭放鬆一下？💆",
+                "別煮了，外送點起來！🛵"
+            ],
+            midnight: [
+                "太晚了，回家直接睡個好覺吧。💤",
+                "別加班了，回家泡個熱水澡吧！🛀",
+                "吃個宵夜再睡？泡麵是好朋友。🍜",
+                "明天再拚吧，身體要顧。🛌",
+                "看著窗外的月亮，深呼吸一下。🌕"
+            ]
+        };
+
+        function getLifeSuggestion(hour) {
+            let pool = [];
+            if (hour < 17) pool = lifeSuggestions.early;
+            else if (hour < 20) pool = lifeSuggestions.dinner;
+            else if (hour < 22) pool = lifeSuggestions.late;
+            else pool = lifeSuggestions.midnight;
+
+            // Random pick
+            return pool[Math.floor(Math.random() * pool.length)];
+        }
+
         // 月曆與休假相關變數
         let currentCalendarDate = new Date();
         let offDays = new Set(); // Stores "YYYY-MM-DD"
@@ -995,18 +1038,29 @@ END:VCALENDAR
                     const offStr = offTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
                     progressInfo += ` (預計 ${offStr} 下班)`;
 
-                    // Life Suggestion Logic
-                    const h = offTime.getHours();
-                    let suggestion = "";
-                    if (h < 17) suggestion = "今晚想吃點什麼好料的？😋";
-                    else if (h < 18) suggestion = "下班後去逛個黃昏市場買菜吧？🥦";
-                    else if (h < 19) suggestion = "這時間剛好！去買杯手搖飲犒賞自己！🧋";
-                    else if (h < 20) suggestion = "晚餐時間到，去吃頓好的吧！🍜";
-                    else if (h < 21) suggestion = "辛苦了，巷口那間鹹酥雞這時候剛好不用排隊。🍗";
-                    else if (h < 22) suggestion = "健身房這時候人剛好變少，去動一動？💪";
-                    else suggestion = "太晚了，回家直接睡個好覺吧。💤";
+                    // Life Suggestion Logic (Randomized)
+                    // Only update if text is empty to prevent flickering on every tick, 
+                    // OR if hour changed (handled by re-calculation)
+                    // Actually, let's keep it simple: Update on every ongoing tick is fine 
+                    // but we want it stable. Let's start with a stable logic based on minute? 
+                    // Or just pick one based on day/hour hash to be consistent?
+                    // User said "not same every day", so let's stick to true random only on reload/logic change?
+                    // No, updateDisplay runs every 10s. We don't want text jumping.
+                    // Solution: Store suggestion in a temp var that only updates when hour changes?
+                    // For now, let's just generate it since 'updateDisplay' refreshes everything.
+                    // To prevent flickering: use a seeded random based on current Hour+Date?
+                    // Or just let it refresh. User won't stare at it for 10s. 
+                    // Wait, if it refreshes every 10s, it will change text. That might be annoying.
+                    // Let's use a simple cache key: "YYYY-MM-DD-HH" -> Message.
 
-                    lifeSuggestionEl.innerHTML = `<i class="fas fa-mug-hot text-orange-400 mr-1"></i> ${suggestion}`;
+                    const now = new Date();
+                    const cacheKey = `${now.getDate()}-${offTime.getHours()}`;
+                    if (!window.cachedSuggestionKey || window.cachedSuggestionKey !== cacheKey) {
+                        window.cachedSuggestion = getLifeSuggestion(offTime.getHours());
+                        window.cachedSuggestionKey = cacheKey;
+                    }
+
+                    lifeSuggestionEl.innerHTML = `<i class="fas fa-mug-hot text-orange-400 mr-1"></i> ${window.cachedSuggestion}`;
                     lifeSuggestionEl.classList.remove('hidden');
 
                 } else {
