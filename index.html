@@ -48,30 +48,119 @@
     </script>
 
     <style>
+        :root {
+            --ios-bg: #F2F2F7;
+            --ios-card: #FFFFFF;
+            --ios-separator: #E5E5EA;
+            --ios-blue: #007AFF;
+            --ios-green: #34C759;
+            --ios-red: #FF3B30;
+            --ios-orange: #FF9500;
+            --ios-purple: #AF52DE;
+            --ios-gray: #8E8E93;
+            --ios-gray2: #AEAEB2;
+            --ios-gray3: #C7C7CC;
+            --ios-gray4: #D1D1D6;
+            --ios-gray5: #E5E5EA;
+            --ios-gray6: #F2F2F7;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --transition-spring: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #F2F2F7;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             -webkit-tap-highlight-color: transparent;
             -webkit-font-smoothing: antialiased;
-            color: #000;
+            color: #1C1C1E;
+            margin: 0;
+            background: transparent;
         }
 
-        /* iOS 風格的滑動開關與輸入框 */
-        .ios-input {
-            background: #F2F2F7;
-            border-radius: 10px;
-            border: none;
-            transition: all 0.2s;
+        /* --- Ambient Glow Background --- */
+        .ambient-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--ambient-bg, var(--ios-bg));
+            transition: background 3s ease;
         }
 
-        .ios-input:focus {
-            background: #E5E5EA;
-            outline: none;
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.65;
+            animation: floatOrb 20s infinite ease-in-out alternate;
+            transition: background 3s ease;
+            transform: translateZ(0);
         }
 
-        /* 隱藏滾動條但保持功能 */
+        .ambient-orb.orb-1 {
+            width: 350px;
+            height: 350px;
+            top: -50px;
+            left: -50px;
+            background: var(--orb1-color, #ffecd2);
+            animation-delay: 0s;
+        }
+
+        .ambient-orb.orb-2 {
+            width: 450px;
+            height: 450px;
+            bottom: -100px;
+            right: -50px;
+            background: var(--orb2-color, #fcb69f);
+            animation-delay: -5s;
+        }
+
+        .ambient-orb.orb-3 {
+            width: 300px;
+            height: 300px;
+            top: 35%;
+            left: 20%;
+            background: var(--orb3-color, #a8edea);
+            animation-delay: -10s;
+        }
+
+        @keyframes floatOrb {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(40px, -50px) scale(1.1) rotate(15deg);
+            }
+
+            100% {
+                transform: translate(-30px, 40px) scale(0.95) rotate(-10deg);
+            }
+        }
+
+        /* --- Typography --- */
+        .time-display {
+            font-size: 44px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            line-height: 1;
+        }
+
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -81,13 +170,151 @@
             scrollbar-width: none;
         }
 
-        /* 按鈕點擊效果 */
-        .active-scale:active {
-            transform: scale(0.96);
-            opacity: 0.9;
+        /* 按鈕交互 */
+        .active-scale {
+            transition: transform 0.15s var(--transition-spring), opacity 0.15s;
         }
 
-        /* 模態窗動畫 */
+        .active-scale:active {
+            transform: scale(0.96);
+            opacity: 0.88;
+        }
+
+        /* 輸入框 */
+        .ios-input {
+            background: var(--ios-gray6);
+            border-radius: 12px;
+            border: none;
+            transition: background 0.2s, box-shadow 0.2s;
+            font-size: 15px;
+        }
+
+        .ios-input:focus {
+            background: var(--ios-gray5);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+
+        /* 卡片 (Glassmorphism) */
+        .card {
+            background: rgba(255, 255, 255, 0.65);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 0.5px solid rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s var(--transition-spring), box-shadow 0.2s, background 0.5s;
+        }
+
+        .night-mode {
+            color: #FFFFFF;
+        }
+
+        .night-mode .card {
+            background: rgba(30, 30, 30, 0.65);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .night-mode header {
+            background: rgba(30, 30, 30, 0.65) !important;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .night-mode h1,
+        .night-mode #currentTime,
+        .night-mode #totalHours,
+        .night-mode .text-gray-900,
+        .night-mode .text-black {
+            color: #FFFFFF !important;
+        }
+
+        .night-mode .text-gray-400,
+        .night-mode .ios-gray {
+            color: #8E8E93 !important;
+        }
+
+        .night-mode .ios-input {
+            background: rgba(60, 60, 65, 0.6);
+            color: white;
+        }
+
+        /* 進度條 */
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: var(--ios-gray6);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #007AFF, #5AC8FA);
+            transition: width 0.7s ease-out;
+        }
+
+        .progress-fill.overtime {
+            background: linear-gradient(90deg, var(--ios-purple), #DA7BFF);
+        }
+
+        .progress-fill.pulse {
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        /* 時間軸 */
+        .timeline-item {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 1.5px;
+            background: var(--ios-gray5);
+        }
+
+        .timeline-item:last-child::before {
+            bottom: 50%;
+        }
+
+        .timeline-item:first-child::before {
+            top: 50%;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2.5px solid var(--ios-blue);
+            background: white;
+            z-index: 1;
+        }
+
+        .timeline-dot.out {
+            border-color: var(--ios-orange);
+        }
+
+        /* 徽章 */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* 動畫 */
         @keyframes slideUp {
             from {
                 transform: translateY(100%);
@@ -100,18 +327,273 @@
             }
         }
 
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+
+            50% {
+                opacity: 0.85;
+                filter: brightness(1.15);
+            }
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.03);
+                opacity: 1;
+            }
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-4px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(4px);
+            }
+        }
+
         .modal-enter {
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUp 0.35s var(--transition-spring) forwards;
+        }
+
+        .anim-fade-in {
+            animation: fadeInUp 0.4s var(--transition-spring) forwards;
+        }
+
+        .anim-breathe {
+            animation: breathe 2.5s ease-in-out infinite;
+        }
+
+        .anim-count {
+            animation: countUp 0.5s var(--transition-spring) forwards;
+        }
+
+        /* 漣漪 */
+        .ripple-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            animation: ripple 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+
+        /* Alarm Modal */
+        .alarm-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .alarm-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .alarm-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 320px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInUp 0.4s var(--transition-spring);
+        }
+
+        /* Tabular nums */
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: 'tnum';
+        }
+
+        /* Salary ticker */
+        .salary-ticker {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--ios-green);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Section label */
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ios-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 8px;
+            margin-bottom: 8px;
+        }
+
+        /* --- Weekly Bar Chart --- */
+        .week-bar {
+            flex: 1;
+            border-radius: 4px 4px 2px 2px;
+            background: var(--ios-blue);
+            min-height: 3px;
+            transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .week-bar.overtime {
+            background: var(--ios-orange);
+        }
+
+        .week-bar.today {
+            background: linear-gradient(180deg, var(--ios-blue), #5AC8FA);
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+        }
+
+        .week-bar.empty {
+            background: var(--ios-separator);
+            min-height: 3px;
+        }
+
+        /* --- Swipe Slider --- */
+        .swipe-track {
+            position: relative;
+            width: 100%;
+            height: 56px;
+            border-radius: 18px;
+            background: var(--ios-red);
+            overflow: hidden;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .swipe-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+            font-weight: 600;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .swipe-handle {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            cursor: grab;
+            transition: left 0.1s linear;
+            z-index: 2;
+        }
+
+        .swipe-handle i {
+            color: var(--ios-red);
+            font-size: 18px;
+        }
+
+        .swipe-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 18px;
+            transition: width 0.1s linear;
+            pointer-events: none;
         }
     </style>
 </head>
 
 <body class="min-h-screen pb-10">
 
-    <div class="max-w-md mx-auto min-h-screen flex flex-col">
+    <!-- Ambient Glow Background -->
+    <div id="ambientContainer" class="ambient-container">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="ambient-orb orb-3"></div>
+    </div>
+
+    <div class="max-w-md mx-auto min-h-screen flex flex-col relative z-10" id="app">
 
         <!-- Header: 大標題風格 -->
-        <header class="px-5 pt-8 pb-4 bg-[#F2F2F7] sticky top-0 z-20 backdrop-blur-xl bg-opacity-80">
+        <header
+            class="px-5 pt-8 pb-4 bg-[#F2F2F7]/80 sticky top-0 z-20 backdrop-blur-xl transition-colors duration-500 border-b border-transparent">
             <div class="flex justify-between items-start mb-1">
                 <div class="text-[13px] text-ios-gray font-semibold uppercase tracking-wide" id="currentDate">LOADING...
                 </div>
@@ -137,36 +619,46 @@
         <!-- Main Content -->
         <main class="flex-1 px-4 space-y-5">
 
+            <!-- 智慧情境橫幅 (C) -->
+            <div id="contextBanner" class="card px-4 py-3 flex items-center gap-3 anim-fade-in">
+                <div class="text-2xl" id="contextEmoji">☀️</div>
+                <div class="flex-1">
+                    <div class="text-[13px] font-semibold text-gray-900" id="contextTitle">早安！</div>
+                    <div class="text-[11px] text-gray-400" id="contextSub">準備開始新的一天</div>
+                </div>
+            </div>
+
             <!-- Summary Card: 簡潔白卡 -->
-            <div class="bg-white rounded-[20px] p-5 shadow-ios">
+            <div class="card p-5">
                 <div class="flex justify-between items-end mb-3">
                     <span class="text-[15px] font-semibold text-gray-900">今日累計</span>
                     <div class="flex items-baseline">
-                        <!-- 修正：移除 tracking-tight，增加 tracking-wide -->
-                        <span class="text-3xl font-bold font-mono tracking-wide" id="totalHours">
-                            0<span class="text-sm font-sans font-medium text-gray-400 ml-1.5 mr-2">h</span>
+                        <span class="time-display tabular-nums" id="totalHours">
+                            0<span class="text-lg font-sans font-medium text-gray-400 ml-1.5 mr-2">h</span>
                             0<span class="text-sm font-sans font-medium text-gray-400 ml-1.5">m</span>
                         </span>
                     </div>
                 </div>
 
-                <!-- Financial Reality Card (創新功能: 薪資跳動) -->
-
-
-                <!-- 極簡進度條 -->
-                <div class="w-full bg-[#F2F2F7] rounded-full h-2 mb-2 overflow-hidden">
-                    <div class="h-full rounded-full transition-all duration-700 ease-out bg-ios-blue" id="progressBar"
-                        style="width: 0%"></div>
+                <!-- 即時薪資跳動 -->
+                <div id="salaryTicker" class="hidden mb-3 text-center py-2 bg-green-50 rounded-xl">
+                    <div class="text-[11px] text-gray-400 font-medium mb-0.5">💰 已賺到</div>
+                    <div class="salary-ticker" id="salaryAmount">$0</div>
                 </div>
 
-                <div class="flex justify-between text-[11px] font-medium text-ios-gray">
+                <!-- 升級進度條 -->
+                <div class="progress-track mb-2">
+                    <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                </div>
+
+                <div class="flex justify-between text-[11px] font-medium" style="color: var(--ios-gray)">
                     <span id="progressText">目標 8h</span>
-                    <span id="ongoingHint" class="text-ios-blue opacity-0 transition-opacity">
+                    <span id="ongoingHint" class="opacity-0 transition-opacity" style="color: var(--ios-blue)">
                         <i class="fas fa-circle text-[6px] animate-pulse mr-1"></i>計時中
                     </span>
                 </div>
                 <div id="lifeSuggestion"
-                    class="mt-3 text-[12px] text-gray-500 font-medium text-center bg-gray-50 rounded-lg py-2 hidden transition-all">
+                    class="mt-3 text-[12px] text-gray-500 font-medium text-center bg-gray-50 rounded-xl py-2.5 px-3 hidden transition-all">
                 </div>
             </div>
 
@@ -198,26 +690,40 @@
                     </div>
                 </div>
 
-                <!-- WLB Score Card (職場健康度) -->
-                <div id="wlbCard" class="bg-white rounded-[20px] p-4 shadow-ios hidden">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">職場健康度</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-500"
-                            id="wlbTag">計算中</span>
+                <!-- 本週工時圖表 (A) -->
+                <div id="weeklyChart" class="card p-4 hidden">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="section-label" style="margin:0;padding:0">本週工時</span>
+                        <span class="text-[11px] text-gray-400 font-medium" id="weeklyStats"></span>
                     </div>
-                    <div class="flex items-end gap-3">
-                        <div class="text-4xl font-black italic text-gray-900" id="wlbScore">--</div>
-                        <div class="text-[13px] font-medium text-gray-500 mb-1.5" id="wlbLevel">...</div>
+                    <div class="flex items-end justify-between gap-1" style="height:60px" id="weeklyBars">
+                        <!-- JS generated -->
                     </div>
-                    <div class="mt-2 text-[11px] text-gray-400" id="wlbComment">保持工作與生活的平衡</div>
+                    <div class="flex justify-between mt-1.5">
+                        <span class="text-[10px] text-gray-300 font-medium">一</span>
+                        <span class="text-[10px] text-gray-300 font-medium">二</span>
+                        <span class="text-[10px] text-gray-300 font-medium">三</span>
+                        <span class="text-[10px] text-gray-300 font-medium">四</span>
+                        <span class="text-[10px] text-gray-300 font-medium">五</span>
+                        <span class="text-[10px] text-gray-300 font-medium">六</span>
+                        <span class="text-[10px] text-gray-300 font-medium">日</span>
+                    </div>
                 </div>
 
-                <!-- 主按鈕 -->
-                <button id="punchBtn" onclick="punch()"
-                    class="w-full py-4 rounded-[18px] text-[17px] font-semibold text-white shadow-ios-floating transition-all active-scale flex items-center justify-center gap-2 bg-black">
-                    <i class="fas fa-fingerprint"></i>
+                <!-- 主按鈕（含漣漪效果）-->
+                <button id="punchBtn" onclick="punchWithRipple(event)"
+                    class="w-full py-4 rounded-[18px] text-[17px] font-semibold text-white transition-all active-scale flex items-center justify-center gap-2 bg-black ripple-container"
+                    style="box-shadow: var(--shadow-md)">
+                    <i class="fas fa-fingerprint anim-breathe"></i>
                     <span id="btnText">上班</span>
                 </button>
+
+                <!-- 滑動下班確認 (B) - 僅工作中顯示 -->
+                <div id="swipeTrack" class="swipe-track hidden">
+                    <div class="swipe-progress"></div>
+                    <div class="swipe-label">滑動確認下班 →</div>
+                    <div class="swipe-handle"><i class="fas fa-arrow-right"></i></div>
+                </div>
             </div>
 
             <!-- Records List: iOS Inset Grouped Style -->
@@ -366,32 +872,83 @@
 
     <!-- Settings Modal -->
     <div id="settingsModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeSettings()"></div>
-        <div class="absolute bottom-0 left-0 right-0 bg-[#F2F2F7] rounded-t-[24px] p-6 modal-enter max-w-md mx-auto">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeSettings()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[24px] p-6 modal-enter max-w-md mx-auto"
+            style="background:var(--ios-bg);max-height:85vh;overflow-y:auto">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-bold text-gray-900">提醒設定</h3>
-                <button onclick="closeSettings()"
+                <h3 class="text-lg font-bold text-gray-900">設定</h3>
+                <button onclick="closeSettings()" aria-label="關閉設定"
                     class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
-            <div class="bg-white rounded-xl overflow-hidden mb-6">
-                <div class="p-4 border-b border-ios-separator flex items-center justify-between">
-                    <label class="text-[15px] text-gray-900">上班後提醒 (分鐘)</label>
-                    <input type="number" id="workReminderInput"
-                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1 text-base" value="120">
+            <!-- 提醒設定 -->
+            <div class="section-label">提醒</div>
+            <div class="bg-white rounded-xl overflow-hidden mb-5">
+                <div class="p-4 flex items-center justify-between" style="border-bottom:1px solid var(--ios-separator)">
+                    <label for="workReminderInput" class="text-[15px] text-gray-900">上班後提醒 (分鐘)</label>
+                    <input type="number" id="workReminderInput" placeholder="120"
+                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="120">
                 </div>
-
                 <div class="p-4 flex items-center justify-between">
-                    <label class="text-[15px] text-gray-900">休息結束提醒 (分鐘)</label>
-                    <input type="number" id="restReminderInput"
-                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1 text-base" value="20">
+                    <label for="restReminderInput" class="text-[15px] text-gray-900">休息結束提醒 (分鐘)</label>
+                    <input type="number" id="restReminderInput" placeholder="20"
+                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="20">
+                </div>
+            </div>
+
+            <!-- AI 設定 -->
+            <div class="section-label">🤖 AI 日報</div>
+            <div class="bg-white rounded-xl overflow-hidden mb-5">
+                <div class="p-4 flex items-center justify-between">
+                    <span class="text-[15px] text-gray-900">AI 服務</span>
+                    <span class="text-[13px] text-gray-400 font-medium">OpenRouter (Free)</span>
+                </div>
+            </div>
+
+            <!-- 薪資設定 -->
+            <div class="section-label">💰 薪資計算</div>
+            <div class="bg-white rounded-xl overflow-hidden mb-5">
+                <div class="p-4 flex items-center justify-between">
+                    <label for="monthlySalaryInput" class="text-[15px] text-gray-900">月薪 (TWD)</label>
+                    <input type="number" id="monthlySalaryInput" placeholder="40000"
+                        class="w-24 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="40000">
                 </div>
             </div>
 
             <button onclick="saveSettings()"
-                class="w-full py-3.5 bg-black text-white rounded-xl font-semibold shadow-lg">儲存設定</button>
+                class="w-full py-3.5 bg-black text-white rounded-xl font-semibold active-scale"
+                style="box-shadow:var(--shadow-md)">儲存設定</button>
+        </div>
+    </div>
+
+    <!-- Alarm Modal (全螢幕提醒) -->
+    <div id="alarmModal" class="alarm-overlay">
+        <div class="alarm-card">
+            <div class="text-5xl mb-4" id="alarmEmoji">⏰</div>
+            <div class="text-xl font-bold text-gray-900 mb-2" id="alarmTitle">休息時間到！</div>
+            <div class="text-[15px] text-gray-500 mb-6" id="alarmBody">你已經連續工作超過設定時間，起來動一動吧</div>
+            <button onclick="dismissAlarm()"
+                class="w-full py-3.5 bg-black text-white rounded-xl font-semibold active-scale">我知道了</button>
+        </div>
+    </div>
+
+    <!-- Stretch Reminder Modal -->
+    <div id="stretchModal" class="alarm-overlay">
+        <div class="alarm-card">
+            <div class="text-5xl mb-4">🧘</div>
+            <div class="text-xl font-bold text-gray-900 mb-2">久坐提醒</div>
+            <div class="text-[15px] text-gray-500 mb-3">你已連續工作 90 分鐘</div>
+            <div class="text-left bg-gray-50 rounded-xl p-4 mb-6 text-[14px] text-gray-600 space-y-2" id="stretchTips">
+                <div>🙆 雙手高舉伸展 10 秒</div>
+                <div>🔄 轉動脖子左右各 5 圈</div>
+                <div>👀 閉眼休息 20 秒</div>
+                <div>🚶 起身走動 1 分鐘</div>
+            </div>
+            <button onclick="dismissStretch()"
+                class="w-full py-3.5 bg-black text-white rounded-xl font-semibold active-scale">已完成伸展 ✓</button>
         </div>
     </div>
 
@@ -399,10 +956,397 @@
         // --- 邏輯部分 ---
         let punchRecords = [];
         let reminderTimer = null;
+        let alarmLoopTimer = null;
+        let stretchCheckTimer = null;
+        let lastStretchDismiss = 0;
         let appSettings = {
             workReminderMinutes: 120,
-            restReminderMinutes: 20
+            restReminderMinutes: 20,
+            aiProvider: 'openrouter',
+            aiKey: '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',
+            aiEndpoint: '',
+            monthlySalary: 40000,
+            consecutiveOnTime: 0,
+            bestStreak: 0
         };
+
+        const AI_PROVIDERS = {
+            openrouter: {
+                url: 'https://openrouter.ai/api/v1/chat/completions',
+                model: 'arcee-ai/trinity-large-preview:free'
+            },
+            nvidia: {
+                url: 'https://corsproxy.io/?' + encodeURIComponent('https://integrate.api.nvidia.com/v1/chat/completions'),
+                model: 'deepseek-ai/deepseek-r1'
+            },
+            openai: {
+                url: 'https://api.openai.com/v1/chat/completions',
+                model: 'gpt-4o-mini'
+            },
+            gemini: {
+                url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+                model: 'gemini-2.0-flash'
+            }
+        };
+
+        // --- 漣漪效果 ---
+        function punchWithRipple(e) {
+            const btn = document.getElementById('punchBtn');
+            const rect = btn.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+
+            punch();
+        }
+
+        // --- Alarm 系統 ---
+        function triggerAlarm(title, body, emoji) {
+            document.getElementById('alarmTitle').textContent = title || '休息時間到！';
+            document.getElementById('alarmBody').textContent = body || '起來動一動吧';
+            document.getElementById('alarmEmoji').textContent = emoji || '⏰';
+            document.getElementById('alarmModal').classList.add('active');
+
+            if ("vibrate" in navigator) navigator.vibrate([500, 300, 500, 300, 500]);
+
+            try {
+                Tone.start();
+                const synth = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 }
+                }).toDestination();
+                const now = Tone.now();
+                synth.triggerAttackRelease("C5", 0.15, now);
+                synth.triggerAttackRelease("E5", 0.15, now + 0.25);
+                synth.triggerAttackRelease("G5", 0.15, now + 0.5);
+                synth.triggerAttackRelease("C6", 0.3, now + 0.75);
+
+                // Loop alarm every 3 seconds
+                alarmLoopTimer = setInterval(() => {
+                    if ("vibrate" in navigator) navigator.vibrate([300, 200, 300]);
+                    try {
+                        const n = Tone.now();
+                        synth.triggerAttackRelease("C5", 0.1, n);
+                        synth.triggerAttackRelease("G5", 0.1, n + 0.2);
+                    } catch (e) { }
+                }, 3000);
+            } catch (e) { console.error(e); }
+        }
+
+        function dismissAlarm() {
+            document.getElementById('alarmModal').classList.remove('active');
+            if (alarmLoopTimer) { clearInterval(alarmLoopTimer); alarmLoopTimer = null; }
+        }
+
+        // --- 久坐伸展提醒 ---
+        function checkStretchReminder() {
+            if (punchRecords.length === 0 || punchRecords.length % 2 === 0) return;
+            const lastIn = new Date(punchRecords[punchRecords.length - 1].time);
+            const elapsed = (Date.now() - lastIn.getTime()) / 60000;
+            const sinceLastDismiss = (Date.now() - lastStretchDismiss) / 60000;
+
+            if (elapsed >= 90 && sinceLastDismiss >= 90) {
+                document.getElementById('stretchModal').classList.add('active');
+                if ("vibrate" in navigator) navigator.vibrate([200, 100, 200]);
+            }
+        }
+
+        function dismissStretch() {
+            document.getElementById('stretchModal').classList.remove('active');
+            lastStretchDismiss = Date.now();
+        }
+
+        // --- 薪資計算 ---
+        function updateSalaryTicker(totalMinutes) {
+            const salary = appSettings.monthlySalary || 0;
+            if (salary <= 0 || totalMinutes <= 0) {
+                document.getElementById('salaryTicker').classList.add('hidden');
+                return;
+            }
+
+            const hourlyRate = salary / 22 / 8; // 22 工作日，8 小時
+            const earned = (totalMinutes / 60) * hourlyRate;
+            const el = document.getElementById('salaryAmount');
+            el.textContent = '$' + Math.floor(earned).toLocaleString();
+            document.getElementById('salaryTicker').classList.remove('hidden');
+        }
+
+        // --- 成就系統 ---
+        function checkAchievement() {
+            const streak = appSettings.consecutiveOnTime || 0;
+            if (streak >= 3) {
+                const container = document.getElementById('weeklyChart');
+                if (!container) return;
+                let badge = document.getElementById('streakBadge');
+                if (!badge) {
+                    badge = document.createElement('div');
+                    badge.id = 'streakBadge';
+                    container.appendChild(badge);
+                }
+                let emoji = '🔥';
+                let label = `連續 ${streak} 天準時`;
+                if (streak >= 30) { emoji = '👑'; label += ' 傳說級！'; }
+                else if (streak >= 14) { emoji = '💎'; label += ' 太厉害了！'; }
+                else if (streak >= 7) { emoji = '⭐'; label += ' 優秀！'; }
+
+                badge.className = 'badge mt-3 anim-count';
+                badge.style.cssText = 'background:#F0FDF4;color:#15803D;display:inline-block;';
+                badge.innerHTML = `${emoji} ${label}`;
+            }
+        }
+
+        // --- AI Provider Toggle ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const sel = document.getElementById('aiProviderSelect');
+            if (sel) sel.addEventListener('change', () => {
+                document.getElementById('customEndpointRow').classList.toggle('hidden', sel.value !== 'custom');
+            });
+        });
+
+        // --- 時段動態漸層背景 ( Ambient Glow ) ---
+        function updateTimeGradient() {
+            const h = new Date().getHours();
+            const root = document.documentElement;
+
+            let bg, orb1, orb2, orb3;
+            let isNight = false;
+
+            if (h >= 5 && h < 8) {
+                // Morning Dawn
+                bg = '#F2F2F7'; orb1 = '#ffecd2'; orb2 = '#fcb69f'; orb3 = '#a8edea';
+            } else if (h >= 8 && h < 16) {
+                // Day Light
+                bg = '#F2F2F7'; orb1 = '#e0f7fa'; orb2 = '#b2ebf2'; orb3 = '#e0e0e0';
+            } else if (h >= 16 && h < 19) {
+                // Evening Sunset
+                bg = '#F2F2F7'; orb1 = '#fce4ec'; orb2 = '#f8bbd0'; orb3 = '#e1bee7';
+            } else {
+                // Night Midnight
+                bg = '#0f172a'; orb1 = '#1e1b4b'; orb2 = '#312e81'; orb3 = '#0f3460';
+                isNight = true;
+            }
+
+            root.style.setProperty('--ambient-bg', bg);
+            root.style.setProperty('--orb1-color', orb1);
+            root.style.setProperty('--orb2-color', orb2);
+            root.style.setProperty('--orb3-color', orb3);
+
+            const app = document.getElementById('app');
+            if (!app) return;
+
+            // Night mode text
+            if (h >= 20 || h < 5) {
+                app.classList.add('night-mode');
+            } else {
+                app.classList.remove('night-mode');
+            }
+        }
+
+        // --- 本週工時圖表 ---
+        function renderWeeklyChart() {
+            const container = document.getElementById('weeklyBars');
+            const statsEl = document.getElementById('weeklyStats');
+            if (!container) return;
+
+            const today = new Date();
+            const dayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1; // 0=Mon
+            const weekData = [];
+            let totalWeek = 0;
+            let daysWorked = 0;
+
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(today);
+                d.setDate(today.getDate() - dayOfWeek + i);
+                const key = d.toLocaleDateString('zh-TW');
+
+                // 從 localStorage 讀取歷史資料
+                const saved = localStorage.getItem('timecardData');
+                let hours = 0;
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    const records = data.records || [];
+                    // 算當天的記錄
+                    const dayRecords = records.filter(r => {
+                        const rd = new Date(r.time);
+                        return rd.toLocaleDateString('zh-TW') === key;
+                    });
+                    // 加總工時
+                    for (let j = 0; j < dayRecords.length - 1; j += 2) {
+                        if (dayRecords[j].type === 'in' && dayRecords[j + 1]?.type === 'out') {
+                            hours += (new Date(dayRecords[j + 1].time) - new Date(dayRecords[j].time)) / 3600000;
+                        }
+                    }
+                    // 進行中
+                    if (i === dayOfWeek && dayRecords.length % 2 !== 0) {
+                        const lastIn = dayRecords[dayRecords.length - 1];
+                        if (lastIn.type === 'in') {
+                            hours += (Date.now() - new Date(lastIn.time).getTime()) / 3600000;
+                        }
+                    }
+                }
+                weekData.push(hours);
+                totalWeek += hours;
+                if (hours > 0) daysWorked++;
+            }
+
+            const maxH = Math.max(...weekData, 8);
+            container.innerHTML = '';
+
+            weekData.forEach((h, i) => {
+                const bar = document.createElement('div');
+                bar.className = 'week-bar';
+                const pct = maxH > 0 ? (h / maxH) * 100 : 0;
+                bar.style.height = pct > 0 ? `${Math.max(pct, 5)}%` : '3px';
+                if (h === 0) bar.classList.add('empty');
+                else if (h > 8) bar.classList.add('overtime');
+                if (i === dayOfWeek) bar.classList.add('today');
+                bar.title = `${h.toFixed(1)}h`;
+                container.appendChild(bar);
+            });
+
+            const avg = daysWorked > 0 ? (totalWeek / daysWorked) : 0;
+            statsEl.textContent = `合計 ${totalWeek.toFixed(1)}h · 日均 ${avg.toFixed(1)}h`;
+
+            if (totalWeek > 0 || punchRecords.length > 0) {
+                document.getElementById('weeklyChart').classList.remove('hidden');
+            }
+        }
+
+        // --- 智慧情境橫幅 ---
+        function updateContextBanner() {
+            const h = new Date().getHours();
+            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
+            const hasPunched = punchRecords.length > 0;
+
+            let emoji, title, sub;
+            const cacheKey = `ctx-${h}-${isWorking}-${hasPunched}`;
+            if (window._ctxCache === cacheKey) return;
+            window._ctxCache = cacheKey;
+
+            if (!hasPunched) {
+                if (h >= 5 && h < 9) { emoji = '☀️'; title = '早安！新的一天'; sub = '今天也要加油喔'; }
+                else if (h >= 9 && h < 12) { emoji = '☕'; title = '上午好'; sub = '先來杯咖啡再開工？'; }
+                else if (h >= 12 && h < 14) { emoji = '🍜'; title = '午安'; sub = '吃飽了再打卡吧'; }
+                else if (h >= 14 && h < 18) { emoji = '💪'; title = '下午好'; sub = '今天還沒開始工作喔'; }
+                else { emoji = '🌙'; title = '晚安'; sub = '今天辛苦了，好好休息'; }
+            } else if (isWorking) {
+                if (h < 12) { emoji = '🚀'; title = '認真工作中'; sub = '保持專注，你很棒'; }
+                else if (h < 14) { emoji = '🍜'; title = '午餐時間快到了'; sub = '記得休息吃飯喔'; }
+                else if (h < 17) { emoji = '⚡'; title = '下午衝刺'; sub = '再撐一下就快下班了'; }
+                else if (h < 19) { emoji = '🏃'; title = '快下班了！'; sub = '收拾好心情準備下班'; }
+                else { emoji = '🪧'; title = '加班中...'; sub = '注意身體，別太拚了'; }
+            } else {
+                if (h < 18) { emoji = '🎉'; title = '今天辛苦了！'; sub = '好好享受下班時光'; }
+                else { emoji = '🌟'; title = '下班愛自己'; sub = '去吃點好的爲勞自己'; }
+            }
+
+            document.getElementById('contextEmoji').textContent = emoji;
+            document.getElementById('contextTitle').textContent = title;
+            document.getElementById('contextSub').textContent = sub;
+        }
+
+        // --- 滑動打卡確認 ---
+        function initSwipePunch() {
+            const track = document.getElementById('swipeTrack');
+            if (!track) return;
+            const handle = track.querySelector('.swipe-handle');
+            const progress = track.querySelector('.swipe-progress');
+            const label = track.querySelector('.swipe-label');
+            let isDragging = false, startX = 0, currentX = 0;
+            const maxX = () => track.clientWidth - handle.clientWidth - 8;
+
+            function onStart(e) {
+                isDragging = true;
+                startX = (e.touches ? e.touches[0] : e).clientX;
+                handle.style.transition = 'none';
+                progress.style.transition = 'none';
+            }
+            function onMove(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = (e.touches ? e.touches[0] : e).clientX;
+                currentX = Math.max(0, Math.min(x - startX, maxX()));
+                handle.style.left = (4 + currentX) + 'px';
+                progress.style.width = (currentX + handle.clientWidth + 4) + 'px';
+                label.style.opacity = 1 - (currentX / maxX());
+            }
+            function onEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                handle.style.transition = 'left 0.3s ease';
+                progress.style.transition = 'width 0.3s ease';
+
+                if (currentX >= maxX() * 0.85) {
+                    // 滑到底 - 執行下班
+                    handle.style.left = (4 + maxX()) + 'px';
+                    progress.style.width = '100%';
+                    if ('vibrate' in navigator) navigator.vibrate(100);
+                    setTimeout(() => {
+                        punch();
+                        showPunchOutCelebration();
+                        resetSwipe();
+                    }, 200);
+                } else {
+                    resetSwipe();
+                }
+                currentX = 0;
+            }
+            function resetSwipe() {
+                handle.style.left = '4px';
+                progress.style.width = '0';
+                label.style.opacity = '1';
+            }
+
+            handle.addEventListener('mousedown', onStart);
+            handle.addEventListener('touchstart', onStart, { passive: true });
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('mouseup', onEnd);
+            document.addEventListener('touchend', onEnd);
+        }
+
+        // --- 下班慶祝 ---
+        function showPunchOutCelebration() {
+            const result = calculateHours();
+            const dur = formatDurationFancy(result.total);
+            const salary = appSettings.monthlySalary || 0;
+            const earned = salary > 0 ? Math.floor((result.total / 60) * (salary / 22 / 8)) : 0;
+
+            // 建立慶祝 overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'alarm-overlay active';
+            overlay.id = 'celebrationOverlay';
+            overlay.innerHTML = `
+                <div class="alarm-card" style="text-align:center">
+                    <div class="text-5xl mb-3">🎉</div>
+                    <div class="text-xl font-bold text-gray-900 mb-1">今天辛苦了！</div>
+                    <div style="background:var(--ios-bg);border-radius:16px;padding:16px;margin:12px 0">
+                        <div class="text-3xl font-bold tabular-nums">${dur.h}h ${Math.round(dur.m)}m</div>
+                        <div class="text-[12px] text-gray-400 mt-1">今日工時</div>
+                        ${earned > 0 ? `<div class="text-lg font-bold mt-2" style="color:var(--ios-green)">+$${earned.toLocaleString()}</div>` : ''}
+                    </div>
+                    <button onclick="this.closest('.alarm-overlay').remove()" class="w-full py-3 bg-black text-white rounded-xl font-semibold active-scale mt-2">太棒了 ✓</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            // 播放慶祝音效
+            try {
+                Tone.start();
+                const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+                const now = Tone.now();
+                synth.triggerAttackRelease('C5', 0.15, now);
+                synth.triggerAttackRelease('E5', 0.15, now + 0.15);
+                synth.triggerAttackRelease('G5', 0.15, now + 0.3);
+                synth.triggerAttackRelease(['C6', 'E6'], 0.4, now + 0.5);
+            } catch (e) { }
+        }
 
         // Life Suggestions Data
         const lifeSuggestions = {
@@ -451,13 +1395,8 @@
         let currentCalendarDate = new Date();
         let offDays = new Set(); // Stores "YYYY-MM-DD"
 
-        // ... (API constants) ...
-
-        const apiKey = "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";
-        const PROXY_URL = "https://corsproxy.io/?";
-        const TARGET_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
-        const apiUrl = PROXY_URL + encodeURIComponent(TARGET_URL);
-        const modelName = "deepseek-ai/deepseek-r1";
+        // API Key 現在從設定讀取，不再硬編碼
+        const FALLBACK_API_KEY = "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";
 
         function playSingleClickSound(frequency = "G4") {
             // ... existing code ...
@@ -585,15 +1524,14 @@ END:VCALENDAR
         function openSettings() {
             document.getElementById('workReminderInput').value = appSettings.workReminderMinutes;
             document.getElementById('restReminderInput').value = appSettings.restReminderMinutes;
+            document.getElementById('monthlySalaryInput').value = appSettings.monthlySalary || 40000;
             document.getElementById('settingsModal').classList.remove('hidden');
         }
         function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
         function saveSettings() {
-            const workVal = parseInt(document.getElementById('workReminderInput').value) || 120;
-            const restVal = parseInt(document.getElementById('restReminderInput').value) || 20;
-
-            appSettings.workReminderMinutes = workVal;
-            appSettings.restReminderMinutes = restVal;
+            appSettings.workReminderMinutes = parseInt(document.getElementById('workReminderInput').value) || 120;
+            appSettings.restReminderMinutes = parseInt(document.getElementById('restReminderInput').value) || 20;
+            appSettings.monthlySalary = parseInt(document.getElementById('monthlySalaryInput').value) || 0;
 
             localStorage.setItem('appSettings', JSON.stringify(appSettings));
             closeSettings();
@@ -677,7 +1615,7 @@ END:VCALENDAR
 
         async function generateAIContent() {
             const result = calculateHours();
-            const completedSessions = result.sessions; // 包含進行中
+            const completedSessions = result.sessions;
             const btn = document.getElementById('insightBtn');
             const originalHTML = btn.innerHTML;
 
@@ -686,11 +1624,29 @@ END:VCALENDAR
                 return;
             }
 
+            // 取得 AI 配置
+            const provider = appSettings.aiProvider || 'nvidia';
+            const key = appSettings.aiKey || FALLBACK_API_KEY;
+            let apiUrl, modelName;
+
+            if (provider === 'custom') {
+                apiUrl = appSettings.aiEndpoint;
+                modelName = 'default';
+            } else {
+                const cfg = AI_PROVIDERS[provider];
+                apiUrl = cfg.url;
+                modelName = cfg.model;
+            }
+
+            if (!key) {
+                showReminder("請先在設定中填入 API Key", 'work');
+                return;
+            }
+
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-xl text-white"></i> <span class="text-white font-bold ml-2">AI 正在撰寫日報中...</span>';
             btn.className = "w-full bg-gray-800 p-4 rounded-[18px] flex items-center justify-center gap-2 transition-all";
 
-            // 準備資料
             const recordsText = punchRecords.map(r =>
                 `[${formatTime(r.time)}] ${r.type === 'in' ? '開始' : '結束'} ${r.task ? ':' + r.task : ''}`
             ).join('\n');
@@ -719,30 +1675,33 @@ END:VCALENDAR
             `;
 
             try {
+                const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` };
+                // Gemini uses x-goog-api-key header
+                if (provider === 'gemini') {
+                    delete headers['Authorization'];
+                    headers['x-goog-api-key'] = key;
+                }
+
                 const response = await fetch(apiUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                    headers: headers,
                     body: JSON.stringify({ model: modelName, messages: [{ role: "user", content: promptText }] })
                 });
                 const json = await response.json();
                 let content = json.choices?.[0]?.message?.content || '無回應';
 
-                // 簡單處理 markdown
                 content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                 content = content.replace(/\n/g, '<br>');
 
                 document.getElementById('aiContent').innerHTML = content;
                 document.getElementById('aiResultArea').classList.remove('hidden');
-
-                // Scroll to result
                 document.getElementById('aiResultArea').scrollIntoView({ behavior: 'smooth' });
 
             } catch (e) {
                 console.error(e);
-                showReminder("AI 連線錯誤", 'work');
+                showReminder("AI 連線錯誤，請檢查 API Key 或網路", 'work');
             }
 
-            // Restore button
             btn.disabled = false;
             btn.innerHTML = originalHTML;
             btn.className = "w-full bg-gradient-to-r from-indigo-500 to-purple-600 p-4 rounded-[18px] shadow-lg shadow-purple-200 flex items-center justify-center gap-3 text-center active-scale disabled:opacity-50 mb-4 transition-all hover:shadow-xl";
@@ -756,58 +1715,7 @@ END:VCALENDAR
         }
 
         // --- WLB 健康度計算 ---
-        function calculateWLB(result) {
-            let score = 100;
-            const hours = result.total / 60;
-            const target = 8;
-
-            // 1. 工時評分
-            if (hours > 9) score -= (hours - 9) * 10; // 加班扣分
-            else if (hours < 4 && hours > 0) score -= (4 - hours) * 5; // 太短也扣分(薪水小偷?)
-
-            // 2. 休息評分
-            // 檢查是否有連續工作超過 4 小時
-            let maxContinuous = 0;
-            for (let i = 0; i < punchRecords.length - 1; i += 2) {
-                const diff = (new Date(punchRecords[i + 1].time) - new Date(punchRecords[i].time)) / 60000 / 60;
-                if (diff > maxContinuous) maxContinuous = diff;
-            }
-            // 檢查當前進行中
-            if (punchRecords.length % 2 !== 0) {
-                const currentDiff = (new Date() - new Date(punchRecords[punchRecords.length - 1].time)) / 60000 / 60;
-                if (currentDiff > maxContinuous) maxContinuous = currentDiff;
-            }
-
-            if (maxContinuous > 4) score -= (maxContinuous - 4) * 15; // 沒休息扣重分
-
-            // 3. 限制範圍
-            score = Math.max(0, Math.min(100, Math.round(score)));
-
-            // 4. 等級判定
-            let level = "";
-            let tag = "";
-            let color = "";
-            let comment = "";
-
-            if (score >= 90) {
-                level = "自由人 (Free Man)"; tag = "S級"; color = "text-ios-green";
-                comment = "完美的工作節奏，令人羨慕！";
-            } else if (score >= 80) {
-                level = "優良員工"; tag = "A級"; color = "text-ios-blue";
-                comment = "表現良好，繼續保持。";
-            } else if (score >= 60) {
-                level = "標準社畜"; tag = "B級"; color = "text-yellow-500";
-                comment = "有點累了嗎？記得休息一下。";
-            } else if (score >= 40) {
-                level = "加班戰士"; tag = "C級"; color = "text-orange-500";
-                comment = "你的肝在哭泣，快點下班吧。";
-            } else {
-                level = "地縛靈"; tag = "D級"; color = "text-ios-red";
-                comment = "你還記得家裡的樣子嗎？";
-            }
-
-            return { score, level, tag, color, comment };
-        }
+        // calculateWLB 已移除，改用本週工時圖表
 
         function loadData() {
             const savedData = localStorage.getItem('timecardData');
@@ -815,8 +1723,8 @@ END:VCALENDAR
 
             const savedSettings = localStorage.getItem('appSettings');
             if (savedSettings) {
-                appSettings = JSON.parse(savedSettings);
-                // 強制更新：若設定為舊值 (180 或 230)，自動調整為 120
+                const loaded = JSON.parse(savedSettings);
+                appSettings = { ...appSettings, ...loaded };
                 if (appSettings.workReminderMinutes === 180 || appSettings.workReminderMinutes === 230) {
                     appSettings.workReminderMinutes = 120;
                     appSettings.restReminderMinutes = 20;
@@ -824,7 +1732,6 @@ END:VCALENDAR
                 if (!appSettings.monthlySalary) appSettings.monthlySalary = 40000;
             }
 
-            // 載入休假資料
             const savedOffDays = localStorage.getItem('offDays');
             if (savedOffDays) offDays = new Set(JSON.parse(savedOffDays));
         }
@@ -949,8 +1856,11 @@ END:VCALENDAR
                 statusIcon.className = "fas fa-mug-hot text-gray-400";
                 nextActionText.innerHTML = "目前狀態：<span class='text-ios-gray'>休息中</span>";
 
-                punchBtn.className = "w-full py-4 rounded-[18px] text-[17px] font-semibold text-white shadow-ios-floating transition-all active-scale flex items-center justify-center gap-2 bg-black";
+                punchBtn.className = "w-full py-4 rounded-[18px] text-[17px] font-semibold text-white transition-all active-scale flex items-center justify-center gap-2 bg-black ripple-container";
+                punchBtn.style.boxShadow = 'var(--shadow-md)';
+                punchBtn.classList.remove('hidden');
                 btnText.textContent = "上班";
+                document.getElementById('swipeTrack').classList.add('hidden');
 
                 taskInputContainer.style.maxHeight = '100px';
                 taskInputContainer.style.opacity = '1';
@@ -984,8 +1894,10 @@ END:VCALENDAR
                     nextActionText.innerHTML = `預計休息：<span class='text-ios-blue'>${timeStr}</span>`;
                 }
 
-                punchBtn.className = "w-full py-4 rounded-[18px] text-[17px] font-semibold text-white shadow-ios-floating transition-all active-scale flex items-center justify-center gap-2 bg-ios-red";
+                punchBtn.className = "w-full py-4 rounded-[18px] text-[17px] font-semibold text-white transition-all active-scale flex items-center justify-center gap-2 ripple-container hidden";
+                punchBtn.style.cssText = 'background:var(--ios-red);box-shadow:var(--shadow-md)';
                 btnText.textContent = "下班";
+                document.getElementById('swipeTrack').classList.remove('hidden');
 
                 taskInputContainer.style.maxHeight = '0';
                 taskInputContainer.style.opacity = '0';
@@ -1021,8 +1933,8 @@ END:VCALENDAR
 
             if (result.total >= targetMin) {
                 progressBar.style.width = '100%';
-                progressBar.className = 'h-full rounded-full bg-purple-500 transition-all duration-700 ease-out';
-                progressInfo = `<span class="text-purple-600 font-bold"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，快下班！</span>`;
+                progressBar.className = 'progress-fill overtime pulse';
+                progressInfo = `<span style="color:var(--ios-purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，快下班！</span>`;
 
                 // Show generic after-work message for overtime
                 lifeSuggestionEl.textContent = "別加班了，回家泡個熱水澡吧！🛀";
@@ -1030,7 +1942,7 @@ END:VCALENDAR
 
             } else {
                 progressBar.style.width = `${pct}%`;
-                progressBar.className = `h-full rounded-full transition-all duration-700 ease-out bg-ios-blue`;
+                progressBar.className = pct > 85 ? 'progress-fill pulse' : 'progress-fill';
 
                 // 計算預計時間
                 if (result.isOngoing) {
@@ -1078,18 +1990,31 @@ END:VCALENDAR
                 document.getElementById('ongoingHint').classList.add('opacity-0');
             }
 
-            // --- WLB Card Update ---
-            const wlbData = calculateWLB(result);
-            if (result.total > 0) {
-                document.getElementById('wlbCard').classList.remove('hidden');
-                const scoreEl = document.getElementById('wlbScore');
-                scoreEl.textContent = wlbData.score;
-                scoreEl.className = `text-4xl font-black italic ${wlbData.color}`;
+            // --- 本週圖表 + 成就 + 情境橫幅 ---
+            renderWeeklyChart();
+            checkAchievement();
+            updateContextBanner();
 
-                document.getElementById('wlbLevel').textContent = wlbData.level;
-                document.getElementById('wlbTag').textContent = wlbData.tag;
-                document.getElementById('wlbComment').textContent = wlbData.comment;
+            // --- 薪資跟踤 ---
+            updateSalaryTicker(result.total);
+
+            // --- Alarm 觸發檢查 ---
+            if (result.isOngoing && lastRecord) {
+                const lastInTime = new Date(lastRecord.time).getTime();
+                const targetTime = lastInTime + appSettings.workReminderMinutes * 60000;
+                if (Date.now() > targetTime && !document.getElementById('alarmModal').classList.contains('active')) {
+                    // Only trigger once per work session
+                    if (!window._alarmTriggered) {
+                        window._alarmTriggered = true;
+                        triggerAlarm('休息時間到！', `你已連續工作 ${appSettings.workReminderMinutes} 分鐘`, '⏰');
+                    }
+                }
+            } else {
+                window._alarmTriggered = false;
             }
+
+            // --- 久坐檢查 ---
+            checkStretchReminder();
 
             // --- 列表渲染 (iOS Inset Grouped Style) ---
             const listContainer = document.getElementById('punchRecords');
@@ -1098,18 +2023,19 @@ END:VCALENDAR
             const displayRecords = punchRecords.slice().reverse().slice(0, 10); // Copy & Reverse
 
             if (displayRecords.length === 0) {
-                listContainer.innerHTML = '<div class="py-4 pr-4 text-center text-ios-gray text-sm">今天還沒開始工作</div>';
+                listContainer.innerHTML = '<div class="py-4 pr-4 text-center text-sm" style="color:var(--ios-gray)">今天還沒開始工作</div>';
             } else {
                 displayRecords.forEach((record, index) => {
-                    const originalIndex = punchRecords.indexOf(record);
                     const isIn = record.type === 'in';
                     const div = document.createElement('div');
-                    // 最後一個元素不顯示底線
-                    div.className = "py-3 pr-4 flex justify-between items-center";
+                    div.className = 'timeline-item py-3 pr-4 flex justify-between items-center anim-fade-in';
+                    div.style.animationDelay = `${index * 0.05}s`;
+                    div.style.opacity = '0';
 
                     div.innerHTML = `
+                        <div class="timeline-dot ${isIn ? '' : 'out'}"></div>
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full ${isIn ? 'bg-green-100 text-ios-green' : 'bg-orange-100 text-ios-orange'} flex items-center justify-center text-xs">
+                            <div class="w-8 h-8 rounded-full ${isIn ? 'bg-green-50' : 'bg-orange-50'} flex items-center justify-center text-xs" style="color:${isIn ? 'var(--ios-green)' : 'var(--ios-orange)'}">
                                 <i class="fas ${isIn ? 'fa-arrow-right' : 'fa-arrow-left'}"></i>
                             </div>
                             <div class="flex flex-col">
@@ -1117,7 +2043,7 @@ END:VCALENDAR
                                 ${record.task ? `<span class="text-[11px] text-gray-500 truncate max-w-[150px]">${record.task}</span>` : ''}
                             </div>
                         </div>
-                        <span class="text-[15px] font-mono text-gray-500">${formatTime(record.time)}</span>
+                        <span class="text-[15px] tabular-nums text-gray-500">${formatTime(record.time)}</span>
                     `;
                     listContainer.appendChild(div);
                 });
@@ -1169,11 +2095,15 @@ END:VCALENDAR
         renderCalendar();
         updateDisplay();
         updateCurrentTime();
+        updateTimeGradient();
+        updateContextBanner();
+        renderWeeklyChart();
+        initSwipePunch();
 
         setInterval(updateDisplay, 10000);
-
         setInterval(updateCurrentTime, 1000);
-
+        setInterval(checkStretchReminder, 60000);
+        setInterval(updateTimeGradient, 60000);
 
     </script>
 </body>
