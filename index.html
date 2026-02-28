@@ -238,6 +238,18 @@
             color: white;
         }
 
+        .night-mode .bg-white {
+            background-color: rgba(30, 30, 30, 0.85) !important;
+        }
+
+        .night-mode .bg-\[\#F2F2F7\] {
+            background-color: rgba(20, 20, 20, 0.95) !important;
+        }
+
+        .night-mode #settingsModal [style*="background:var(--ios-bg)"] {
+            background: rgba(20, 20, 20, 0.95) !important;
+        }
+
         /* 進度條 */
         .progress-track {
             width: 100%;
@@ -425,6 +437,136 @@
             animation: countUp 0.5s var(--transition-spring) forwards;
         }
 
+        /* --- 精靈 (Work Sprite) --- */
+        .sprite-terrarium {
+            position: relative;
+            background: rgba(255, 255, 255, 0.4);
+            border: 0.5px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 24px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            transition: all 0.5s var(--transition-spring);
+        }
+
+        .night-mode .sprite-terrarium {
+            background: rgba(40, 40, 45, 0.5);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .sprite-core-container {
+            width: 56px;
+            height: 56px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.03);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .night-mode .sprite-core-container {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .sprite-core {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff, #A5B4FC);
+            box-shadow: 0 0 10px #A5B4FC, 0 0 20px #818CF8;
+            transition: all 1s ease;
+            transform: scale(1);
+        }
+
+        .sprite-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(165, 180, 252, 0.5);
+            opacity: 0;
+            transition: all 1s ease;
+            box-sizing: border-box;
+        }
+
+        /* 狀態：工作中呼吸 */
+        .sprite-working .sprite-core {
+            animation: breathe 3s ease-in-out infinite alternate;
+            box-shadow: 0 0 15px #818CF8, 0 0 30px #6366F1;
+            background: radial-gradient(circle at 30% 30%, #fff, #818CF8);
+        }
+
+        .sprite-working .sprite-ring {
+            animation: spin 8s linear infinite;
+        }
+
+        /* 等級進化差異 */
+        .sprite-lv1 .sprite-core {
+            width: 16px;
+            height: 16px;
+        }
+
+        .sprite-lv2 .sprite-core {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sprite-lv2 .sprite-ring.ring-1 {
+            width: 32px;
+            height: 32px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(129, 140, 248, 0.6);
+        }
+
+        .sprite-lv3 .sprite-core {
+            width: 24px;
+            height: 24px;
+            background: radial-gradient(circle at 30% 30%, #fff, #C084FC);
+            box-shadow: 0 0 20px #C084FC, 0 0 40px #A855F7;
+        }
+
+        .sprite-lv3 .sprite-working .sprite-core {
+            box-shadow: 0 0 25px #A855F7, 0 0 50px #9333EA;
+            background: radial-gradient(circle at 30% 30%, #fff, #A855F7);
+        }
+
+        .sprite-lv3 .sprite-ring.ring-1 {
+            width: 38px;
+            height: 38px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(192, 132, 252, 0.7);
+            border-style: dashed;
+        }
+
+        .sprite-lv3 .sprite-ring.ring-2 {
+            width: 48px;
+            height: 48px;
+            opacity: 1;
+            border-width: 1px;
+            border-color: rgba(168, 85, 247, 0.4);
+            animation: spinReverse 12s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spinReverse {
+            100% {
+                transform: rotate(-360deg);
+            }
+        }
+
         /* 漣漪 */
         .ripple-container {
             position: relative;
@@ -595,7 +737,7 @@
         <header
             class="px-5 pt-8 pb-4 bg-[#F2F2F7]/80 sticky top-0 z-20 backdrop-blur-xl transition-colors duration-500 border-b border-transparent">
             <div class="flex justify-between items-start mb-1">
-                <div class="text-[13px] text-ios-gray font-semibold uppercase tracking-wide" id="currentDate">LOADING...
+                <div class="text-[13px] text-ios-gray font-semibold uppercase tracking-wide" id="currentDate">載入中...
                 </div>
                 <div class="flex gap-3">
                     <!-- 幫助/安裝按鈕 -->
@@ -618,6 +760,28 @@
 
         <!-- Main Content -->
         <main class="flex-1 px-4 space-y-5">
+
+            <!-- 工作精靈 (Work Sprite) 生態箱 -->
+            <div id="spriteTerrarium" class="sprite-terrarium anim-fade-in" onclick="interactWithSprite()">
+                <div class="sprite-core-container">
+                    <div class="sprite-ring ring-2"></div>
+                    <div class="sprite-ring ring-1"></div>
+                    <div class="sprite-core"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <div class="text-[14px] font-bold text-gray-900" id="spriteName">能量晶種 (Lv.1)</div>
+                        <div class="text-[10px] font-medium text-ios-blue" id="spriteExp">EXP 0/100</div>
+                    </div>
+                    <!-- 進度條 -->
+                    <div
+                        class="w-full h-[4px] bg-gray-200/50 rounded-full overflow-hidden mb-1.5 night-mode:bg-gray-700/50">
+                        <div id="spriteExpFill" class="h-full bg-ios-blue rounded-full transition-all duration-700"
+                            style="width: 0%"></div>
+                    </div>
+                    <div class="text-[11px] text-gray-500 truncate" id="spriteMessage">精靈正在沉睡...等待上班喚醒。</div>
+                </div>
+            </div>
 
             <!-- 智慧情境橫幅 (C) -->
             <div id="contextBanner" class="card px-4 py-3 flex items-center gap-3 anim-fade-in">
@@ -671,7 +835,7 @@
                         <i id="statusIcon" class="fas fa-coffee text-gray-400"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div class="text-[11px] text-ios-gray uppercase font-semibold mb-0.5">Current Status</div>
+                        <div class="text-[11px] text-ios-gray uppercase font-semibold mb-0.5">目前狀態</div>
                         <div id="nextActionType" class="text-[15px] font-bold text-gray-900 truncate">準備開始</div>
                     </div>
                 </div>
@@ -800,10 +964,10 @@
 
                 <button id="insightBtn" onclick="generateAIContent()" disabled
                     class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 p-4 rounded-[18px] shadow-lg shadow-purple-200 flex items-center justify-center gap-3 text-center active-scale disabled:opacity-50 mb-4 transition-all hover:shadow-xl">
-                    <i class="fas fa-robot text-white text-lg"></i>
+                    <i class="fas fa-magic text-white text-lg"></i>
                     <div class="text-left">
-                        <div class="text-[15px] font-bold text-white">生成下班日報</div>
-                        <div class="text-[11px] text-purple-100 font-medium">AI 自動幫您寫匯報，準時下班！</div>
+                        <div class="text-[15px] font-bold text-white">獲取下班生活指南</div>
+                        <div class="text-[11px] text-purple-100 font-medium">AI 推薦晚餐與放鬆提案</div>
                     </div>
                 </button>
 
@@ -811,7 +975,7 @@
                 <div id="aiResultArea" class="mt-4 bg-white rounded-[18px] p-5 shadow-ios hidden">
                     <div id="aiResultTitle"
                         class="text-[15px] font-bold text-gray-900 mb-3 flex items-center justify-between">
-                        <div class="flex items-center gap-2"><i class="fas fa-file-alt text-purple-600"></i> 今日工作日報
+                        <div class="flex items-center gap-2"><i class="fas fa-sparkles text-purple-600"></i> 下班生活指南
                         </div>
                         <button onclick="copyReport()"
                             class="text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600 active:bg-gray-200">複製</button>
@@ -900,11 +1064,19 @@
             </div>
 
             <!-- AI 設定 -->
-            <div class="section-label">🤖 AI 日報</div>
+            <div class="section-label">🤖 AI 助理設定</div>
             <div class="bg-white rounded-xl overflow-hidden mb-5">
-                <div class="p-4 flex items-center justify-between">
+                <div class="p-4 flex items-center justify-between" style="border-bottom:1px solid var(--ios-separator)">
                     <span class="text-[15px] text-gray-900">AI 服務</span>
                     <span class="text-[13px] text-gray-400 font-medium">OpenRouter (Free)</span>
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                    <label for="aiPersonalityInput" class="text-[15px] text-gray-900">說話風格</label>
+                    <select id="aiPersonalityInput"
+                        class="bg-gray-100 rounded-lg px-2 py-1 text-[14px] text-gray-900 outline-none border-none">
+                        <option value="warm">暖心陪伴陪伴</option>
+                        <option value="sassy">毒舌鞭策教練</option>
+                    </select>
                 </div>
             </div>
 
@@ -1218,37 +1390,87 @@
             }
         }
 
-        // --- 智慧情境橫幅 ---
-        function updateContextBanner() {
-            const h = new Date().getHours();
-            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
-            const hasPunched = punchRecords.length > 0;
+        document.getElementById('contextEmoji').textContent = emoji;
+        document.getElementById('contextTitle').textContent = title;
+        document.getElementById('contextSub').textContent = sub;
+        }
 
-            let emoji, title, sub;
-            const cacheKey = `ctx-${h}-${isWorking}-${hasPunched}`;
-            if (window._ctxCache === cacheKey) return;
-            window._ctxCache = cacheKey;
+        // --- 工作精靈 (Work Sprite) 邏輯 ---
+        function updateWorkSprite() {
+            const terrarium = document.getElementById('spriteTerrarium');
+            if (!terrarium) return;
 
-            if (!hasPunched) {
-                if (h >= 5 && h < 9) { emoji = '☀️'; title = '早安！新的一天'; sub = '今天也要加油喔'; }
-                else if (h >= 9 && h < 12) { emoji = '☕'; title = '上午好'; sub = '先來杯咖啡再開工？'; }
-                else if (h >= 12 && h < 14) { emoji = '🍜'; title = '午安'; sub = '吃飽了再打卡吧'; }
-                else if (h >= 14 && h < 18) { emoji = '💪'; title = '下午好'; sub = '今天還沒開始工作喔'; }
-                else { emoji = '🌙'; title = '晚安'; sub = '今天辛苦了，好好休息'; }
-            } else if (isWorking) {
-                if (h < 12) { emoji = '🚀'; title = '認真工作中'; sub = '保持專注，你很棒'; }
-                else if (h < 14) { emoji = '🍜'; title = '午餐時間快到了'; sub = '記得休息吃飯喔'; }
-                else if (h < 17) { emoji = '⚡'; title = '下午衝刺'; sub = '再撐一下就快下班了'; }
-                else if (h < 19) { emoji = '🏃'; title = '快下班了！'; sub = '收拾好心情準備下班'; }
-                else { emoji = '🪧'; title = '加班中...'; sub = '注意身體，別太拚了'; }
-            } else {
-                if (h < 18) { emoji = '🎉'; title = '今天辛苦了！'; sub = '好好享受下班時光'; }
-                else { emoji = '🌟'; title = '下班愛自己'; sub = '去吃點好的爲勞自己'; }
+            // 1h = 10 EXP (360s = 1 EXP)
+            // 計算總經驗值 (包含歷史紀錄)
+            const history = JSON.parse(localStorage.getItem('timecardData')) || { records: [] };
+            const allRecords = history.records;
+            let totalMinutes = 0;
+            for (let i = 0; i < allRecords.length; i += 2) {
+                if (i + 1 < allRecords.length) {
+                    const start = new Date(allRecords[i].time);
+                    const end = new Date(allRecords[i + 1].time);
+                    totalMinutes += (end - start) / 60000;
+                }
             }
 
-            document.getElementById('contextEmoji').textContent = emoji;
-            document.getElementById('contextTitle').textContent = title;
-            document.getElementById('contextSub').textContent = sub;
+            // 加上今天可能還沒存回 history 的進行中時間
+            let currentSessionMinutes = 0;
+            if (punchRecords.length > 0 && punchRecords.length % 2 !== 0) {
+                const now = new Date();
+                const start = new Date(punchRecords[punchRecords.length - 1].time);
+                currentSessionMinutes = (now - start) / 60000;
+            }
+
+            const totalExp = Math.floor((totalMinutes + currentSessionMinutes) / 60 * 10);
+
+            // 等級判定：每 100 EXP 升一級
+            const level = Math.min(Math.floor(totalExp / 100) + 1, 3);
+            const expInCurrentLevel = totalExp % 100;
+            const progressPct = expInCurrentLevel; // 因為每級 100，所以直接是 %
+
+            // 更新 UI 文字
+            document.getElementById('spriteExp').textContent = `EXP ${expInCurrentLevel}/100`;
+            document.getElementById('spriteExpFill').style.width = `${progressPct}%`;
+
+            let name = "能量晶種";
+            if (level === 2) name = "浮游光帶";
+            else if (level >= 3) name = "幾何星體";
+            document.getElementById('spriteName').textContent = `${name} (Lv.${level})`;
+
+            // 更新 CSS 狀態與動畫
+            terrarium.className = `sprite-terrarium anim-fade-in sprite-lv${level}`;
+            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
+
+            if (isWorking) {
+                terrarium.classList.add('sprite-working');
+                document.getElementById('spriteMessage').textContent = "正在吸收純粹的專注能量 ✨";
+            } else {
+                terrarium.classList.remove('sprite-working');
+                document.getElementById('spriteMessage').textContent = "精靈正在沉睡...等待上班喚醒。";
+            }
+        }
+
+        function interactWithSprite() {
+            if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]); // Haptic 反饋
+            playSingleClickSound("E5");
+
+            // 漣漪特效
+            const container = document.querySelector('.sprite-core-container');
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple-effect w-full h-full';
+            container.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+
+            // 互動文字
+            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
+            const msgEl = document.getElementById('spriteMessage');
+            if (isWorking) {
+                const msgs = ["好飽...專注能量真美味 🤤", "我感覺我快進化了！", "嗝...主人你太認真了。"];
+                msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+            } else {
+                const msgs = ["Zzz... 好睏...", "上班才能餵我喔！", "點我也沒用，去休息吧。"];
+                msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+            }
         }
 
         // --- 滑動打卡確認 ---
@@ -1525,6 +1747,7 @@ END:VCALENDAR
             document.getElementById('workReminderInput').value = appSettings.workReminderMinutes;
             document.getElementById('restReminderInput').value = appSettings.restReminderMinutes;
             document.getElementById('monthlySalaryInput').value = appSettings.monthlySalary || 40000;
+            document.getElementById('aiPersonalityInput').value = appSettings.aiPersonality || 'warm';
             document.getElementById('settingsModal').classList.remove('hidden');
         }
         function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
@@ -1532,6 +1755,7 @@ END:VCALENDAR
             appSettings.workReminderMinutes = parseInt(document.getElementById('workReminderInput').value) || 120;
             appSettings.restReminderMinutes = parseInt(document.getElementById('restReminderInput').value) || 20;
             appSettings.monthlySalary = parseInt(document.getElementById('monthlySalaryInput').value) || 0;
+            appSettings.aiPersonality = document.getElementById('aiPersonalityInput').value;
 
             localStorage.setItem('appSettings', JSON.stringify(appSettings));
             closeSettings();
@@ -1644,34 +1868,53 @@ END:VCALENDAR
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-xl text-white"></i> <span class="text-white font-bold ml-2">AI 正在撰寫日報中...</span>';
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-xl text-white"></i> <span class="text-white font-bold ml-2">AI 正在幫您規劃下班生活...</span>';
             btn.className = "w-full bg-gray-800 p-4 rounded-[18px] flex items-center justify-center gap-2 transition-all";
 
             const recordsText = punchRecords.map(r =>
                 `[${formatTime(r.time)}] ${r.type === 'in' ? '開始' : '結束'} ${r.task ? ':' + r.task : ''}`
             ).join('\n');
 
+            const totalHoursResult = calculateHours();
+            const totalH = Math.floor(totalHoursResult.totalMinutes / 60);
+            const totalM = totalHoursResult.totalMinutes % 60;
+            const hour = new Date().getHours();
+            let timeContext = (hour < 17) ? "提早下班" : (hour < 20) ? "正常晚餐時間" : (hour < 22) ? "稍微加了點班" : "深夜過勞";
+
+            let weatherText = "無天氣資訊";
+            try {
+                const wRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=25.0330&longitude=121.5654&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTaipei&forecast_days=2");
+                const wData = await wRes.json();
+                weatherText = `明日天氣預測：最高 ${wData.daily.temperature_2m_max[1]}°C, 最低 ${wData.daily.temperature_2m_min[1]}°C, 降雨機率 ${wData.daily.precipitation_probability_max[1]}%`;
+            } catch (e) { console.log("Weather fetch failed"); }
+
+            const personality = appSettings.aiPersonality === 'sassy' ?
+                "【毒舌鞭策教練】說話犀利、愛嘲諷，但其實是刀子嘴豆腐心，用語辛辣有創意。" :
+                "【暖心陪伴教練】說話極度溫柔、充滿正能量，會適時給予安慰與鼓勵，像一位認識很久的知心好友。";
+
             const promptText = `
             【角色設定】
-            你是專業的「家電賣場/零售銷售人員」。
+            你是一個打卡APP的「下班生活助理」。你不寫工作日報！
+            你現在的人格屬性是：${personality}
             
-            【任務】
-            請根據以下打卡紀錄，撰寫一份「給店長/主管看的下班日報」。
+            【當前狀態】
+            當地時間：${new Date().toLocaleString('zh-TW')}
+            當前時間段描述：${timeContext}
+            今日工時：${totalH} 小時 ${totalM} 分鐘
+            天氣預報：${weatherText}
             
-            【當前時間】
-            ${new Date().toLocaleString('zh-TW')}
-            
-            【紀錄數據】
+            【使用者今日工作紀錄】
             ${recordsText}
             
-            【撰寫要求】
-            1. 語氣：積極、負責、充滿服務熱忱。
-            2. 用詞：請自動帶入零售業/家電銷售術語 (如：庫存盤點、客情維繫、檔期活動、展示機整理、成交追蹤...) 來潤飾模糊的任務。
-            3. 格式 (條列式 HTML)：
-               - ✅ <b>今日銷售/重點事務</b>：列出 3-5 點具體事項。
-               - 📊 <b>工時與排班</b>：簡述今日工時狀況。
-               - 🚀 <b>明日目標</b>：例如追蹤某位猶豫客、整理某區陳列等。
-            4. 內容需合理化填充：如果紀錄中沒有寫具體任務，請幫我「合理腦補」一些常見的賣場雜務，讓我看起來很忙碌且有效率。
+            【任務】
+            請根據上述情境，生成一份給使用者的「下班生活指南」。
+            
+            【格式要求】 (請直接使用 HTML 格式排版輸出，善用 <b>、<br>)
+            <div style="margin-bottom: 8px;">💬 <b>教練碎碎念</b><br>用你的人格屬性，針對「今日工時總長」與「下班時間點」進行 2-3 句話的點評。</div>
+            <div style="margin-bottom: 8px;">🍽️ <b>下班解壓縮提案</b><br>推薦一個符合現在時間點的「晚餐選擇」或「放鬆活動」(例如宵夜、Netflix)，並直接結合【天氣預報】給出一個隔日的貼心提醒。</div>
+            <div style="margin-bottom: 8px;">📰 <b>無用冷知識/趣聞</b><br>隨便分享一個有趣無用的冷知識或迷因話題，讓人會心一笑。</div>
+            
+            規則：請直接輸出上述 HTML 內容，不要加上 "好的"、"這是一份指南" 等開頭與結尾語。
             `;
 
             try {
@@ -1743,7 +1986,7 @@ END:VCALENDAR
         function updateCurrentTime() {
             const now = new Date();
             document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-TW', { month: 'long', day: 'numeric', weekday: 'long' });
         }
 
         function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
