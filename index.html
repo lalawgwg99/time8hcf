@@ -1203,18 +1203,28 @@
             </div>
 
             <!-- 月曆同步設定 -->
-            <div class="section-label">🗓️ 休假日曆同步 (iCal)</div>
+            <div class="section-label">🗓️ 休假日曆同步</div>
             <div class="bg-white rounded-xl overflow-hidden mb-5">
                 <div class="p-4" style="border-bottom:1px solid var(--ios-separator)">
-                    <label class="block text-[15px] text-gray-900 mb-2">iCal 訂閱網址 (Apple/Google)</label>
-                    <input type="url" id="icalUrlInput" placeholder="https://..."
-                        class="w-full bg-gray-100 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:ring-2 focus:ring-ios-blue text-gray-600">
+                    <label class="block text-[15px] text-gray-900 mb-2">選擇要同步的休假表</label>
+                    <select id="icalPresetSelect" onchange="toggleCustomIcalInput()"
+                        class="w-full bg-gray-100 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:ring-2 focus:ring-ios-blue text-gray-900 mb-2">
+                        <option value="">(無)</option>
+                        <option
+                            value="https://calendar.google.com/calendar/ical/zh-tw.taiwan%23holiday%40group.v.calendar.google.com/public/basic.ics">
+                            🇹🇼 台灣政府行政機關辦公日曆表</option>
+                        <option value="custom">⚙️ 自訂 iCal 網址 (進階)</option>
+                    </select>
+
+                    <div id="customIcalContainer" class="hidden">
+                        <input type="url" id="icalUrlInput" placeholder="請貼上 Apple/Google iCal 網址https://..."
+                            class="w-full bg-gray-100 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:ring-2 focus:ring-ios-blue text-gray-600 mt-1">
+                    </div>
                 </div>
                 <div class="p-4 flex items-center justify-end gap-3 bg-gray-50">
                     <button onclick="clearAllOffDays()"
                         class="text-[13px] text-ios-red px-3 py-1.5 rounded-lg active:bg-red-100 transition">清除所有休假</button>
-                    <button id="syncCalendarBtn"
-                        onclick="syncRemoteCalendar(document.getElementById('icalUrlInput').value)"
+                    <button id="syncCalendarBtn" onclick="handleSyncClick()"
                         class="text-[13px] bg-ios-blue text-white px-4 py-1.5 rounded-lg active:scale-95 transition shadow-sm flex items-center gap-1">
                         立即同步
                     </button>
@@ -1858,19 +1868,61 @@ END:VCALENDAR
             }
         }
 
+        function toggleCustomIcalInput() {
+            const select = document.getElementById('icalPresetSelect');
+            const customContainer = document.getElementById('customIcalContainer');
+            if (select.value === 'custom') {
+                customContainer.classList.remove('hidden');
+            } else {
+                customContainer.classList.add('hidden');
+            }
+        }
+
+        function handleSyncClick() {
+            const select = document.getElementById('icalPresetSelect');
+            let urlToSync = select.value;
+            if (urlToSync === 'custom') {
+                urlToSync = document.getElementById('icalUrlInput').value.trim();
+            }
+            if (!urlToSync) {
+                showReminder("請選擇或輸入有效的網址", 'rest');
+                return;
+            }
+            syncRemoteCalendar(urlToSync);
+        }
+
         function openSettings() {
             document.getElementById('workReminderInput').value = appSettings.workReminderMinutes;
             document.getElementById('restReminderInput').value = appSettings.restReminderMinutes;
-            const icalInput = document.getElementById('icalUrlInput');
-            if (icalInput) icalInput.value = appSettings.icalUrl || '';
+
+            // 恢復下拉選單與自訂網址的狀態
+            const savedUrl = appSettings.icalUrl || '';
+            const presetSelect = document.getElementById('icalPresetSelect');
+            const customInput = document.getElementById('icalUrlInput');
+
+            if (!savedUrl) {
+                presetSelect.value = '';
+            } else if (savedUrl === 'https://calendar.google.com/calendar/ical/zh-tw.taiwan%23holiday%40group.v.calendar.google.com/public/basic.ics') {
+                presetSelect.value = savedUrl;
+            } else {
+                presetSelect.value = 'custom';
+                customInput.value = savedUrl;
+            }
+            toggleCustomIcalInput();
+
             document.getElementById('settingsModal').classList.remove('hidden');
         }
         function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
         function saveSettings() {
             appSettings.workReminderMinutes = parseInt(document.getElementById('workReminderInput').value) || 120;
             appSettings.restReminderMinutes = parseInt(document.getElementById('restReminderInput').value) || 20;
-            const icalInput = document.getElementById('icalUrlInput');
-            if (icalInput) appSettings.icalUrl = icalInput.value.trim();
+
+            const presetSelect = document.getElementById('icalPresetSelect');
+            if (presetSelect.value === 'custom') {
+                appSettings.icalUrl = document.getElementById('icalUrlInput').value.trim();
+            } else {
+                appSettings.icalUrl = presetSelect.value;
+            }
 
             localStorage.setItem('appSettings', JSON.stringify(appSettings));
             closeSettings();
