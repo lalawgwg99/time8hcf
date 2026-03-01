@@ -1202,6 +1202,24 @@
                 </div>
             </div>
 
+            <!-- AI 設定 -->
+            <div class="section-label">🤖 AI 助理設定 (OpenRouter)</div>
+            <div class="bg-white rounded-xl overflow-hidden mb-5">
+                <div class="p-4 flex items-center justify-between" style="border-bottom:1px solid var(--ios-separator)">
+                    <span class="text-[15px] text-gray-900 w-32">API Key</span>
+                    <input type="password" id="aiKeyInput" placeholder="sk-or-v1-..."
+                        class="w-full text-right bg-transparent text-[14px] focus:outline-none text-gray-600">
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                    <label for="aiPersonalityInput" class="text-[15px] text-gray-900">說話風格</label>
+                    <select id="aiPersonalityInput"
+                        class="bg-gray-100 rounded-lg px-2 py-1 text-[14px] text-gray-900 outline-none border-none">
+                        <option value="warm">暖心陪伴</option>
+                        <option value="sassy">毒舌教練</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- 月曆同步設定 -->
             <div class="section-label">🗓️ 休假日曆同步 (iCal)</div>
             <div class="bg-white rounded-xl overflow-hidden mb-5">
@@ -1265,9 +1283,9 @@
         let appSettings = {
             workReminderMinutes: 120,
             restReminderMinutes: 20,
-            aiProvider: 'nvidia',
-            aiKey: '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',
-            aiEndpoint: '',
+            aiProvider: 'openrouter',
+            aiKey: '',
+            aiPersonality: 'warm',
             consecutiveOnTime: 0,
             bestStreak: 0,
             elfExp: 0,
@@ -1275,9 +1293,9 @@
         };
 
         const AI_PROVIDERS = {
-            nvidia: {
-                url: 'https://integrate.api.nvidia.com/v1/chat/completions',
-                model: 'deepseek-ai/deepseek-v3.2'
+            openrouter: {
+                url: 'https://openrouter.ai/api/v1/chat/completions',
+                model: 'z-ai/glm-4.5-air:free'
             }
         };
 
@@ -1871,7 +1889,8 @@ END:VCALENDAR
         function openSettings() {
             document.getElementById('workReminderInput').value = appSettings.workReminderMinutes;
             document.getElementById('restReminderInput').value = appSettings.restReminderMinutes;
-            document.getElementById('icalUrlInput').value = appSettings.icalUrl || '';
+            document.getElementById('aiKeyInput').value = appSettings.aiKey || '';
+            document.getElementById('aiPersonalityInput').value = appSettings.aiPersonality || 'warm';
             const icalInput = document.getElementById('icalUrlInput');
             if (icalInput) icalInput.value = appSettings.icalUrl || '';
             document.getElementById('settingsModal').classList.remove('hidden');
@@ -1880,7 +1899,8 @@ END:VCALENDAR
         function saveSettings() {
             appSettings.workReminderMinutes = parseInt(document.getElementById('workReminderInput').value) || 120;
             appSettings.restReminderMinutes = parseInt(document.getElementById('restReminderInput').value) || 20;
-            appSettings.icalUrl = document.getElementById('icalUrlInput').value;
+            appSettings.aiKey = document.getElementById('aiKeyInput').value.trim();
+            appSettings.aiPersonality = document.getElementById('aiPersonalityInput').value;
             const icalInput = document.getElementById('icalUrlInput');
             if (icalInput) appSettings.icalUrl = icalInput.value.trim();
 
@@ -1971,83 +1991,97 @@ END:VCALENDAR
             const originalHTML = btn.innerHTML;
 
             if (completedSessions.length === 0) {
-                showReminder("沒有足夠的資料生成日報", 'work');
-                return;
-            }
-
-            // 取得 AI 配置
-            const provider = appSettings.aiProvider || 'nvidia';
-            const key = appSettings.aiKey || FALLBACK_API_KEY;
-            let apiUrl, modelName;
-
-            if (provider === 'custom') {
-                apiUrl = appSettings.aiEndpoint;
-                modelName = 'default';
-            } else {
-                const cfg = AI_PROVIDERS[provider];
-                apiUrl = cfg.url;
-                modelName = cfg.model;
-            }
-
-            if (!key) {
-                showReminder("請先在設定中填入 API Key", 'work');
+                showReminder("沒有足夠的資料生成指南喔", 'work');
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-xl text-white"></i> <span class="text-white font-bold ml-2">AI 正在幫您規劃下班生活...</span>';
-            btn.className = "w-full bg-gray-800 p-4 rounded-[18px] flex items-center justify-center gap-2 transition-all";
+            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> AI 正在為您規劃下班生活...`;
 
-            const recordsText = punchRecords.map(r =>
-                `[${formatTime(r.time)}] ${r.type === 'in' ? '開始' : '結束'} ${r.task ? ':' + r.task : ''}`
-            ).join('\n');
+            const key = appSettings.aiKey || '';
+            if (!key) {
+                showReminder("請先在設定中填寫 OpenRouter API Key", 'work');
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                openSettings(); // 引導使用者開啟設定
+                return;
+            }
 
             const totalH = Math.floor(result.total / 60);
             const totalM = Math.round(result.total % 60);
-            const hour = new Date().getHours();
-            let timeContext = (hour < 17) ? "提早下班" : (hour < 20) ? "正常晚餐時間" : (hour < 22) ? "稍微加了點班" : "深夜過勞";
+            const recordsText = punchRecords.map(r =>
+                `[${formatTime(r.time)}] ${r.type === 'in' ? '開始' : '結束'} ${r.task ? ':' + r.task : ''}`
+            ).join('\n');
 
             let weatherText = "無天氣資訊";
             try {
                 const wRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=25.0330&longitude=121.5654&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTaipei&forecast_days=2");
                 const wData = await wRes.json();
                 weatherText = `明日天氣預測：最高 ${wData.daily.temperature_2m_max[1]}°C, 最低 ${wData.daily.temperature_2m_min[1]}°C, 降雨機率 ${wData.daily.precipitation_probability_max[1]}%`;
-            } catch (e) { console.log("Weather fetch failed"); }
+            } catch (e) { }
 
-            // --- 隨機資料庫 ---
-            const coachMessages = [
-                totalHours > 9 ? "辛苦了！今天又是燃燒生命的一天，快放下工作，別讓螢幕前的心血變成明天的醫藥費！" : "今天準時下班？幹得好！工作是公司的，命是自己的。",
-                totalHours > 8 ? "老闆不會因為你今天多留一小時就分股份給你，閃人啦！" : "漂亮的節奏！這才是懂生活的人該有的工時。",
-                "別再想剛才那封還沒回的 Email 了，下班後的你已經是自由之身！",
-                "如果工作做不完，那是資源分配的問題，不是你今晚不睡覺能解決的。"
-            ];
+            const personality = appSettings.aiPersonality === 'sassy' ?
+                "【毒舌鞭策教練】說話犀利、愛嘲諷，但其實是刀子嘴豆腐心，用語辛辣有創意。" :
+                "【暖心陪伴教練】說話極度溫柔、充滿正能量，會適時給予安慰與鼓勵，像一位認識很久的知心好友。";
 
-            const relaxIdeas = [
-                "🍽️ <b>晚餐提案：</b> 慰勞自己吃點熱呼呼的鍋物吧！<br>📺 <b>放鬆推薦：</b> 挑一部不需動腦的喜劇動畫耍廢。",
-                "🍽️ <b>晚餐提案：</b> 去買那家一直想吃但還沒買過的宵夜！<br>🛀 <b>放鬆推薦：</b> 泡個熱水澡，聽一點 Lo-Fi 音樂。",
-                "🍽️ <b>晚餐提案：</b> 來點罪惡的炸物配冰涼氣泡水！<br>🎮 <b>放鬆推薦：</b> 打開那款買了很久積灰塵的遊戲進度。",
-                "🍽️ <b>晚餐提案：</b> 簡單清爽的沙拉配點輕酒精飲料。<br>🛌 <b>放鬆推薦：</b> 今晚提早一小時上床，享受沒有鬧鐘報復的早睡。"
-            ];
-
-            const trivias = [
-                "💡 <b>你知道嗎：</b> 水獺在睡覺的時候會牽著手，以免彼此被水流沖散。希望你今晚也能有這麼安穩的睡眠！",
-                "💡 <b>無用冷知識：</b> 其實香蕉是漿果（Berry），但草莓不是。這就像你的工作，表面看是一回事，實際又是另一回事。",
-                "💡 <b>趣味迷因：</b> 據統計，人類在把 USB 隨身碟插進電腦時，平均會插錯 1.5 次。你今天下班的路線只要走一次就好。",
-                "💡 <b>有趣事實：</b> 章魚有三顆心臟，所以牠們心碎的時候特別痛。你只有一顆，請好好愛護它，別讓工作傷了心。"
-            ];
-
-            const pick = arr => arr[Math.floor(Math.random() * arr.length)];
-
-            // 組裝 HTML
-            let content = `
-                <div style="margin-bottom: 12px; line-height: 1.6;">💬 <b>教練碎碎念</b><br><span style="color:#4B5563">${pick(coachMessages)}</span></div>
-                <div style="margin-bottom: 12px; line-height: 1.6;">✨ <b>下班解壓縮提案</b><br><span style="color:#4B5563">${pick(relaxIdeas)}</span></div>
-                <div style="line-height: 1.6;">📰 <b>無用冷知識/趣聞</b><br><span style="color:#4B5563">${pick(trivias)}</span></div>
+            const promptText = `
+            【角色設定】
+            你是一個打卡APP的「下班生活助理」。你不寫工作日報！
+            你現在的人格屬性是：${personality}
+            
+            【當前狀態】
+            當地時間：${new Date().toLocaleString('zh-TW')}
+            今日工時：${totalH} 小時 ${totalM} 分鐘
+            天氣預報：${weatherText}
+            
+            【使用者今日工作紀錄】
+            ${recordsText}
+            
+            【任務】
+            請根據上述情境，生成一份給使用者的「下班生活指南」。
+            
+            【格式要求】 (請直接使用 HTML 格式排版輸出，善用 <b>、<br>)
+            <div style="margin-bottom: 8px;">💬 <b>教練碎碎念</b><br>用你的人格屬性，針對「今日工時總長」與「下班時間點」進行 2-3 句話的點評。</div>
+            <div style="margin-bottom: 8px;">🍽️ <b>下班解壓縮提案</b><br>推薦一個符合現在時間點的「晚餐選擇」或「放鬆活動」(例如宵夜、Netflix)，並直接結合【天氣預報】給出一個隔日的貼心提醒。</div>
+            <div style="margin-bottom: 8px;">📰 <b>無用冷知識/趣聞</b><br>隨便分享一個有趣無用的冷知識或迷因話題，讓人會心一笑。</div>
+            
+            規則：請直接輸出上述 HTML 內容，不要加上 "好的"、"這是一份指南" 等開頭與結尾語。
             `;
 
-            document.getElementById('aiContent').innerHTML = content;
-            document.getElementById('aiResultArea').classList.remove('hidden');
-            document.getElementById('aiResultArea').scrollIntoView({ behavior: 'smooth', block: 'end' });
+            try {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${key}`,
+                        'HTTP-Referer': location.origin,
+                        'X-Title': 'TimeTracker PWA',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "z-ai/glm-4.5-air:free",
+                        messages: [{ role: "user", content: promptText }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorJson = await response.json();
+                    throw new Error(errorJson.error?.message || 'API Response not ok');
+                }
+
+                const json = await response.json();
+                let content = json.choices?.[0]?.message?.content || '無回應';
+
+                content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                content = content.replace(/\n/g, '<br>');
+
+                document.getElementById('aiContent').innerHTML = content;
+                document.getElementById('aiResultArea').classList.remove('hidden');
+                document.getElementById('aiResultArea').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (e) {
+                console.error(e);
+                showReminder("AI 連線錯誤，請確認 API Key 或網路狀態", 'work');
+            }
 
             btn.disabled = false;
             btn.innerHTML = originalHTML;
