@@ -990,7 +990,7 @@
                 </div>
 
                 <!-- 即時新聞重點摘要 (Proposed H) -->
-                <div id="newsDigestContainer" class="card p-4 hidden">
+                <div id="newsDigestContainer" class="card p-4">
                     <div class="flex justify-between items-center mb-3">
                         <span class="section-label" style="margin:0;padding:0">
                             📰 即時新聞摘要
@@ -2404,7 +2404,6 @@ END:VCALENDAR
             }
 
             // --- 即時新聞 + 成就 + 工作精靈 + 情境橫幅 ---
-            document.getElementById('newsDigestContainer').classList.remove('hidden');
             checkAchievement();
             updateWorkSprite();
 
@@ -2551,8 +2550,18 @@ END:VCALENDAR
 
                 // Fetch top 5 news items
                 for (let i = 0; i < Math.min(5, items.length); i++) {
-                    const title = items[i].querySelector("title").textContent;
-                    const link = items[i].querySelector("link").textContent;
+                    const titleEl = items[i].querySelector("title");
+                    const title = titleEl ? titleEl.textContent : '(無標題)';
+                    // RSS <link> can be tricky - try textContent first, then nextSibling
+                    let link = '';
+                    const linkEl = items[i].querySelector("link");
+                    if (linkEl) {
+                        link = linkEl.textContent.trim();
+                        if (!link && linkEl.nextSibling) {
+                            link = linkEl.nextSibling.textContent.trim();
+                        }
+                    }
+                    if (!link) link = '#';
                     newsData.push({ title, link });
                 }
 
