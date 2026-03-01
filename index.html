@@ -1293,7 +1293,7 @@
 
         const AI_PROVIDERS = {
             nvidia: {
-                url: 'https://corsproxy.io/?' + encodeURIComponent('https://integrate.api.nvidia.com/v1/chat/completions'),
+                url: 'https://integrate.api.nvidia.com/v1/chat/completions',
                 model: 'deepseek-ai/deepseek-v3.2'
             }
         };
@@ -2076,8 +2076,7 @@ END:VCALENDAR
                         messages: [{ role: "user", content: promptText }],
                         temperature: 1,
                         top_p: 0.95,
-                        max_tokens: 8192,
-                        chat_template_kwargs: { thinking: true }
+                        max_tokens: 2048
                     })
                 });
                 const json = await response.json();
