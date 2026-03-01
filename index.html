@@ -1390,9 +1390,34 @@
             }
         }
 
-        document.getElementById('contextEmoji').textContent = emoji;
-        document.getElementById('contextTitle').textContent = title;
-        document.getElementById('contextSub').textContent = sub;
+        // --- 智慧情境橫幅 ---
+        function updateContextBanner() {
+            const h = new Date().getHours();
+            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
+            const hasPunched = punchRecords.length > 0;
+
+            let emoji = '☀️', title = '', sub = '';
+
+            if (!hasPunched) {
+                if (h >= 5 && h < 9) { emoji = '☀️'; title = '早安！新的一天'; sub = '今天也要加油喔'; }
+                else if (h >= 9 && h < 12) { emoji = '☕'; title = '上午好'; sub = '先來杯咖啡再開工？'; }
+                else if (h >= 12 && h < 14) { emoji = '🍜'; title = '午安'; sub = '吃飽了再打卡吧'; }
+                else if (h >= 14 && h < 18) { emoji = '💪'; title = '下午好'; sub = '今天還沒開始工作喔'; }
+                else { emoji = '🌙'; title = '晚安'; sub = '今天辛苦了，好好休息'; }
+            } else if (isWorking) {
+                if (h < 12) { emoji = '🚀'; title = '認真工作中'; sub = '保持專注，你很棒'; }
+                else if (h < 14) { emoji = '🍜'; title = '午餐時間快到了'; sub = '記得休息吃飯喔'; }
+                else if (h < 17) { emoji = '⚡'; title = '下午衝刺'; sub = '再撐一下就快下班了'; }
+                else if (h < 19) { emoji = '🏃'; title = '快下班了！'; sub = '收拾好心情準備下班'; }
+                else { emoji = '🪧'; title = '加班中...'; sub = '注意身體，別太拚了'; }
+            } else {
+                if (h < 18) { emoji = '🎉'; title = '今天辛苦了！'; sub = '好好享受下班時光'; }
+                else { emoji = '🌟'; title = '下班愛自己'; sub = '去吃點好的爲勞自己'; }
+            }
+
+            document.getElementById('contextEmoji').textContent = emoji;
+            document.getElementById('contextTitle').textContent = title;
+            document.getElementById('contextSub').textContent = sub;
         }
 
         // --- 工作精靈 (Work Sprite) 邏輯 ---
