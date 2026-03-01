@@ -555,6 +555,150 @@
             animation: spinReverse 12s linear infinite;
         }
 
+        /* Lv4: Pulsar */
+        .sprite-lv4 .sprite-core {
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle at 30% 30%, #fff, #F97316);
+            box-shadow: 0 0 25px #F97316, 0 0 50px #EA580C;
+        }
+
+        .sprite-lv4 .sprite-working .sprite-core {
+            animation: breathe 1.5s ease-in-out infinite alternate;
+            box-shadow: 0 0 35px #FB923C, 0 0 60px #EA580C;
+        }
+
+        .sprite-lv4 .sprite-ring.ring-1 {
+            width: 44px;
+            height: 44px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(249, 115, 22, 0.7);
+            border-style: dashed;
+        }
+
+        .sprite-lv4 .sprite-ring.ring-2 {
+            width: 56px;
+            height: 56px;
+            opacity: 1;
+            border-width: 1px;
+            border-color: rgba(234, 88, 12, 0.5);
+            animation: spinReverse 8s linear infinite;
+        }
+
+        /* Lv5: Stellar */
+        .sprite-lv5 .sprite-core {
+            width: 34px;
+            height: 34px;
+            background: radial-gradient(circle at 30% 30%, #fff, #FBBF24);
+            box-shadow: 0 0 30px #FBBF24, 0 0 60px #D97706;
+        }
+
+        .sprite-lv5 .sprite-working .sprite-core {
+            animation: breathe 2s ease-in-out infinite alternate;
+            box-shadow: 0 0 40px #FDE68A, 0 0 80px #D97706;
+        }
+
+        .sprite-lv5 .sprite-ring.ring-1 {
+            width: 54px;
+            height: 54px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(251, 191, 36, 0.8);
+            animation: spin 6s linear infinite;
+        }
+
+        .sprite-lv5 .sprite-ring.ring-2 {
+            width: 68px;
+            height: 68px;
+            opacity: 0.8;
+            border-width: 2px;
+            border-color: rgba(217, 119, 6, 0.4);
+            border-style: dotted;
+            animation: spinReverse 10s linear infinite;
+        }
+
+        /* Lv6: Supernova */
+        .sprite-lv6 .sprite-core {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 30% 30%, #E0E7FF, #4338CA);
+            box-shadow: 0 0 40px #4338CA, 0 0 80px #312E81;
+        }
+
+        .sprite-lv6 .sprite-working .sprite-core {
+            animation: breathe 1s ease-in-out infinite alternate;
+            box-shadow: 0 0 50px #6366F1, 0 0 100px #312E81;
+        }
+
+        .sprite-lv6 .sprite-ring.ring-1 {
+            width: 60px;
+            height: 60px;
+            opacity: 1;
+            border-width: 3px;
+            border-color: rgba(67, 56, 202, 0.8);
+            border-style: double;
+            animation: spin 5s linear infinite;
+        }
+
+        .sprite-lv6 .sprite-ring.ring-2 {
+            width: 80px;
+            height: 80px;
+            opacity: 0.9;
+            border-width: 1px;
+            border-color: rgba(99, 102, 241, 0.5);
+            animation: spinReverse 7s linear infinite;
+        }
+
+        /* Lv7: Cosmos */
+        .sprite-lv7 .sprite-core {
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, #A855F7, #EC4899, #3B82F6);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+            box-shadow: 0 0 50px #EC4899, 0 0 100px #3B82F6;
+        }
+
+        .sprite-lv7 .sprite-working .sprite-core {
+            animation: gradientShift 1.5s ease infinite, breathe 0.8s ease-in-out infinite alternate;
+            box-shadow: 0 0 60px #F472B6, 0 0 120px #60A5FA;
+        }
+
+        .sprite-lv7 .sprite-ring.ring-1 {
+            width: 70px;
+            height: 70px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(236, 72, 153, 0.8);
+            border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%;
+            animation: spin 4s linear infinite;
+        }
+
+        .sprite-lv7 .sprite-ring.ring-2 {
+            width: 90px;
+            height: 90px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(59, 130, 246, 0.6);
+            border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%;
+            animation: spinReverse 6s linear infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         @keyframes spin {
             100% {
                 transform: rotate(360deg);
@@ -783,15 +927,6 @@
                 </div>
             </div>
 
-            <!-- 智慧情境橫幅 (C) -->
-            <div id="contextBanner" class="card px-4 py-3 flex items-center gap-3 anim-fade-in">
-                <div class="text-2xl" id="contextEmoji">☀️</div>
-                <div class="flex-1">
-                    <div class="text-[13px] font-semibold text-gray-900" id="contextTitle">早安！</div>
-                    <div class="text-[11px] text-gray-400" id="contextSub">準備開始新的一天</div>
-                </div>
-            </div>
-
             <!-- Summary Card: 簡潔白卡 -->
             <div class="card p-5">
                 <div class="flex justify-between items-end mb-3">
@@ -854,23 +989,26 @@
                     </div>
                 </div>
 
-                <!-- 本週工時圖表 (A) -->
-                <div id="weeklyChart" class="card p-4 hidden">
+                <!-- 即時新聞重點摘要 (Proposed H) -->
+                <div id="newsDigestContainer" class="card p-4 hidden">
                     <div class="flex justify-between items-center mb-3">
-                        <span class="section-label" style="margin:0;padding:0">本週工時</span>
-                        <span class="text-[11px] text-gray-400 font-medium" id="weeklyStats"></span>
+                        <span class="section-label" style="margin:0;padding:0">
+                            📰 即時新聞摘要
+                        </span>
+                        <button onclick="fetchNews(true)"
+                            class="text-[12px] text-ios-blue font-medium active:scale-95 transition flex items-center gap-1">
+                            <i class="fas fa-sync-alt" id="newsSyncIcon"></i>
+                            更新
+                        </button>
                     </div>
-                    <div class="flex items-end justify-between gap-1" style="height:60px" id="weeklyBars">
-                        <!-- JS generated -->
-                    </div>
-                    <div class="flex justify-between mt-1.5">
-                        <span class="text-[10px] text-gray-300 font-medium">一</span>
-                        <span class="text-[10px] text-gray-300 font-medium">二</span>
-                        <span class="text-[10px] text-gray-300 font-medium">三</span>
-                        <span class="text-[10px] text-gray-300 font-medium">四</span>
-                        <span class="text-[10px] text-gray-300 font-medium">五</span>
-                        <span class="text-[10px] text-gray-300 font-medium">六</span>
-                        <span class="text-[10px] text-gray-300 font-medium">日</span>
+                    <div id="newsList" class="space-y-3">
+                        <!-- Skeleton Loading -->
+                        <div class="animate-pulse flex space-x-3">
+                            <div class="flex-1 space-y-2 py-1">
+                                <div class="h-3 bg-gray-200 rounded w-3/4"></div>
+                                <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -894,7 +1032,13 @@
             <div class="pt-2">
                 <div class="flex justify-between items-center px-2 mb-2">
                     <h3 class="text-[13px] font-semibold text-ios-gray uppercase tracking-wide">打卡紀錄</h3>
-                    <div class="flex gap-3">
+                    <div class="flex gap-3 items-center">
+                        <button id="exportCalendarBtn" onclick="exportWorkSessions()"
+                            class="text-[13px] text-ios-blue font-medium active:opacity-50 transition flex items-center gap-1"
+                            title="匯出紀錄至日曆">
+                            <i class="far fa-calendar-plus mr-1"></i>匯出
+                        </button>
+                        <div class="w-px h-3 bg-gray-300"></div>
                         <button id="undoBtn" onclick="undoLastPunch()"
                             class="text-[13px] text-ios-blue font-medium disabled:opacity-30 active:opacity-50 transition">復原</button>
                         <button id="clearBtn" onclick="clearAll()"
@@ -955,13 +1099,8 @@
                 </div>
             </div>
 
-            <!-- AI Insights Section (簡化版 - 僅保留文字洞察) -->
-            <div id="workSessionsContainer" class="hidden pt-2 pb-6">
-                <!-- 工作區段列表 -->
-                <div class="bg-white rounded-[18px] overflow-hidden shadow-ios mb-4 divide-y divide-ios-separator pl-4"
-                    id="workSessions">
-                </div>
-
+            <!-- AI 分析結果呈現與按鈕 -->
+            <div id="aiLifeGuideContainer" class="pt-4 pb-6 px-2">
                 <button id="insightBtn" onclick="generateAIContent()" disabled
                     class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 p-4 rounded-[18px] shadow-lg shadow-purple-200 flex items-center justify-center gap-3 text-center active-scale disabled:opacity-50 mb-4 transition-all hover:shadow-xl">
                     <i class="fas fa-magic text-white text-lg"></i>
@@ -983,7 +1122,7 @@
                     <div id="aiContent" class="text-[13px] leading-relaxed text-gray-600 space-y-2"></div>
                     <div
                         class="mt-3 pt-3 border-t border-gray-100 text-[11px] text-orange-400 text-center font-medium bg-orange-50 rounded-lg py-2">
-                        <i class="fas fa-exclamation-circle mr-1"></i> 提醒：此為 AI 模擬範本，請務必修改後再送出
+                        <i class="fas fa-exclamation-circle mr-1"></i> 提醒：此為 AI 模擬範本，僅供參考
                     </div>
                 </div>
             </div>
@@ -1068,25 +1207,34 @@
             <div class="bg-white rounded-xl overflow-hidden mb-5">
                 <div class="p-4 flex items-center justify-between" style="border-bottom:1px solid var(--ios-separator)">
                     <span class="text-[15px] text-gray-900">AI 服務</span>
-                    <span class="text-[13px] text-gray-400 font-medium">OpenRouter (Free)</span>
+                    <span class="text-[13px] text-gray-400 font-medium">NVIDIA DeepSeek V3.2</span>
                 </div>
                 <div class="p-4 flex items-center justify-between">
                     <label for="aiPersonalityInput" class="text-[15px] text-gray-900">說話風格</label>
                     <select id="aiPersonalityInput"
                         class="bg-gray-100 rounded-lg px-2 py-1 text-[14px] text-gray-900 outline-none border-none">
-                        <option value="warm">暖心陪伴陪伴</option>
-                        <option value="sassy">毒舌鞭策教練</option>
+                        <option value="warm">暖心陪伴</option>
+                        <option value="sassy">毒舌教練</option>
                     </select>
                 </div>
             </div>
 
-            <!-- 薪資設定 -->
-            <div class="section-label">💰 薪資計算</div>
+            <!-- 月曆同步設定 -->
+            <div class="section-label">🗓️ 休假日曆同步 (iCal)</div>
             <div class="bg-white rounded-xl overflow-hidden mb-5">
-                <div class="p-4 flex items-center justify-between">
-                    <label for="monthlySalaryInput" class="text-[15px] text-gray-900">月薪 (TWD)</label>
-                    <input type="number" id="monthlySalaryInput" placeholder="40000"
-                        class="w-24 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="40000">
+                <div class="p-4" style="border-bottom:1px solid var(--ios-separator)">
+                    <label class="block text-[15px] text-gray-900 mb-2">iCal 訂閱網址 (Apple/Google)</label>
+                    <input type="url" id="icalUrlInput" placeholder="https://..."
+                        class="w-full bg-gray-100 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:ring-2 focus:ring-ios-blue text-gray-600">
+                </div>
+                <div class="p-4 flex items-center justify-end gap-3 bg-gray-50">
+                    <button onclick="clearAllOffDays()"
+                        class="text-[13px] text-ios-red px-3 py-1.5 rounded-lg active:bg-red-100 transition">清除所有休假</button>
+                    <button id="syncCalendarBtn"
+                        onclick="syncRemoteCalendar(document.getElementById('icalUrlInput').value)"
+                        class="text-[13px] bg-ios-blue text-white px-4 py-1.5 rounded-lg active:scale-95 transition shadow-sm flex items-center gap-1">
+                        立即同步
+                    </button>
                 </div>
             </div>
 
@@ -1134,30 +1282,19 @@
         let appSettings = {
             workReminderMinutes: 120,
             restReminderMinutes: 20,
-            aiProvider: 'openrouter',
-            aiKey: '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',
+            aiProvider: 'nvidia',
+            aiKey: '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',
             aiEndpoint: '',
-            monthlySalary: 40000,
             consecutiveOnTime: 0,
-            bestStreak: 0
+            bestStreak: 0,
+            elfExp: 0,
+            icalUrl: ''
         };
 
         const AI_PROVIDERS = {
-            openrouter: {
-                url: 'https://openrouter.ai/api/v1/chat/completions',
-                model: 'arcee-ai/trinity-large-preview:free'
-            },
             nvidia: {
                 url: 'https://corsproxy.io/?' + encodeURIComponent('https://integrate.api.nvidia.com/v1/chat/completions'),
-                model: 'deepseek-ai/deepseek-r1'
-            },
-            openai: {
-                url: 'https://api.openai.com/v1/chat/completions',
-                model: 'gpt-4o-mini'
-            },
-            gemini: {
-                url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
-                model: 'gemini-2.0-flash'
+                model: 'deepseek-ai/deepseek-v3.2'
             }
         };
 
@@ -1233,22 +1370,7 @@
             document.getElementById('stretchModal').classList.remove('active');
             lastStretchDismiss = Date.now();
         }
-
-        // --- 薪資計算 ---
-        function updateSalaryTicker(totalMinutes) {
-            const salary = appSettings.monthlySalary || 0;
-            if (salary <= 0 || totalMinutes <= 0) {
-                document.getElementById('salaryTicker').classList.add('hidden');
-                return;
-            }
-
-            const hourlyRate = salary / 22 / 8; // 22 工作日，8 小時
-            const earned = (totalMinutes / 60) * hourlyRate;
-            const el = document.getElementById('salaryAmount');
-            el.textContent = '$' + Math.floor(earned).toLocaleString();
-            document.getElementById('salaryTicker').classList.remove('hidden');
-        }
-
+        // --- 薪資計算已移除 ---
         // --- 成就系統 ---
         function checkAchievement() {
             const streak = appSettings.consecutiveOnTime || 0;
@@ -1320,124 +1442,15 @@
             }
         }
 
-        // --- 本週工時圖表 ---
-        function renderWeeklyChart() {
-            const container = document.getElementById('weeklyBars');
-            const statsEl = document.getElementById('weeklyStats');
-            if (!container) return;
-
-            const today = new Date();
-            const dayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1; // 0=Mon
-            const weekData = [];
-            let totalWeek = 0;
-            let daysWorked = 0;
-
-            for (let i = 0; i < 7; i++) {
-                const d = new Date(today);
-                d.setDate(today.getDate() - dayOfWeek + i);
-                const key = d.toLocaleDateString('zh-TW');
-
-                // 從 localStorage 讀取歷史資料
-                const saved = localStorage.getItem('timecardData');
-                let hours = 0;
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    const records = data.records || [];
-                    // 算當天的記錄
-                    const dayRecords = records.filter(r => {
-                        const rd = new Date(r.time);
-                        return rd.toLocaleDateString('zh-TW') === key;
-                    });
-                    // 加總工時
-                    for (let j = 0; j < dayRecords.length - 1; j += 2) {
-                        if (dayRecords[j].type === 'in' && dayRecords[j + 1]?.type === 'out') {
-                            hours += (new Date(dayRecords[j + 1].time) - new Date(dayRecords[j].time)) / 3600000;
-                        }
-                    }
-                    // 進行中
-                    if (i === dayOfWeek && dayRecords.length % 2 !== 0) {
-                        const lastIn = dayRecords[dayRecords.length - 1];
-                        if (lastIn.type === 'in') {
-                            hours += (Date.now() - new Date(lastIn.time).getTime()) / 3600000;
-                        }
-                    }
-                }
-                weekData.push(hours);
-                totalWeek += hours;
-                if (hours > 0) daysWorked++;
-            }
-
-            const maxH = Math.max(...weekData, 8);
-            container.innerHTML = '';
-
-            weekData.forEach((h, i) => {
-                const bar = document.createElement('div');
-                bar.className = 'week-bar';
-                const pct = maxH > 0 ? (h / maxH) * 100 : 0;
-                bar.style.height = pct > 0 ? `${Math.max(pct, 5)}%` : '3px';
-                if (h === 0) bar.classList.add('empty');
-                else if (h > 8) bar.classList.add('overtime');
-                if (i === dayOfWeek) bar.classList.add('today');
-                bar.title = `${h.toFixed(1)}h`;
-                container.appendChild(bar);
-            });
-
-            const avg = daysWorked > 0 ? (totalWeek / daysWorked) : 0;
-            statsEl.textContent = `合計 ${totalWeek.toFixed(1)}h · 日均 ${avg.toFixed(1)}h`;
-
-            if (totalWeek > 0 || punchRecords.length > 0) {
-                document.getElementById('weeklyChart').classList.remove('hidden');
-            }
-        }
-
-        // --- 智慧情境橫幅 ---
-        function updateContextBanner() {
-            const h = new Date().getHours();
-            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
-            const hasPunched = punchRecords.length > 0;
-
-            let emoji = '☀️', title = '', sub = '';
-
-            if (!hasPunched) {
-                if (h >= 5 && h < 9) { emoji = '☀️'; title = '早安！新的一天'; sub = '今天也要加油喔'; }
-                else if (h >= 9 && h < 12) { emoji = '☕'; title = '上午好'; sub = '先來杯咖啡再開工？'; }
-                else if (h >= 12 && h < 14) { emoji = '🍜'; title = '午安'; sub = '吃飽了再打卡吧'; }
-                else if (h >= 14 && h < 18) { emoji = '💪'; title = '下午好'; sub = '今天還沒開始工作喔'; }
-                else { emoji = '🌙'; title = '晚安'; sub = '今天辛苦了，好好休息'; }
-            } else if (isWorking) {
-                if (h < 14) { emoji = '🍜'; title = '午餐時間快到了'; sub = '記得休息吃飯喔'; }
-                else if (h < 17) { emoji = '⚡'; title = '下午衝刺'; sub = '再撐一下就快下班了'; }
-                else if (h < 19) { emoji = '🏃'; title = '快下班了！'; sub = '收拾好心情準備下班'; }
-                else { emoji = '🪧'; title = '加班中...'; sub = '注意身體，別太拚了'; }
-            } else {
-                if (h < 18) { emoji = '🎉'; title = '今天辛苦了！'; sub = '好好享受下班時光'; }
-                else { emoji = '🌟'; title = '下班愛自己'; sub = '去吃點好的爲勞自己'; }
-            }
-
-            document.getElementById('contextEmoji').textContent = emoji;
-            document.getElementById('contextTitle').textContent = title;
-            document.getElementById('contextSub').textContent = sub;
-        }
 
         // --- 工作精靈 (Work Sprite) 邏輯 ---
         function updateWorkSprite() {
             const terrarium = document.getElementById('spriteTerrarium');
             if (!terrarium) return;
 
-            // 1h = 10 EXP (360s = 1 EXP)
-            // 計算總經驗值 (包含歷史紀錄)
-            const history = JSON.parse(localStorage.getItem('timecardData')) || { records: [] };
-            const allRecords = history.records;
-            let totalMinutes = 0;
-            for (let i = 0; i < allRecords.length; i += 2) {
-                if (i + 1 < allRecords.length) {
-                    const start = new Date(allRecords[i].time);
-                    const end = new Date(allRecords[i + 1].time);
-                    totalMinutes += (end - start) / 60000;
-                }
-            }
+            // 1h = 60 EXP (1min = 1 EXP) -> 直接使用總分鐘數
+            let totalMinutes = appSettings.elfExp || 0;
 
-            // 加上今天可能還沒存回 history 的進行中時間
             let currentSessionMinutes = 0;
             if (punchRecords.length > 0 && punchRecords.length % 2 !== 0) {
                 const now = new Date();
@@ -1445,24 +1458,36 @@
                 currentSessionMinutes = (now - start) / 60000;
             }
 
-            const totalExp = Math.floor((totalMinutes + currentSessionMinutes) / 60 * 10);
+            const totalExp = Math.floor(totalMinutes + currentSessionMinutes);
 
-            // 等級判定：每 100 EXP 升一級
-            const level = Math.min(Math.floor(totalExp / 100) + 1, 3);
-            const expInCurrentLevel = totalExp % 100;
-            const progressPct = expInCurrentLevel; // 因為每級 100，所以直接是 %
+            // 等級判定：L = floor(sqrt(EXP/10)) + 1
+            const level = Math.floor(Math.sqrt(totalExp / 10)) + 1;
+
+            // 計算當前等級進度
+            const expForCurrentLevel = 10 * Math.pow(level - 1, 2);
+            const expForNextLevel = 10 * Math.pow(level, 2);
+
+            const expInCurrentLevel = totalExp - expForCurrentLevel;
+            const requiredExpForLevelUp = expForNextLevel - expForCurrentLevel;
+            const progressPct = Math.min((expInCurrentLevel / requiredExpForLevelUp) * 100, 100);
 
             // 更新 UI 文字
-            document.getElementById('spriteExp').textContent = `EXP ${expInCurrentLevel}/100`;
+            document.getElementById('spriteExp').textContent = `EXP ${expInCurrentLevel}/${requiredExpForLevelUp}`;
             document.getElementById('spriteExpFill').style.width = `${progressPct}%`;
 
             let name = "能量晶種";
-            if (level === 2) name = "浮游光帶";
-            else if (level >= 3) name = "幾何星體";
+            let visualLv = 1;
+            if (level >= 5 && level < 15) { name = "浮游光帶"; visualLv = 2; }
+            else if (level >= 15 && level < 30) { name = "幾何星體"; visualLv = 3; }
+            else if (level >= 30 && level < 50) { name = "脈衝星"; visualLv = 4; }
+            else if (level >= 50 && level < 80) { name = "恆星序列"; visualLv = 5; }
+            else if (level >= 80 && level < 100) { name = "超新星"; visualLv = 6; }
+            else if (level >= 100) { name = "宇宙微波"; visualLv = 7; }
+
             document.getElementById('spriteName').textContent = `${name} (Lv.${level})`;
 
             // 更新 CSS 狀態與動畫
-            terrarium.className = `sprite-terrarium anim-fade-in sprite-lv${level}`;
+            terrarium.className = `sprite-terrarium anim-fade-in sprite-lv${visualLv}`;
             const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
 
             if (isWorking) {
@@ -1470,7 +1495,8 @@
                 document.getElementById('spriteMessage').textContent = "正在吸收純粹的專注能量 ✨";
             } else {
                 terrarium.classList.remove('sprite-working');
-                document.getElementById('spriteMessage').textContent = "精靈正在沉睡...等待上班喚醒。";
+                const msgs = ["Zzz... 好睏...", "上班才能餵我喔！", "陪伴模式：休眠中 💤"];
+                document.getElementById('spriteMessage').textContent = msgs[Math.floor(Math.random() * msgs.length)];
             }
         }
 
@@ -1492,7 +1518,7 @@
                 const msgs = ["好飽...專注能量真美味 🤤", "我感覺我快進化了！", "嗝...主人你太認真了。"];
                 msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
             } else {
-                const msgs = ["Zzz... 好睏...", "上班才能餵我喔！", "點我也沒用，去休息吧。"];
+                const msgs = ["Zzz... 讓我繼續睡...", "你現在沒上班，我沒東西吃！", "呼嚕嚕... (夢話)", "我要收集能量再長大！"];
                 msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
             }
         }
@@ -1561,8 +1587,6 @@
         function showPunchOutCelebration() {
             const result = calculateHours();
             const dur = formatDurationFancy(result.total);
-            const salary = appSettings.monthlySalary || 0;
-            const earned = salary > 0 ? Math.floor((result.total / 60) * (salary / 22 / 8)) : 0;
 
             // 建立慶祝 overlay
             const overlay = document.createElement('div');
@@ -1575,7 +1599,6 @@
                     <div style="background:var(--ios-bg);border-radius:16px;padding:16px;margin:12px 0">
                         <div class="text-3xl font-bold tabular-nums">${dur.h}h ${Math.round(dur.m)}m</div>
                         <div class="text-[12px] text-gray-400 mt-1">今日工時</div>
-                        ${earned > 0 ? `<div class="text-lg font-bold mt-2" style="color:var(--ios-green)">+$${earned.toLocaleString()}</div>` : ''}
                     </div>
                     <button onclick="this.closest('.alarm-overlay').remove()" class="w-full py-3 bg-black text-white rounded-xl font-semibold active-scale mt-2">太棒了 ✓</button>
                 </div>
@@ -1642,13 +1665,7 @@
         let offDays = new Set(); // Stores "YYYY-MM-DD"
 
         // API Key 現在從設定讀取，不再硬編碼
-        const FALLBACK_API_KEY = "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";
-
-        function playSingleClickSound(frequency = "G4") {
-            // ... existing code ...
-        }
-
-
+        const FALLBACK_API_KEY = "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";
 
         function playSingleClickSound(frequency = "G4") {
             try {
@@ -1670,7 +1687,7 @@
                     envelope: { attack: 0.005, decay: 0.1, sustain: 0.0, release: 0.1 }
                 }).toDestination();
                 const now = Tone.now();
-                synth.triggerAttackAttackRelease("C5", 0.1, now);
+                synth.triggerAttackRelease("C5", 0.1, now);
                 synth.triggerAttackRelease("E5", 0.1, now + 0.2);
                 synth.triggerAttackRelease("G5", 0.1, now + 0.4);
             } catch (e) { console.error(e); }
@@ -1767,19 +1784,122 @@ END:VCALENDAR
             showReminder("日曆提醒已下載", 'rest');
         }
 
+        function exportWorkSessions() {
+            if (punchRecords.length < 2) {
+                showReminder("沒有完整的工時紀錄可匯出", 'work');
+                return;
+            }
+
+            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Time8hcf//WorkSessions//ZH\n";
+            let hasEvents = false;
+
+            for (let i = 0; i < punchRecords.length; i += 2) {
+                if (i + 1 < punchRecords.length) {
+                    const rIn = punchRecords[i];
+                    const rOut = punchRecords[i + 1];
+                    const taskName = rIn.task || '工作時段';
+                    const dtstart = formatDT(new Date(rIn.time));
+                    const dtend = formatDT(new Date(rOut.time));
+                    const dtstamp = formatDT(new Date());
+
+                    icsContent += `BEGIN:VEVENT\nUID:${new Date(rIn.time).getTime()}_${i}@time8hcf.app\nDTSTAMP:${dtstamp}\nDTSTART:${dtstart}\nDTEND:${dtend}\nSUMMARY:${taskName}\nDESCRIPTION:Time8hcf 自動匯出的打卡紀錄。\\n共計 ${((new Date(rOut.time) - new Date(rIn.time)) / 60000).toFixed(1)} 分鐘\nEND:VEVENT\n`;
+                    hasEvents = true;
+                }
+            }
+
+            icsContent += "END:VCALENDAR";
+
+            if (!hasEvents) {
+                showReminder("沒有完整的工時紀錄可匯出", 'work');
+                return;
+            }
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `WorkLog_${new Date().toISOString().slice(0, 10)}.ics`;
+            document.body.appendChild(link);
+            try { link.click(); } catch (e) { showReminder("無法自動下載", 'rest'); }
+            document.body.removeChild(link);
+            showReminder("已匯出 iCal 檔案", 'work');
+            playSingleClickSound("A4");
+        }
+
+        // --- 月曆同步 (iCal Sync) ---
+        async function syncRemoteCalendar(url) {
+            if (!url) return;
+            appSettings.icalUrl = url;
+            localStorage.setItem('appSettings', JSON.stringify(appSettings));
+
+            const btn = document.getElementById('syncCalendarBtn');
+            if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> 同步中...';
+
+            try {
+                // Use corsproxy.io to bypass browser CORS restrictions for external ICS files
+                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const icsData = await response.text();
+
+                const events = icsData.split('BEGIN:VEVENT');
+                let newOffDaysCount = 0;
+
+                events.forEach(evt => {
+                    if (!evt.includes('END:VEVENT')) return;
+
+                    // Match DTSTART;VALUE=DATE:YYYYMMDD or DTSTART:YYYYMMDD
+                    const match = evt.match(/DTSTART(?:;VALUE=DATE)?:(\d{4})(\d{2})(\d{2})/);
+                    if (match) {
+                        const dateStr = `${match[1]}-${match[2]}-${match[3]}`;
+                        if (!offDays.has(dateStr)) {
+                            offDays.add(dateStr);
+                            newOffDaysCount++;
+                        }
+                    }
+                });
+
+                localStorage.setItem('offDays', JSON.stringify(Array.from(offDays)));
+                renderCalendar();
+
+                if (btn) btn.innerHTML = `已同步 ${newOffDaysCount} 天`;
+                showReminder(`成功從日曆同步了 ${newOffDaysCount} 天休假`, 'work');
+            } catch (error) {
+                console.error('Error syncing calendar:', error);
+                if (btn) btn.innerHTML = '<span class="text-red-500">同步失敗</span>';
+                showReminder("日曆同步失敗，請檢查網址是否公開可用", 'rest');
+            }
+
+            if (btn) {
+                setTimeout(() => {
+                    btn.innerHTML = '立即同步';
+                }, 3000);
+            }
+        }
+
+        function clearAllOffDays() {
+            if (confirm("確定要清除所有休假設定嗎？")) {
+                offDays.clear();
+                localStorage.setItem('offDays', JSON.stringify(Array.from(offDays)));
+                renderCalendar();
+                showReminder("已清除所有休假紀錄", 'work');
+            }
+        }
+
         function openSettings() {
             document.getElementById('workReminderInput').value = appSettings.workReminderMinutes;
             document.getElementById('restReminderInput').value = appSettings.restReminderMinutes;
-            document.getElementById('monthlySalaryInput').value = appSettings.monthlySalary || 40000;
             document.getElementById('aiPersonalityInput').value = appSettings.aiPersonality || 'warm';
+            const icalInput = document.getElementById('icalUrlInput');
+            if (icalInput) icalInput.value = appSettings.icalUrl || '';
             document.getElementById('settingsModal').classList.remove('hidden');
         }
         function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
         function saveSettings() {
             appSettings.workReminderMinutes = parseInt(document.getElementById('workReminderInput').value) || 120;
             appSettings.restReminderMinutes = parseInt(document.getElementById('restReminderInput').value) || 20;
-            appSettings.monthlySalary = parseInt(document.getElementById('monthlySalaryInput').value) || 0;
             appSettings.aiPersonality = document.getElementById('aiPersonalityInput').value;
+            const icalInput = document.getElementById('icalUrlInput');
+            if (icalInput) appSettings.icalUrl = icalInput.value.trim();
 
             localStorage.setItem('appSettings', JSON.stringify(appSettings));
             closeSettings();
@@ -1899,9 +2019,8 @@ END:VCALENDAR
                 `[${formatTime(r.time)}] ${r.type === 'in' ? '開始' : '結束'} ${r.task ? ':' + r.task : ''}`
             ).join('\n');
 
-            const totalHoursResult = calculateHours();
-            const totalH = Math.floor(totalHoursResult.totalMinutes / 60);
-            const totalM = totalHoursResult.totalMinutes % 60;
+            const totalH = Math.floor(result.total / 60);
+            const totalM = Math.round(result.total % 60);
             const hour = new Date().getHours();
             let timeContext = (hour < 17) ? "提早下班" : (hour < 20) ? "正常晚餐時間" : (hour < 22) ? "稍微加了點班" : "深夜過勞";
 
@@ -1952,7 +2071,14 @@ END:VCALENDAR
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: headers,
-                    body: JSON.stringify({ model: modelName, messages: [{ role: "user", content: promptText }] })
+                    body: JSON.stringify({
+                        model: modelName,
+                        messages: [{ role: "user", content: promptText }],
+                        temperature: 1,
+                        top_p: 0.95,
+                        max_tokens: 8192,
+                        chat_template_kwargs: { thinking: true }
+                    })
                 });
                 const json = await response.json();
                 let content = json.choices?.[0]?.message?.content || '無回應';
@@ -1996,7 +2122,6 @@ END:VCALENDAR
                     appSettings.workReminderMinutes = 120;
                     appSettings.restReminderMinutes = 20;
                 }
-                if (!appSettings.monthlySalary) appSettings.monthlySalary = 40000;
             }
 
             const savedOffDays = localStorage.getItem('offDays');
@@ -2028,6 +2153,16 @@ END:VCALENDAR
             if (type === 'in' && taskInput) {
                 taskName = taskInput.value.trim();
                 taskInput.value = "";
+            } else if (type === 'out') {
+                // Persistent Elf EXP Accumulation
+                const lastIn = punchRecords[punchRecords.length - 1];
+                if (lastIn && lastIn.type === 'in') {
+                    const durationMinutes = (now - new Date(lastIn.time)) / 60000;
+                    if (durationMinutes > 0) {
+                        appSettings.elfExp = (appSettings.elfExp || 0) + durationMinutes;
+                        saveSettings();
+                    }
+                }
             }
 
             punchRecords.push({ time: now.toISOString(), type: type, task: taskName });
@@ -2038,7 +2173,18 @@ END:VCALENDAR
         function undoLastPunch() {
             if (punchRecords.length > 0) {
                 playSingleClickSound("G4");
-                punchRecords.pop();
+                const last = punchRecords.pop();
+
+                // Revert Persistent Elf EXP if we undo an OUT punch
+                if (last.type === 'out') {
+                    const lastIn = punchRecords[punchRecords.length - 1];
+                    if (lastIn && lastIn.type === 'in') {
+                        const durationMinutes = (new Date(last.time) - new Date(lastIn.time)) / 60000;
+                        appSettings.elfExp = Math.max(0, (appSettings.elfExp || 0) - durationMinutes);
+                        saveSettings();
+                    }
+                }
+
                 saveData();
                 updateDisplay();
             }
@@ -2257,13 +2403,12 @@ END:VCALENDAR
                 document.getElementById('ongoingHint').classList.add('opacity-0');
             }
 
-            // --- 本週圖表 + 成就 + 情境橫幅 ---
-            renderWeeklyChart();
+            // --- 即時新聞 + 成就 + 工作精靈 + 情境橫幅 ---
+            document.getElementById('newsDigestContainer').classList.remove('hidden');
             checkAchievement();
-            updateContextBanner();
+            updateWorkSprite();
 
-            // --- 薪資跟踤 ---
-            updateSalaryTicker(result.total);
+            // 薪資跟蹤已移除
 
             // --- Alarm 觸發檢查 ---
             if (result.isOngoing && lastRecord) {
@@ -2285,68 +2430,64 @@ END:VCALENDAR
 
             // --- 列表渲染 (iOS Inset Grouped Style) ---
             const listContainer = document.getElementById('punchRecords');
-            listContainer.innerHTML = '';
-
-            const displayRecords = punchRecords.slice().reverse().slice(0, 10); // Copy & Reverse
-
-            if (displayRecords.length === 0) {
-                listContainer.innerHTML = '<div class="py-4 pr-4 text-center text-sm" style="color:var(--ios-gray)">今天還沒開始工作</div>';
+            // --- Render Records (合併顯示區段與打卡點) ---
+            const recordsDiv = document.getElementById('punchRecords');
+            recordsDiv.innerHTML = '';
+            if (punchRecords.length === 0) {
+                recordsDiv.innerHTML = '<div class="py-4 pr-4 text-center text-ios-gray text-sm">尚無紀錄</div>';
             } else {
-                displayRecords.forEach((record, index) => {
-                    const isIn = record.type === 'in';
-                    const div = document.createElement('div');
-                    div.className = 'timeline-item py-3 pr-4 flex justify-between items-center anim-fade-in';
-                    div.style.animationDelay = `${index * 0.05}s`;
-                    div.style.opacity = '0';
+                [...punchRecords].reverse().forEach((r, idx) => {
+                    const trueIndex = punchRecords.length - 1 - idx;
+                    const isLast = idx === punchRecords.length - 1;
+                    const d = new Date(r.time);
+                    const timeStr = d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    const icon = r.type === 'in' ? '<i class="fas fa-arrow-right text-green-500"></i>' : '<i class="fas fa-arrow-left text-orange-500"></i>';
+                    const bg = r.type === 'in' ? 'bg-green-50' : 'bg-orange-50';
+                    const color = r.type === 'in' ? 'text-green-500' : 'text-orange-500';
+                    const title = r.type === 'in' ? '開始工作' : '結束工作';
+                    const dotColor = r.type === 'in' ? 'border-ios-blue' : 'border-ios-orange';
 
-                    div.innerHTML = `
-                        <div class="timeline-dot ${isIn ? '' : 'out'}"></div>
+                    const row = document.createElement('div');
+                    row.className = 'py-3 pr-4 flex items-center justify-between';
+
+                    row.innerHTML = `
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full ${isIn ? 'bg-green-50' : 'bg-orange-50'} flex items-center justify-center text-xs" style="color:${isIn ? 'var(--ios-green)' : 'var(--ios-orange)'}">
-                                <i class="fas ${isIn ? 'fa-arrow-right' : 'fa-arrow-left'}"></i>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-[15px] font-medium text-gray-900">${isIn ? '開始工作' : '結束工作'}</span>
-                                ${record.task ? `<span class="text-[11px] text-gray-500 truncate max-w-[150px]">${record.task}</span>` : ''}
+                            <div class="w-8 h-8 rounded-full ${bg} flex items-center justify-center text-sm">${icon}</div>
+                            <div>
+                                <div class="text-[15px] text-gray-900 font-medium">${title}</div>
+                                ${r.task ? `<div class="text-[12px] text-ios-gray mt-0.5 truncate max-w-[140px]"><i class="fas fa-thumbtack mr-1"></i>${r.task}</div>` : ''}
                             </div>
                         </div>
-                        <span class="text-[15px] tabular-nums text-gray-500">${formatTime(record.time)}</span>
+                        <div class="text-[15px] text-gray-500 tabular-nums">${timeStr}</div>
                     `;
-                    listContainer.appendChild(div);
+                    recordsDiv.appendChild(row);
+
+                    // 如果這是一個 `in` 點，且前面有一個對應的 `out` 點 (因為是 reverse，所以對應的是 idx - 1)
+                    if (r.type === 'in' && trueIndex + 1 < punchRecords.length && punchRecords[trueIndex + 1].type === 'out') {
+                        const outRecord = punchRecords[trueIndex + 1];
+                        const diffMins = (new Date(outRecord.time) - new Date(r.time)) / 60000;
+                        const dur = formatDurationFancy(diffMins);
+
+                        const durRow = document.createElement('div');
+                        durRow.className = 'py-2 pr-4 flex items-center justify-end';
+                        durRow.innerHTML = `
+                            <div class="text-[12px] font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-lg">
+                                共計 ${dur.h}h ${Math.round(dur.m)}m
+                            </div>
+                        `;
+                        recordsDiv.appendChild(durRow);
+                    }
                 });
             }
 
-            // --- Session List ---
-            const sessionContainer = document.getElementById('workSessions');
-            const sessionParent = document.getElementById('workSessionsContainer');
-
+            // --- Render Work Sessions (移除原有的 Work Sessions 區塊，統一由 records 取代) ---
+            // 由於前述已整合，這裡只需判定 "獲取下班指引" 按鈕的狀態
+            const insightBtn = document.getElementById('insightBtn');
             if (result.sessions.length > 0) {
-                sessionParent.classList.remove('hidden');
-                sessionContainer.innerHTML = '';
-                // 倒序顯示
-                [...result.sessions].reverse().forEach((session, i) => {
-                    const div = document.createElement('div');
-                    div.className = "py-3 pr-4 flex justify-between items-center";
-                    const durObj = formatDurationFancy(session.duration);
-
-                    div.innerHTML = `
-                        <div class="flex flex-col">
-                            <span class="text-[13px] font-semibold text-gray-900">工作時段 ${result.sessions.length - i}</span>
-                            <span class="text-[11px] text-gray-500">${session.start} - ${session.end}</span>
-                        </div>
-                        <span class="text-[13px] font-medium text-gray-900 bg-gray-100 px-2 py-1 rounded-md">
-                            ${durObj.h}h ${Math.round(durObj.m)}m
-                        </span>
-                   `;
-                    sessionContainer.appendChild(div);
-                });
-                document.getElementById('insightBtn').removeAttribute('disabled');
+                insightBtn.disabled = false;
             } else {
-                sessionParent.classList.add('hidden');
-            }
-
-            // Undo 按鈕狀態
-            document.getElementById('undoBtn').disabled = punchRecords.length === 0;
+                insightBtn.disabled = true;
+            } document.getElementById('undoBtn').disabled = punchRecords.length === 0;
 
             // Clear 按鈕狀態 (如果正在確認中，重置它)
             if (punchRecords.length === 0) {
@@ -2357,21 +2498,115 @@ END:VCALENDAR
             }
         }
 
+        // --- 即時新聞摘要 (News Fetch) ---
+        async function fetchNews(forceUpdate = false) {
+            const container = document.getElementById('newsList');
+            const icon = document.getElementById('newsSyncIcon');
+
+            const cacheKey = 'appNewsCache';
+            const cacheTimeKey = 'appNewsCacheTime';
+            const cacheDuration = 12 * 60 * 60 * 1000; // 12 hours
+
+            if (!forceUpdate) {
+                const cachedNews = localStorage.getItem(cacheKey);
+                const cachedTime = localStorage.getItem(cacheTimeKey);
+                if (cachedNews && cachedTime && (Date.now() - parseInt(cachedTime)) < cacheDuration) {
+                    renderNews(JSON.parse(cachedNews));
+                    return;
+                }
+            }
+
+            if (icon) icon.classList.add('fa-spin');
+
+            // Render Skeleton
+            container.innerHTML = `
+                <div class="animate-pulse flex space-x-3">
+                    <div class="flex-1 space-y-2 py-1">
+                        <div class="h-3 bg-gray-200 rounded w-full"></div>
+                        <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+                    </div>
+                </div>
+                <div class="animate-pulse flex space-x-3 mt-2">
+                    <div class="flex-1 space-y-2 py-1">
+                        <div class="h-3 bg-gray-200 rounded w-full"></div>
+                        <div class="h-3 bg-gray-200 rounded w-4/6"></div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                // Using Yahoo Taiwan RSS
+                const rssUrl = 'https://tw.news.yahoo.com/rss';
+                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(rssUrl);
+
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+                const items = xmlDoc.querySelectorAll("item");
+                const newsData = [];
+
+                // Fetch top 5 news items
+                for (let i = 0; i < Math.min(5, items.length); i++) {
+                    const title = items[i].querySelector("title").textContent;
+                    const link = items[i].querySelector("link").textContent;
+                    newsData.push({ title, link });
+                }
+
+                localStorage.setItem(cacheKey, JSON.stringify(newsData));
+                localStorage.setItem(cacheTimeKey, Date.now().toString());
+                renderNews(newsData);
+
+                if (forceUpdate) showReminder("新聞已更新", "work");
+
+            } catch (error) {
+                console.error("Failed to fetch news:", error);
+
+                // Fallback to cache if error
+                const cachedNews = localStorage.getItem(cacheKey);
+                if (cachedNews) {
+                    renderNews(JSON.parse(cachedNews));
+                    if (forceUpdate) showReminder("無法更新，顯示快取新聞", "rest");
+                } else {
+                    container.innerHTML = `<div class="text-[13px] text-gray-400 text-center py-2">目前無法取得新聞 📡</div>`;
+                }
+            } finally {
+                if (icon) icon.classList.remove('fa-spin');
+            }
+        }
+
+        function renderNews(newsArray) {
+            const container = document.getElementById('newsList');
+            container.innerHTML = '';
+
+            newsArray.forEach((item, index) => {
+                const a = document.createElement('a');
+                a.href = item.link;
+                a.target = "_blank";
+                a.className = "block text-[14px] text-gray-800 leading-snug hover:text-ios-blue transition-colors pb-3 border-b border-gray-100 last:border-0 last:pb-0 relative pl-4";
+
+                // Add a small bullet point dot
+                const dot = document.createElement('span');
+                dot.className = "absolute left-0 top-1.5 w-1.5 h-1.5 rounded-full bg-ios-blue opacity-70";
+
+                a.appendChild(dot);
+                a.appendChild(document.createTextNode(item.title));
+                container.appendChild(a);
+            });
+        }
+
         // Initialize
         loadData();
         renderCalendar();
         updateDisplay();
-        updateCurrentTime();
-        updateTimeGradient();
-        updateContextBanner();
-        renderWeeklyChart();
-        initSwipePunch();
+        fetchNews(); // Fetch on initial load
 
-        setInterval(updateDisplay, 10000);
-        setInterval(updateCurrentTime, 1000);
-        setInterval(checkStretchReminder, 60000);
-        setInterval(updateTimeGradient, 60000);
-
+        // --- Loops ---
+        setInterval(updateDisplay, 60000); // 1 minute
+        setInterval(playTickSound, 1000);  // 1 second (10s debug check)
     </script>
 </body>
 
