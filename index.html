@@ -1206,8 +1206,8 @@
             <div class="section-label">🤖 AI 助理設定 (OpenRouter)</div>
             <div class="bg-white rounded-xl overflow-hidden mb-5">
                 <div class="p-4 flex items-center justify-between" style="border-bottom:1px solid var(--ios-separator)">
-                    <span class="text-[15px] text-gray-900 w-32">API Key</span>
-                    <input type="password" id="aiKeyInput" placeholder="sk-or-v1-..."
+                    <span class="text-[15px] text-gray-900 w-32">API Key 或網址</span>
+                    <input type="password" id="aiKeyInput" placeholder="sk-or-... 或 Cloudflare 網址"
                         class="w-full text-right bg-transparent text-[14px] focus:outline-none text-gray-600">
                 </div>
                 <div class="p-4 flex items-center justify-between">
@@ -1998,13 +1998,29 @@ END:VCALENDAR
             btn.disabled = true;
             btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> AI 正在為您規劃下班生活...`;
 
-            const key = appSettings.aiKey || '';
+            let key = appSettings.aiKey || '';
             if (!key) {
-                showReminder("請先在設定中填寫 OpenRouter API Key", 'work');
+                showReminder("請先在設定中填寫 OpenRouter 的 API Key 或讀取網址", 'work');
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
                 openSettings(); // 引導使用者開啟設定
                 return;
+            }
+
+            // 如果使用者填寫的是 Cloudflare 網址，則動態讀取 API Key
+            if (key.startsWith('http://') || key.startsWith('https://')) {
+                try {
+                    const keyRes = await fetch(key);
+                    if (!keyRes.ok) throw new Error('讀取金鑰失敗');
+                    key = await keyRes.text();
+                    key = key.trim();
+                } catch (e) {
+                    console.error("Cloudflare Key Fetch Error:", e);
+                    showReminder("無法從 Cloudflare 讀取 API Key，請檢查網址", 'work');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                    return;
+                }
             }
 
             const totalH = Math.floor(result.total / 60);
