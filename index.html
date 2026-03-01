@@ -2537,7 +2537,7 @@ END:VCALENDAR
             try {
                 // Using Yahoo Taiwan RSS
                 const rssUrl = 'https://tw.news.yahoo.com/rss';
-                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(rssUrl);
+                const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl);
 
                 const response = await fetch(proxyUrl);
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -2602,11 +2602,17 @@ END:VCALENDAR
         loadData();
         renderCalendar();
         updateDisplay();
+        updateCurrentTime();
+        updateWorkSprite();
+        initSwipePunch();
         fetchNews(); // Fetch on initial load
 
         // --- Loops ---
-        setInterval(updateDisplay, 60000); // 1 minute
-        setInterval(playTickSound, 1000);  // 1 second (10s debug check)
+        setInterval(updateDisplay, 10000); // 10s check
+        setInterval(updateCurrentTime, 1000); // 1s clock
+        setInterval(checkStretchReminder, 60000);
+        setInterval(playTickSound, 1000);  // 1 second sound loop
+        setInterval(updateTimeGradient, 60000);
     </script>
 </body>
 
