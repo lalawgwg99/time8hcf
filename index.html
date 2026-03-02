@@ -1379,17 +1379,6 @@
             <!-- ===== TAB: 記錄 ===== -->
             <section id="tabRecords" class="tab-panel">
 
-                <!-- Weekly Stats -->
-                <div>
-                    <div class="editorial-label">本週工時</div>
-                    <div class="zen-card" style="padding:20px 20px 18px;">
-                        <div style="display:flex; justify-content:flex-end; margin-bottom:14px;">
-                            <span id="weeklyAvg" style="font-size:11px; font-weight:400; color:var(--label-tertiary); letter-spacing:0.06em;">平均 —</span>
-                        </div>
-                        <div id="weeklyChart" style="display:flex; align-items:flex-end; gap:6px; height:90px;"></div>
-                    </div>
-                </div>
-
                 <!-- Punch Records -->
                 <div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -2652,7 +2641,7 @@ END:VCALENDAR
 
         function renderWeeklyChart() {
             const chart = document.getElementById('weeklyChart');
-            if (!chart) return;
+            if (!chart) return; // 已移除 UI，靜默跳過
             const targetMin = getTargetMinutes();
             const days = ['日', '一', '二', '三', '四', '五', '六'];
             const today = new Date();
