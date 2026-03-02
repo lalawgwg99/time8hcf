@@ -1296,9 +1296,9 @@
                                     <stop offset="100%" stop-color="#6FA876"/>
                                 </linearGradient>
                             </defs>
-                            <!-- Track -->
+                            <!-- Track (always visible) -->
                             <path d="M 6 22 Q 80 18 160 22 Q 240 26 314 20"
-                                stroke="rgba(40,32,20,0.10)" stroke-width="1" fill="none" stroke-linecap="round"/>
+                                stroke="rgba(40,32,20,0.14)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
                             <!-- Progress brushstroke -->
                             <path id="brushStroke" d="M 6 22 Q 80 18 160 22 Q 240 26 314 20"
                                 stroke="url(#strokeGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
@@ -1735,7 +1735,9 @@
         function initBrushstroke() {
             const path = document.getElementById('brushStroke');
             if (!path) return;
-            const len = path.getTotalLength();
+            let len = path.getTotalLength();
+            // Fallback if SVG not yet rendered
+            if (!len || len < 10) len = 310;
             path.style.strokeDasharray = len;
             path.style.strokeDashoffset = len;
             window._brushLen = len;
