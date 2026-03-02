@@ -8,6 +8,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="工時紀錄">
+    <meta name="description" content="簡潔的工時追蹤工具，記錄每日上下班時間，查看週統計。">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <title>工時紀錄</title>
     <!-- iOS 系統字體優化 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -2222,6 +2224,7 @@ END:VCALENDAR
 
         function punch() {
             if (punchRecords.length >= 20) { showReminder("已達今日紀錄上限", 'work'); return; }
+            haptic(getNextPunchType() === 'in' ? 'light' : 'medium');
             playSingleClickSound("A4");
             requestNotificationPermission();
 
@@ -2715,11 +2718,100 @@ END:VCALENDAR
         initSwipePunch();
         fetchNews(); // Fetch on initial load
 
+        // --- Onboarding 首次引導 ---
+        function showOnboarding() {
+            if (localStorage.getItem('onboardingDone')) return;
+            const overlay = document.createElement('div');
+            overlay.id = 'onboardingOverlay';
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:10000;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);';
+
+            const steps = [
+                { icon: 'fas fa-chart-pie', title: '追蹤工時', desc: '圓環即時顯示今日累計，達標自動提醒' },
+                { icon: 'fas fa-fingerprint', title: '一鍵打卡', desc: '點擊按鈕上班，記錄工作階段' },
+                { icon: 'fas fa-arrow-right', title: '滑動下班', desc: '工作中滑動即可結束，防止誤觸' }
+            ];
+            let current = 0;
+
+            function render() {
+                const s = steps[current];
+                overlay.innerHTML = `
+                    <div style="background:var(--card,#fff);border-radius:20px;padding:36px 28px;max-width:300px;text-align:center;margin:20px;">
+                        <div style="width:64px;height:64px;border-radius:50%;background:rgba(0,122,255,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+                            <i class="${s.icon}" style="font-size:28px;color:var(--blue,#007AFF);"></i>
+                        </div>
+                        <h3 style="font-size:20px;font-weight:700;color:var(--label,#1C1C1E);margin-bottom:8px;">${s.title}</h3>
+                        <p style="font-size:15px;color:var(--label-secondary,#3C3C43);line-height:1.5;margin-bottom:24px;">${s.desc}</p>
+                        <div style="display:flex;justify-content:center;gap:6px;margin-bottom:20px;">
+                            ${steps.map((_, i) => `<div style="width:8px;height:8px;border-radius:50%;background:${i === current ? 'var(--blue,#007AFF)' : 'var(--fill,#ddd)'}"></div>`).join('')}
+                        </div>
+                        <button onclick="onboardingNext()" style="width:100%;padding:14px;border-radius:14px;background:var(--blue,#007AFF);color:#fff;border:none;font-size:17px;font-weight:600;cursor:pointer;">
+                            ${current < steps.length - 1 ? '下一步' : '開始使用'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            window.onboardingNext = function () {
+                current++;
+                if (current >= steps.length) {
+                    localStorage.setItem('onboardingDone', '1');
+                    overlay.remove();
+                    delete window.onboardingNext;
+                } else {
+                    render();
+                }
+            };
+            render();
+            document.body.appendChild(overlay);
+        }
+
+        // --- a11y 無障礙 ---
+        function initA11y() {
+            const ring = document.getElementById('progressRing');
+            if (ring) {
+                const svg = ring.closest('svg');
+                if (svg) {
+                    svg.setAttribute('role', 'progressbar');
+                    svg.setAttribute('aria-label', '今日工時進度');
+                    svg.setAttribute('aria-valuemin', '0');
+                    svg.setAttribute('aria-valuemax', '100');
+                    svg.setAttribute('aria-valuenow', '0');
+                }
+            }
+            // 按鈕 aria-label
+            const labels = {
+                'punchBtn': '打卡',
+                'undoBtn': '復原上一筆紀錄',
+                'clearBtn': '清除所有紀錄',
+                'exportCalendarBtn': '匯出至日曆',
+                'insightBtn': '取得下班建議'
+            };
+            Object.entries(labels).forEach(([id, label]) => {
+                const el = document.getElementById(id);
+                if (el) el.setAttribute('aria-label', label);
+            });
+        }
+
+        // --- Haptic 觸覺回饋 ---
+        function haptic(style) {
+            if ('vibrate' in navigator) {
+                switch (style) {
+                    case 'light': navigator.vibrate(10); break;
+                    case 'medium': navigator.vibrate(20); break;
+                    case 'heavy': navigator.vibrate([30, 10, 30]); break;
+                }
+            }
+        }
+
+        // 初始化
+        showOnboarding();
+        initA11y();
+
         // --- Loops ---
-        setInterval(updateDisplay, 10000); // 10s check
-        setInterval(updateCurrentTime, 1000); // 1s clock
+        setInterval(updateDisplay, 10000);
+        setInterval(updateCurrentTime, 1000);
         setInterval(checkStretchReminder, 60000);
-        setInterval(playTickSound, 1000);  // 1 second sound loop
+        setInterval(playTickSound, 1000);
         setInterval(updateTimeGradient, 60000);
     </script>
 </body>
