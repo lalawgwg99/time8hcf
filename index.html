@@ -54,12 +54,13 @@
             --bg: #F2F2F7;
             --card: #FFFFFF;
             --card-secondary: #F9F9FB;
-            --separator: rgba(60, 60, 67, 0.12);
+            --separator: rgba(60, 60, 67, 0.10);
             --label: #1C1C1E;
             --label-secondary: #3C3C43;
             --label-tertiary: #8E8E93;
             --label-quaternary: #AEAEB2;
             --blue: #007AFF;
+            --blue-light: #5AC8FA;
             --green: #34C759;
             --red: #FF3B30;
             --orange: #FF9500;
@@ -67,12 +68,17 @@
             --teal: #5AC8FA;
             --fill: rgba(120, 120, 128, 0.08);
             --fill-secondary: rgba(120, 120, 128, 0.12);
-            --shadow-card: 0 0.5px 1px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.04);
-            --shadow-elevated: 0 2px 12px rgba(0, 0, 0, 0.08);
-            --radius: 16px;
-            --radius-sm: 12px;
-            --radius-xs: 8px;
+            --fill-tertiary: rgba(120, 120, 128, 0.05);
+            --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
+            --shadow-elevated: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-button: 0 3px 16px rgba(0,0,0,0.22), 0 1px 4px rgba(0,0,0,0.14);
+            --shadow-blue: 0 4px 16px rgba(0,122,255,0.22);
+            --radius: 18px;
+            --radius-sm: 13px;
+            --radius-xs: 10px;
+            --radius-pill: 100px;
             --spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         * {
@@ -96,15 +102,16 @@
             --bg: #000000;
             --card: #1C1C1E;
             --card-secondary: #2C2C2E;
-            --separator: rgba(84, 84, 88, 0.36);
+            --separator: rgba(84, 84, 88, 0.30);
             --label: #FFFFFF;
             --label-secondary: #EBEBF5;
             --label-tertiary: #8E8E93;
             --label-quaternary: #636366;
-            --fill: rgba(120, 120, 128, 0.24);
-            --fill-secondary: rgba(120, 120, 128, 0.32);
+            --fill: rgba(120, 120, 128, 0.22);
+            --fill-secondary: rgba(120, 120, 128, 0.30);
+            --fill-tertiary: rgba(120, 120, 128, 0.12);
             --shadow-card: none;
-            --shadow-elevated: 0 2px 16px rgba(0, 0, 0, 0.4);
+            --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0,0,0,0.3);
             color: #FFFFFF;
         }
 
@@ -119,7 +126,7 @@
         }
 
         .night-mode header {
-            background: rgba(0, 0, 0, 0.85) !important;
+            background: rgba(0, 0, 0, 0.82) !important;
             border-color: var(--separator) !important;
         }
 
@@ -209,15 +216,16 @@
                 --bg: #000000;
                 --card: #1C1C1E;
                 --card-secondary: #2C2C2E;
-                --separator: rgba(84, 84, 88, 0.36);
+                --separator: rgba(84, 84, 88, 0.32);
                 --label: #FFFFFF;
                 --label-secondary: #EBEBF5;
                 --label-tertiary: #8E8E93;
                 --label-quaternary: #636366;
                 --fill: rgba(120, 120, 128, 0.24);
                 --fill-secondary: rgba(120, 120, 128, 0.32);
+                --fill-tertiary: rgba(120, 120, 128, 0.14);
                 --shadow-card: none;
-                --shadow-elevated: 0 2px 16px rgba(0, 0, 0, 0.4);
+                --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0,0,0,0.3);
                 color: #FFFFFF;
             }
         }
@@ -256,7 +264,8 @@
             border: 0.5px solid var(--separator);
             border-radius: var(--radius);
             box-shadow: var(--shadow-card);
-            transition: background 0.3s, border-color 0.3s;
+            overflow: hidden;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
 
         .inset-card {
@@ -264,6 +273,7 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow-card);
             overflow: hidden;
+            border: 0.5px solid var(--separator);
         }
 
         /* --- Typography --- */
@@ -276,11 +286,11 @@
         }
 
         .section-label {
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             color: var(--label-tertiary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
             padding: 0 4px;
             margin-bottom: 8px;
         }
@@ -555,13 +565,14 @@
         .swipe-track {
             position: relative;
             width: 100%;
-            height: 56px;
+            height: 58px;
             border-radius: var(--radius);
-            background: var(--red);
+            background: linear-gradient(90deg, rgba(255,59,48,0.92) 0%, var(--red) 60%);
             overflow: hidden;
             touch-action: none;
             -webkit-user-select: none;
             user-select: none;
+            box-shadow: 0 4px 16px rgba(255,59,48,0.22), inset 0 1px 0 rgba(255,255,255,0.14);
         }
 
         .swipe-label {
@@ -570,17 +581,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.55);
             font-size: 15px;
             font-weight: 600;
+            letter-spacing: 0.2px;
             pointer-events: none;
             transition: opacity 0.2s;
         }
 
         .swipe-handle {
             position: absolute;
-            left: 4px;
-            top: 4px;
+            left: 5px;
+            top: 5px;
             width: 48px;
             height: 48px;
             border-radius: var(--radius-sm);
@@ -588,7 +600,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12);
             cursor: grab;
             transition: left 0.1s linear;
             z-index: 2;
@@ -604,7 +616,7 @@
             left: 0;
             top: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.08);
             border-radius: var(--radius);
             transition: width 0.1s linear;
             pointer-events: none;
@@ -633,13 +645,27 @@
 
         .alarm-card {
             background: var(--card);
-            border-radius: 20px;
-            padding: 36px 28px;
+            border-radius: 28px;
+            padding: 40px 28px 32px;
             text-align: center;
             max-width: 300px;
             width: 88%;
             box-shadow: var(--shadow-elevated);
             animation: fadeInUp 0.35s var(--spring);
+        }
+
+        /* Sheet Handle (bottom modal handle indicator) */
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(60, 60, 67, 0.20);
+            border-radius: 2px;
+            margin: 0 auto 18px;
+            flex-shrink: 0;
+        }
+
+        .night-mode .sheet-handle {
+            background: rgba(255, 255, 255, 0.24);
         }
 
         /* --- Ripple --- */
@@ -852,25 +878,25 @@
 
         <!-- Header -->
         <header
-            style="padding:calc(env(safe-area-inset-top, 12px) + 12px) 20px 14px; position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:0.5px solid transparent; -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%); transition:background 0.3s, border-color 0.3s;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <div style="font-size:13px; color:var(--label-tertiary); font-weight:600; text-transform:uppercase; letter-spacing:0.5px;"
+            style="padding:calc(env(safe-area-inset-top, 12px) + 10px) 20px 12px; position:sticky; top:0; z-index:20; background:rgba(242,242,247,0.86); border-bottom:0.5px solid var(--separator); -webkit-backdrop-filter:blur(24px) saturate(200%); backdrop-filter:blur(24px) saturate(200%); transition:background 0.3s, border-color 0.3s;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                <div style="font-size:11px; color:var(--label-tertiary); font-weight:700; text-transform:uppercase; letter-spacing:0.8px;"
                     id="currentDate">載入中...</div>
                 <div style="display:flex; gap:8px;">
                     <button onclick="showInstallGuide()" aria-label="安裝" class="active-scale"
-                        style="width:32px; height:32px; border-radius:50%; background:var(--fill); border:none; display:flex; align-items:center; justify-content:center; color:var(--blue); cursor:pointer;">
-                        <i class="fas fa-arrow-down" style="font-size:13px;"></i>
+                        style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--blue); cursor:pointer;">
+                        <i class="fas fa-arrow-down" style="font-size:12px;"></i>
                     </button>
                     <button onclick="openSettings()" aria-label="設定" class="active-scale"
-                        style="width:32px; height:32px; border-radius:50%; background:var(--fill); border:none; display:flex; align-items:center; justify-content:center; color:var(--blue); cursor:pointer;">
-                        <i class="fas fa-cog" style="font-size:13px;"></i>
+                        style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--blue); cursor:pointer;">
+                        <i class="fas fa-cog" style="font-size:12px;"></i>
                     </button>
                 </div>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                <h1 style="font-size:34px; font-weight:700; letter-spacing:-0.5px; color:var(--label); margin:0;">工時紀錄
+                <h1 style="font-size:32px; font-weight:700; letter-spacing:-1px; color:var(--label); margin:0;">工時紀錄
                 </h1>
-                <div style="font-size:22px; font-weight:500; font-variant-numeric:tabular-nums; color:var(--label);"
+                <div style="font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--label);"
                     id="currentTime">00:00</div>
             </div>
         </header>
@@ -886,12 +912,26 @@
                     style="display:flex; flex-direction:column; align-items:center; position:relative; margin-bottom:8px;">
                     <div style="position:relative; width:180px; height:180px;">
                         <svg width="180" height="180" viewBox="0 0 180 180" style="transform:rotate(-90deg);">
+                            <defs>
+                                <linearGradient id="ringGradientBlue" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#5AC8FA"/>
+                                    <stop offset="100%" stop-color="#007AFF"/>
+                                </linearGradient>
+                                <linearGradient id="ringGradientGreen" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#34C759"/>
+                                    <stop offset="100%" stop-color="#30D158"/>
+                                </linearGradient>
+                                <linearGradient id="ringGradientPurple" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#BF5AF2"/>
+                                    <stop offset="100%" stop-color="#AF52DE"/>
+                                </linearGradient>
+                            </defs>
                             <!-- Background track -->
                             <circle cx="90" cy="90" r="80" fill="none" stroke="var(--fill-secondary)"
-                                stroke-width="8" />
+                                stroke-width="9" />
                             <!-- Progress ring -->
-                            <circle id="progressRing" cx="90" cy="90" r="80" fill="none" stroke="var(--blue)"
-                                stroke-width="8" stroke-linecap="round" stroke-dasharray="502.65"
+                            <circle id="progressRing" cx="90" cy="90" r="80" fill="none" stroke="url(#ringGradientBlue)"
+                                stroke-width="9" stroke-linecap="round" stroke-dasharray="502.65"
                                 stroke-dashoffset="502.65"
                                 style="transition:stroke-dashoffset 0.8s ease, stroke 0.3s;" />
                         </svg>
@@ -933,7 +973,7 @@
                 <div
                     style="display:flex; align-items:center; gap:12px; padding:12px 0; border-top:0.5px solid var(--separator);">
                     <div id="statusIconBg"
-                        style="width:40px; height:40px; border-radius:var(--radius-xs); background:var(--fill); display:flex; align-items:center; justify-content:center; font-size:18px; transition:background 0.3s, color 0.3s; flex-shrink:0;">
+                        style="width:42px; height:42px; border-radius:var(--radius-sm); background:var(--fill); display:flex; align-items:center; justify-content:center; font-size:18px; transition:background 0.3s, color 0.3s; flex-shrink:0;">
                         <i id="statusIcon" class="fas fa-mug-hot" style="color:var(--label-tertiary);"></i>
                     </div>
                     <div style="flex:1; min-width:0;">
@@ -961,7 +1001,7 @@
 
                 <!-- Punch button -->
                 <button id="punchBtn" onclick="punchWithRipple(event)" class="ripple-container active-scale"
-                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:17px; font-weight:600; color:white; background:#1C1C1E; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; box-shadow:var(--shadow-card);">
+                    style="width:100%; padding:16px; border-radius:var(--radius); font-size:17px; font-weight:600; color:white; background:linear-gradient(180deg, #2C2C2E 0%, #141414 100%); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:9px; margin-top:14px; box-shadow:0 3px 16px rgba(0,0,0,0.26), 0 1px 4px rgba(0,0,0,0.16), inset 0 0.5px 0 rgba(255,255,255,0.09); letter-spacing:0.2px;">
                     <i class="fas fa-fingerprint anim-breathe"></i>
                     <span id="btnText">上班</span>
                 </button>
@@ -1114,8 +1154,8 @@
                 <button id="insightBtn" onclick="generateAIContent()" disabled class="active-scale card"
                     style="width:100%; padding:14px 16px; border:none; cursor:pointer; display:flex; align-items:center; gap:12px; text-align:left; opacity:1;">
                     <div
-                        style="width:36px; height:36px; border-radius:var(--radius-xs); background:var(--fill); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <i class="fas fa-magic" style="color:var(--blue); font-size:15px;"></i>
+                        style="width:40px; height:40px; border-radius:var(--radius-sm); background:linear-gradient(135deg, rgba(0,122,255,0.12) 0%, rgba(90,200,250,0.08) 100%); border:0.5px solid rgba(0,122,255,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fas fa-magic" style="color:var(--blue); font-size:16px;"></i>
                     </div>
                     <div style="flex:1;">
                         <div style="font-size:15px; font-weight:600; color:var(--label);">下班生活指南</div>
@@ -1130,7 +1170,7 @@
                         <div style="display:flex; align-items:center; gap:6px;"><i class="fas fa-sparkles"
                                 style="color:var(--blue);"></i> 下班生活指南</div>
                         <button onclick="copyReport()"
-                            style="font-size:12px; background:var(--fill); padding:4px 8px; border-radius:6px; color:var(--label-secondary); border:none; cursor:pointer;">複製</button>
+                            style="font-size:12px; background:var(--fill-secondary); padding:5px 10px; border-radius:8px; color:var(--label-secondary); border:none; cursor:pointer; font-weight:500;">複製</button>
                     </div>
                     <div id="aiContent" style="font-size:13px; line-height:1.6; color:var(--label-secondary);"></div>
                     <div
@@ -1143,7 +1183,7 @@
             <!-- Calendar Reminder Button -->
             <div id="calendarReminderContainer" style="padding-bottom:16px;">
                 <button id="addCalendarBtn" onclick="addCalendarReminder()" disabled class="active-scale"
-                    style="width:100%; padding:13px; border-radius:var(--radius-sm); font-size:15px; font-weight:600; background:var(--card); color:var(--red); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:var(--shadow-card); opacity:0.5;">
+                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--card); color:var(--red); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:var(--shadow-card); opacity:0.5;">
                     <i class="far fa-calendar-plus"></i>
                     <span id="calendarBtnText">加入休息提醒</span>
                 </button>
@@ -1164,27 +1204,27 @@
     <div id="installGuideModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeInstallGuide()">
         </div>
-        <div class="absolute bottom-0 left-0 right-0 bg-[#F2F2F7] rounded-t-[24px] p-6 modal-enter max-w-md mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-bold text-gray-900">安裝到主畫面</h3>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto" style="background:var(--bg); padding:14px 24px 32px;">
+            <div class="sheet-handle"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="font-size:17px; font-weight:700; color:var(--label);">安裝到主畫面</h3>
                 <button onclick="closeInstallGuide()"
-                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                    <i class="fas fa-times"></i>
+                    style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:12px;"></i>
                 </button>
             </div>
-            <div class="space-y-4 mb-6">
-                <div class="flex items-center gap-4 bg-white p-4 rounded-xl">
-                    <i class="fas fa-share-square text-ios-blue text-xl"></i>
-                    <div class="text-sm text-gray-600">點擊 Safari 瀏覽器下方的<br><span
-                            class="font-bold text-black">分享按鈕</span></div>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+                <div style="display:flex; align-items:center; gap:14px; background:var(--card); padding:16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="fas fa-share-square" style="color:var(--blue); font-size:20px; width:24px; text-align:center;"></i>
+                    <div style="font-size:14px; color:var(--label-secondary); line-height:1.5;">點擊 Safari 瀏覽器下方的<br><span style="font-weight:700; color:var(--label);">分享按鈕</span></div>
                 </div>
-                <div class="flex items-center gap-4 bg-white p-4 rounded-xl">
-                    <i class="far fa-plus-square text-ios-blue text-xl"></i>
-                    <div class="text-sm text-gray-600">往下滑動並選擇<br><span class="font-bold text-black">加入主畫面</span></div>
+                <div style="display:flex; align-items:center; gap:14px; background:var(--card); padding:16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="far fa-plus-square" style="color:var(--blue); font-size:20px; width:24px; text-align:center;"></i>
+                    <div style="font-size:14px; color:var(--label-secondary); line-height:1.5;">往下滑動並選擇<br><span style="font-weight:700; color:var(--label);">加入主畫面</span></div>
                 </div>
             </div>
             <button onclick="closeInstallGuide()"
-                class="w-full py-3.5 bg-ios-blue text-white rounded-xl font-semibold">了解</button>
+                style="width:100%; padding:15px; background:var(--blue); color:white; border:none; border-radius:var(--radius); font-size:17px; font-weight:600; cursor:pointer; box-shadow:var(--shadow-blue);">了解</button>
         </div>
     </div>
 
@@ -1192,15 +1232,19 @@
     <div id="settingsModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
             onclick="closeSettings()"></div>
-        <div class="absolute bottom-0 left-0 right-0 rounded-t-[24px] p-6 modal-enter max-w-md mx-auto"
-            style="background:var(--ios-bg);max-height:85vh;overflow-y:auto">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-bold text-gray-900">設定</h3>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg);max-height:88vh;overflow-y:auto;">
+            <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:1;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:0.5px solid var(--separator);">
+                    <h3 style="font-size:17px; font-weight:700; color:var(--label);">設定</h3>
                 <button onclick="closeSettings()" aria-label="關閉設定"
-                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                    <i class="fas fa-times"></i>
+                    style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:12px;"></i>
                 </button>
+                </div>
             </div>
+            <div style="padding:16px 24px 32px;">
 
             <!-- 提醒設定 -->
             <div class="section-label">提醒</div>
@@ -1256,37 +1300,37 @@
                 </div>
             </div>
 
-            <button onclick="saveSettings()"
-                class="w-full py-3.5 bg-black text-white rounded-xl font-semibold active-scale"
-                style="box-shadow:var(--shadow-md)">儲存設定</button>
-        </div>
+            <button onclick="saveSettings()" class="active-scale"
+                style="width:100%; padding:15px; border-radius:var(--radius); font-size:17px; font-weight:600; background:linear-gradient(180deg, #2C2C2E 0%, #141414 100%); color:white; border:none; cursor:pointer; box-shadow:0 3px 16px rgba(0,0,0,0.26), 0 1px 4px rgba(0,0,0,0.16), inset 0 0.5px 0 rgba(255,255,255,0.09);">儲存設定</button>
+            </div><!-- /content padding -->
+        </div><!-- /outer modal -->
     </div>
 
     <!-- Alarm Modal (全螢幕提醒) -->
     <div id="alarmModal" class="alarm-overlay">
         <div class="alarm-card">
-            <div class="text-5xl mb-4" id="alarmEmoji">⏰</div>
-            <div class="text-xl font-bold text-gray-900 mb-2" id="alarmTitle">休息時間到！</div>
-            <div class="text-[15px] text-gray-500 mb-6" id="alarmBody">你已經連續工作超過設定時間，起來動一動吧</div>
-            <button onclick="dismissAlarm()"
-                class="w-full py-3.5 bg-black text-white rounded-xl font-semibold active-scale">我知道了</button>
+            <div style="font-size:52px; margin-bottom:16px;" id="alarmEmoji">⏰</div>
+            <div style="font-size:20px; font-weight:700; color:var(--label); margin-bottom:8px;" id="alarmTitle">休息時間到！</div>
+            <div style="font-size:15px; color:var(--label-tertiary); margin-bottom:24px; line-height:1.5;" id="alarmBody">你已經連續工作超過設定時間，起來動一動吧</div>
+            <button onclick="dismissAlarm()" class="active-scale"
+                style="width:100%; padding:15px; border-radius:var(--radius); font-size:17px; font-weight:600; background:linear-gradient(180deg, #2C2C2E 0%, #141414 100%); color:white; border:none; cursor:pointer; box-shadow:0 3px 16px rgba(0,0,0,0.26), inset 0 0.5px 0 rgba(255,255,255,0.09);">我知道了</button>
         </div>
     </div>
 
     <!-- Stretch Reminder Modal -->
     <div id="stretchModal" class="alarm-overlay">
         <div class="alarm-card">
-            <div class="text-5xl mb-4">🧘</div>
-            <div class="text-xl font-bold text-gray-900 mb-2">久坐提醒</div>
-            <div class="text-[15px] text-gray-500 mb-3">你已連續工作 90 分鐘</div>
-            <div class="text-left bg-gray-50 rounded-xl p-4 mb-6 text-[14px] text-gray-600 space-y-2" id="stretchTips">
-                <div>🙆 雙手高舉伸展 10 秒</div>
-                <div>🔄 轉動脖子左右各 5 圈</div>
-                <div>👀 閉眼休息 20 秒</div>
-                <div>🚶 起身走動 1 分鐘</div>
+            <div style="font-size:52px; margin-bottom:16px;">🧘</div>
+            <div style="font-size:20px; font-weight:700; color:var(--label); margin-bottom:8px;">久坐提醒</div>
+            <div style="font-size:15px; color:var(--label-tertiary); margin-bottom:12px;">你已連續工作 90 分鐘</div>
+            <div style="text-align:left; background:var(--fill); border-radius:var(--radius-sm); padding:16px; margin-bottom:22px; display:flex; flex-direction:column; gap:10px;" id="stretchTips">
+                <div style="font-size:14px; color:var(--label-secondary);">🙆 雙手高舉伸展 10 秒</div>
+                <div style="font-size:14px; color:var(--label-secondary);">🔄 轉動脖子左右各 5 圈</div>
+                <div style="font-size:14px; color:var(--label-secondary);">👀 閉眼休息 20 秒</div>
+                <div style="font-size:14px; color:var(--label-secondary);">🚶 起身走動 1 分鐘</div>
             </div>
-            <button onclick="dismissStretch()"
-                class="w-full py-3.5 bg-black text-white rounded-xl font-semibold active-scale">已完成伸展 ✓</button>
+            <button onclick="dismissStretch()" class="active-scale"
+                style="width:100%; padding:15px; border-radius:var(--radius); font-size:17px; font-weight:600; background:linear-gradient(135deg, #34C759 0%, #30D158 100%); color:white; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(52,199,89,0.25), inset 0 0.5px 0 rgba(255,255,255,0.15);">已完成伸展 ✓</button>
         </div>
     </div>
 
@@ -2199,11 +2243,12 @@ END:VCALENDAR
                 const opacity = isToday ? '1' : (hasData ? '0.5' : '0.3');
                 const label = hours > 0 ? hours.toFixed(1) : '';
 
+                const todayGlow = isToday && hasData ? 'box-shadow:0 2px 10px rgba(0,122,255,0.22);' : '';
                 bars += `
-                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">
                         <span style="font-size:9px;font-weight:600;color:var(--label-tertiary);min-height:12px">${label}</span>
-                        <div style="width:100%;background:var(--fill);border-radius:6px;height:80px;position:relative;overflow:hidden">
-                            <div style="position:absolute;bottom:0;width:100%;height:${Math.max(pct, hasData ? 8 : 0)}%;background:${barColor};opacity:${opacity};border-radius:6px;transition:height 0.6s var(--spring)"></div>
+                        <div style="width:100%;background:var(--fill-secondary);border-radius:8px;height:80px;position:relative;overflow:hidden">
+                            <div style="position:absolute;bottom:0;width:100%;height:${Math.max(pct, hasData ? 6 : 0)}%;background:${barColor};opacity:${opacity};border-radius:8px;transition:height 0.6s var(--spring);${todayGlow}"></div>
                         </div>
                         <span style="font-size:10px;font-weight:${isToday ? '700' : '500'};color:${isToday ? 'var(--blue)' : 'var(--label-tertiary)'}">${days[d.getDay()]}</span>
                     </div>
@@ -2425,7 +2470,7 @@ END:VCALENDAR
 
             if (result.total >= targetMin) {
                 ring.style.strokeDashoffset = '0';
-                ring.style.stroke = 'var(--purple)';
+                ring.style.stroke = 'url(#ringGradientPurple)';
                 const targetH = appSettings.targetHours || 8;
                 progressInfo = `<span style="color:var(--purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 ${targetH} 小時，可以下班了</span>`;
 
@@ -2435,7 +2480,7 @@ END:VCALENDAR
             } else {
                 const offset = circumference - (pct / 100) * circumference;
                 ring.style.strokeDashoffset = offset;
-                ring.style.stroke = pct > 85 ? 'var(--green)' : 'var(--blue)';
+                ring.style.stroke = pct > 85 ? 'url(#ringGradientGreen)' : 'url(#ringGradientBlue)';
 
                 // 計算預計時間
                 if (result.isOngoing) {
@@ -2549,7 +2594,7 @@ END:VCALENDAR
                     }
 
                     const card = document.createElement('div');
-                    card.style.cssText = 'background:var(--fill);border-radius:12px;padding:14px 16px;margin-bottom:8px;';
+                    card.style.cssText = 'background:var(--fill-tertiary);border-radius:13px;padding:14px 16px;margin-bottom:8px;border:0.5px solid var(--separator);';
 
                     card.innerHTML = `
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${s.in.task ? '6' : '0'}px">
@@ -2697,11 +2742,11 @@ END:VCALENDAR
                 const a = document.createElement('a');
                 a.href = item.link;
                 a.target = "_blank";
-                a.style.cssText = 'display:block;font-size:14px;color:var(--label);line-height:1.5;padding-bottom:10px;border-bottom:0.5px solid var(--separator);position:relative;padding-left:14px;text-decoration:none';
+                a.style.cssText = 'display:block;font-size:13.5px;color:var(--label);line-height:1.55;padding-bottom:11px;border-bottom:0.5px solid var(--separator);position:relative;padding-left:15px;text-decoration:none;font-weight:400;';
 
                 // Add a small bullet point dot
                 const dot = document.createElement('span');
-                dot.style.cssText = 'position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:0.6';
+                dot.style.cssText = 'position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:0.5';
 
                 a.appendChild(dot);
                 a.appendChild(document.createTextNode(item.title));
