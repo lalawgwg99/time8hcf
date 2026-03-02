@@ -2173,8 +2173,7 @@ END:VCALENDAR
                 statusIcon.style.color = 'var(--label-tertiary)';
                 nextActionText.textContent = "休息中";
 
-                punchBtn.style.background = '#1C1C1E';
-                punchBtn.classList.remove('hidden');
+                punchBtn.style.display = 'flex';
                 btnText.textContent = "上班";
                 document.getElementById('swipeTrack').classList.add('hidden');
 
@@ -2209,9 +2208,7 @@ END:VCALENDAR
                     nextActionText.innerHTML = `預計休息：<span style="color:var(--blue)">${timeStr}</span>`;
                 }
 
-                punchBtn.classList.add('hidden');
-                punchBtn.style.background = 'var(--red)';
-                btnText.textContent = "下班";
+                punchBtn.style.display = 'none';
                 document.getElementById('swipeTrack').classList.remove('hidden');
 
                 taskInputContainer.style.maxHeight = '0';
