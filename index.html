@@ -12,7 +12,9 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <title>工時紀錄</title>
     <!-- iOS 系統字體優化 -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
@@ -71,10 +73,10 @@
             --fill: rgba(40, 32, 20, 0.05);
             --fill-secondary: rgba(40, 32, 20, 0.08);
             --fill-tertiary: rgba(40, 32, 20, 0.03);
-            --shadow-card: 0 2px 32px rgba(40,30,10,0.05), 0 1px 6px rgba(40,30,10,0.04);
-            --shadow-elevated: 0 8px 48px rgba(40,30,10,0.12), 0 2px 12px rgba(40,30,10,0.07);
-            --shadow-button: 0 2px 16px rgba(28,23,12,0.18), 0 1px 4px rgba(28,23,12,0.12);
-            --shadow-blue: 0 4px 20px rgba(110,125,106,0.22);
+            --shadow-card: 0 2px 32px rgba(40, 30, 10, 0.05), 0 1px 6px rgba(40, 30, 10, 0.04);
+            --shadow-elevated: 0 8px 48px rgba(40, 30, 10, 0.12), 0 2px 12px rgba(40, 30, 10, 0.07);
+            --shadow-button: 0 2px 16px rgba(28, 23, 12, 0.18), 0 1px 4px rgba(28, 23, 12, 0.12);
+            --shadow-blue: 0 4px 20px rgba(110, 125, 106, 0.22);
             --radius: 22px;
             --radius-sm: 14px;
             --radius-xs: 10px;
@@ -105,137 +107,17 @@
             background: var(--bg);
         }
 
-        /* --- Night Mode (Ink Dark) --- */
-        .night-mode {
-            --bg: #0E0D0B;
-            --card: #1A1916;
-            --card-secondary: #242220;
-            --separator: rgba(240, 225, 200, 0.09);
-            --label: #EDE5D8;
-            --label-secondary: #C8B89A;
-            --label-tertiary: #807060;
-            --label-quaternary: #504540;
-            --fill: rgba(240, 225, 200, 0.06);
-            --fill-secondary: rgba(240, 225, 200, 0.10);
-            --fill-tertiary: rgba(240, 225, 200, 0.03);
-            --shadow-card: none;
-            --shadow-elevated: 0 4px 40px rgba(0, 0, 0, 0.6), 0 1px 6px rgba(0,0,0,0.4);
-            color: #EDE5D8;
-        }
 
-        .night-mode body,
-        .night-mode {
-            background: var(--bg);
-        }
-
-        .night-mode .card,
-        .night-mode .zen-card,
-        .night-mode .action-card {
-            background: var(--card);
-        }
-
-        .night-mode #currentTime,
-        .night-mode #totalHours,
-        .night-mode .text-gray-900,
-        .night-mode .text-black {
-            color: var(--label) !important;
-        }
-
-        .night-mode .text-gray-400,
-        .night-mode .text-gray-500 {
-            color: var(--label-tertiary) !important;
-        }
-
-        .night-mode .ios-input,
-        .night-mode input[type="text"],
-        .night-mode input[type="number"],
-        .night-mode input[type="url"],
-        .night-mode select,
-        .night-mode .task-input-zen {
-            background: var(--fill-secondary) !important;
-            color: var(--label);
-        }
-
-        .night-mode .bg-white,
-        .night-mode .inset-card {
-            background: var(--card) !important;
-        }
-
-        .night-mode .bg-gray-100,
-        .night-mode .bg-gray-50 {
-            background: var(--fill) !important;
-        }
-
-        .night-mode .alarm-card {
-            background: var(--card);
-        }
-
-        .night-mode .alarm-card .text-gray-900 { color: var(--label) !important; }
-        .night-mode .alarm-card .text-gray-500 { color: var(--label-tertiary) !important; }
-
-        .night-mode .sprite-terrarium {
-            background: var(--card);
-            border-color: var(--separator);
-        }
-
-        .night-mode .sprite-core-container {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .night-mode .swipe-track { box-shadow: none; }
-
-        .night-mode #punchBtn,
-        .night-mode .punch-btn-zen {
-            background: var(--label) !important;
-            color: var(--bg) !important;
-        }
-
-        .night-mode #settingsModal .bg-white {
-            background: var(--card) !important;
-        }
-
-        .night-mode #settingsModal>div:last-child {
-            background: var(--card) !important;
-        }
-
-        .night-mode .editorial-label::before {
-            background: var(--ink-light);
-        }
-
-        /* Brushstroke track color in dark */
-        .night-mode #brushstrokeSVG path:first-child {
-            stroke: rgba(240,225,200,0.10);
-        }
-
-        /* System dark mode auto-detection */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0E0D0B;
-                --card: #1A1916;
-                --card-secondary: #242220;
-                --separator: rgba(240, 225, 200, 0.09);
-                --label: #EDE5D8;
-                --label-secondary: #C8B89A;
-                --label-tertiary: #807060;
-                --label-quaternary: #504540;
-                --fill: rgba(240, 225, 200, 0.06);
-                --fill-secondary: rgba(240, 225, 200, 0.10);
-                --fill-tertiary: rgba(240, 225, 200, 0.03);
-                --shadow-card: none;
-                --shadow-elevated: 0 4px 40px rgba(0, 0, 0, 0.6), 0 1px 6px rgba(0,0,0,0.4);
-                color: #EDE5D8;
-            }
-        }
 
         /* Ring draw-in animation on load */
         @keyframes ring-draw {
             from {
-                stroke-dashoffset: 502.65;
+                stroke-dashoffset: 565.49;
             }
         }
 
         #progressRing {
-            animation: ring-draw 1s var(--spring) forwards;
+            animation: ring-draw 1.2s var(--spring) forwards;
         }
 
         /* Ring breathe effect during work */
@@ -243,11 +125,13 @@
 
             0%,
             100% {
-                stroke-width: 8;
+                stroke-width: 7;
+                opacity: 1;
             }
 
             50% {
-                stroke-width: 10;
+                stroke-width: 9;
+                opacity: 0.85;
             }
         }
 
@@ -371,8 +255,8 @@
         }
 
         .sprite-core-container {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             position: relative;
             display: flex;
             align-items: center;
@@ -380,6 +264,19 @@
             border-radius: 50%;
             background: var(--fill);
             flex-shrink: 0;
+            animation: spriteFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes spriteFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-3px);
+            }
         }
 
         .sprite-core {
@@ -400,10 +297,43 @@
             box-sizing: border-box;
         }
 
+        .sprite-working .sprite-core-container {
+            animation: spriteFloatWorking 2.5s ease-in-out infinite;
+        }
+
+        @keyframes spriteFloatWorking {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-4px) scale(1.05);
+            }
+        }
+
         .sprite-working .sprite-core {
-            animation: breathe 3s ease-in-out infinite alternate;
-            box-shadow: 0 0 12px #818CF8, 0 0 24px #6366F1;
+            animation: breatheAlive 3s ease-in-out infinite alternate;
+            box-shadow: 0 0 14px #818CF8, 0 0 28px #6366F1;
             background: radial-gradient(circle at 30% 30%, #fff, #818CF8);
+        }
+
+        @keyframes breatheAlive {
+            0% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
         }
 
         .sprite-working .sprite-ring {
@@ -564,12 +494,12 @@
             width: 100%;
             height: 58px;
             border-radius: var(--radius);
-            background: linear-gradient(90deg, rgba(255,59,48,0.92) 0%, var(--red) 60%);
+            background: linear-gradient(90deg, rgba(255, 59, 48, 0.92) 0%, var(--red) 60%);
             overflow: hidden;
             touch-action: none;
             -webkit-user-select: none;
             user-select: none;
-            box-shadow: 0 4px 16px rgba(255,59,48,0.22), inset 0 1px 0 rgba(255,255,255,0.14);
+            box-shadow: 0 4px 16px rgba(255, 59, 48, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.14);
         }
 
         .swipe-label {
@@ -597,7 +527,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
             cursor: grab;
             transition: left 0.1s linear;
             z-index: 2;
@@ -661,9 +591,7 @@
             flex-shrink: 0;
         }
 
-        .night-mode .sheet-handle {
-            background: rgba(255, 255, 255, 0.24);
-        }
+
 
         /* --- Ripple --- */
         .ripple-container {
@@ -851,12 +779,20 @@
             min-height: 3px;
             transition: height 0.7s ease-in-out;
         }
-        .week-bar.overtime { background: var(--orange); }
+
+        .week-bar.overtime {
+            background: var(--orange);
+        }
+
         .week-bar.today {
             background: linear-gradient(180deg, var(--ink-light), var(--ink));
-            box-shadow: 0 2px 8px rgba(139,104,64,0.2);
+            box-shadow: 0 2px 8px rgba(139, 104, 64, 0.2);
         }
-        .week-bar.empty { background: var(--fill-secondary); min-height: 3px; }
+
+        .week-bar.empty {
+            background: var(--fill-secondary);
+            min-height: 3px;
+        }
 
         /* =============================================
            IPPITSU ZEN DESIGN SYSTEM
@@ -880,14 +816,13 @@
             backdrop-filter: blur(24px) saturate(180%);
             transition: background 0.5s ease-in-out, border-color 0.5s ease-in-out;
         }
-        .night-mode #appHeader {
-            background: rgba(14, 13, 11, 0.88) !important;
-        }
+
         .header-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .header-date {
             font-size: 10px;
             font-weight: 400;
@@ -895,6 +830,7 @@
             letter-spacing: 0.10em;
             text-transform: uppercase;
         }
+
         .header-brand {
             font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: 11px;
@@ -903,6 +839,7 @@
             letter-spacing: 0.32em;
             text-transform: uppercase;
         }
+
         .header-time {
             font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: 20px;
@@ -919,13 +856,22 @@
             gap: 20px;
             padding-top: 4px;
         }
+
         .tab-panel.active {
             display: flex;
             animation: zenFadeIn 0.55s ease-in-out;
         }
+
         @keyframes zenFadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0);   }
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* --- Bottom Nav --- */
@@ -946,9 +892,7 @@
             align-items: flex-start;
             transition: background 0.5s ease-in-out;
         }
-        .night-mode #bottomNav {
-            background: rgba(14, 13, 11, 0.92) !important;
-        }
+
         .nav-tab {
             flex: 1;
             display: flex;
@@ -963,9 +907,21 @@
             transition: color 0.5s ease-in-out;
             -webkit-tap-highlight-color: transparent;
         }
-        .nav-tab.active { color: var(--label); }
-        .nav-tab svg { width: 20px; height: 20px; transition: transform 0.4s ease-in-out; }
-        .nav-tab.active svg { transform: scale(1.08); }
+
+        .nav-tab.active {
+            color: var(--label);
+        }
+
+        .nav-tab svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .nav-tab.active svg {
+            transform: scale(1.08);
+        }
+
         .nav-tab span {
             font-size: 10px;
             font-weight: 400;
@@ -973,70 +929,89 @@
             font-family: 'Noto Sans TC', sans-serif;
         }
 
-        /* --- Hero Section --- */
+        /* --- Hero Section (Circular Ring) --- */
         .hero-section {
-            padding: 32px 0 8px;
+            padding: 20px 0 8px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
         }
+
+        .ring-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin-bottom: 8px;
+        }
+
+        .ring-container svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .ring-inner-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
         .hero-eyebrow {
             font-size: 10px;
             font-weight: 400;
             color: var(--label-quaternary);
             text-transform: uppercase;
             letter-spacing: 0.18em;
-            margin-bottom: 6px;
         }
+
         #totalHours {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 92px;
+            font-size: 48px;
             font-weight: 300;
-            line-height: 0.88;
-            letter-spacing: -4px;
+            line-height: 1;
+            letter-spacing: -2px;
             color: var(--label);
             font-variant-numeric: tabular-nums;
-            margin-bottom: 14px;
         }
+
         .hero-unit {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 38px;
+            font-size: 22px;
             font-weight: 300;
             color: var(--label-tertiary);
             letter-spacing: 0;
-            margin: 0 4px 0 3px;
+            margin: 0 2px 0 1px;
         }
+
         #ongoingHint {
             font-size: 11px;
             font-weight: 400;
             color: var(--blue);
             letter-spacing: 0.10em;
-            margin-bottom: 10px;
             transition: opacity 0.5s ease-in-out;
         }
 
-        /* --- Brushstroke Progress --- */
-        .stroke-wrap { width: 100%; }
-        .stroke-labels {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
+        .ring-pct {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 12px;
+            color: var(--label-quaternary);
+            letter-spacing: 0.04em;
         }
-        .stroke-info {
+
+        .ring-target-info {
             font-size: 11px;
             color: var(--label-tertiary);
             font-weight: 400;
             letter-spacing: 0.04em;
+            text-align: center;
         }
-        .stroke-pct {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 13px;
-            color: var(--label-quaternary);
-            font-weight: 400;
-            letter-spacing: 0.04em;
-        }
-        #brushStroke {
+
+        /* --- Ring track glow --- */
+        #progressRing {
             transition: stroke-dashoffset 0.9s ease-in-out, stroke 0.6s ease-in-out;
         }
 
@@ -1048,6 +1023,7 @@
             box-shadow: var(--shadow-card);
             transition: background 0.5s;
         }
+
         .status-row {
             display: flex;
             align-items: center;
@@ -1055,6 +1031,7 @@
             padding-bottom: 16px;
             border-bottom: 0.5px solid var(--separator);
         }
+
         .status-icon {
             width: 40px;
             height: 40px;
@@ -1068,6 +1045,7 @@
             flex-shrink: 0;
             color: var(--label-tertiary);
         }
+
         .status-label {
             font-size: 14px;
             font-weight: 500;
@@ -1075,6 +1053,7 @@
             flex: 1;
             letter-spacing: 0.02em;
         }
+
         .task-input-zen {
             width: 100%;
             padding: 12px 14px;
@@ -1089,12 +1068,16 @@
             transition: background 0.5s;
             font-family: 'Noto Sans TC', sans-serif;
         }
-        .task-input-zen:focus { background: var(--fill-secondary); }
+
+        .task-input-zen:focus {
+            background: var(--fill-secondary);
+        }
+
         .current-task-pill {
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(110,125,106,0.08);
+            background: rgba(110, 125, 106, 0.08);
             border-radius: var(--radius-sm);
             padding: 10px 14px;
             margin-top: 10px;
@@ -1119,22 +1102,30 @@
             justify-content: center;
             gap: 10px;
             margin-top: 16px;
-            box-shadow: 0 4px 28px rgba(28,23,12,0.16), 0 1px 6px rgba(28,23,12,0.10);
+            box-shadow: 0 4px 28px rgba(28, 23, 12, 0.16), 0 1px 6px rgba(28, 23, 12, 0.10);
             letter-spacing: 0.12em;
             transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, background 0.5s;
             font-family: 'Noto Sans TC', sans-serif;
             position: relative;
             overflow: hidden;
         }
-        .punch-btn-zen:active { transform: scale(0.98); opacity: 0.9; }
+
+        .punch-btn-zen:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
         .punch-glyph {
             font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: 22px;
             font-weight: 300;
             line-height: 1;
         }
+
         /* Working state: circle fills */
-        .punch-btn-zen.working .punch-glyph { content: '●'; }
+        .punch-btn-zen.working .punch-glyph {
+            content: '●';
+        }
 
         /* --- Zen Card (generic) --- */
         .zen-card {
@@ -1156,6 +1147,7 @@
             padding-left: 12px;
             position: relative;
         }
+
         .editorial-label::before {
             content: '';
             position: absolute;
@@ -1188,6 +1180,7 @@
             z-index: 45;
             overflow: hidden;
         }
+
         .ink-drop-circle {
             position: absolute;
             border-radius: 50%;
@@ -1195,44 +1188,65 @@
             pointer-events: none;
             animation: inkSpread 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
+
         @keyframes inkSpread {
-            0%   { transform: translate(-50%, -50%) scale(0);  opacity: 0.45; }
-            55%  { opacity: 0.2; }
-            100% { transform: translate(-50%, -50%) scale(22); opacity: 0; }
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.45;
+            }
+
+            55% {
+                opacity: 0.2;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(22);
+                opacity: 0;
+            }
         }
 
         /* --- Ambient Breathing (working state) --- */
         @keyframes ambientBreathe {
-            0%, 100% { opacity: 0; }
-            50%       { opacity: 1; }
+
+            0%,
+            100% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
+
         #ambientGlow {
             position: fixed;
             inset: 0;
             pointer-events: none;
             z-index: 0;
-            background: radial-gradient(ellipse at 50% 20%, rgba(196,168,122,0.05) 0%, transparent 60%);
+            background: radial-gradient(ellipse at 50% 20%, rgba(196, 168, 122, 0.05) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
+
         #ambientGlow.active {
             animation: ambientBreathe 4s ease-in-out infinite;
         }
 
-        /* --- Night mode: various overrides --- */
-        .night-mode .action-card,
-        .night-mode .zen-card { box-shadow: none; }
-        .night-mode .punch-btn-zen { color: var(--bg); }
+
 
         /* --- Swipe track zen style --- */
         .swipe-track {
-            background: linear-gradient(90deg, rgba(154,64,64,0.85) 0%, var(--red) 60%);
+            background: linear-gradient(90deg, rgba(154, 64, 64, 0.85) 0%, var(--red) 60%);
         }
-        .swipe-handle i { color: var(--red); }
+
+        .swipe-handle i {
+            color: var(--red);
+        }
 
         /* Sprite terrarium zen adjustments */
-        .sprite-terrarium { border-radius: var(--radius); }
-
+        .sprite-terrarium {
+            border-radius: var(--radius);
+        }
     </style>
 </head>
 
@@ -1251,63 +1265,55 @@
         </header>
 
         <!-- Main Content: Three Tabs -->
-        <main style="flex:1; padding:0 24px; display:flex; flex-direction:column; gap:0; margin-top:0; padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 12px);">
-
-            <!-- Hidden ring SVG for JS/a11y compat -->
-            <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
-                <defs>
-                    <linearGradient id="ringGradientBlue" x1="0%" y1="100%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#8BAB86"/><stop offset="100%" stop-color="#6E7D6A"/>
-                    </linearGradient>
-                    <linearGradient id="ringGradientGreen" x1="0%" y1="100%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#6FA876"/><stop offset="100%" stop-color="#4D7A52"/>
-                    </linearGradient>
-                    <linearGradient id="ringGradientPurple" x1="0%" y1="100%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#9A78B4"/><stop offset="100%" stop-color="#7A5A8A"/>
-                    </linearGradient>
-                </defs>
-                <circle id="progressRing" cx="90" cy="90" r="80" fill="none"
-                    stroke="url(#ringGradientBlue)" stroke-width="9" stroke-linecap="round"
-                    stroke-dasharray="502.65" stroke-dashoffset="502.65"/>
-            </svg>
+        <main
+            style="flex:1; padding:0 24px; display:flex; flex-direction:column; gap:0; margin-top:0; padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 12px);">
 
             <!-- ===== TAB: 今日 ===== -->
             <section id="tabToday" class="tab-panel active">
 
-                <!-- Hero: Large Time Display -->
+                <!-- Hero: Circular Ring with Time Inside -->
                 <div class="hero-section">
-                    <div class="hero-eyebrow">今日工時</div>
-                    <div id="totalHours">
-                        0<span class="hero-unit">h</span>&thinsp;0<span class="hero-unit">m</span>
-                    </div>
-                    <span id="ongoingHint" class="opacity-0">● 工作中</span>
-
-                    <!-- Brushstroke Progress -->
-                    <div class="stroke-wrap">
-                        <svg id="brushstrokeSVG" width="100%" height="40" viewBox="0 0 320 40" preserveAspectRatio="none">
+                    <div class="ring-container" id="ringContainer">
+                        <svg viewBox="0 0 200 200">
                             <defs>
-                                <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#8B6840" stop-opacity="0.5"/>
-                                    <stop offset="55%" stop-color="#C4A87A"/>
-                                    <stop offset="100%" stop-color="#E8C17A"/>
+                                <linearGradient id="ringGradientBlue" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#C4A87A" />
+                                    <stop offset="100%" stop-color="#8B6840" />
                                 </linearGradient>
-                                <linearGradient id="strokeGradComplete" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#4D7A52" stop-opacity="0.5"/>
-                                    <stop offset="100%" stop-color="#6FA876"/>
+                                <linearGradient id="ringGradientGreen" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#6FA876" />
+                                    <stop offset="100%" stop-color="#4D7A52" />
                                 </linearGradient>
+                                <linearGradient id="ringGradientPurple" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#9A78B4" />
+                                    <stop offset="100%" stop-color="#7A5A8A" />
+                                </linearGradient>
+                                <filter id="ringGlow" x="-10%" y="-10%" width="120%" height="120%">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur" />
+                                    <feMerge>
+                                        <feMergeNode in="blur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
                             </defs>
-                            <!-- Track (always visible) -->
-                            <path d="M 6 22 Q 80 18 160 22 Q 240 26 314 20"
-                                stroke="rgba(40,32,20,0.14)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                            <!-- Progress brushstroke -->
-                            <path id="brushStroke" d="M 6 22 Q 80 18 160 22 Q 240 26 314 20"
-                                stroke="url(#strokeGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <!-- Track circle -->
+                            <circle cx="100" cy="100" r="90" fill="none" stroke="var(--fill-secondary)"
+                                stroke-width="7" />
+                            <!-- Progress ring -->
+                            <circle id="progressRing" cx="100" cy="100" r="90" fill="none"
+                                stroke="url(#ringGradientBlue)" stroke-width="7" stroke-linecap="round"
+                                stroke-dasharray="565.49" stroke-dashoffset="565.49" filter="url(#ringGlow)" />
                         </svg>
-                        <div class="stroke-labels">
-                            <span id="progressText" class="stroke-info">目標 8 小時</span>
-                            <span id="strokePct" class="stroke-pct">0%</span>
+                        <div class="ring-inner-content">
+                            <div class="hero-eyebrow">今日工時</div>
+                            <div id="totalHours">
+                                0<span class="hero-unit">h</span>&thinsp;0<span class="hero-unit">m</span>
+                            </div>
+                            <span id="ongoingHint" class="opacity-0">● 工作中</span>
+                            <span id="strokePct" class="ring-pct">0%</span>
                         </div>
                     </div>
+                    <div id="progressText" class="ring-target-info">目標 8 小時</div>
                 </div>
 
                 <!-- Life Suggestion -->
@@ -1316,7 +1322,9 @@
                 <!-- Salary Ticker -->
                 <div id="salaryTicker" class="hidden"
                     style="text-align:center; padding:12px; background:var(--fill); border-radius:var(--radius-sm);">
-                    <div style="font-size:10px; color:var(--label-tertiary); font-weight:400; margin-bottom:3px; letter-spacing:0.08em; text-transform:uppercase;">已累計收入</div>
+                    <div
+                        style="font-size:10px; color:var(--label-tertiary); font-weight:400; margin-bottom:3px; letter-spacing:0.08em; text-transform:uppercase;">
+                        已累計收入</div>
                     <div class="salary-ticker" id="salaryAmount">$0</div>
                 </div>
 
@@ -1330,12 +1338,14 @@
                     </div>
 
                     <!-- Task input -->
-                    <div id="taskInputContainer" style="overflow:hidden; max-height:0; opacity:0; transition:max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;">
+                    <div id="taskInputContainer"
+                        style="overflow:hidden; max-height:0; opacity:0; transition:max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;">
                         <input type="text" id="taskInput" placeholder="今天做什麼？（選填）" class="task-input-zen">
                     </div>
 
                     <!-- Current task -->
-                    <div id="currentTaskDisplay" style="overflow:hidden; max-height:0; opacity:0; transition:max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;">
+                    <div id="currentTaskDisplay"
+                        style="overflow:hidden; max-height:0; opacity:0; transition:max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;">
                         <div class="current-task-pill">
                             <span id="currentTaskName">任務名稱</span>
                         </div>
@@ -1363,14 +1373,23 @@
                         <div class="sprite-core"></div>
                     </div>
                     <div style="flex:1; min-width:0;">
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px;">
-                            <div style="font-size:13px; font-weight:400; color:var(--label); letter-spacing:0.02em;" id="spriteName">能量晶種 (Lv.1)</div>
-                            <div style="font-size:10px; font-weight:400; color:var(--blue); letter-spacing:0.04em;" id="spriteExp">EXP 0/10</div>
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+                            <div style="font-size:13px; font-weight:500; color:var(--label); letter-spacing:0.02em;"
+                                id="spriteName">能量晶種 (Lv.1)</div>
+                            <div style="font-size:10px; font-weight:400; color:var(--blue); letter-spacing:0.04em;"
+                                id="spriteExp">EXP 0/10</div>
                         </div>
-                        <div style="width:100%; height:2px; background:var(--fill-secondary); border-radius:2px; overflow:hidden; margin-bottom:5px;">
-                            <div id="spriteExpFill" style="height:100%; background:var(--blue); border-radius:2px; transition:width 0.8s ease-in-out; width:0%"></div>
+                        <div
+                            style="width:100%; height:3px; background:var(--fill-secondary); border-radius:2px; overflow:hidden; margin-bottom:5px;">
+                            <div id="spriteExpFill"
+                                style="height:100%; background:var(--blue); border-radius:2px; transition:width 0.8s ease-in-out; width:0%">
+                            </div>
                         </div>
-                        <div style="font-size:11px; color:var(--label-tertiary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:0.04em;" id="spriteMessage">待機中</div>
+                        <div style="font-size:12px; color:var(--label-secondary); line-height:1.4; letter-spacing:0.02em; margin-bottom:2px;"
+                            id="spriteMessage">靜靜等待著你開始工作</div>
+                        <div style="font-size:10px; color:var(--label-tertiary); letter-spacing:0.04em;"
+                            id="spriteMood">💤 休眠中 · 點擊互動</div>
                     </div>
                 </div>
 
@@ -1391,7 +1410,9 @@
                     </div>
                     <div id="punchRecordsContainer">
                         <div id="punchRecords">
-                            <div style="padding:24px; text-align:center; font-size:13px; color:var(--label-tertiary); letter-spacing:0.04em;">今天還沒上班</div>
+                            <div
+                                style="padding:24px; text-align:center; font-size:13px; color:var(--label-tertiary); letter-spacing:0.04em;">
+                                今天還沒上班</div>
                         </div>
                     </div>
                 </div>
@@ -1421,8 +1442,10 @@
                     </div>
                     <div id="newsDigestContainer" class="zen-card" style="padding:18px 20px;">
                         <div id="newsList" style="display:flex; flex-direction:column; gap:10px;">
-                            <div style="height:9px; background:var(--fill-secondary); border-radius:4px; width:75%;"></div>
-                            <div style="height:9px; background:var(--fill-secondary); border-radius:4px; width:55%;"></div>
+                            <div style="height:9px; background:var(--fill-secondary); border-radius:4px; width:75%;">
+                            </div>
+                            <div style="height:9px; background:var(--fill-secondary); border-radius:4px; width:55%;">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1432,24 +1455,32 @@
                     <div class="editorial-label">下班指引</div>
                     <button id="insightBtn" onclick="generateAIContent()" disabled class="zen-card"
                         style="width:100%; padding:18px 20px; border:none; cursor:pointer; display:flex; align-items:center; gap:14px; text-align:left;">
-                        <div style="width:38px; height:38px; border-radius:var(--radius-sm); background:var(--fill); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <div
+                            style="width:38px; height:38px; border-radius:var(--radius-sm); background:var(--fill); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                             <i class="fas fa-magic" style="color:var(--label-quaternary); font-size:13px;"></i>
                         </div>
                         <div style="flex:1;">
-                            <div style="font-size:14px; font-weight:400; color:var(--label); letter-spacing:0.02em;">生成下班生活指南</div>
-                            <div style="font-size:11px; color:var(--label-tertiary); margin-top:2px; letter-spacing:0.04em;">依據下班時段 AI 推薦</div>
+                            <div style="font-size:14px; font-weight:400; color:var(--label); letter-spacing:0.02em;">
+                                生成下班生活指南</div>
+                            <div
+                                style="font-size:11px; color:var(--label-tertiary); margin-top:2px; letter-spacing:0.04em;">
+                                依據下班時段 AI 推薦</div>
                         </div>
                         <i class="fas fa-chevron-right" style="color:var(--label-quaternary); font-size:10px;"></i>
                     </button>
 
                     <div id="aiResultArea" class="zen-card hidden" style="margin-top:10px; padding:20px;">
-                        <div style="font-size:13px; font-weight:500; color:var(--label); margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; letter-spacing:0.02em;">
+                        <div
+                            style="font-size:13px; font-weight:500; color:var(--label); margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; letter-spacing:0.02em;">
                             <span>下班生活指南</span>
                             <button onclick="copyReport()"
                                 style="font-size:11px; background:var(--fill-secondary); padding:4px 10px; border-radius:8px; color:var(--label-secondary); border:none; cursor:pointer; font-weight:400; letter-spacing:0.04em;">複製</button>
                         </div>
-                        <div id="aiContent" style="font-size:13px; line-height:1.8; color:var(--label-secondary); letter-spacing:0.02em;"></div>
-                        <div style="margin-top:14px; padding-top:12px; border-top:0.5px solid var(--separator); font-size:10px; color:var(--orange); text-align:center; font-weight:400; letter-spacing:0.06em; text-transform:uppercase;">
+                        <div id="aiContent"
+                            style="font-size:13px; line-height:1.8; color:var(--label-secondary); letter-spacing:0.02em;">
+                        </div>
+                        <div
+                            style="margin-top:14px; padding-top:12px; border-top:0.5px solid var(--separator); font-size:10px; color:var(--orange); text-align:center; font-weight:400; letter-spacing:0.06em; text-transform:uppercase;">
                             AI 產生內容，僅供參考
                         </div>
                     </div>
@@ -1460,12 +1491,15 @@
                     <button onclick="toggleCalendar()"
                         style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:12px; background:none; border:none; cursor:pointer; padding:0;">
                         <div class="editorial-label" style="margin:0;">假期日曆</div>
-                        <i id="calendarChevron" class="fas fa-chevron-down" style="font-size:10px; color:var(--label-quaternary); transition:transform 0.5s ease-in-out;"></i>
+                        <i id="calendarChevron" class="fas fa-chevron-down"
+                            style="font-size:10px; color:var(--label-quaternary); transition:transform 0.5s ease-in-out;"></i>
                     </button>
                     <div id="calendarCollapsible" class="collapsible-content">
                         <div class="zen-card" style="padding:20px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-                                <h3 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:18px; font-weight:400; color:var(--label); margin:0; letter-spacing:0.02em;" id="calendarTitle">Month Year</h3>
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                                <h3 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:18px; font-weight:400; color:var(--label); margin:0; letter-spacing:0.02em;"
+                                    id="calendarTitle">Month Year</h3>
                                 <div style="display:flex; gap:4px;">
                                     <button onclick="changeMonth(-1)" aria-label="上個月"
                                         style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--label-tertiary); cursor:pointer;">
@@ -1477,22 +1511,35 @@
                                     </button>
                                 </div>
                             </div>
-                            <div style="display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:10px; text-align:center;">
-                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">日</span>
-                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">一</span>
-                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">二</span>
-                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">三</span>
-                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">四</span>
-                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">五</span>
-                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">六</span>
+                            <div
+                                style="display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:10px; text-align:center;">
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">日</span>
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">一</span>
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">二</span>
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">三</span>
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">四</span>
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">五</span>
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">六</span>
                             </div>
-                            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px 0; place-items:center;" id="calendarGrid"></div>
-                            <div style="margin-top:14px; padding-top:10px; border-top:0.5px solid var(--separator); display:flex; justify-content:center; gap:20px; font-size:10px; color:var(--label-tertiary); letter-spacing:0.06em;">
+                            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px 0; place-items:center;"
+                                id="calendarGrid"></div>
+                            <div
+                                style="margin-top:14px; padding-top:10px; border-top:0.5px solid var(--separator); display:flex; justify-content:center; gap:20px; font-size:10px; color:var(--label-tertiary); letter-spacing:0.06em;">
                                 <div style="display:flex; align-items:center; gap:5px;">
-                                    <div style="width:5px; height:5px; border-radius:50%; background:var(--blue);"></div>今日
+                                    <div style="width:5px; height:5px; border-radius:50%; background:var(--blue);">
+                                    </div>今日
                                 </div>
                                 <div style="display:flex; align-items:center; gap:5px;">
-                                    <div style="width:5px; height:5px; border-radius:50%; background:var(--fill-secondary);"></div>排休
+                                    <div
+                                        style="width:5px; height:5px; border-radius:50%; background:var(--fill-secondary);">
+                                    </div>排休
                                 </div>
                             </div>
                         </div>
@@ -1501,7 +1548,8 @@
 
                 <!-- Footer -->
                 <div style="padding:12px 0 8px; text-align:center;">
-                    <p style="font-family:'Cormorant Garamond',Georgia,serif; font-size:10px; color:var(--label-quaternary); font-weight:300; letter-spacing:0.38em; text-transform:uppercase; margin:0; font-style:italic;">
+                    <p
+                        style="font-family:'Cormorant Garamond',Georgia,serif; font-size:10px; color:var(--label-quaternary); font-weight:300; letter-spacing:0.38em; text-transform:uppercase; margin:0; font-style:italic;">
                         一 筆 · Ippitsu
                     </p>
                 </div>
@@ -1513,23 +1561,24 @@
         <nav id="bottomNav">
             <button class="nav-tab active" id="navTabToday" onclick="switchTab('Today')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
-                    <circle cx="12" cy="12" r="8.5"/>
-                    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+                    <circle cx="12" cy="12" r="8.5" />
+                    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
                 </svg>
                 <span>今日</span>
             </button>
             <button class="nav-tab" id="navTabInsights" onclick="switchTab('Insights')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3.5 L19.5 12 L12 20.5 L4.5 12 Z"/>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 3.5 L19.5 12 L12 20.5 L4.5 12 Z" />
                 </svg>
                 <span>洞察</span>
             </button>
             <button class="nav-tab" id="navTabSettings" onclick="openSettings()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
-                    <line x1="4"  y1="6"  x2="20" y2="6"/>
-                    <line x1="4"  y1="18" x2="20" y2="18"/>
-                    <circle cx="9"  cy="6"  r="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.3"/>
-                    <circle cx="15" cy="18" r="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.3"/>
+                    <line x1="4" y1="6" x2="20" y2="6" />
+                    <line x1="4" y1="18" x2="20" y2="18" />
+                    <circle cx="9" cy="6" r="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.3" />
+                    <circle cx="15" cy="18" r="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.3" />
                 </svg>
                 <span>設定</span>
             </button>
@@ -1549,7 +1598,8 @@
     <div id="installGuideModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeInstallGuide()">
         </div>
-        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto" style="background:var(--bg); padding:14px 24px 32px;">
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:14px 24px 32px;">
             <div class="sheet-handle"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="font-size:17px; font-weight:700; color:var(--label);">安裝到主畫面</h3>
@@ -1559,13 +1609,19 @@
                 </button>
             </div>
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
-                <div style="display:flex; align-items:center; gap:14px; background:var(--card); padding:16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
-                    <i class="fas fa-share-square" style="color:var(--blue); font-size:20px; width:24px; text-align:center;"></i>
-                    <div style="font-size:14px; color:var(--label-secondary); line-height:1.5;">點擊 Safari 瀏覽器下方的<br><span style="font-weight:700; color:var(--label);">分享按鈕</span></div>
+                <div
+                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="fas fa-share-square"
+                        style="color:var(--blue); font-size:20px; width:24px; text-align:center;"></i>
+                    <div style="font-size:14px; color:var(--label-secondary); line-height:1.5;">點擊 Safari
+                        瀏覽器下方的<br><span style="font-weight:700; color:var(--label);">分享按鈕</span></div>
                 </div>
-                <div style="display:flex; align-items:center; gap:14px; background:var(--card); padding:16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
-                    <i class="far fa-plus-square" style="color:var(--blue); font-size:20px; width:24px; text-align:center;"></i>
-                    <div style="font-size:14px; color:var(--label-secondary); line-height:1.5;">往下滑動並選擇<br><span style="font-weight:700; color:var(--label);">加入主畫面</span></div>
+                <div
+                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="far fa-plus-square"
+                        style="color:var(--blue); font-size:20px; width:24px; text-align:center;"></i>
+                    <div style="font-size:14px; color:var(--label-secondary); line-height:1.5;">往下滑動並選擇<br><span
+                            style="font-weight:700; color:var(--label);">加入主畫面</span></div>
                 </div>
             </div>
             <button onclick="closeInstallGuide()"
@@ -1581,72 +1637,74 @@
             style="background:var(--bg);max-height:88vh;overflow-y:auto;">
             <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:1;">
                 <div class="sheet-handle"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:0.5px solid var(--separator);">
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:0.5px solid var(--separator);">
                     <h3 style="font-size:17px; font-weight:700; color:var(--label);">設定</h3>
-                <button onclick="closeSettings()" aria-label="關閉設定"
-                    style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
-                    <i class="fas fa-times" style="font-size:12px;"></i>
-                </button>
+                    <button onclick="closeSettings()" aria-label="關閉設定"
+                        style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                        <i class="fas fa-times" style="font-size:12px;"></i>
+                    </button>
                 </div>
             </div>
             <div style="padding:16px 24px 32px;">
 
-            <!-- 提醒設定 -->
-            <div class="section-label">提醒</div>
-            <div class="bg-white rounded-xl overflow-hidden mb-5">
-                <div class="p-4 flex items-center justify-between" style="border-bottom:1px solid var(--ios-separator)">
-                    <label for="workReminderInput" class="text-[15px] text-gray-900">上班後提醒 (分鐘)</label>
-                    <input type="number" id="workReminderInput" placeholder="120"
-                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="120">
-                </div>
-                <div class="p-4 flex items-center justify-between">
-                    <label for="restReminderInput" class="text-[15px] text-gray-900">休息結束提醒 (分鐘)</label>
-                    <input type="number" id="restReminderInput" placeholder="20"
-                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="20">
-                </div>
-            </div>
-
-            <!-- 工時設定 -->
-            <div class="section-label">工時</div>
-            <div class="bg-white rounded-xl overflow-hidden mb-5">
-                <div class="p-4 flex items-center justify-between">
-                    <label for="targetHoursInput" class="text-[15px] text-gray-900">每日目標 (小時)</label>
-                    <input type="number" id="targetHoursInput" placeholder="8" min="1" max="24" step="0.5"
-                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="8">
-                </div>
-            </div>
-
-            <!-- 月曆同步設定 -->
-            <div class="section-label">🗓️ 休假日曆同步</div>
-            <div class="bg-white rounded-xl overflow-hidden mb-5">
-                <div class="p-4" style="border-bottom:1px solid var(--ios-separator)">
-                    <label class="block text-[15px] text-gray-900 mb-2">選擇要同步的休假表</label>
-                    <select id="icalPresetSelect" onchange="toggleCustomIcalInput()"
-                        class="w-full bg-gray-100 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:ring-2 focus:ring-ios-blue text-gray-900 mb-2">
-                        <option value="">(無)</option>
-                        <option
-                            value="https://calendar.google.com/calendar/ical/zh-tw.taiwan%23holiday%40group.v.calendar.google.com/public/basic.ics">
-                            🇹🇼 台灣政府行政機關辦公日曆表</option>
-                        <option value="custom">⚙️ 自訂 iCal 網址 (進階)</option>
-                    </select>
-
-                    <div id="customIcalContainer" class="hidden">
-                        <input type="url" id="icalUrlInput" placeholder="請貼上 Apple/Google iCal 網址https://..."
-                            class="w-full bg-gray-100 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:ring-2 focus:ring-ios-blue text-gray-600 mt-1">
+                <!-- 提醒設定 -->
+                <div class="section-label">提醒</div>
+                <div class="bg-white rounded-xl overflow-hidden mb-5">
+                    <div class="p-4 flex items-center justify-between"
+                        style="border-bottom:1px solid var(--ios-separator)">
+                        <label for="workReminderInput" class="text-[15px] text-gray-900">上班後提醒 (分鐘)</label>
+                        <input type="number" id="workReminderInput" placeholder="120"
+                            class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="120">
+                    </div>
+                    <div class="p-4 flex items-center justify-between">
+                        <label for="restReminderInput" class="text-[15px] text-gray-900">休息結束提醒 (分鐘)</label>
+                        <input type="number" id="restReminderInput" placeholder="20"
+                            class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="20">
                     </div>
                 </div>
-                <div class="p-4 flex items-center justify-end gap-3 bg-gray-50">
-                    <button onclick="clearAllOffDays()"
-                        class="text-[13px] text-ios-red px-3 py-1.5 rounded-lg active:bg-red-100 transition">清除所有休假</button>
-                    <button id="syncCalendarBtn" onclick="handleSyncClick()"
-                        class="text-[13px] bg-ios-blue text-white px-4 py-1.5 rounded-lg active:scale-95 transition shadow-sm flex items-center gap-1">
-                        立即同步
-                    </button>
-                </div>
-            </div>
 
-            <button onclick="saveSettings()" class="active-scale"
-                style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em; font-family:'Noto Sans TC',sans-serif;">儲存設定</button>
+                <!-- 工時設定 -->
+                <div class="section-label">工時</div>
+                <div class="bg-white rounded-xl overflow-hidden mb-5">
+                    <div class="p-4 flex items-center justify-between">
+                        <label for="targetHoursInput" class="text-[15px] text-gray-900">每日目標 (小時)</label>
+                        <input type="number" id="targetHoursInput" placeholder="8" min="1" max="24" step="0.5"
+                            class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="8">
+                    </div>
+                </div>
+
+                <!-- 月曆同步設定 -->
+                <div class="section-label">🗓️ 休假日曆同步</div>
+                <div class="bg-white rounded-xl overflow-hidden mb-5">
+                    <div class="p-4" style="border-bottom:1px solid var(--ios-separator)">
+                        <label class="block text-[15px] text-gray-900 mb-2">選擇要同步的休假表</label>
+                        <select id="icalPresetSelect" onchange="toggleCustomIcalInput()"
+                            class="w-full bg-gray-100 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:ring-2 focus:ring-ios-blue text-gray-900 mb-2">
+                            <option value="">(無)</option>
+                            <option
+                                value="https://calendar.google.com/calendar/ical/zh-tw.taiwan%23holiday%40group.v.calendar.google.com/public/basic.ics">
+                                🇹🇼 台灣政府行政機關辦公日曆表</option>
+                            <option value="custom">⚙️ 自訂 iCal 網址 (進階)</option>
+                        </select>
+
+                        <div id="customIcalContainer" class="hidden">
+                            <input type="url" id="icalUrlInput" placeholder="請貼上 Apple/Google iCal 網址https://..."
+                                class="w-full bg-gray-100 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:ring-2 focus:ring-ios-blue text-gray-600 mt-1">
+                        </div>
+                    </div>
+                    <div class="p-4 flex items-center justify-end gap-3 bg-gray-50">
+                        <button onclick="clearAllOffDays()"
+                            class="text-[13px] text-ios-red px-3 py-1.5 rounded-lg active:bg-red-100 transition">清除所有休假</button>
+                        <button id="syncCalendarBtn" onclick="handleSyncClick()"
+                            class="text-[13px] bg-ios-blue text-white px-4 py-1.5 rounded-lg active:scale-95 transition shadow-sm flex items-center gap-1">
+                            立即同步
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="saveSettings()" class="active-scale"
+                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em; font-family:'Noto Sans TC',sans-serif;">儲存設定</button>
             </div><!-- /content padding -->
         </div><!-- /outer modal -->
     </div>
@@ -1655,8 +1713,10 @@
     <div id="alarmModal" class="alarm-overlay">
         <div class="alarm-card">
             <div style="font-size:52px; margin-bottom:16px;" id="alarmEmoji">⏰</div>
-            <div style="font-size:20px; font-weight:700; color:var(--label); margin-bottom:8px;" id="alarmTitle">休息時間到！</div>
-            <div style="font-size:15px; color:var(--label-tertiary); margin-bottom:24px; line-height:1.5;" id="alarmBody">你已經連續工作超過設定時間，起來動一動吧</div>
+            <div style="font-size:20px; font-weight:700; color:var(--label); margin-bottom:8px;" id="alarmTitle">休息時間到！
+            </div>
+            <div style="font-size:15px; color:var(--label-tertiary); margin-bottom:24px; line-height:1.5;"
+                id="alarmBody">你已經連續工作超過設定時間，起來動一動吧</div>
             <button onclick="dismissAlarm()" class="active-scale"
                 style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em;">我知道了</button>
         </div>
@@ -1668,14 +1728,16 @@
             <div style="font-size:52px; margin-bottom:16px;">🧘</div>
             <div style="font-size:20px; font-weight:700; color:var(--label); margin-bottom:8px;">久坐提醒</div>
             <div style="font-size:15px; color:var(--label-tertiary); margin-bottom:12px;">你已連續工作 90 分鐘</div>
-            <div style="text-align:left; background:var(--fill); border-radius:var(--radius-sm); padding:16px; margin-bottom:22px; display:flex; flex-direction:column; gap:10px;" id="stretchTips">
+            <div style="text-align:left; background:var(--fill); border-radius:var(--radius-sm); padding:16px; margin-bottom:22px; display:flex; flex-direction:column; gap:10px;"
+                id="stretchTips">
                 <div style="font-size:14px; color:var(--label-secondary);">🙆 雙手高舉伸展 10 秒</div>
                 <div style="font-size:14px; color:var(--label-secondary);">🔄 轉動脖子左右各 5 圈</div>
                 <div style="font-size:14px; color:var(--label-secondary);">👀 閉眼休息 20 秒</div>
                 <div style="font-size:14px; color:var(--label-secondary);">🚶 起身走動 1 分鐘</div>
             </div>
             <button onclick="dismissStretch()" class="active-scale"
-                style="width:100%; padding:15px; border-radius:var(--radius); font-size:17px; font-weight:600; background:linear-gradient(135deg, #34C759 0%, #30D158 100%); color:white; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(52,199,89,0.25), inset 0 0.5px 0 rgba(255,255,255,0.15);">已完成伸展 ✓</button>
+                style="width:100%; padding:15px; border-radius:var(--radius); font-size:17px; font-weight:600; background:linear-gradient(135deg, #34C759 0%, #30D158 100%); color:white; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(52,199,89,0.25), inset 0 0.5px 0 rgba(255,255,255,0.15);">已完成伸展
+                ✓</button>
         </div>
     </div>
 
@@ -1707,26 +1769,38 @@
             if ('vibrate' in navigator) navigator.vibrate(8);
         }
 
-        // === IPPITSU: Brushstroke Init & Update ===
+        // === Circular Ring Init & Update ===
         function initBrushstroke() {
-            const path = document.getElementById('brushStroke');
-            if (!path) return;
-            let len = path.getTotalLength();
-            // Fallback if SVG not yet rendered
-            if (!len || len < 10) len = 310;
-            path.style.strokeDasharray = len;
-            path.style.strokeDashoffset = len;
-            window._brushLen = len;
+            // Ring is initialized via SVG attributes, no JS init needed
+            // But we mark initialization is done
+            window._ringReady = true;
         }
 
         function updateBrushstroke(pct, isComplete) {
-            const path = document.getElementById('brushStroke');
-            if (!path || !window._brushLen) return;
-            const offset = window._brushLen * (1 - Math.min(pct, 100) / 100);
-            path.style.strokeDashoffset = offset;
-            path.style.stroke = isComplete ? 'url(#strokeGradComplete)' : 'url(#strokeGrad)';
+            const ring = document.getElementById('progressRing');
+            if (!ring) return;
+            const circumference = 565.49;
+            const offset = circumference - (Math.min(pct, 100) / 100) * circumference;
+            ring.style.strokeDashoffset = offset;
+            if (isComplete) {
+                ring.style.stroke = 'url(#ringGradientPurple)';
+            } else if (pct > 85) {
+                ring.style.stroke = 'url(#ringGradientGreen)';
+            } else {
+                ring.style.stroke = 'url(#ringGradientBlue)';
+            }
             const pctEl = document.getElementById('strokePct');
             if (pctEl) pctEl.textContent = Math.round(Math.min(pct, 100)) + '%';
+            // Breathing animation when working
+            const container = document.getElementById('ringContainer');
+            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
+            if (container) {
+                if (isWorking && pct > 0) {
+                    container.classList.add('ring-working');
+                } else {
+                    container.classList.remove('ring-working');
+                }
+            }
         }
 
         // === IPPITSU: Ink Drop Punch Animation ===
@@ -1866,18 +1940,6 @@
             });
         });
 
-        // --- 時段動態漸層背景 ( Ambient Glow ) ---
-        function updateTimeGradient() {
-            const h = new Date().getHours();
-            const app = document.getElementById('app');
-            if (!app) return;
-
-            if (h >= 20 || h < 5) {
-                app.classList.add('night-mode');
-            } else {
-                app.classList.remove('night-mode');
-            }
-        }
 
 
         // --- 工作精靈 (Work Sprite) 邏輯 ---
@@ -1885,7 +1947,6 @@
             const terrarium = document.getElementById('spriteTerrarium');
             if (!terrarium) return;
 
-            // 1h = 60 EXP (1min = 1 EXP) -> 直接使用總分鐘數
             let totalMinutes = appSettings.elfExp || 0;
 
             let currentSessionMinutes = 0;
@@ -1896,67 +1957,116 @@
             }
 
             const totalExp = Math.floor(totalMinutes + currentSessionMinutes);
-
-            // 等級判定：L = floor(sqrt(EXP/10)) + 1
             const level = Math.floor(Math.sqrt(totalExp / 10)) + 1;
-
-            // 計算當前等級進度
             const expForCurrentLevel = 10 * Math.pow(level - 1, 2);
             const expForNextLevel = 10 * Math.pow(level, 2);
-
             const expInCurrentLevel = totalExp - expForCurrentLevel;
             const requiredExpForLevelUp = expForNextLevel - expForCurrentLevel;
             const progressPct = Math.min((expInCurrentLevel / requiredExpForLevelUp) * 100, 100);
 
-            // 更新 UI 文字
             document.getElementById('spriteExp').textContent = `EXP ${expInCurrentLevel}/${requiredExpForLevelUp}`;
             document.getElementById('spriteExpFill').style.width = `${progressPct}%`;
 
             let name = "能量晶種";
             let visualLv = 1;
-            if (level >= 5 && level < 15) { name = "浮游光帶"; visualLv = 2; }
-            else if (level >= 15 && level < 30) { name = "幾何星體"; visualLv = 3; }
-            else if (level >= 30 && level < 50) { name = "脈衝星"; visualLv = 4; }
-            else if (level >= 50 && level < 80) { name = "恆星序列"; visualLv = 5; }
-            else if (level >= 80 && level < 100) { name = "超新星"; visualLv = 6; }
-            else if (level >= 100) { name = "宇宙微波"; visualLv = 7; }
+            let desc = "初始型態，蘊含無限可能";
+            if (level >= 5 && level < 15) { name = "浮游光帶"; visualLv = 2; desc = "光芒漸強，意識正在覺醒"; }
+            else if (level >= 15 && level < 30) { name = "幾何星體"; visualLv = 3; desc = "結構成形，穩定運轉中"; }
+            else if (level >= 30 && level < 50) { name = "脈衝星"; visualLv = 4; desc = "能量脈動，輻射溫暖光芒"; }
+            else if (level >= 50 && level < 80) { name = "恆星序列"; visualLv = 5; desc = "恆穩燃燒，照亮工作時光"; }
+            else if (level >= 80 && level < 100) { name = "超新星"; visualLv = 6; desc = "即將綻放，蓄勢待發"; }
+            else if (level >= 100) { name = "宇宙微波"; visualLv = 7; desc = "超越極限，與宇宙共鳴"; }
 
             document.getElementById('spriteName').textContent = `${name} (Lv.${level})`;
 
-            // 更新 CSS 狀態與動畫
             terrarium.className = `sprite-terrarium anim-fade-in sprite-lv${visualLv}`;
             const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
+            const msgEl = document.getElementById('spriteMessage');
+            const moodEl = document.getElementById('spriteMood');
 
             if (isWorking) {
                 terrarium.classList.add('sprite-working');
-                document.getElementById('spriteMessage').textContent = "專注能量吸收中";
+                const sessionMins = Math.floor(currentSessionMinutes);
+                const workMsgs = [
+                    "正在吸收你的專注能量",
+                    "感受到穩定的工作節奏",
+                    "與你一起進入心流狀態",
+                    "每一分鐘都在悄悄成長",
+                    "你的專注就是最好的養分",
+                    "能量場正在擴大中"
+                ];
+                msgEl.textContent = workMsgs[Math.floor(Math.random() * workMsgs.length)];
+                if (sessionMins < 30) {
+                    moodEl.textContent = `✨ 剛開始暖身 · 已工作 ${sessionMins} 分鐘`;
+                } else if (sessionMins < 60) {
+                    moodEl.textContent = `🔥 漸入佳境 · 已工作 ${sessionMins} 分鐘`;
+                } else if (sessionMins < 120) {
+                    moodEl.textContent = `🌟 深度專注中 · 已工作 ${Math.floor(sessionMins / 60)}h${sessionMins % 60}m`;
+                } else {
+                    moodEl.textContent = `💫 超長續航！· 已工作 ${Math.floor(sessionMins / 60)}h${sessionMins % 60}m`;
+                }
             } else {
                 terrarium.classList.remove('sprite-working');
-                const msgs = ["待機中", "休眠中", "等待工作餵食"];
-                document.getElementById('spriteMessage').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+                const h = new Date().getHours();
+                let idleMsgs, moodText;
+                if (h >= 6 && h < 12) {
+                    idleMsgs = ["早安，新的一天充滿可能", "陽光正好，適合開始工作", "期待今天的第一次打卡"];
+                    moodText = `☀️ 早晨 · ${desc}`;
+                } else if (h >= 12 && h < 14) {
+                    idleMsgs = ["午餐時間，記得好好休息", "補充能量後繼續加油", "短暫的休息是為了走更遠"];
+                    moodText = `🍙 午間 · ${desc}`;
+                } else if (h >= 14 && h < 18) {
+                    idleMsgs = ["下午的時光也很珍貴", "靜靜等待你回來工作", "每段專注都值得被記錄"];
+                    moodText = `🌤 午後 · ${desc}`;
+                } else if (h >= 18 && h < 22) {
+                    idleMsgs = ["晚間模式，放慢腳步", "今天辛苦了，好好休息", "回顧今天的成果吧"];
+                    moodText = `🌙 傍晚 · ${desc}`;
+                } else {
+                    idleMsgs = ["深夜了，注意休息", "在安靜中蓄積能量", "明天又是新的開始"];
+                    moodText = `💤 深夜 · ${desc}`;
+                }
+                msgEl.textContent = idleMsgs[Math.floor(Math.random() * idleMsgs.length)];
+                moodEl.textContent = moodText;
             }
         }
 
         function interactWithSprite() {
-            if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]); // Haptic 反饋
+            if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
             playSingleClickSound("E5");
 
-            // 漣漪特效
             const container = document.querySelector('.sprite-core-container');
             const ripple = document.createElement('div');
             ripple.className = 'ripple-effect w-full h-full';
             container.appendChild(ripple);
             setTimeout(() => ripple.remove(), 600);
 
-            // 互動文字
             const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
             const msgEl = document.getElementById('spriteMessage');
+            const moodEl = document.getElementById('spriteMood');
             if (isWorking) {
-                const msgs = ["能量充沛", "感謝專注", "持續成長中"];
+                const msgs = [
+                    "嘿！感謝你的專注 ✦",
+                    "能量共鳴中，繼續保持！",
+                    "你的觸碰讓我更有活力",
+                    "一起努力，一起成長",
+                    "專注是最強大的力量",
+                    "工作節奏很穩定呢！",
+                    "距離升級又近了一步"
+                ];
                 msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+                moodEl.textContent = '🫧 互動中 · 能量 +1';
             } else {
-                const msgs = ["待機中", "等待工作能量", "休眠中"];
+                const msgs = [
+                    "你好呀，想開始工作了嗎？",
+                    "點一下打卡按鈕就能餵食我",
+                    "輕輕觸碰，感受我的存在",
+                    "工作時間就是我的養分",
+                    "在休息中慢慢恢復能量",
+                    "每次工作都讓我更強大",
+                    "期待你的下一次專注"
+                ];
                 msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+                moodEl.textContent = '🫧 互動中 · 等待工作能量';
             }
         }
 
@@ -2672,8 +2782,8 @@ END:VCALENDAR
             const now = new Date();
             document.getElementById('currentTime').textContent =
                 now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             document.getElementById('currentDate').textContent =
                 `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
         }
@@ -2879,9 +2989,7 @@ END:VCALENDAR
             const targetMin = getTargetMinutes();
             const remainingMin = targetMin - result.total;
             const pct = Math.min((result.total / targetMin) * 100, 100);
-            const ring = document.getElementById('progressRing');
-            const circumference = 502.65;
-            // Update brushstroke progress
+            // Update ring progress
             updateBrushstroke(pct, result.total >= targetMin);
 
             // 預計下班時間與 8小時提醒邏輯
@@ -2889,8 +2997,6 @@ END:VCALENDAR
             const lifeSuggestionEl = document.getElementById('lifeSuggestion');
 
             if (result.total >= targetMin) {
-                ring.style.strokeDashoffset = '0';
-                ring.style.stroke = 'url(#ringGradientPurple)';
                 const targetH = appSettings.targetHours || 8;
                 progressInfo = `<span style="color:var(--purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 ${targetH} 小時，可以下班了</span>`;
 
@@ -2898,9 +3004,6 @@ END:VCALENDAR
                 lifeSuggestionEl.classList.remove('hidden');
 
             } else {
-                const offset = circumference - (pct / 100) * circumference;
-                ring.style.strokeDashoffset = offset;
-                ring.style.stroke = pct > 85 ? 'url(#ringGradientGreen)' : 'url(#ringGradientBlue)';
 
                 // 計算預計時間
                 if (result.isOngoing) {
@@ -3276,7 +3379,7 @@ END:VCALENDAR
         setInterval(updateCurrentTime, 1000);
         setInterval(checkStretchReminder, 60000);
         setInterval(playTickSound, 1000);
-        setInterval(updateTimeGradient, 60000);
+
     </script>
 </body>
 
