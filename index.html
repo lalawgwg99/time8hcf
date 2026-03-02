@@ -187,6 +187,67 @@
             box-shadow: none;
         }
 
+        .night-mode #punchBtn {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        .night-mode #settingsModal .bg-white {
+            background: #2C2C2E !important;
+        }
+
+        .night-mode #settingsModal [style*="background:var(--ios-bg)"],
+        .night-mode #settingsModal>div:last-child {
+            background: #1C1C1E !important;
+        }
+
+        /* System dark mode auto-detection */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #000000;
+                --card: #1C1C1E;
+                --card-secondary: #2C2C2E;
+                --separator: rgba(84, 84, 88, 0.36);
+                --label: #FFFFFF;
+                --label-secondary: #EBEBF5;
+                --label-tertiary: #8E8E93;
+                --label-quaternary: #636366;
+                --fill: rgba(120, 120, 128, 0.24);
+                --fill-secondary: rgba(120, 120, 128, 0.32);
+                --shadow-card: none;
+                --shadow-elevated: 0 2px 16px rgba(0, 0, 0, 0.4);
+                color: #FFFFFF;
+            }
+        }
+
+        /* Ring draw-in animation on load */
+        @keyframes ring-draw {
+            from {
+                stroke-dashoffset: 502.65;
+            }
+        }
+
+        #progressRing {
+            animation: ring-draw 1s var(--spring) forwards;
+        }
+
+        /* Ring breathe effect during work */
+        @keyframes ring-breathe {
+
+            0%,
+            100% {
+                stroke-width: 8;
+            }
+
+            50% {
+                stroke-width: 10;
+            }
+        }
+
+        .ring-working #progressRing {
+            animation: ring-breathe 3s ease-in-out infinite;
+        }
+
         /* --- Cards --- */
         .card {
             background: var(--card);
@@ -939,7 +1000,7 @@
             <div>
                 <div
                     style="display:flex; justify-content:space-between; align-items:center; padding:0 4px; margin-bottom:8px;">
-                    <h3 class="section-label" style="margin:0;">打卡紀錄</h3>
+                    <h3 class="section-label" style="margin:0;">工作階段</h3>
                     <div style="display:flex; gap:12px; align-items:center;">
                         <button id="exportCalendarBtn" onclick="exportWorkSessions()" title="匯出紀錄至日曆"
                             style="font-size:13px; color:var(--blue); font-weight:500; background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
@@ -955,7 +1016,7 @@
                     </div>
                 </div>
                 <div class="inset-card" id="punchRecordsContainer">
-                    <div id="punchRecords" style="padding-left:16px;">
+                    <div id="punchRecords">
                         <div style="padding:16px; text-align:center; font-size:14px; color:var(--label-tertiary);">尚無紀錄
                         </div>
                     </div>
@@ -2306,8 +2367,10 @@ END:VCALENDAR
 
             if (result.isOngoing) {
                 document.getElementById('ongoingHint').classList.remove('opacity-0');
+                document.querySelector('svg')?.parentElement?.classList.add('ring-working');
             } else {
                 document.getElementById('ongoingHint').classList.add('opacity-0');
+                document.querySelector('svg')?.parentElement?.classList.remove('ring-working');
             }
 
             // --- 即時新聞 + 成就 + 工作精靈 + 情境橫幅 ---
@@ -2340,49 +2403,54 @@ END:VCALENDAR
             const recordsDiv = document.getElementById('punchRecords');
             recordsDiv.innerHTML = '';
             if (punchRecords.length === 0) {
-                recordsDiv.innerHTML = '<div style="padding:16px;text-align:center;font-size:14px;color:var(--label-tertiary)">尚無紀錄</div>';
+                recordsDiv.innerHTML = '<div style="padding:20px;text-align:center;font-size:13px;color:var(--label-tertiary)">今天還沒上班</div>';
             } else {
-                [...punchRecords].reverse().forEach((r, idx) => {
-                    const trueIndex = punchRecords.length - 1 - idx;
-                    const isLast = idx === punchRecords.length - 1;
-                    const d = new Date(r.time);
-                    const timeStr = d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-                    const icon = r.type === 'in' ? '<i class="fas fa-arrow-right text-green-500"></i>' : '<i class="fas fa-arrow-left text-orange-500"></i>';
-                    const bg = r.type === 'in' ? 'bg-green-50' : 'bg-orange-50';
-                    const color = r.type === 'in' ? 'text-green-500' : 'text-orange-500';
-                    const title = r.type === 'in' ? '開始工作' : '結束工作';
-                    const dotColor = r.type === 'in' ? 'border-blue' : 'border-orange';
-
-                    const row = document.createElement('div');
-                    row.className = 'py-3 pr-4 flex items-center justify-between';
-
-                    row.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full ${bg} flex items-center justify-center text-sm">${icon}</div>
-                            <div>
-                                <div style="font-size:15px;color:var(--label);font-weight:500">${title}</div>
-                                ${r.task ? `<div style="font-size:12px;color:var(--label-tertiary);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px"><i class="fas fa-thumbtack" style="margin-right:3px"></i>${r.task}</div>` : ''}
-                            </div>
-                        </div>
-                        <div style="font-size:15px;color:var(--label-tertiary);font-variant-numeric:tabular-nums">${timeStr}</div>
-                    `;
-                    recordsDiv.appendChild(row);
-
-                    // 如果這是一個 `in` 點，且前面有一個對應的 `out` 點 (因為是 reverse，所以對應的是 idx - 1)
-                    if (r.type === 'in' && trueIndex + 1 < punchRecords.length && punchRecords[trueIndex + 1].type === 'out') {
-                        const outRecord = punchRecords[trueIndex + 1];
-                        const diffMins = (new Date(outRecord.time) - new Date(r.time)) / 60000;
-                        const dur = formatDurationFancy(diffMins);
-
-                        const durRow = document.createElement('div');
-                        durRow.className = 'py-2 pr-4 flex items-center justify-end';
-                        durRow.innerHTML = `
-                            <div style="font-size:12px;font-weight:500;color:var(--label-tertiary);background:var(--fill);padding:4px 10px;border-radius:8px">
-                                共計 ${dur.h}h ${Math.round(dur.m)}m
-                            </div>
-                        `;
-                        recordsDiv.appendChild(durRow);
+                // Group records into sessions (in/out pairs)
+                const sessions = [];
+                for (let i = 0; i < punchRecords.length; i++) {
+                    if (punchRecords[i].type === 'in') {
+                        const outRecord = (i + 1 < punchRecords.length && punchRecords[i + 1].type === 'out') ? punchRecords[i + 1] : null;
+                        sessions.push({ in: punchRecords[i], out: outRecord });
+                        if (outRecord) i++; // skip next
                     }
+                }
+
+                // Render sessions in reverse (newest first)
+                [...sessions].reverse().forEach((s) => {
+                    const inTime = new Date(s.in.time);
+                    const inStr = inTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    const isOngoing = !s.out;
+
+                    let outStr = '';
+                    let durLabel = '';
+                    if (s.out) {
+                        const outTime = new Date(s.out.time);
+                        outStr = outTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+                        const diffMins = (outTime - inTime) / 60000;
+                        const dur = formatDurationFancy(diffMins);
+                        durLabel = `${dur.h}h ${Math.round(dur.m)}m`;
+                    } else {
+                        const diffMins = (new Date() - inTime) / 60000;
+                        const dur = formatDurationFancy(diffMins);
+                        durLabel = `${dur.h}h ${Math.round(dur.m)}m`;
+                    }
+
+                    const card = document.createElement('div');
+                    card.style.cssText = 'background:var(--fill);border-radius:12px;padding:14px 16px;margin-bottom:8px;';
+
+                    card.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${s.in.task ? '6' : '0'}px">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <div style="width:8px;height:8px;border-radius:50%;background:${isOngoing ? 'var(--green)' : 'var(--blue)'};flex-shrink:0;${isOngoing ? 'animation:pulse-glow 1.5s infinite;' : ''}"></div>
+                                <span style="font-size:15px;font-weight:600;color:var(--label);font-variant-numeric:tabular-nums">
+                                    ${inStr}<span style="color:var(--label-tertiary);font-weight:400;margin:0 4px">—</span>${isOngoing ? '<span style="color:var(--green)">進行中</span>' : outStr}
+                                </span>
+                            </div>
+                            <span style="font-size:13px;font-weight:600;color:${isOngoing ? 'var(--green)' : 'var(--label-secondary)'};background:${isOngoing ? 'rgba(52,199,89,0.1)' : 'var(--card)'};padding:3px 10px;border-radius:20px;font-variant-numeric:tabular-nums">${durLabel}</span>
+                        </div>
+                        ${s.in.task ? `<div style="font-size:12px;color:var(--label-tertiary);margin-left:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><i class="fas fa-tag" style="margin-right:4px;font-size:10px"></i>${s.in.task}</div>` : ''}
+                    `;
+                    recordsDiv.appendChild(card);
                 });
             }
 
