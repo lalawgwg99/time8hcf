@@ -817,32 +817,40 @@
 
             <!-- === Core Card: Today Summary + Status + Action === -->
             <div class="card" style="padding:20px;">
-                <!-- Time display -->
-                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4px;">
-                    <span
-                        style="font-size:13px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.3px;">今日累計</span>
-                    <span id="ongoingHint" class="opacity-0"
-                        style="transition:opacity 0.3s; font-size:11px; font-weight:600; color:var(--blue);">
-                        <i class="fas fa-circle"
-                            style="font-size:5px; vertical-align:middle; margin-right:3px; animation:pulse-glow 1.5s infinite;"></i>工作中
-                    </span>
-                </div>
-                <div style="margin-bottom:12px;">
-                    <span class="time-display" id="totalHours" style="color:var(--label);">
-                        0<span
-                            style="font-size:16px; font-weight:500; color:var(--label-tertiary); margin:0 2px 0 4px;">h</span>
-                        0<span
-                            style="font-size:14px; font-weight:500; color:var(--label-tertiary); margin-left:4px;">m</span>
-                    </span>
-                </div>
 
-                <!-- Progress bar -->
-                <div class="progress-track" style="margin-bottom:6px;">
-                    <div class="progress-fill" id="progressBar" style="width: 0%"></div>
-                </div>
+                <!-- Circular Progress Ring -->
                 <div
-                    style="display:flex; justify-content:space-between; font-size:11px; font-weight:500; color:var(--label-tertiary); margin-bottom:12px;">
-                    <span id="progressText">目標 8 小時</span>
+                    style="display:flex; flex-direction:column; align-items:center; position:relative; margin-bottom:8px;">
+                    <div style="position:relative; width:180px; height:180px;">
+                        <svg width="180" height="180" viewBox="0 0 180 180" style="transform:rotate(-90deg);">
+                            <!-- Background track -->
+                            <circle cx="90" cy="90" r="80" fill="none" stroke="var(--fill-secondary)"
+                                stroke-width="8" />
+                            <!-- Progress ring -->
+                            <circle id="progressRing" cx="90" cy="90" r="80" fill="none" stroke="var(--blue)"
+                                stroke-width="8" stroke-linecap="round" stroke-dasharray="502.65"
+                                stroke-dashoffset="502.65"
+                                style="transition:stroke-dashoffset 0.8s ease, stroke 0.3s;" />
+                        </svg>
+                        <!-- Center text -->
+                        <div
+                            style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                            <span class="time-display" id="totalHours" style="color:var(--label); font-size:40px;">
+                                0<span
+                                    style="font-size:18px; font-weight:500; color:var(--label-tertiary); margin:0 2px 0 3px;">h</span>
+                                0<span
+                                    style="font-size:16px; font-weight:500; color:var(--label-tertiary); margin-left:3px;">m</span>
+                            </span>
+                            <span id="ongoingHint" class="opacity-0"
+                                style="transition:opacity 0.3s; font-size:11px; font-weight:600; color:var(--blue); margin-top:4px;">
+                                <i class="fas fa-circle"
+                                    style="font-size:5px; vertical-align:middle; margin-right:3px; animation:pulse-glow 1.5s infinite;"></i>工作中
+                            </span>
+                        </div>
+                    </div>
+                    <div style="font-size:11px; font-weight:500; color:var(--label-tertiary); margin-top:8px;">
+                        <span id="progressText">目標 8 小時</span>
+                    </div>
                 </div>
 
                 <!-- Life suggestion (dynamic) -->
@@ -2229,31 +2237,32 @@ END:VCALENDAR
             // 修正：在 updateDisplay 中也更新間距，確保動態更新時樣式一致
             const timeObj = formatDurationFancy(result.total);
             document.getElementById('totalHours').innerHTML = `
-                ${timeObj.h}<span style="font-size:16px;font-weight:500;color:var(--label-tertiary);margin:0 2px 0 4px;">h</span>
-                ${Math.round(timeObj.m)}<span style="font-size:14px;font-weight:500;color:var(--label-tertiary);margin-left:4px;">m</span>
+                ${timeObj.h}<span style="font-size:18px;font-weight:500;color:var(--label-tertiary);margin:0 2px 0 3px;">h</span>
+                ${Math.round(timeObj.m)}<span style="font-size:16px;font-weight:500;color:var(--label-tertiary);margin-left:3px;">m</span>
             `;
 
             const targetMin = 8 * 60;
             const remainingMin = targetMin - result.total;
             const pct = Math.min((result.total / targetMin) * 100, 100);
-            const progressBar = document.getElementById('progressBar');
+            const ring = document.getElementById('progressRing');
+            const circumference = 502.65;
 
             // 預計下班時間與 8小時提醒邏輯
-            let progressInfo = "目標 8h";
+            let progressInfo = "目標 8 小時";
             const lifeSuggestionEl = document.getElementById('lifeSuggestion');
 
             if (result.total >= targetMin) {
-                progressBar.style.width = '100%';
-                progressBar.className = 'progress-fill overtime pulse';
+                ring.style.strokeDashoffset = '0';
+                ring.style.stroke = 'var(--purple)';
                 progressInfo = `<span style="color:var(--purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，可以下班了</span>`;
 
-                // Show generic after-work message for overtime
                 lifeSuggestionEl.textContent = "別加班了，回家好好休息吧";
                 lifeSuggestionEl.classList.remove('hidden');
 
             } else {
-                progressBar.style.width = `${pct}%`;
-                progressBar.className = pct > 85 ? 'progress-fill pulse' : 'progress-fill';
+                const offset = circumference - (pct / 100) * circumference;
+                ring.style.strokeDashoffset = offset;
+                ring.style.stroke = pct > 85 ? 'var(--green)' : 'var(--blue)';
 
                 // 計算預計時間
                 if (result.isOngoing) {
@@ -2432,36 +2441,46 @@ END:VCALENDAR
             `;
 
             try {
-                // Using Yahoo Taiwan RSS
                 const rssUrl = 'https://tw.news.yahoo.com/rss';
-                const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl);
+                let newsData = [];
 
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error('Network response was not ok');
-
-                const xmlText = await response.text();
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-
-                const items = xmlDoc.querySelectorAll("item");
-                const newsData = [];
-
-                // Fetch top 5 news items
-                for (let i = 0; i < Math.min(5, items.length); i++) {
-                    const titleEl = items[i].querySelector("title");
-                    const title = titleEl ? titleEl.textContent : '(無標題)';
-                    // RSS <link> can be tricky - try textContent first, then nextSibling
-                    let link = '';
-                    const linkEl = items[i].querySelector("link");
-                    if (linkEl) {
-                        link = linkEl.textContent.trim();
-                        if (!link && linkEl.nextSibling) {
-                            link = linkEl.nextSibling.textContent.trim();
-                        }
+                // Primary: rss2json.com (returns JSON, no CORS issues)
+                try {
+                    const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+                    if (!response.ok) throw new Error('rss2json failed');
+                    const data = await response.json();
+                    if (data.status === 'ok' && data.items) {
+                        newsData = data.items.slice(0, 5).map(item => ({
+                            title: item.title,
+                            link: item.link || '#'
+                        }));
+                    } else {
+                        throw new Error('rss2json returned bad data');
                     }
-                    if (!link) link = '#';
-                    newsData.push({ title, link });
+                } catch (e) {
+                    // Fallback: allorigins proxy + XML parsing
+                    console.warn('rss2json failed, trying allorigins:', e);
+                    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl);
+                    const response = await fetch(proxyUrl);
+                    if (!response.ok) throw new Error('allorigins also failed');
+                    const xmlText = await response.text();
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+                    const items = xmlDoc.querySelectorAll("item");
+                    for (let i = 0; i < Math.min(5, items.length); i++) {
+                        const titleEl = items[i].querySelector("title");
+                        const title = titleEl ? titleEl.textContent : '(無標題)';
+                        let link = '';
+                        const linkEl = items[i].querySelector("link");
+                        if (linkEl) {
+                            link = linkEl.textContent.trim();
+                            if (!link && linkEl.nextSibling) link = linkEl.nextSibling.textContent.trim();
+                        }
+                        newsData.push({ title, link: link || '#' });
+                    }
                 }
+
+                if (newsData.length === 0) throw new Error('No news items found');
 
                 localStorage.setItem(cacheKey, JSON.stringify(newsData));
                 localStorage.setItem(cacheTimeKey, Date.now().toString());
