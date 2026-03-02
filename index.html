@@ -49,31 +49,34 @@
 
     <style>
         :root {
-            --ios-bg: #F2F2F7;
-            --ios-card: #FFFFFF;
-            --ios-separator: #E5E5EA;
-            --ios-blue: #007AFF;
-            --ios-green: #34C759;
-            --ios-red: #FF3B30;
-            --ios-orange: #FF9500;
-            --ios-purple: #AF52DE;
-            --ios-gray: #8E8E93;
-            --ios-gray2: #AEAEB2;
-            --ios-gray3: #C7C7CC;
-            --ios-gray4: #D1D1D6;
-            --ios-gray5: #E5E5EA;
-            --ios-gray6: #F2F2F7;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-xl: 24px;
-            --transition-spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --bg: #F2F2F7;
+            --card: #FFFFFF;
+            --card-secondary: #F9F9FB;
+            --separator: rgba(60, 60, 67, 0.12);
+            --label: #1C1C1E;
+            --label-secondary: #3C3C43;
+            --label-tertiary: #8E8E93;
+            --label-quaternary: #AEAEB2;
+            --blue: #007AFF;
+            --green: #34C759;
+            --red: #FF3B30;
+            --orange: #FF9500;
+            --purple: #AF52DE;
+            --teal: #5AC8FA;
+            --fill: rgba(120, 120, 128, 0.08);
+            --fill-secondary: rgba(120, 120, 128, 0.12);
+            --shadow-card: 0 0.5px 1px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-elevated: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+            --spring: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
@@ -82,142 +85,40 @@
             padding-bottom: env(safe-area-inset-bottom);
             -webkit-tap-highlight-color: transparent;
             -webkit-font-smoothing: antialiased;
-            color: #1C1C1E;
-            margin: 0;
-            background: transparent;
+            color: var(--label);
+            background: var(--bg);
         }
 
-        /* --- Ambient Glow Background --- */
-        .ambient-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-            background: var(--ambient-bg, var(--ios-bg));
-            transition: background 3s ease;
-        }
-
-        .ambient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.65;
-            animation: floatOrb 20s infinite ease-in-out alternate;
-            transition: background 3s ease;
-            transform: translateZ(0);
-        }
-
-        .ambient-orb.orb-1 {
-            width: 350px;
-            height: 350px;
-            top: -50px;
-            left: -50px;
-            background: var(--orb1-color, #ffecd2);
-            animation-delay: 0s;
-        }
-
-        .ambient-orb.orb-2 {
-            width: 450px;
-            height: 450px;
-            bottom: -100px;
-            right: -50px;
-            background: var(--orb2-color, #fcb69f);
-            animation-delay: -5s;
-        }
-
-        .ambient-orb.orb-3 {
-            width: 300px;
-            height: 300px;
-            top: 35%;
-            left: 20%;
-            background: var(--orb3-color, #a8edea);
-            animation-delay: -10s;
-        }
-
-        @keyframes floatOrb {
-            0% {
-                transform: translate(0, 0) scale(1) rotate(0deg);
-            }
-
-            50% {
-                transform: translate(40px, -50px) scale(1.1) rotate(15deg);
-            }
-
-            100% {
-                transform: translate(-30px, 40px) scale(0.95) rotate(-10deg);
-            }
-        }
-
-        /* --- Typography --- */
-        .time-display {
-            font-size: 44px;
-            font-weight: 800;
-            letter-spacing: -2px;
-            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            line-height: 1;
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* 按鈕交互 */
-        .active-scale {
-            transition: transform 0.15s var(--transition-spring), opacity 0.15s;
-        }
-
-        .active-scale:active {
-            transform: scale(0.96);
-            opacity: 0.88;
-        }
-
-        /* 輸入框 */
-        .ios-input {
-            background: var(--ios-gray6);
-            border-radius: 12px;
-            border: none;
-            transition: background 0.2s, box-shadow 0.2s;
-            font-size: 15px;
-        }
-
-        .ios-input:focus {
-            background: var(--ios-gray5);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
-        }
-
-        /* 卡片 (Glassmorphism) */
-        .card {
-            background: rgba(255, 255, 255, 0.65);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            backdrop-filter: blur(25px) saturate(180%);
-            border: 0.5px solid rgba(255, 255, 255, 0.5);
-            border-radius: var(--radius-lg);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-            transition: transform 0.2s var(--transition-spring), box-shadow 0.2s, background 0.5s;
-        }
-
+        /* --- Night Mode --- */
         .night-mode {
+            --bg: #000000;
+            --card: #1C1C1E;
+            --card-secondary: #2C2C2E;
+            --separator: rgba(84, 84, 88, 0.36);
+            --label: #FFFFFF;
+            --label-secondary: #EBEBF5;
+            --label-tertiary: #8E8E93;
+            --label-quaternary: #636366;
+            --fill: rgba(120, 120, 128, 0.24);
+            --fill-secondary: rgba(120, 120, 128, 0.32);
+            --shadow-card: none;
+            --shadow-elevated: 0 2px 16px rgba(0, 0, 0, 0.4);
             color: #FFFFFF;
         }
 
+        .night-mode body,
+        .night-mode {
+            background: var(--bg);
+        }
+
         .night-mode .card {
-            background: rgba(30, 30, 30, 0.65);
-            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            background: var(--card);
+            border-color: var(--separator);
         }
 
         .night-mode header {
-            background: rgba(30, 30, 30, 0.65) !important;
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.85) !important;
+            border-color: var(--separator) !important;
         }
 
         .night-mode h1,
@@ -229,93 +130,152 @@
         }
 
         .night-mode .text-gray-400,
-        .night-mode .ios-gray {
-            color: #8E8E93 !important;
+        .night-mode .text-gray-500 {
+            color: var(--label-tertiary) !important;
         }
 
-        .night-mode .ios-input {
-            background: rgba(60, 60, 65, 0.6);
-            color: white;
+        .night-mode .ios-input,
+        .night-mode input[type="text"],
+        .night-mode input[type="number"],
+        .night-mode input[type="url"],
+        .night-mode select {
+            background: var(--fill-secondary) !important;
+            color: #FFFFFF;
         }
 
-        .night-mode .bg-white {
-            background-color: rgba(30, 30, 30, 0.85) !important;
+        .night-mode .bg-white,
+        .night-mode .inset-card {
+            background: var(--card) !important;
         }
 
-        .night-mode .bg-\[\#F2F2F7\] {
-            background-color: rgba(20, 20, 20, 0.95) !important;
+        .night-mode .bg-gray-100,
+        .night-mode .bg-gray-50 {
+            background: var(--fill) !important;
         }
 
-        .night-mode #settingsModal [style*="background:var(--ios-bg)"] {
-            background: rgba(20, 20, 20, 0.95) !important;
+        .night-mode .alarm-card {
+            background: var(--card);
         }
 
-        /* 進度條 */
+        .night-mode .alarm-card .text-gray-900 {
+            color: #fff !important;
+        }
+
+        .night-mode .alarm-card .text-gray-500 {
+            color: var(--label-tertiary) !important;
+        }
+
+        .night-mode #settingsModal [style*="background:var(--ios-bg)"],
+        .night-mode [style*="background:var(--bg)"] {
+            background: #000 !important;
+        }
+
+        .night-mode .section-label {
+            color: var(--label-tertiary);
+        }
+
+        .night-mode .sprite-terrarium {
+            background: var(--card);
+            border-color: var(--separator);
+        }
+
+        .night-mode .sprite-core-container {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .night-mode .swipe-track {
+            box-shadow: none;
+        }
+
+        /* --- Cards --- */
+        .card {
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .inset-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+
+        /* --- Typography --- */
+        .time-display {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -2.5px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--label-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 4px;
+            margin-bottom: 8px;
+        }
+
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: 'tnum';
+        }
+
+        /* --- Interactive --- */
+        .active-scale {
+            transition: transform 0.12s var(--spring), opacity 0.12s;
+        }
+
+        .active-scale:active {
+            transform: scale(0.97);
+            opacity: 0.85;
+        }
+
+        .ios-input {
+            background: var(--fill);
+            border-radius: var(--radius-sm);
+            border: none;
+            font-size: 15px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .ios-input:focus {
+            background: var(--fill-secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+
+        /* --- Progress --- */
         .progress-track {
             width: 100%;
-            height: 8px;
-            background: var(--ios-gray6);
-            border-radius: 4px;
+            height: 6px;
+            background: var(--fill-secondary);
+            border-radius: 3px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #007AFF, #5AC8FA);
+            border-radius: 3px;
+            background: var(--blue);
             transition: width 0.7s ease-out;
         }
 
         .progress-fill.overtime {
-            background: linear-gradient(90deg, var(--ios-purple), #DA7BFF);
+            background: var(--purple);
         }
 
         .progress-fill.pulse {
             animation: pulse-glow 1.5s ease-in-out infinite;
         }
 
-        /* 時間軸 */
-        .timeline-item {
-            position: relative;
-            padding-left: 28px;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
-            bottom: 0;
-            width: 1.5px;
-            background: var(--ios-gray5);
-        }
-
-        .timeline-item:last-child::before {
-            bottom: 50%;
-        }
-
-        .timeline-item:first-child::before {
-            top: 50%;
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: 4px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 2.5px solid var(--ios-blue);
-            background: white;
-            z-index: 1;
-        }
-
-        .timeline-dot.out {
-            border-color: var(--ios-orange);
-        }
-
-        /* 徽章 */
+        /* --- Badge --- */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -326,7 +286,335 @@
             font-weight: 600;
         }
 
-        /* 動畫 */
+        /* --- Sprite (compact) --- */
+        .sprite-terrarium {
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            transition: all 0.3s var(--spring);
+        }
+
+        .sprite-core-container {
+            width: 44px;
+            height: 44px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--fill);
+            flex-shrink: 0;
+        }
+
+        .sprite-core {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff, #A5B4FC);
+            box-shadow: 0 0 8px #A5B4FC, 0 0 16px #818CF8;
+            transition: all 0.8s ease;
+        }
+
+        .sprite-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(165, 180, 252, 0.5);
+            opacity: 0;
+            transition: all 0.8s ease;
+            box-sizing: border-box;
+        }
+
+        .sprite-working .sprite-core {
+            animation: breathe 3s ease-in-out infinite alternate;
+            box-shadow: 0 0 12px #818CF8, 0 0 24px #6366F1;
+            background: radial-gradient(circle at 30% 30%, #fff, #818CF8);
+        }
+
+        .sprite-working .sprite-ring {
+            animation: spin 8s linear infinite;
+        }
+
+        .sprite-lv1 .sprite-core {
+            width: 14px;
+            height: 14px;
+        }
+
+        .sprite-lv2 .sprite-core {
+            width: 18px;
+            height: 18px;
+        }
+
+        .sprite-lv2 .sprite-ring.ring-1 {
+            width: 28px;
+            height: 28px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(129, 140, 248, 0.6);
+        }
+
+        .sprite-lv3 .sprite-core {
+            width: 22px;
+            height: 22px;
+            background: radial-gradient(circle at 30% 30%, #fff, #C084FC);
+            box-shadow: 0 0 16px #C084FC, 0 0 32px #A855F7;
+        }
+
+        .sprite-lv3 .sprite-ring.ring-1 {
+            width: 34px;
+            height: 34px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(192, 132, 252, 0.7);
+            border-style: dashed;
+        }
+
+        .sprite-lv3 .sprite-ring.ring-2 {
+            width: 42px;
+            height: 42px;
+            opacity: 1;
+            border-width: 1px;
+            border-color: rgba(168, 85, 247, 0.4);
+            animation: spinReverse 12s linear infinite;
+        }
+
+        .sprite-lv4 .sprite-core {
+            width: 24px;
+            height: 24px;
+            background: radial-gradient(circle at 30% 30%, #fff, #F97316);
+            box-shadow: 0 0 20px #F97316, 0 0 40px #EA580C;
+        }
+
+        .sprite-lv4 .sprite-ring.ring-1 {
+            width: 38px;
+            height: 38px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(249, 115, 22, 0.7);
+            border-style: dashed;
+        }
+
+        .sprite-lv4 .sprite-ring.ring-2 {
+            width: 44px;
+            height: 44px;
+            opacity: 1;
+            border-width: 1px;
+            border-color: rgba(234, 88, 12, 0.5);
+            animation: spinReverse 8s linear infinite;
+        }
+
+        .sprite-lv5 .sprite-core {
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle at 30% 30%, #fff, #FBBF24);
+            box-shadow: 0 0 24px #FBBF24, 0 0 48px #D97706;
+        }
+
+        .sprite-lv5 .sprite-ring.ring-1 {
+            width: 42px;
+            height: 42px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(251, 191, 36, 0.8);
+            animation: spin 6s linear infinite;
+        }
+
+        .sprite-lv5 .sprite-ring.ring-2 {
+            width: 44px;
+            height: 44px;
+            opacity: 0.8;
+            border-width: 2px;
+            border-color: rgba(217, 119, 6, 0.4);
+            border-style: dotted;
+            animation: spinReverse 10s linear infinite;
+        }
+
+        .sprite-lv6 .sprite-core {
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle at 30% 30%, #E0E7FF, #4338CA);
+            box-shadow: 0 0 32px #4338CA, 0 0 64px #312E81;
+        }
+
+        .sprite-lv6 .sprite-ring.ring-1 {
+            width: 44px;
+            height: 44px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(67, 56, 202, 0.8);
+            animation: spin 5s linear infinite;
+        }
+
+        .sprite-lv6 .sprite-ring.ring-2 {
+            width: 44px;
+            height: 44px;
+            opacity: 0.9;
+            border-width: 1px;
+            border-color: rgba(99, 102, 241, 0.5);
+            animation: spinReverse 7s linear infinite;
+        }
+
+        .sprite-lv7 .sprite-core {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #A855F7, #EC4899, #3B82F6);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+            box-shadow: 0 0 40px #EC4899, 0 0 80px #3B82F6;
+        }
+
+        .sprite-lv7 .sprite-ring.ring-1 {
+            width: 44px;
+            height: 44px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(236, 72, 153, 0.8);
+            border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%;
+            animation: spin 4s linear infinite;
+        }
+
+        .sprite-lv7 .sprite-ring.ring-2 {
+            width: 44px;
+            height: 44px;
+            opacity: 1;
+            border-width: 2px;
+            border-color: rgba(59, 130, 246, 0.6);
+            border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%;
+            animation: spinReverse 6s linear infinite;
+        }
+
+        /* --- Swipe Slider --- */
+        .swipe-track {
+            position: relative;
+            width: 100%;
+            height: 56px;
+            border-radius: var(--radius);
+            background: var(--red);
+            overflow: hidden;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .swipe-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+            font-weight: 600;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .swipe-handle {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            cursor: grab;
+            transition: left 0.1s linear;
+            z-index: 2;
+        }
+
+        .swipe-handle i {
+            color: var(--red);
+            font-size: 18px;
+        }
+
+        .swipe-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius);
+            transition: width 0.1s linear;
+            pointer-events: none;
+        }
+
+        /* --- Alarm/Modal Overlay --- */
+        .alarm-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(24px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .alarm-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .alarm-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 36px 28px;
+            text-align: center;
+            max-width: 300px;
+            width: 88%;
+            box-shadow: var(--shadow-elevated);
+            animation: fadeInUp 0.35s var(--spring);
+        }
+
+        /* --- Ripple --- */
+        .ripple-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: ripple 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+
+        /* Salary ticker */
+        .salary-ticker {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--green);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Collapsible */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s var(--spring), opacity 0.3s;
+            opacity: 0;
+        }
+
+        .collapsible-content.open {
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        /* --- Animations --- */
         @keyframes slideUp {
             from {
                 transform: translateY(100%);
@@ -342,7 +630,7 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(12px);
+                transform: translateY(10px);
             }
 
             to {
@@ -368,12 +656,10 @@
             0%,
             100% {
                 opacity: 1;
-                filter: brightness(1);
             }
 
             50% {
-                opacity: 0.85;
-                filter: brightness(1.15);
+                opacity: 0.8;
             }
         }
 
@@ -382,19 +668,17 @@
             0%,
             100% {
                 transform: scale(1);
-                opacity: 0.9;
             }
 
             50% {
-                transform: scale(1.03);
-                opacity: 1;
+                transform: scale(1.04);
             }
         }
 
         @keyframes countUp {
             from {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(6px);
             }
 
             to {
@@ -412,277 +696,13 @@
 
             20%,
             60% {
-                transform: translateX(-4px);
+                transform: translateX(-3px);
             }
 
             40%,
             80% {
-                transform: translateX(4px);
+                transform: translateX(3px);
             }
-        }
-
-        .modal-enter {
-            animation: slideUp 0.35s var(--transition-spring) forwards;
-        }
-
-        .anim-fade-in {
-            animation: fadeInUp 0.4s var(--transition-spring) forwards;
-        }
-
-        .anim-breathe {
-            animation: breathe 2.5s ease-in-out infinite;
-        }
-
-        .anim-count {
-            animation: countUp 0.5s var(--transition-spring) forwards;
-        }
-
-        /* --- 精靈 (Work Sprite) --- */
-        .sprite-terrarium {
-            position: relative;
-            background: rgba(255, 255, 255, 0.4);
-            border: 0.5px solid rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border-radius: 24px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-            overflow: hidden;
-            transition: all 0.5s var(--transition-spring);
-        }
-
-        .night-mode .sprite-terrarium {
-            background: rgba(40, 40, 45, 0.5);
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-        }
-
-        .sprite-core-container {
-            width: 56px;
-            height: 56px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.03);
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .night-mode .sprite-core-container {
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .sprite-core {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #fff, #A5B4FC);
-            box-shadow: 0 0 10px #A5B4FC, 0 0 20px #818CF8;
-            transition: all 1s ease;
-            transform: scale(1);
-        }
-
-        .sprite-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(165, 180, 252, 0.5);
-            opacity: 0;
-            transition: all 1s ease;
-            box-sizing: border-box;
-        }
-
-        /* 狀態：工作中呼吸 */
-        .sprite-working .sprite-core {
-            animation: breathe 3s ease-in-out infinite alternate;
-            box-shadow: 0 0 15px #818CF8, 0 0 30px #6366F1;
-            background: radial-gradient(circle at 30% 30%, #fff, #818CF8);
-        }
-
-        .sprite-working .sprite-ring {
-            animation: spin 8s linear infinite;
-        }
-
-        /* 等級進化差異 */
-        .sprite-lv1 .sprite-core {
-            width: 16px;
-            height: 16px;
-        }
-
-        .sprite-lv2 .sprite-core {
-            width: 20px;
-            height: 20px;
-        }
-
-        .sprite-lv2 .sprite-ring.ring-1 {
-            width: 32px;
-            height: 32px;
-            opacity: 1;
-            border-width: 2px;
-            border-color: rgba(129, 140, 248, 0.6);
-        }
-
-        .sprite-lv3 .sprite-core {
-            width: 24px;
-            height: 24px;
-            background: radial-gradient(circle at 30% 30%, #fff, #C084FC);
-            box-shadow: 0 0 20px #C084FC, 0 0 40px #A855F7;
-        }
-
-        .sprite-lv3 .sprite-working .sprite-core {
-            box-shadow: 0 0 25px #A855F7, 0 0 50px #9333EA;
-            background: radial-gradient(circle at 30% 30%, #fff, #A855F7);
-        }
-
-        .sprite-lv3 .sprite-ring.ring-1 {
-            width: 38px;
-            height: 38px;
-            opacity: 1;
-            border-width: 2px;
-            border-color: rgba(192, 132, 252, 0.7);
-            border-style: dashed;
-        }
-
-        .sprite-lv3 .sprite-ring.ring-2 {
-            width: 48px;
-            height: 48px;
-            opacity: 1;
-            border-width: 1px;
-            border-color: rgba(168, 85, 247, 0.4);
-            animation: spinReverse 12s linear infinite;
-        }
-
-        /* Lv4: Pulsar */
-        .sprite-lv4 .sprite-core {
-            width: 28px;
-            height: 28px;
-            background: radial-gradient(circle at 30% 30%, #fff, #F97316);
-            box-shadow: 0 0 25px #F97316, 0 0 50px #EA580C;
-        }
-
-        .sprite-lv4 .sprite-working .sprite-core {
-            animation: breathe 1.5s ease-in-out infinite alternate;
-            box-shadow: 0 0 35px #FB923C, 0 0 60px #EA580C;
-        }
-
-        .sprite-lv4 .sprite-ring.ring-1 {
-            width: 44px;
-            height: 44px;
-            opacity: 1;
-            border-width: 2px;
-            border-color: rgba(249, 115, 22, 0.7);
-            border-style: dashed;
-        }
-
-        .sprite-lv4 .sprite-ring.ring-2 {
-            width: 56px;
-            height: 56px;
-            opacity: 1;
-            border-width: 1px;
-            border-color: rgba(234, 88, 12, 0.5);
-            animation: spinReverse 8s linear infinite;
-        }
-
-        /* Lv5: Stellar */
-        .sprite-lv5 .sprite-core {
-            width: 34px;
-            height: 34px;
-            background: radial-gradient(circle at 30% 30%, #fff, #FBBF24);
-            box-shadow: 0 0 30px #FBBF24, 0 0 60px #D97706;
-        }
-
-        .sprite-lv5 .sprite-working .sprite-core {
-            animation: breathe 2s ease-in-out infinite alternate;
-            box-shadow: 0 0 40px #FDE68A, 0 0 80px #D97706;
-        }
-
-        .sprite-lv5 .sprite-ring.ring-1 {
-            width: 54px;
-            height: 54px;
-            opacity: 1;
-            border-width: 2px;
-            border-color: rgba(251, 191, 36, 0.8);
-            animation: spin 6s linear infinite;
-        }
-
-        .sprite-lv5 .sprite-ring.ring-2 {
-            width: 68px;
-            height: 68px;
-            opacity: 0.8;
-            border-width: 2px;
-            border-color: rgba(217, 119, 6, 0.4);
-            border-style: dotted;
-            animation: spinReverse 10s linear infinite;
-        }
-
-        /* Lv6: Supernova */
-        .sprite-lv6 .sprite-core {
-            width: 40px;
-            height: 40px;
-            background: radial-gradient(circle at 30% 30%, #E0E7FF, #4338CA);
-            box-shadow: 0 0 40px #4338CA, 0 0 80px #312E81;
-        }
-
-        .sprite-lv6 .sprite-working .sprite-core {
-            animation: breathe 1s ease-in-out infinite alternate;
-            box-shadow: 0 0 50px #6366F1, 0 0 100px #312E81;
-        }
-
-        .sprite-lv6 .sprite-ring.ring-1 {
-            width: 60px;
-            height: 60px;
-            opacity: 1;
-            border-width: 3px;
-            border-color: rgba(67, 56, 202, 0.8);
-            border-style: double;
-            animation: spin 5s linear infinite;
-        }
-
-        .sprite-lv6 .sprite-ring.ring-2 {
-            width: 80px;
-            height: 80px;
-            opacity: 0.9;
-            border-width: 1px;
-            border-color: rgba(99, 102, 241, 0.5);
-            animation: spinReverse 7s linear infinite;
-        }
-
-        /* Lv7: Cosmos */
-        .sprite-lv7 .sprite-core {
-            width: 46px;
-            height: 46px;
-            background: linear-gradient(135deg, #A855F7, #EC4899, #3B82F6);
-            background-size: 200% 200%;
-            animation: gradientShift 3s ease infinite;
-            box-shadow: 0 0 50px #EC4899, 0 0 100px #3B82F6;
-        }
-
-        .sprite-lv7 .sprite-working .sprite-core {
-            animation: gradientShift 1.5s ease infinite, breathe 0.8s ease-in-out infinite alternate;
-            box-shadow: 0 0 60px #F472B6, 0 0 120px #60A5FA;
-        }
-
-        .sprite-lv7 .sprite-ring.ring-1 {
-            width: 70px;
-            height: 70px;
-            opacity: 1;
-            border-width: 2px;
-            border-color: rgba(236, 72, 153, 0.8);
-            border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%;
-            animation: spin 4s linear infinite;
-        }
-
-        .sprite-lv7 .sprite-ring.ring-2 {
-            width: 90px;
-            height: 90px;
-            opacity: 1;
-            border-width: 2px;
-            border-color: rgba(59, 130, 246, 0.6);
-            border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%;
-            animation: spinReverse 6s linear infinite;
         }
 
         @keyframes gradientShift {
@@ -711,434 +731,347 @@
             }
         }
 
-        /* 漣漪 */
-        .ripple-container {
-            position: relative;
-            overflow: hidden;
+        .modal-enter {
+            animation: slideUp 0.35s var(--spring) forwards;
         }
 
-        .ripple-effect {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.35);
-            animation: ripple 0.6s ease-out forwards;
-            pointer-events: none;
+        .anim-fade-in {
+            animation: fadeInUp 0.35s var(--spring) forwards;
         }
 
-        /* Alarm Modal */
-        .alarm-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+        .anim-breathe {
+            animation: breathe 2.5s ease-in-out infinite;
         }
 
-        .alarm-overlay.active {
-            opacity: 1;
-            visibility: visible;
+        .anim-count {
+            animation: countUp 0.4s var(--spring) forwards;
         }
 
-        .alarm-card {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 40px 32px;
-            text-align: center;
-            max-width: 320px;
-            width: 90%;
-            box-shadow: var(--shadow-lg);
-            animation: fadeInUp 0.4s var(--transition-spring);
+        /* Hide scrollbar */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
         }
 
-        /* Tabular nums */
-        .tabular-nums {
-            font-variant-numeric: tabular-nums;
-            font-feature-settings: 'tnum';
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* Salary ticker */
-        .salary-ticker {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--ios-green);
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* Section label */
-        .section-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ios-gray);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 0 8px;
-            margin-bottom: 8px;
-        }
-
-        /* --- Weekly Bar Chart --- */
+        /* Week bar (kept for possible re-use) */
         .week-bar {
             flex: 1;
             border-radius: 4px 4px 2px 2px;
-            background: var(--ios-blue);
+            background: var(--blue);
             min-height: 3px;
             transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .week-bar.overtime {
-            background: var(--ios-orange);
+            background: var(--orange);
         }
 
         .week-bar.today {
-            background: linear-gradient(180deg, var(--ios-blue), #5AC8FA);
-            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+            background: linear-gradient(180deg, var(--blue), var(--teal));
+            box-shadow: 0 2px 6px rgba(0, 122, 255, 0.25);
         }
 
         .week-bar.empty {
-            background: var(--ios-separator);
+            background: var(--fill-secondary);
             min-height: 3px;
-        }
-
-        /* --- Swipe Slider --- */
-        .swipe-track {
-            position: relative;
-            width: 100%;
-            height: 56px;
-            border-radius: 18px;
-            background: var(--ios-red);
-            overflow: hidden;
-            touch-action: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .swipe-label {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 15px;
-            font-weight: 600;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-
-        .swipe-handle {
-            position: absolute;
-            left: 4px;
-            top: 4px;
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            cursor: grab;
-            transition: left 0.1s linear;
-            z-index: 2;
-        }
-
-        .swipe-handle i {
-            color: var(--ios-red);
-            font-size: 18px;
-        }
-
-        .swipe-progress {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 18px;
-            transition: width 0.1s linear;
-            pointer-events: none;
         }
     </style>
 </head>
 
-<body class="min-h-screen pb-10">
+<body style="min-height:100vh; padding-bottom:40px; background:var(--bg);">
 
-    <!-- Ambient Glow Background -->
-    <div id="ambientContainer" class="ambient-container">
-        <div class="ambient-orb orb-1"></div>
-        <div class="ambient-orb orb-2"></div>
-        <div class="ambient-orb orb-3"></div>
-    </div>
+    <div style="max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;"
+        id="app">
 
-    <div class="max-w-md mx-auto min-h-screen flex flex-col relative z-10" id="app">
-
-        <!-- Header: 大標題風格 -->
+        <!-- Header -->
         <header
-            class="px-5 pt-8 pb-4 bg-[#F2F2F7]/80 sticky top-0 z-20 backdrop-blur-xl transition-colors duration-500 border-b border-transparent">
-            <div class="flex justify-between items-start mb-1">
-                <div class="text-[13px] text-ios-gray font-semibold uppercase tracking-wide" id="currentDate">載入中...
-                </div>
-                <div class="flex gap-3">
-                    <!-- 幫助/安裝按鈕 -->
-                    <button onclick="showInstallGuide()"
-                        class="w-8 h-8 rounded-full bg-white shadow-ios flex items-center justify-center text-ios-blue active-scale">
-                        <i class="fas fa-arrow-down text-sm"></i>
+            style="padding:calc(env(safe-area-inset-top, 12px) + 12px) 20px 14px; position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:0.5px solid transparent; -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%); transition:background 0.3s, border-color 0.3s;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="font-size:13px; color:var(--label-tertiary); font-weight:600; text-transform:uppercase; letter-spacing:0.5px;"
+                    id="currentDate">載入中...</div>
+                <div style="display:flex; gap:8px;">
+                    <button onclick="showInstallGuide()" aria-label="安裝" class="active-scale"
+                        style="width:32px; height:32px; border-radius:50%; background:var(--fill); border:none; display:flex; align-items:center; justify-content:center; color:var(--blue); cursor:pointer;">
+                        <i class="fas fa-arrow-down" style="font-size:13px;"></i>
                     </button>
-                    <!-- 設定按鈕 -->
-                    <button onclick="openSettings()"
-                        class="w-8 h-8 rounded-full bg-white shadow-ios flex items-center justify-center text-ios-blue active-scale">
-                        <i class="fas fa-cog text-sm"></i>
+                    <button onclick="openSettings()" aria-label="設定" class="active-scale"
+                        style="width:32px; height:32px; border-radius:50%; background:var(--fill); border:none; display:flex; align-items:center; justify-content:center; color:var(--blue); cursor:pointer;">
+                        <i class="fas fa-cog" style="font-size:13px;"></i>
                     </button>
                 </div>
             </div>
-            <div class="flex justify-between items-baseline">
-                <h1 class="text-[34px] font-bold tracking-tight text-black">工時紀錄</h1>
-                <div class="text-2xl font-mono font-medium text-black" id="currentTime">00:00</div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <h1 style="font-size:34px; font-weight:700; letter-spacing:-0.5px; color:var(--label); margin:0;">工時紀錄
+                </h1>
+                <div style="font-size:22px; font-weight:500; font-variant-numeric:tabular-nums; color:var(--label);"
+                    id="currentTime">00:00</div>
             </div>
         </header>
 
         <!-- Main Content -->
-        <main class="flex-1 px-4 space-y-5">
+        <main style="flex:1; padding:0 16px; display:flex; flex-direction:column; gap:12px; margin-top:8px;">
 
-            <!-- 工作精靈 (Work Sprite) 生態箱 -->
-            <div id="spriteTerrarium" class="sprite-terrarium anim-fade-in" onclick="interactWithSprite()">
-                <div class="sprite-core-container">
-                    <div class="sprite-ring ring-2"></div>
-                    <div class="sprite-ring ring-1"></div>
-                    <div class="sprite-core"></div>
+            <!-- === Core Card: Today Summary + Status + Action === -->
+            <div class="card" style="padding:20px;">
+                <!-- Time display -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4px;">
+                    <span
+                        style="font-size:13px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.3px;">今日工時</span>
+                    <span id="ongoingHint" class="opacity-0"
+                        style="transition:opacity 0.3s; font-size:11px; font-weight:600; color:var(--blue);">
+                        <i class="fas fa-circle"
+                            style="font-size:5px; vertical-align:middle; margin-right:3px; animation:pulse-glow 1.5s infinite;"></i>計時中
+                    </span>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex justify-between items-baseline mb-1">
-                        <div class="text-[14px] font-bold text-gray-900" id="spriteName">能量晶種 (Lv.1)</div>
-                        <div class="text-[10px] font-medium text-ios-blue" id="spriteExp">EXP 0/100</div>
-                    </div>
-                    <!-- 進度條 -->
-                    <div
-                        class="w-full h-[4px] bg-gray-200/50 rounded-full overflow-hidden mb-1.5 night-mode:bg-gray-700/50">
-                        <div id="spriteExpFill" class="h-full bg-ios-blue rounded-full transition-all duration-700"
-                            style="width: 0%"></div>
-                    </div>
-                    <div class="text-[11px] text-gray-500 truncate" id="spriteMessage">精靈正在沉睡...等待上班喚醒。</div>
-                </div>
-            </div>
-
-            <!-- Summary Card: 簡潔白卡 -->
-            <div class="card p-5">
-                <div class="flex justify-between items-end mb-3">
-                    <span class="text-[15px] font-semibold text-gray-900">今日累計</span>
-                    <div class="flex items-baseline">
-                        <span class="time-display tabular-nums" id="totalHours">
-                            0<span class="text-lg font-sans font-medium text-gray-400 ml-1.5 mr-2">h</span>
-                            0<span class="text-sm font-sans font-medium text-gray-400 ml-1.5">m</span>
-                        </span>
-                    </div>
+                <div style="margin-bottom:12px;">
+                    <span class="time-display" id="totalHours" style="color:var(--label);">
+                        0<span
+                            style="font-size:16px; font-weight:500; color:var(--label-tertiary); margin:0 2px 0 4px;">h</span>
+                        0<span
+                            style="font-size:14px; font-weight:500; color:var(--label-tertiary); margin-left:4px;">m</span>
+                    </span>
                 </div>
 
-                <!-- 即時薪資跳動 -->
-                <div id="salaryTicker" class="hidden mb-3 text-center py-2 bg-green-50 rounded-xl">
-                    <div class="text-[11px] text-gray-400 font-medium mb-0.5">💰 已賺到</div>
+                <!-- Progress bar -->
+                <div class="progress-track" style="margin-bottom:6px;">
+                    <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                </div>
+                <div
+                    style="display:flex; justify-content:space-between; font-size:11px; font-weight:500; color:var(--label-tertiary); margin-bottom:12px;">
+                    <span id="progressText">目標 8h</span>
+                </div>
+
+                <!-- Life suggestion (dynamic) -->
+                <div id="lifeSuggestion" class="hidden"
+                    style="font-size:12px; font-weight:500; color:var(--label-secondary); text-align:center; background:var(--fill); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:12px; transition:all 0.3s;">
+                </div>
+
+                <!-- Salary ticker (hidden by default) -->
+                <div id="salaryTicker" class="hidden"
+                    style="text-align:center; padding:8px; background:var(--fill); border-radius:var(--radius-sm); margin-bottom:12px;">
+                    <div style="font-size:11px; color:var(--label-tertiary); font-weight:500; margin-bottom:2px;">💰 已賺到
+                    </div>
                     <div class="salary-ticker" id="salaryAmount">$0</div>
                 </div>
 
-                <!-- 升級進度條 -->
-                <div class="progress-track mb-2">
-                    <div class="progress-fill" id="progressBar" style="width: 0%"></div>
-                </div>
-
-                <div class="flex justify-between text-[11px] font-medium" style="color: var(--ios-gray)">
-                    <span id="progressText">目標 8h</span>
-                    <span id="ongoingHint" class="opacity-0 transition-opacity" style="color: var(--ios-blue)">
-                        <i class="fas fa-circle text-[6px] animate-pulse mr-1"></i>計時中
-                    </span>
-                </div>
-                <div id="lifeSuggestion"
-                    class="mt-3 text-[12px] text-gray-500 font-medium text-center bg-gray-50 rounded-xl py-2.5 px-3 hidden transition-all">
-                </div>
-            </div>
-
-            <!-- Action Section: 狀態與操作 -->
-            <div class="space-y-3">
-                <!-- 狀態顯示 -->
-                <div class="bg-white rounded-[20px] p-4 shadow-ios flex items-center gap-4">
+                <!-- Status row -->
+                <div
+                    style="display:flex; align-items:center; gap:12px; padding:12px 0; border-top:0.5px solid var(--separator);">
                     <div id="statusIconBg"
-                        class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl transition-colors duration-300">
-                        <i id="statusIcon" class="fas fa-coffee text-gray-400"></i>
+                        style="width:40px; height:40px; border-radius:var(--radius-xs); background:var(--fill); display:flex; align-items:center; justify-content:center; font-size:18px; transition:background 0.3s, color 0.3s; flex-shrink:0;">
+                        <i id="statusIcon" class="fas fa-mug-hot" style="color:var(--label-tertiary);"></i>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="text-[11px] text-ios-gray uppercase font-semibold mb-0.5">目前狀態</div>
-                        <div id="nextActionType" class="text-[15px] font-bold text-gray-900 truncate">準備開始</div>
+                    <div style="flex:1; min-width:0;">
+                        <div id="nextActionType"
+                            style="font-size:15px; font-weight:600; color:var(--label); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            準備開始</div>
                     </div>
                 </div>
 
-                <!-- 任務輸入框 (動態顯示) -->
-                <div id="taskInputContainer" class="transition-all duration-300 overflow-hidden max-h-0 opacity-0">
+                <!-- Task input (dynamic) -->
+                <div id="taskInputContainer" style="overflow:hidden; max-height:0; opacity:0; transition:all 0.3s;">
                     <input type="text" id="taskInput" placeholder="輸入工作內容 (選填)..."
-                        class="w-full px-4 py-3.5 rounded-[14px] bg-white text-[15px] text-gray-900 placeholder-gray-400 shadow-ios border-none focus:ring-2 focus:ring-ios-blue/20 outline-none">
+                        style="width:100%; padding:12px 14px; border-radius:var(--radius-sm); background:var(--fill); border:none; font-size:15px; color:var(--label); outline:none; margin-top:8px;">
                 </div>
 
-                <!-- 進行中任務 (動態顯示) -->
-                <div id="currentTaskDisplay" class="transition-all duration-300 overflow-hidden max-h-0 opacity-0">
-                    <div class="bg-ios-blue/10 rounded-[14px] px-4 py-3 flex items-center gap-2">
-                        <i class="fas fa-thumbtack text-ios-blue text-xs"></i>
-                        <span id="currentTaskName" class="text-[13px] font-medium text-ios-blue truncate">任務名稱</span>
+                <!-- Current task (dynamic) -->
+                <div id="currentTaskDisplay" style="overflow:hidden; max-height:0; opacity:0; transition:all 0.3s;">
+                    <div
+                        style="background:rgba(0,122,255,0.08); border-radius:var(--radius-sm); padding:10px 14px; display:flex; align-items:center; gap:6px; margin-top:8px;">
+                        <i class="fas fa-thumbtack" style="color:var(--blue); font-size:11px;"></i>
+                        <span id="currentTaskName"
+                            style="font-size:13px; font-weight:500; color:var(--blue); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">任務名稱</span>
                     </div>
                 </div>
 
-                <!-- 即時新聞重點摘要 (Proposed H) -->
-                <div id="newsDigestContainer" class="card p-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="section-label" style="margin:0;padding:0">
-                            📰 即時新聞摘要
-                        </span>
-                        <button onclick="fetchNews(true)"
-                            class="text-[12px] text-ios-blue font-medium active:scale-95 transition flex items-center gap-1">
-                            <i class="fas fa-sync-alt" id="newsSyncIcon"></i>
-                            更新
-                        </button>
-                    </div>
-                    <div id="newsList" class="space-y-3">
-                        <!-- Skeleton Loading -->
-                        <div class="animate-pulse flex space-x-3">
-                            <div class="flex-1 space-y-2 py-1">
-                                <div class="h-3 bg-gray-200 rounded w-3/4"></div>
-                                <div class="h-3 bg-gray-200 rounded w-1/2"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 主按鈕（含漣漪效果）-->
-                <button id="punchBtn" onclick="punchWithRipple(event)"
-                    class="w-full py-4 rounded-[18px] text-[17px] font-semibold text-white transition-all active-scale flex items-center justify-center gap-2 bg-black ripple-container"
-                    style="box-shadow: var(--shadow-md)">
+                <!-- Punch button -->
+                <button id="punchBtn" onclick="punchWithRipple(event)" class="ripple-container active-scale"
+                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:17px; font-weight:600; color:white; background:#1C1C1E; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; box-shadow:var(--shadow-card);">
                     <i class="fas fa-fingerprint anim-breathe"></i>
                     <span id="btnText">上班</span>
                 </button>
 
-                <!-- 滑動下班確認 (B) - 僅工作中顯示 -->
-                <div id="swipeTrack" class="swipe-track hidden">
+                <!-- Swipe to punch out -->
+                <div id="swipeTrack" class="swipe-track hidden" style="margin-top:14px;">
                     <div class="swipe-progress"></div>
                     <div class="swipe-label">滑動確認下班 →</div>
                     <div class="swipe-handle"><i class="fas fa-arrow-right"></i></div>
                 </div>
             </div>
 
-            <!-- Records List: iOS Inset Grouped Style -->
-            <div class="pt-2">
-                <div class="flex justify-between items-center px-2 mb-2">
-                    <h3 class="text-[13px] font-semibold text-ios-gray uppercase tracking-wide">打卡紀錄</h3>
-                    <div class="flex gap-3 items-center">
-                        <button id="exportCalendarBtn" onclick="exportWorkSessions()"
-                            class="text-[13px] text-ios-blue font-medium active:opacity-50 transition flex items-center gap-1"
-                            title="匯出紀錄至日曆">
-                            <i class="far fa-calendar-plus mr-1"></i>匯出
+            <!-- === Sprite (compact inline) === -->
+            <div id="spriteTerrarium" class="sprite-terrarium anim-fade-in" onclick="interactWithSprite()">
+                <div class="sprite-core-container">
+                    <div class="sprite-ring ring-2"></div>
+                    <div class="sprite-ring ring-1"></div>
+                    <div class="sprite-core"></div>
+                </div>
+                <div style="flex:1; min-width:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px;">
+                        <div style="font-size:14px; font-weight:600; color:var(--label);" id="spriteName">能量晶種 (Lv.1)
+                        </div>
+                        <div style="font-size:10px; font-weight:600; color:var(--blue);" id="spriteExp">EXP 0/10</div>
+                    </div>
+                    <div
+                        style="width:100%; height:3px; background:var(--fill-secondary); border-radius:2px; overflow:hidden; margin-bottom:4px;">
+                        <div id="spriteExpFill"
+                            style="height:100%; background:var(--blue); border-radius:2px; transition:width 0.7s; width:0%">
+                        </div>
+                    </div>
+                    <div style="font-size:11px; color:var(--label-tertiary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"
+                        id="spriteMessage">精靈正在沉睡...等待上班喚醒。</div>
+                </div>
+            </div>
+
+            <!-- === Punch Records === -->
+            <div>
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; padding:0 4px; margin-bottom:8px;">
+                    <h3 class="section-label" style="margin:0;">打卡紀錄</h3>
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <button id="exportCalendarBtn" onclick="exportWorkSessions()" title="匯出紀錄至日曆"
+                            style="font-size:13px; color:var(--blue); font-weight:500; background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
+                            <i class="far fa-calendar-plus"></i>匯出
                         </button>
-                        <div class="w-px h-3 bg-gray-300"></div>
+                        <div style="width:1px; height:12px; background:var(--separator);"></div>
                         <button id="undoBtn" onclick="undoLastPunch()"
-                            class="text-[13px] text-ios-blue font-medium disabled:opacity-30 active:opacity-50 transition">復原</button>
+                            style="font-size:13px; color:var(--blue); font-weight:500; background:none; border:none; cursor:pointer;">復原</button>
                         <button id="clearBtn" onclick="clearAll()"
-                            class="text-[13px] text-ios-red font-medium active:opacity-50 transition flex items-center gap-1">
+                            style="font-size:13px; color:var(--red); font-weight:500; background:none; border:none; cursor:pointer;">
                             <span>清除</span>
                         </button>
                     </div>
                 </div>
-
-                <div class="bg-white rounded-[18px] overflow-hidden shadow-ios" id="punchRecordsContainer">
-                    <div id="punchRecords" class="divide-y divide-ios-separator pl-4">
-                        <div class="py-4 pr-4 text-center text-ios-gray text-sm">尚無紀錄</div>
+                <div class="inset-card" id="punchRecordsContainer">
+                    <div id="punchRecords" style="padding-left:16px;">
+                        <div style="padding:16px; text-align:center; font-size:14px; color:var(--label-tertiary);">尚無紀錄
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Calendar Section (取代了原本的 Analysis) -->
-            <div class="pt-2">
-                <h3 class="text-[13px] font-semibold text-ios-gray uppercase tracking-wide px-2 mb-2">休假設定</h3>
-                <div class="bg-white rounded-[18px] p-5 shadow-ios">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-[17px] font-bold text-gray-900" id="calendarTitle">Month Year</h3>
-                        <div class="flex gap-1">
-                            <button onclick="changeMonth(-1)"
-                                class="w-8 h-8 flex items-center justify-center rounded-full text-ios-blue active:bg-gray-100"><i
-                                    class="fas fa-chevron-left"></i></button>
-                            <button onclick="changeMonth(1)"
-                                class="w-8 h-8 flex items-center justify-center rounded-full text-ios-blue active:bg-gray-100"><i
-                                    class="fas fa-chevron-right"></i></button>
+            <!-- === News Digest (moved below records) === -->
+            <div id="newsDigestContainer" class="card" style="padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <span class="section-label" style="margin:0; padding:0;">📰 即時新聞</span>
+                    <button onclick="fetchNews(true)"
+                        style="font-size:12px; color:var(--blue); font-weight:500; background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
+                        <i class="fas fa-sync-alt" id="newsSyncIcon"></i> 更新
+                    </button>
+                </div>
+                <div id="newsList" style="display:flex; flex-direction:column; gap:10px;">
+                    <div class="animate-pulse" style="display:flex; gap:12px;">
+                        <div style="flex:1; display:flex; flex-direction:column; gap:6px; padding:4px 0;">
+                            <div style="height:10px; background:var(--fill-secondary); border-radius:4px; width:75%;">
+                            </div>
+                            <div style="height:10px; background:var(--fill-secondary); border-radius:4px; width:50%;">
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Calendar Header -->
-                    <div class="grid grid-cols-7 mb-2 text-center">
-                        <span class="text-[11px] font-semibold text-gray-400">日</span>
-                        <span class="text-[11px] font-semibold text-gray-400">一</span>
-                        <span class="text-[11px] font-semibold text-gray-400">二</span>
-                        <span class="text-[11px] font-semibold text-gray-400">三</span>
-                        <span class="text-[11px] font-semibold text-gray-400">四</span>
-                        <span class="text-[11px] font-semibold text-gray-400">五</span>
-                        <span class="text-[11px] font-semibold text-gray-400">六</span>
+            <!-- === Calendar (collapsible) === -->
+            <div>
+                <button onclick="toggleCalendar()"
+                    style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 4px; margin-bottom:8px; background:none; border:none; cursor:pointer;">
+                    <h3 class="section-label" style="margin:0;">休假日曆</h3>
+                    <i id="calendarChevron" class="fas fa-chevron-down"
+                        style="font-size:12px; color:var(--label-tertiary); transition:transform 0.3s;"></i>
+                </button>
+                <div id="calendarCollapsible" class="collapsible-content">
+                    <div class="inset-card" style="padding:20px;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <h3 style="font-size:17px; font-weight:700; color:var(--label); margin:0;"
+                                id="calendarTitle">Month Year</h3>
+                            <div style="display:flex; gap:4px;">
+                                <button onclick="changeMonth(-1)" aria-label="上個月"
+                                    style="width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--blue); cursor:pointer;">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button onclick="changeMonth(1)" aria-label="下個月"
+                                    style="width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--blue); cursor:pointer;">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            style="display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:8px; text-align:center;">
+                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">日</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">一</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">二</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">三</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">四</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">五</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">六</span>
+                        </div>
+                        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px 0; place-items:center;"
+                            id="calendarGrid"></div>
+                        <div
+                            style="margin-top:14px; padding-top:10px; border-top:0.5px solid var(--separator); display:flex; justify-content:center; gap:16px; font-size:11px; color:var(--label-tertiary);">
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <div style="width:6px; height:6px; border-radius:50%; background:var(--blue);"></div>今日
+                            </div>
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <div
+                                    style="width:6px; height:6px; border-radius:50%; background:var(--fill-secondary);">
+                                </div>排休
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Calendar Grid -->
-                    <div class="grid grid-cols-7 gap-y-2 place-items-center" id="calendarGrid">
-                        <!-- JS generated -->
-                    </div>
-
+            <!-- === AI Life Guide === -->
+            <div id="aiLifeGuideContainer" style="padding-bottom:8px;">
+                <button id="insightBtn" onclick="generateAIContent()" disabled class="active-scale card"
+                    style="width:100%; padding:14px 16px; border:none; cursor:pointer; display:flex; align-items:center; gap:12px; text-align:left; opacity:1;">
                     <div
-                        class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-center gap-4 text-[11px] text-gray-400">
-                        <div class="flex items-center gap-1">
-                            <div class="w-2 h-2 rounded-full bg-ios-blue"></div>今日
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <div class="w-2 h-2 rounded-full bg-gray-200"></div>排休
-                        </div>
+                        style="width:36px; height:36px; border-radius:var(--radius-xs); background:var(--fill); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fas fa-magic" style="color:var(--blue); font-size:15px;"></i>
                     </div>
-                </div>
-            </div>
-
-            <!-- AI 分析結果呈現與按鈕 -->
-            <div id="aiLifeGuideContainer" class="pt-4 pb-6 px-2">
-                <button id="insightBtn" onclick="generateAIContent()" disabled
-                    class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 p-4 rounded-[18px] shadow-lg shadow-purple-200 flex items-center justify-center gap-3 text-center active-scale disabled:opacity-50 mb-4 transition-all hover:shadow-xl">
-                    <i class="fas fa-magic text-white text-lg"></i>
-                    <div class="text-left">
-                        <div class="text-[15px] font-bold text-white">獲取下班生活指南</div>
-                        <div class="text-[11px] text-purple-100 font-medium">AI 推薦晚餐與放鬆提案</div>
+                    <div style="flex:1;">
+                        <div style="font-size:15px; font-weight:600; color:var(--label);">下班生活指南</div>
+                        <div style="font-size:11px; color:var(--label-tertiary); font-weight:500;">AI 推薦晚餐與放鬆提案</div>
                     </div>
+                    <i class="fas fa-chevron-right" style="color:var(--label-quaternary); font-size:13px;"></i>
                 </button>
 
-                <!-- AI 分析結果呈現 -->
-                <div id="aiResultArea" class="mt-4 bg-white rounded-[18px] p-5 shadow-ios hidden">
-                    <div id="aiResultTitle"
-                        class="text-[15px] font-bold text-gray-900 mb-3 flex items-center justify-between">
-                        <div class="flex items-center gap-2"><i class="fas fa-sparkles text-purple-600"></i> 下班生活指南
-                        </div>
-                        <button onclick="copyReport()"
-                            class="text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600 active:bg-gray-200">複製</button>
-                    </div>
-                    <div id="aiContent" class="text-[13px] leading-relaxed text-gray-600 space-y-2"></div>
+                <div id="aiResultArea" class="card hidden" style="margin-top:12px; padding:20px;">
                     <div
-                        class="mt-3 pt-3 border-t border-gray-100 text-[11px] text-orange-400 text-center font-medium bg-orange-50 rounded-lg py-2">
-                        <i class="fas fa-exclamation-circle mr-1"></i> 提醒：此為 AI 模擬範本，僅供參考
+                        style="font-size:15px; font-weight:700; color:var(--label); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+                        <div style="display:flex; align-items:center; gap:6px;"><i class="fas fa-sparkles"
+                                style="color:var(--blue);"></i> 下班生活指南</div>
+                        <button onclick="copyReport()"
+                            style="font-size:12px; background:var(--fill); padding:4px 8px; border-radius:6px; color:var(--label-secondary); border:none; cursor:pointer;">複製</button>
+                    </div>
+                    <div id="aiContent" style="font-size:13px; line-height:1.6; color:var(--label-secondary);"></div>
+                    <div
+                        style="margin-top:12px; padding-top:10px; border-top:0.5px solid var(--separator); font-size:11px; color:var(--orange); text-align:center; font-weight:500;">
+                        <i class="fas fa-exclamation-circle" style="margin-right:3px;"></i> 此為 AI 模擬範本，僅供參考
                     </div>
                 </div>
             </div>
 
-            <!-- 日曆按鈕 -->
-            <div id="calendarReminderContainer" class="pb-6">
-                <button id="addCalendarBtn" onclick="addCalendarReminder()" disabled
-                    class="w-full bg-white text-ios-red py-3.5 rounded-[14px] text-[15px] font-semibold shadow-ios active-scale disabled:opacity-50 disabled:bg-gray-100 disabled:text-gray-400 flex items-center justify-center gap-2">
+            <!-- Calendar Reminder Button -->
+            <div id="calendarReminderContainer" style="padding-bottom:16px;">
+                <button id="addCalendarBtn" onclick="addCalendarReminder()" disabled class="active-scale"
+                    style="width:100%; padding:13px; border-radius:var(--radius-sm); font-size:15px; font-weight:600; background:var(--card); color:var(--red); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:var(--shadow-card); opacity:0.5;">
                     <i class="far fa-calendar-plus"></i>
                     <span id="calendarBtnText">加入休息提醒</span>
                 </button>
             </div>
 
-            <!-- Footer Credit (極簡化) -->
-            <div class="pb-8 text-center">
-                <p class="text-[10px] text-gray-300 font-medium tracking-widest uppercase">Time Tracker</p>
+            <!-- Footer -->
+            <div style="padding-bottom:32px; text-align:center;">
+                <p
+                    style="font-size:10px; color:var(--label-quaternary); font-weight:500; letter-spacing:2px; text-transform:uppercase; margin:0;">
+                    Time Tracker</p>
             </div>
         </main>
     </div>
@@ -1389,35 +1322,9 @@
         // --- 時段動態漸層背景 ( Ambient Glow ) ---
         function updateTimeGradient() {
             const h = new Date().getHours();
-            const root = document.documentElement;
-
-            let bg, orb1, orb2, orb3;
-            let isNight = false;
-
-            if (h >= 5 && h < 8) {
-                // Morning Dawn
-                bg = '#F2F2F7'; orb1 = '#ffecd2'; orb2 = '#fcb69f'; orb3 = '#a8edea';
-            } else if (h >= 8 && h < 16) {
-                // Day Light
-                bg = '#F2F2F7'; orb1 = '#e0f7fa'; orb2 = '#b2ebf2'; orb3 = '#e0e0e0';
-            } else if (h >= 16 && h < 19) {
-                // Evening Sunset
-                bg = '#F2F2F7'; orb1 = '#fce4ec'; orb2 = '#f8bbd0'; orb3 = '#e1bee7';
-            } else {
-                // Night Midnight
-                bg = '#0f172a'; orb1 = '#1e1b4b'; orb2 = '#312e81'; orb3 = '#0f3460';
-                isNight = true;
-            }
-
-            root.style.setProperty('--ambient-bg', bg);
-            root.style.setProperty('--orb1-color', orb1);
-            root.style.setProperty('--orb2-color', orb2);
-            root.style.setProperty('--orb3-color', orb3);
-
             const app = document.getElementById('app');
             if (!app) return;
 
-            // Night mode text
             if (h >= 20 || h < 5) {
                 app.classList.add('night-mode');
             } else {
@@ -1579,7 +1486,7 @@
                 <div class="alarm-card" style="text-align:center">
                     <div class="text-5xl mb-3">🎉</div>
                     <div class="text-xl font-bold text-gray-900 mb-1">今天辛苦了！</div>
-                    <div style="background:var(--ios-bg);border-radius:16px;padding:16px;margin:12px 0">
+                    <div style="background:var(--fill);border-radius:16px;padding:16px;margin:12px 0">
                         <div class="text-3xl font-bold tabular-nums">${dur.h}h ${Math.round(dur.m)}m</div>
                         <div class="text-[12px] text-gray-400 mt-1">今日工時</div>
                     </div>
@@ -1939,6 +1846,14 @@ END:VCALENDAR
         }
 
         // --- 月曆功能邏輯 ---
+        // --- 可收合日曆 ---
+        function toggleCalendar() {
+            const content = document.getElementById('calendarCollapsible');
+            const chevron = document.getElementById('calendarChevron');
+            content.classList.toggle('open');
+            chevron.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
         function renderCalendar() {
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
@@ -1973,7 +1888,7 @@ END:VCALENDAR
                     className += "bg-gray-100 text-gray-400 line-through decoration-gray-400";
                 } else if (isToday) {
                     // 今日樣式：藍色實心
-                    className += "bg-ios-blue text-white shadow-md";
+                    className += "bg-blue-500 text-white shadow-md";
                 } else {
                     // 一般日期
                     className += "text-gray-900 hover:bg-gray-100";
@@ -2253,31 +2168,31 @@ END:VCALENDAR
 
             if (nextType === 'in') {
                 // 狀態：休息中/準備上班
-                statusIconBg.className = "w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-xl transition-colors duration-300";
-                statusIcon.className = "fas fa-mug-hot text-gray-400";
-                nextActionText.innerHTML = "目前狀態：<span class='text-ios-gray'>休息中</span>";
+                statusIconBg.style.background = 'var(--fill)';
+                statusIcon.className = "fas fa-mug-hot";
+                statusIcon.style.color = 'var(--label-tertiary)';
+                nextActionText.textContent = "休息中";
 
-                punchBtn.className = "w-full py-4 rounded-[18px] text-[17px] font-semibold text-white transition-all active-scale flex items-center justify-center gap-2 bg-black ripple-container";
-                punchBtn.style.boxShadow = 'var(--shadow-md)';
+                punchBtn.style.background = '#1C1C1E';
                 punchBtn.classList.remove('hidden');
                 btnText.textContent = "上班";
                 document.getElementById('swipeTrack').classList.add('hidden');
 
                 taskInputContainer.style.maxHeight = '100px';
                 taskInputContainer.style.opacity = '1';
-                taskInputContainer.style.marginTop = '0.75rem';
 
                 currentTaskDisplay.style.maxHeight = '0';
                 currentTaskDisplay.style.opacity = '0';
-                currentTaskDisplay.style.marginTop = '0';
 
                 calendarBtn.disabled = true;
+                calendarBtn.style.opacity = '0.5';
                 document.getElementById('calendarBtnText').textContent = "加入休息提醒 (上班後可用)";
 
             } else {
                 // 狀態：工作中/準備下班
-                statusIconBg.className = "w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-xl transition-colors duration-300";
-                statusIcon.className = "fas fa-briefcase text-ios-blue";
+                statusIconBg.style.background = 'rgba(0,122,255,0.1)';
+                statusIcon.className = "fas fa-briefcase";
+                statusIcon.style.color = 'var(--blue)';
 
                 // 計算預計休息時間
                 const lastInTime = new Date(lastRecord.time).getTime();
@@ -2286,32 +2201,30 @@ END:VCALENDAR
 
                 // 4小時休息提醒邏輯
                 if (Date.now() > targetTime) {
-                    statusIconBg.className = "w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center text-xl animate-pulse";
-                    statusIcon.className = "fas fa-exclamation-triangle text-ios-red";
-                    nextActionText.innerHTML = `<span class='text-ios-red font-bold'>工作過久！請立即休息</span>`;
-
-
+                    statusIconBg.style.background = 'rgba(255,59,48,0.1)';
+                    statusIcon.className = "fas fa-exclamation-triangle";
+                    statusIcon.style.color = 'var(--red)';
+                    nextActionText.innerHTML = `<span style="color:var(--red);font-weight:700">工作過久！請立即休息</span>`;
                 } else {
-                    nextActionText.innerHTML = `預計休息：<span class='text-ios-blue'>${timeStr}</span>`;
+                    nextActionText.innerHTML = `預計休息：<span style="color:var(--blue)">${timeStr}</span>`;
                 }
 
-                punchBtn.className = "w-full py-4 rounded-[18px] text-[17px] font-semibold text-white transition-all active-scale flex items-center justify-center gap-2 ripple-container hidden";
-                punchBtn.style.cssText = 'background:var(--ios-red);box-shadow:var(--shadow-md)';
+                punchBtn.classList.add('hidden');
+                punchBtn.style.background = 'var(--red)';
                 btnText.textContent = "下班";
                 document.getElementById('swipeTrack').classList.remove('hidden');
 
                 taskInputContainer.style.maxHeight = '0';
                 taskInputContainer.style.opacity = '0';
-                taskInputContainer.style.marginTop = '0';
 
                 if (lastRecord.task) {
                     document.getElementById('currentTaskName').textContent = lastRecord.task;
                     currentTaskDisplay.style.maxHeight = '100px';
                     currentTaskDisplay.style.opacity = '1';
-                    currentTaskDisplay.style.marginTop = '0.75rem';
                 }
 
                 calendarBtn.disabled = false;
+                calendarBtn.style.opacity = '1';
                 document.getElementById('calendarBtnText').textContent = `加入休息提醒 (${appSettings.workReminderMinutes}分)`;
             }
 
@@ -2319,8 +2232,8 @@ END:VCALENDAR
             // 修正：在 updateDisplay 中也更新間距，確保動態更新時樣式一致
             const timeObj = formatDurationFancy(result.total);
             document.getElementById('totalHours').innerHTML = `
-                ${timeObj.h}<span class="text-sm font-sans font-medium text-gray-400 ml-1.5 mr-2">h</span>
-                ${Math.round(timeObj.m)}<span class="text-sm font-sans font-medium text-gray-400 ml-1.5">m</span>
+                ${timeObj.h}<span style="font-size:16px;font-weight:500;color:var(--label-tertiary);margin:0 2px 0 4px;">h</span>
+                ${Math.round(timeObj.m)}<span style="font-size:14px;font-weight:500;color:var(--label-tertiary);margin-left:4px;">m</span>
             `;
 
             const targetMin = 8 * 60;
@@ -2335,7 +2248,7 @@ END:VCALENDAR
             if (result.total >= targetMin) {
                 progressBar.style.width = '100%';
                 progressBar.className = 'progress-fill overtime pulse';
-                progressInfo = `<span style="color:var(--ios-purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，快下班！</span>`;
+                progressInfo = `<span style="color:var(--purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，快下班！</span>`;
 
                 // Show generic after-work message for overtime
                 lifeSuggestionEl.textContent = "別加班了，回家泡個熱水澡吧！🛀";
@@ -2421,7 +2334,7 @@ END:VCALENDAR
             const recordsDiv = document.getElementById('punchRecords');
             recordsDiv.innerHTML = '';
             if (punchRecords.length === 0) {
-                recordsDiv.innerHTML = '<div class="py-4 pr-4 text-center text-ios-gray text-sm">尚無紀錄</div>';
+                recordsDiv.innerHTML = '<div style="padding:16px;text-align:center;font-size:14px;color:var(--label-tertiary)">尚無紀錄</div>';
             } else {
                 [...punchRecords].reverse().forEach((r, idx) => {
                     const trueIndex = punchRecords.length - 1 - idx;
@@ -2432,7 +2345,7 @@ END:VCALENDAR
                     const bg = r.type === 'in' ? 'bg-green-50' : 'bg-orange-50';
                     const color = r.type === 'in' ? 'text-green-500' : 'text-orange-500';
                     const title = r.type === 'in' ? '開始工作' : '結束工作';
-                    const dotColor = r.type === 'in' ? 'border-ios-blue' : 'border-ios-orange';
+                    const dotColor = r.type === 'in' ? 'border-blue' : 'border-orange';
 
                     const row = document.createElement('div');
                     row.className = 'py-3 pr-4 flex items-center justify-between';
@@ -2441,11 +2354,11 @@ END:VCALENDAR
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full ${bg} flex items-center justify-center text-sm">${icon}</div>
                             <div>
-                                <div class="text-[15px] text-gray-900 font-medium">${title}</div>
-                                ${r.task ? `<div class="text-[12px] text-ios-gray mt-0.5 truncate max-w-[140px]"><i class="fas fa-thumbtack mr-1"></i>${r.task}</div>` : ''}
+                                <div style="font-size:15px;color:var(--label);font-weight:500">${title}</div>
+                                ${r.task ? `<div style="font-size:12px;color:var(--label-tertiary);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px"><i class="fas fa-thumbtack" style="margin-right:3px"></i>${r.task}</div>` : ''}
                             </div>
                         </div>
-                        <div class="text-[15px] text-gray-500 tabular-nums">${timeStr}</div>
+                        <div style="font-size:15px;color:var(--label-tertiary);font-variant-numeric:tabular-nums">${timeStr}</div>
                     `;
                     recordsDiv.appendChild(row);
 
@@ -2458,7 +2371,7 @@ END:VCALENDAR
                         const durRow = document.createElement('div');
                         durRow.className = 'py-2 pr-4 flex items-center justify-end';
                         durRow.innerHTML = `
-                            <div class="text-[12px] font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-lg">
+                            <div style="font-size:12px;font-weight:500;color:var(--label-tertiary);background:var(--fill);padding:4px 10px;border-radius:8px">
                                 共計 ${dur.h}h ${Math.round(dur.m)}m
                             </div>
                         `;
@@ -2583,11 +2496,11 @@ END:VCALENDAR
                 const a = document.createElement('a');
                 a.href = item.link;
                 a.target = "_blank";
-                a.className = "block text-[14px] text-gray-800 leading-snug hover:text-ios-blue transition-colors pb-3 border-b border-gray-100 last:border-0 last:pb-0 relative pl-4";
+                a.style.cssText = 'display:block;font-size:14px;color:var(--label);line-height:1.5;padding-bottom:10px;border-bottom:0.5px solid var(--separator);position:relative;padding-left:14px;text-decoration:none';
 
                 // Add a small bullet point dot
                 const dot = document.createElement('span');
-                dot.className = "absolute left-0 top-1.5 w-1.5 h-1.5 rounded-full bg-ios-blue opacity-70";
+                dot.style.cssText = 'position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:0.6';
 
                 a.appendChild(dot);
                 a.appendChild(document.createTextNode(item.title));
