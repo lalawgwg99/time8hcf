@@ -1023,7 +1023,18 @@
                 </div>
             </div>
 
-            <!-- === News Digest (moved below records) === -->
+            <!-- === Weekly Stats === -->
+            <div class="card" style="padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <span class="section-label" style="margin:0; padding:0;">本週工時</span>
+                    <span id="weeklyAvg" style="font-size:11px; font-weight:600; color:var(--label-tertiary);">平均
+                        —</span>
+                </div>
+                <div id="weeklyChart" style="display:flex; align-items:flex-end; gap:6px; height:100px;">
+                </div>
+            </div>
+
+
             <div id="newsDigestContainer" class="card" style="padding:16px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <span class="section-label" style="margin:0; padding:0;">即時新聞</span>
@@ -1201,6 +1212,16 @@
                     <label for="restReminderInput" class="text-[15px] text-gray-900">休息結束提醒 (分鐘)</label>
                     <input type="number" id="restReminderInput" placeholder="20"
                         class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="20">
+                </div>
+            </div>
+
+            <!-- 工時設定 -->
+            <div class="section-label">工時</div>
+            <div class="bg-white rounded-xl overflow-hidden mb-5">
+                <div class="p-4 flex items-center justify-between">
+                    <label for="targetHoursInput" class="text-[15px] text-gray-900">每日目標 (小時)</label>
+                    <input type="number" id="targetHoursInput" placeholder="8" min="1" max="24" step="0.5"
+                        class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="8">
                 </div>
             </div>
 
@@ -1870,6 +1891,7 @@ END:VCALENDAR
         function openSettings() {
             document.getElementById('workReminderInput').value = appSettings.workReminderMinutes;
             document.getElementById('restReminderInput').value = appSettings.restReminderMinutes;
+            document.getElementById('targetHoursInput').value = appSettings.targetHours || 8;
 
             // 恢復下拉選單與自訂網址的狀態
             const savedUrl = appSettings.icalUrl || '';
@@ -1892,6 +1914,7 @@ END:VCALENDAR
         function saveSettings() {
             appSettings.workReminderMinutes = parseInt(document.getElementById('workReminderInput').value) || 120;
             appSettings.restReminderMinutes = parseInt(document.getElementById('restReminderInput').value) || 20;
+            appSettings.targetHours = parseFloat(document.getElementById('targetHoursInput').value) || 8;
 
             const presetSelect = document.getElementById('icalPresetSelect');
             if (presetSelect.value === 'custom') {
@@ -2082,10 +2105,12 @@ END:VCALENDAR
         // --- WLB 健康度計算 ---
         // calculateWLB 已移除，改用本週工時圖表
 
-        function loadData() {
-            const savedData = localStorage.getItem('timecardData');
-            if (savedData) punchRecords = JSON.parse(savedData).records || [];
+        function getTodayKey() {
+            return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+        }
 
+        function loadData() {
+            // Load settings first
             const savedSettings = localStorage.getItem('appSettings');
             if (savedSettings) {
                 const loaded = JSON.parse(savedSettings);
@@ -2095,13 +2120,96 @@ END:VCALENDAR
                     appSettings.restReminderMinutes = 20;
                 }
             }
+            if (!appSettings.targetHours) appSettings.targetHours = 8;
+
+            // Migrate old flat data to per-day if needed
+            const oldData = localStorage.getItem('timecardData');
+            if (oldData) {
+                const parsed = JSON.parse(oldData);
+                if (parsed.records && parsed.records.length > 0) {
+                    // Archive old records by date
+                    const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+                    parsed.records.forEach(r => {
+                        const dateKey = r.time.slice(0, 10);
+                        if (!history[dateKey]) history[dateKey] = [];
+                        history[dateKey].push(r);
+                    });
+                    localStorage.setItem('timecardHistory', JSON.stringify(history));
+                    localStorage.removeItem('timecardData');
+                }
+            }
+
+            // Load today's records from history
+            const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+            punchRecords = history[getTodayKey()] || [];
 
             const savedOffDays = localStorage.getItem('offDays');
             if (savedOffDays) offDays = new Set(JSON.parse(savedOffDays));
         }
 
         function saveData() {
-            localStorage.setItem('timecardData', JSON.stringify({ records: punchRecords }));
+            const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+            history[getTodayKey()] = punchRecords;
+            localStorage.setItem('timecardHistory', JSON.stringify(history));
+        }
+
+        function getTargetMinutes() {
+            return (appSettings.targetHours || 8) * 60;
+        }
+
+        function getDayTotalMinutes(dateKey) {
+            const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+            const records = history[dateKey] || [];
+            let total = 0;
+            for (let i = 0; i < records.length; i += 2) {
+                if (records[i] && records[i].type === 'in') {
+                    const start = new Date(records[i].time);
+                    const end = (records[i + 1] && records[i + 1].type === 'out') ? new Date(records[i + 1].time) : (dateKey === getTodayKey() ? new Date() : start);
+                    total += (end - start) / 60000;
+                }
+            }
+            return total;
+        }
+
+        function renderWeeklyChart() {
+            const chart = document.getElementById('weeklyChart');
+            if (!chart) return;
+            const targetMin = getTargetMinutes();
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            const today = new Date();
+            let totalHours = 0;
+            let workDays = 0;
+            let bars = '';
+
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                const key = d.toISOString().slice(0, 10);
+                const mins = getDayTotalMinutes(key);
+                const hours = mins / 60;
+                const pct = Math.min((mins / targetMin) * 100, 100);
+                const isToday = i === 0;
+                const hasData = mins > 0;
+
+                if (hasData) { totalHours += hours; workDays++; }
+
+                const barColor = isToday ? 'var(--blue)' : (hasData ? 'var(--blue)' : 'var(--fill-secondary)');
+                const opacity = isToday ? '1' : (hasData ? '0.5' : '0.3');
+                const label = hours > 0 ? hours.toFixed(1) : '';
+
+                bars += `
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+                        <span style="font-size:9px;font-weight:600;color:var(--label-tertiary);min-height:12px">${label}</span>
+                        <div style="width:100%;background:var(--fill);border-radius:6px;height:80px;position:relative;overflow:hidden">
+                            <div style="position:absolute;bottom:0;width:100%;height:${Math.max(pct, hasData ? 8 : 0)}%;background:${barColor};opacity:${opacity};border-radius:6px;transition:height 0.6s var(--spring)"></div>
+                        </div>
+                        <span style="font-size:10px;font-weight:${isToday ? '700' : '500'};color:${isToday ? 'var(--blue)' : 'var(--label-tertiary)'}">${days[d.getDay()]}</span>
+                    </div>
+                `;
+            }
+            chart.innerHTML = bars;
+            const avg = workDays > 0 ? (totalHours / workDays).toFixed(1) : '—';
+            document.getElementById('weeklyAvg').textContent = `平均 ${avg}h / 日`;
         }
 
         function updateCurrentTime() {
@@ -2302,20 +2410,21 @@ END:VCALENDAR
                 ${Math.round(timeObj.m)}<span style="font-size:16px;font-weight:500;color:var(--label-tertiary);margin-left:3px;">m</span>
             `;
 
-            const targetMin = 8 * 60;
+            const targetMin = getTargetMinutes();
             const remainingMin = targetMin - result.total;
             const pct = Math.min((result.total / targetMin) * 100, 100);
             const ring = document.getElementById('progressRing');
             const circumference = 502.65;
 
             // 預計下班時間與 8小時提醒邏輯
-            let progressInfo = "目標 8 小時";
+            let progressInfo = `目標 ${appSettings.targetHours || 8} 小時`;
             const lifeSuggestionEl = document.getElementById('lifeSuggestion');
 
             if (result.total >= targetMin) {
                 ring.style.strokeDashoffset = '0';
                 ring.style.stroke = 'var(--purple)';
-                progressInfo = `<span style="color:var(--purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，可以下班了</span>`;
+                const targetH = appSettings.targetHours || 8;
+                progressInfo = `<span style="color:var(--purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 ${targetH} 小時，可以下班了</span>`;
 
                 lifeSuggestionEl.textContent = "別加班了，回家好好休息吧";
                 lifeSuggestionEl.classList.remove('hidden');
@@ -2376,6 +2485,7 @@ END:VCALENDAR
             // --- 即時新聞 + 成就 + 工作精靈 + 情境橫幅 ---
             checkAchievement();
             updateWorkSprite();
+            renderWeeklyChart();
 
             // 薪資跟蹤已移除
 
