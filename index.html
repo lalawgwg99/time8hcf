@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <title>工時紀錄</title>
     <!-- iOS 系統字體優化 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
@@ -51,34 +51,42 @@
 
     <style>
         :root {
-            --bg: #F2F2F7;
-            --card: #FFFFFF;
-            --card-secondary: #F9F9FB;
-            --separator: rgba(60, 60, 67, 0.10);
-            --label: #1C1C1E;
-            --label-secondary: #3C3C43;
-            --label-tertiary: #8E8E93;
-            --label-quaternary: #AEAEB2;
-            --blue: #007AFF;
-            --blue-light: #5AC8FA;
-            --green: #34C759;
-            --red: #FF3B30;
-            --orange: #FF9500;
-            --purple: #AF52DE;
-            --teal: #5AC8FA;
-            --fill: rgba(120, 120, 128, 0.08);
-            --fill-secondary: rgba(120, 120, 128, 0.12);
-            --fill-tertiary: rgba(120, 120, 128, 0.05);
-            --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
-            --shadow-elevated: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-button: 0 3px 16px rgba(0,0,0,0.22), 0 1px 4px rgba(0,0,0,0.14);
-            --shadow-blue: 0 4px 16px rgba(0,122,255,0.22);
-            --radius: 18px;
-            --radius-sm: 13px;
+            /* === IPPITSU ZEN PALETTE === */
+            --bg: #F4EFE6;
+            --card: #FDFAF5;
+            --card-secondary: #EDE8DF;
+            --separator: rgba(40, 32, 20, 0.07);
+            --label: #1C1712;
+            --label-secondary: #52493E;
+            --label-tertiary: #9C9086;
+            --label-quaternary: #C4B8AE;
+            /* Accent: bamboo green replaces iOS blue */
+            --blue: #6E7D6A;
+            --blue-light: #8BAB86;
+            --green: #4D7A52;
+            --red: #9A4040;
+            --orange: #9A7040;
+            --purple: #7A5A8A;
+            --teal: #4A788A;
+            --fill: rgba(40, 32, 20, 0.05);
+            --fill-secondary: rgba(40, 32, 20, 0.08);
+            --fill-tertiary: rgba(40, 32, 20, 0.03);
+            --shadow-card: 0 2px 32px rgba(40,30,10,0.05), 0 1px 6px rgba(40,30,10,0.04);
+            --shadow-elevated: 0 8px 48px rgba(40,30,10,0.12), 0 2px 12px rgba(40,30,10,0.07);
+            --shadow-button: 0 2px 16px rgba(28,23,12,0.18), 0 1px 4px rgba(28,23,12,0.12);
+            --shadow-blue: 0 4px 20px rgba(110,125,106,0.22);
+            --radius: 22px;
+            --radius-sm: 14px;
             --radius-xs: 10px;
             --radius-pill: 100px;
-            --spring: cubic-bezier(0.16, 1, 0.3, 1);
-            --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Slower, water-like transitions */
+            --spring: cubic-bezier(0.4, 0, 0.2, 1);
+            --spring-bounce: cubic-bezier(0.4, 0, 0.2, 1);
+            --nav-height: 68px;
+            /* Ippitsu brushstroke accent */
+            --ink: #8B6840;
+            --ink-light: #C4A87A;
+            --ink-gold: #E8C17A;
         }
 
         * {
@@ -97,22 +105,22 @@
             background: var(--bg);
         }
 
-        /* --- Night Mode --- */
+        /* --- Night Mode (Ink Dark) --- */
         .night-mode {
-            --bg: #000000;
-            --card: #1C1C1E;
-            --card-secondary: #2C2C2E;
-            --separator: rgba(84, 84, 88, 0.30);
-            --label: #FFFFFF;
-            --label-secondary: #EBEBF5;
-            --label-tertiary: #8E8E93;
-            --label-quaternary: #636366;
-            --fill: rgba(120, 120, 128, 0.22);
-            --fill-secondary: rgba(120, 120, 128, 0.30);
-            --fill-tertiary: rgba(120, 120, 128, 0.12);
+            --bg: #0E0D0B;
+            --card: #1A1916;
+            --card-secondary: #242220;
+            --separator: rgba(240, 225, 200, 0.09);
+            --label: #EDE5D8;
+            --label-secondary: #C8B89A;
+            --label-tertiary: #807060;
+            --label-quaternary: #504540;
+            --fill: rgba(240, 225, 200, 0.06);
+            --fill-secondary: rgba(240, 225, 200, 0.10);
+            --fill-tertiary: rgba(240, 225, 200, 0.03);
             --shadow-card: none;
-            --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0,0,0,0.3);
-            color: #FFFFFF;
+            --shadow-elevated: 0 4px 40px rgba(0, 0, 0, 0.6), 0 1px 6px rgba(0,0,0,0.4);
+            color: #EDE5D8;
         }
 
         .night-mode body,
@@ -120,22 +128,17 @@
             background: var(--bg);
         }
 
-        .night-mode .card {
+        .night-mode .card,
+        .night-mode .zen-card,
+        .night-mode .action-card {
             background: var(--card);
-            border-color: var(--separator);
         }
 
-        .night-mode header {
-            background: rgba(0, 0, 0, 0.82) !important;
-            border-color: var(--separator) !important;
-        }
-
-        .night-mode h1,
         .night-mode #currentTime,
         .night-mode #totalHours,
         .night-mode .text-gray-900,
         .night-mode .text-black {
-            color: #FFFFFF !important;
+            color: var(--label) !important;
         }
 
         .night-mode .text-gray-400,
@@ -147,9 +150,10 @@
         .night-mode input[type="text"],
         .night-mode input[type="number"],
         .night-mode input[type="url"],
-        .night-mode select {
+        .night-mode select,
+        .night-mode .task-input-zen {
             background: var(--fill-secondary) !important;
-            color: #FFFFFF;
+            color: var(--label);
         }
 
         .night-mode .bg-white,
@@ -166,22 +170,8 @@
             background: var(--card);
         }
 
-        .night-mode .alarm-card .text-gray-900 {
-            color: #fff !important;
-        }
-
-        .night-mode .alarm-card .text-gray-500 {
-            color: var(--label-tertiary) !important;
-        }
-
-        .night-mode #settingsModal [style*="background:var(--ios-bg)"],
-        .night-mode [style*="background:var(--bg)"] {
-            background: #000 !important;
-        }
-
-        .night-mode .section-label {
-            color: var(--label-tertiary);
-        }
+        .night-mode .alarm-card .text-gray-900 { color: var(--label) !important; }
+        .night-mode .alarm-card .text-gray-500 { color: var(--label-tertiary) !important; }
 
         .night-mode .sprite-terrarium {
             background: var(--card);
@@ -189,44 +179,51 @@
         }
 
         .night-mode .sprite-core-container {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .night-mode .swipe-track {
-            box-shadow: none;
-        }
+        .night-mode .swipe-track { box-shadow: none; }
 
-        .night-mode #punchBtn {
-            background: #fff !important;
-            color: #000 !important;
+        .night-mode #punchBtn,
+        .night-mode .punch-btn-zen {
+            background: var(--label) !important;
+            color: var(--bg) !important;
         }
 
         .night-mode #settingsModal .bg-white {
-            background: #2C2C2E !important;
+            background: var(--card) !important;
         }
 
-        .night-mode #settingsModal [style*="background:var(--ios-bg)"],
         .night-mode #settingsModal>div:last-child {
-            background: #1C1C1E !important;
+            background: var(--card) !important;
+        }
+
+        .night-mode .editorial-label::before {
+            background: var(--ink-light);
+        }
+
+        /* Brushstroke track color in dark */
+        .night-mode #brushstrokeSVG path:first-child {
+            stroke: rgba(240,225,200,0.10);
         }
 
         /* System dark mode auto-detection */
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg: #000000;
-                --card: #1C1C1E;
-                --card-secondary: #2C2C2E;
-                --separator: rgba(84, 84, 88, 0.32);
-                --label: #FFFFFF;
-                --label-secondary: #EBEBF5;
-                --label-tertiary: #8E8E93;
-                --label-quaternary: #636366;
-                --fill: rgba(120, 120, 128, 0.24);
-                --fill-secondary: rgba(120, 120, 128, 0.32);
-                --fill-tertiary: rgba(120, 120, 128, 0.14);
+                --bg: #0E0D0B;
+                --card: #1A1916;
+                --card-secondary: #242220;
+                --separator: rgba(240, 225, 200, 0.09);
+                --label: #EDE5D8;
+                --label-secondary: #C8B89A;
+                --label-tertiary: #807060;
+                --label-quaternary: #504540;
+                --fill: rgba(240, 225, 200, 0.06);
+                --fill-secondary: rgba(240, 225, 200, 0.10);
+                --fill-tertiary: rgba(240, 225, 200, 0.03);
                 --shadow-card: none;
-                --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0,0,0,0.3);
-                color: #FFFFFF;
+                --shadow-elevated: 0 4px 40px rgba(0, 0, 0, 0.6), 0 1px 6px rgba(0,0,0,0.4);
+                color: #EDE5D8;
             }
         }
 
@@ -846,357 +843,729 @@
             scrollbar-width: none;
         }
 
-        /* Week bar (kept for possible re-use) */
+        /* Week bar */
         .week-bar {
             flex: 1;
             border-radius: 4px 4px 2px 2px;
             background: var(--blue);
             min-height: 3px;
-            transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: height 0.7s ease-in-out;
         }
-
-        .week-bar.overtime {
-            background: var(--orange);
-        }
-
+        .week-bar.overtime { background: var(--orange); }
         .week-bar.today {
-            background: linear-gradient(180deg, var(--blue), var(--teal));
-            box-shadow: 0 2px 6px rgba(0, 122, 255, 0.25);
+            background: linear-gradient(180deg, var(--ink-light), var(--ink));
+            box-shadow: 0 2px 8px rgba(139,104,64,0.2);
+        }
+        .week-bar.empty { background: var(--fill-secondary); min-height: 3px; }
+
+        /* =============================================
+           IPPITSU ZEN DESIGN SYSTEM
+           ============================================= */
+
+        /* --- Body & App --- */
+        body {
+            background: var(--bg);
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
         }
 
-        .week-bar.empty {
-            background: var(--fill-secondary);
-            min-height: 3px;
+        /* --- Header --- */
+        #appHeader {
+            padding: calc(env(safe-area-inset-top, 12px) + 8px) 24px 10px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(244, 239, 230, 0.88);
+            border-bottom: 0.5px solid var(--separator);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            backdrop-filter: blur(24px) saturate(180%);
+            transition: background 0.5s ease-in-out, border-color 0.5s ease-in-out;
         }
+        .night-mode #appHeader {
+            background: rgba(14, 13, 11, 0.88) !important;
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-date {
+            font-size: 10px;
+            font-weight: 400;
+            color: var(--label-tertiary);
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+        }
+        .header-brand {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--label-quaternary);
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+        }
+        .header-time {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 20px;
+            font-weight: 300;
+            color: var(--label);
+            letter-spacing: -0.5px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* --- Tab Panels --- */
+        .tab-panel {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            padding-top: 4px;
+        }
+        .tab-panel.active {
+            display: flex;
+            animation: zenFadeIn 0.55s ease-in-out;
+        }
+        @keyframes zenFadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0);   }
+        }
+
+        /* --- Bottom Nav --- */
+        #bottomNav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            z-index: 30;
+            background: rgba(253, 250, 245, 0.92);
+            border-top: 0.5px solid var(--separator);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            backdrop-filter: blur(24px) saturate(180%);
+            padding: 8px 0 env(safe-area-inset-bottom, 0px);
+            display: flex;
+            align-items: flex-start;
+            transition: background 0.5s ease-in-out;
+        }
+        .night-mode #bottomNav {
+            background: rgba(14, 13, 11, 0.92) !important;
+        }
+        .nav-tab {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 0 4px;
+            color: var(--label-quaternary);
+            transition: color 0.5s ease-in-out;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-tab.active { color: var(--label); }
+        .nav-tab svg { width: 20px; height: 20px; transition: transform 0.4s ease-in-out; }
+        .nav-tab.active svg { transform: scale(1.08); }
+        .nav-tab span {
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            padding: 32px 0 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .hero-eyebrow {
+            font-size: 10px;
+            font-weight: 400;
+            color: var(--label-quaternary);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            margin-bottom: 6px;
+        }
+        #totalHours {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 92px;
+            font-weight: 300;
+            line-height: 0.88;
+            letter-spacing: -4px;
+            color: var(--label);
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 14px;
+        }
+        .hero-unit {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 38px;
+            font-weight: 300;
+            color: var(--label-tertiary);
+            letter-spacing: 0;
+            margin: 0 4px 0 3px;
+        }
+        #ongoingHint {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--blue);
+            letter-spacing: 0.10em;
+            margin-bottom: 10px;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* --- Brushstroke Progress --- */
+        .stroke-wrap { width: 100%; }
+        .stroke-labels {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .stroke-info {
+            font-size: 11px;
+            color: var(--label-tertiary);
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+        .stroke-pct {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 13px;
+            color: var(--label-quaternary);
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+        #brushStroke {
+            transition: stroke-dashoffset 0.9s ease-in-out, stroke 0.6s ease-in-out;
+        }
+
+        /* --- Action Card --- */
+        .action-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-card);
+            transition: background 0.5s;
+        }
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 0.5px solid var(--separator);
+        }
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--fill);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: background 0.5s, color 0.5s;
+            flex-shrink: 0;
+            color: var(--label-tertiary);
+        }
+        .status-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--label);
+            flex: 1;
+            letter-spacing: 0.02em;
+        }
+        .task-input-zen {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            background: var(--fill);
+            border: none;
+            font-size: 14px;
+            color: var(--label);
+            outline: none;
+            margin-top: 12px;
+            letter-spacing: 0.02em;
+            transition: background 0.5s;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .task-input-zen:focus { background: var(--fill-secondary); }
+        .current-task-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(110,125,106,0.08);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--blue);
+            letter-spacing: 0.04em;
+        }
+
+        /* --- Punch Button (Zen) --- */
+        .punch-btn-zen {
+            width: 100%;
+            padding: 18px;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 400;
+            color: var(--bg);
+            background: var(--label);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 16px;
+            box-shadow: 0 4px 28px rgba(28,23,12,0.16), 0 1px 6px rgba(28,23,12,0.10);
+            letter-spacing: 0.12em;
+            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, background 0.5s;
+            font-family: 'Noto Sans TC', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        .punch-btn-zen:active { transform: scale(0.98); opacity: 0.9; }
+        .punch-glyph {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 22px;
+            font-weight: 300;
+            line-height: 1;
+        }
+        /* Working state: circle fills */
+        .punch-btn-zen.working .punch-glyph { content: '●'; }
+
+        /* --- Zen Card (generic) --- */
+        .zen-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            transition: background 0.5s, box-shadow 0.5s;
+        }
+
+        /* --- Editorial Label --- */
+        .editorial-label {
+            font-size: 10px;
+            font-weight: 400;
+            color: var(--label-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            margin-bottom: 12px;
+            padding-left: 12px;
+            position: relative;
+        }
+        .editorial-label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 12px;
+            background: var(--ink-light);
+            border-radius: 1px;
+        }
+
+        /* --- Life Pill --- */
+        .life-pill {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--label-secondary);
+            background: var(--fill);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            letter-spacing: 0.04em;
+            line-height: 1.65;
+        }
+
+        /* --- Ink Drop Overlay --- */
+        #inkDropOverlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 45;
+            overflow: hidden;
+        }
+        .ink-drop-circle {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            animation: inkSpread 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes inkSpread {
+            0%   { transform: translate(-50%, -50%) scale(0);  opacity: 0.45; }
+            55%  { opacity: 0.2; }
+            100% { transform: translate(-50%, -50%) scale(22); opacity: 0; }
+        }
+
+        /* --- Ambient Breathing (working state) --- */
+        @keyframes ambientBreathe {
+            0%, 100% { opacity: 0; }
+            50%       { opacity: 1; }
+        }
+        #ambientGlow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(ellipse at 50% 20%, rgba(196,168,122,0.05) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        #ambientGlow.active {
+            animation: ambientBreathe 4s ease-in-out infinite;
+        }
+
+        /* --- Night mode: various overrides --- */
+        .night-mode .action-card,
+        .night-mode .zen-card { box-shadow: none; }
+        .night-mode .punch-btn-zen { color: var(--bg); }
+
+        /* --- Swipe track zen style --- */
+        .swipe-track {
+            background: linear-gradient(90deg, rgba(154,64,64,0.85) 0%, var(--red) 60%);
+        }
+        .swipe-handle i { color: var(--red); }
+
+        /* Sprite terrarium zen adjustments */
+        .sprite-terrarium { border-radius: var(--radius); }
+
     </style>
 </head>
 
-<body style="min-height:100vh; padding-bottom:40px; background:var(--bg);">
+<body style="min-height:100vh; background:var(--bg); overflow-x:hidden;">
 
     <div style="max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;"
         id="app">
 
-        <!-- Header -->
-        <header
-            style="padding:calc(env(safe-area-inset-top, 12px) + 10px) 20px 12px; position:sticky; top:0; z-index:20; background:rgba(242,242,247,0.86); border-bottom:0.5px solid var(--separator); -webkit-backdrop-filter:blur(24px) saturate(200%); backdrop-filter:blur(24px) saturate(200%); transition:background 0.3s, border-color 0.3s;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                <div style="font-size:11px; color:var(--label-tertiary); font-weight:700; text-transform:uppercase; letter-spacing:0.8px;"
-                    id="currentDate">載入中...</div>
-                <div style="display:flex; gap:8px;">
-                    <button onclick="showInstallGuide()" aria-label="安裝" class="active-scale"
-                        style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--blue); cursor:pointer;">
-                        <i class="fas fa-arrow-down" style="font-size:12px;"></i>
-                    </button>
-                    <button onclick="openSettings()" aria-label="設定" class="active-scale"
-                        style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--blue); cursor:pointer;">
-                        <i class="fas fa-cog" style="font-size:12px;"></i>
-                    </button>
-                </div>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                <h1 style="font-size:32px; font-weight:700; letter-spacing:-1px; color:var(--label); margin:0;">工時紀錄
-                </h1>
-                <div style="font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--label);"
-                    id="currentTime">00:00</div>
+        <!-- Header: Minimal Editorial -->
+        <header id="appHeader">
+            <div class="header-inner">
+                <span class="header-date" id="currentDate">載入中...</span>
+                <span class="header-brand">一 筆</span>
+                <span class="header-time" id="currentTime">00:00</span>
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main style="flex:1; padding:0 16px; display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+        <!-- Main Content: Three Tabs -->
+        <main style="flex:1; padding:0 24px; display:flex; flex-direction:column; gap:0; margin-top:0; padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 12px);">
 
-            <!-- === Core Card: Today Summary + Status + Action === -->
-            <div class="card" style="padding:20px;">
+            <!-- Hidden ring SVG for JS/a11y compat -->
+            <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+                <defs>
+                    <linearGradient id="ringGradientBlue" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#8BAB86"/><stop offset="100%" stop-color="#6E7D6A"/>
+                    </linearGradient>
+                    <linearGradient id="ringGradientGreen" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#6FA876"/><stop offset="100%" stop-color="#4D7A52"/>
+                    </linearGradient>
+                    <linearGradient id="ringGradientPurple" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#9A78B4"/><stop offset="100%" stop-color="#7A5A8A"/>
+                    </linearGradient>
+                </defs>
+                <circle id="progressRing" cx="90" cy="90" r="80" fill="none"
+                    stroke="url(#ringGradientBlue)" stroke-width="9" stroke-linecap="round"
+                    stroke-dasharray="502.65" stroke-dashoffset="502.65"/>
+            </svg>
 
-                <!-- Circular Progress Ring -->
-                <div
-                    style="display:flex; flex-direction:column; align-items:center; position:relative; margin-bottom:8px;">
-                    <div style="position:relative; width:180px; height:180px;">
-                        <svg width="180" height="180" viewBox="0 0 180 180" style="transform:rotate(-90deg);">
+            <!-- ===== TAB: 今日 ===== -->
+            <section id="tabToday" class="tab-panel active">
+
+                <!-- Hero: Large Time Display -->
+                <div class="hero-section">
+                    <div class="hero-eyebrow">今日工時</div>
+                    <div id="totalHours">
+                        0<span class="hero-unit">h</span>&thinsp;0<span class="hero-unit">m</span>
+                    </div>
+                    <span id="ongoingHint" class="opacity-0">● 工作中</span>
+
+                    <!-- Brushstroke Progress -->
+                    <div class="stroke-wrap">
+                        <svg id="brushstrokeSVG" width="100%" height="40" viewBox="0 0 320 40" preserveAspectRatio="none">
                             <defs>
-                                <linearGradient id="ringGradientBlue" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#5AC8FA"/>
-                                    <stop offset="100%" stop-color="#007AFF"/>
+                                <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#8B6840" stop-opacity="0.5"/>
+                                    <stop offset="55%" stop-color="#C4A87A"/>
+                                    <stop offset="100%" stop-color="#E8C17A"/>
                                 </linearGradient>
-                                <linearGradient id="ringGradientGreen" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#34C759"/>
-                                    <stop offset="100%" stop-color="#30D158"/>
-                                </linearGradient>
-                                <linearGradient id="ringGradientPurple" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#BF5AF2"/>
-                                    <stop offset="100%" stop-color="#AF52DE"/>
+                                <linearGradient id="strokeGradComplete" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#4D7A52" stop-opacity="0.5"/>
+                                    <stop offset="100%" stop-color="#6FA876"/>
                                 </linearGradient>
                             </defs>
-                            <!-- Background track -->
-                            <circle cx="90" cy="90" r="80" fill="none" stroke="var(--fill-secondary)"
-                                stroke-width="9" />
-                            <!-- Progress ring -->
-                            <circle id="progressRing" cx="90" cy="90" r="80" fill="none" stroke="url(#ringGradientBlue)"
-                                stroke-width="9" stroke-linecap="round" stroke-dasharray="502.65"
-                                stroke-dashoffset="502.65"
-                                style="transition:stroke-dashoffset 0.8s ease, stroke 0.3s;" />
+                            <!-- Track -->
+                            <path d="M 6 22 Q 80 18 160 22 Q 240 26 314 20"
+                                stroke="rgba(40,32,20,0.10)" stroke-width="1" fill="none" stroke-linecap="round"/>
+                            <!-- Progress brushstroke -->
+                            <path id="brushStroke" d="M 6 22 Q 80 18 160 22 Q 240 26 314 20"
+                                stroke="url(#strokeGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                         </svg>
-                        <!-- Center text -->
-                        <div
-                            style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                            <span class="time-display" id="totalHours" style="color:var(--label); font-size:40px;">
-                                0<span
-                                    style="font-size:18px; font-weight:500; color:var(--label-tertiary); margin:0 2px 0 3px;">h</span>
-                                0<span
-                                    style="font-size:16px; font-weight:500; color:var(--label-tertiary); margin-left:3px;">m</span>
-                            </span>
-                            <span id="ongoingHint" class="opacity-0"
-                                style="transition:opacity 0.3s; font-size:11px; font-weight:600; color:var(--blue); margin-top:4px;">
-                                <i class="fas fa-circle"
-                                    style="font-size:5px; vertical-align:middle; margin-right:3px; animation:pulse-glow 1.5s infinite;"></i>工作中
-                            </span>
+                        <div class="stroke-labels">
+                            <span id="progressText" class="stroke-info">目標 8 小時</span>
+                            <span id="strokePct" class="stroke-pct">0%</span>
                         </div>
                     </div>
-                    <div style="font-size:11px; font-weight:500; color:var(--label-tertiary); margin-top:8px;">
-                        <span id="progressText">目標 8 小時</span>
-                    </div>
                 </div>
 
-                <!-- Life suggestion (dynamic) -->
-                <div id="lifeSuggestion" class="hidden"
-                    style="font-size:12px; font-weight:500; color:var(--label-secondary); text-align:center; background:var(--fill); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:12px; transition:all 0.3s;">
-                </div>
+                <!-- Life Suggestion -->
+                <div id="lifeSuggestion" class="hidden life-pill"></div>
 
-                <!-- Salary ticker (hidden by default) -->
+                <!-- Salary Ticker -->
                 <div id="salaryTicker" class="hidden"
-                    style="text-align:center; padding:8px; background:var(--fill); border-radius:var(--radius-sm); margin-bottom:12px;">
-                    <div style="font-size:11px; color:var(--label-tertiary); font-weight:500; margin-bottom:2px;">已累計收入
-                    </div>
+                    style="text-align:center; padding:12px; background:var(--fill); border-radius:var(--radius-sm);">
+                    <div style="font-size:10px; color:var(--label-tertiary); font-weight:400; margin-bottom:3px; letter-spacing:0.08em; text-transform:uppercase;">已累計收入</div>
                     <div class="salary-ticker" id="salaryAmount">$0</div>
                 </div>
 
-                <!-- Status row -->
-                <div
-                    style="display:flex; align-items:center; gap:12px; padding:12px 0; border-top:0.5px solid var(--separator);">
-                    <div id="statusIconBg"
-                        style="width:42px; height:42px; border-radius:var(--radius-sm); background:var(--fill); display:flex; align-items:center; justify-content:center; font-size:18px; transition:background 0.3s, color 0.3s; flex-shrink:0;">
-                        <i id="statusIcon" class="fas fa-mug-hot" style="color:var(--label-tertiary);"></i>
+                <!-- Action Card: Status + Punch -->
+                <div class="action-card">
+                    <div class="status-row">
+                        <div id="statusIconBg" class="status-icon">
+                            <i id="statusIcon" class="fas fa-mug-hot"></i>
+                        </div>
+                        <div id="nextActionType" class="status-label">休息中</div>
+                    </div>
+
+                    <!-- Task input -->
+                    <div id="taskInputContainer" style="overflow:hidden; max-height:0; opacity:0; transition:max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;">
+                        <input type="text" id="taskInput" placeholder="今天做什麼？（選填）" class="task-input-zen">
+                    </div>
+
+                    <!-- Current task -->
+                    <div id="currentTaskDisplay" style="overflow:hidden; max-height:0; opacity:0; transition:max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;">
+                        <div class="current-task-pill">
+                            <span id="currentTaskName">任務名稱</span>
+                        </div>
+                    </div>
+
+                    <!-- Punch button -->
+                    <button id="punchBtn" onclick="punchWithRipple(event)" class="punch-btn-zen ripple-container">
+                        <span class="punch-glyph" id="punchGlyph">◯</span>
+                        <span id="btnText">上班</span>
+                    </button>
+
+                    <!-- Swipe to punch out -->
+                    <div id="swipeTrack" class="swipe-track hidden" style="margin-top:14px;">
+                        <div class="swipe-progress"></div>
+                        <div class="swipe-label">← 滑動下班</div>
+                        <div class="swipe-handle"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+
+                <!-- Sprite (companion) -->
+                <div id="spriteTerrarium" class="sprite-terrarium" onclick="interactWithSprite()">
+                    <div class="sprite-core-container">
+                        <div class="sprite-ring ring-2"></div>
+                        <div class="sprite-ring ring-1"></div>
+                        <div class="sprite-core"></div>
                     </div>
                     <div style="flex:1; min-width:0;">
-                        <div id="nextActionType"
-                            style="font-size:15px; font-weight:600; color:var(--label); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            休息中</div>
-                    </div>
-                </div>
-
-                <!-- Task input (dynamic) -->
-                <div id="taskInputContainer" style="overflow:hidden; max-height:0; opacity:0; transition:all 0.3s;">
-                    <input type="text" id="taskInput" placeholder="今天做什麼？（選填）"
-                        style="width:100%; padding:12px 14px; border-radius:var(--radius-sm); background:var(--fill); border:none; font-size:15px; color:var(--label); outline:none; margin-top:8px;">
-                </div>
-
-                <!-- Current task (dynamic) -->
-                <div id="currentTaskDisplay" style="overflow:hidden; max-height:0; opacity:0; transition:all 0.3s;">
-                    <div
-                        style="background:rgba(0,122,255,0.08); border-radius:var(--radius-sm); padding:10px 14px; display:flex; align-items:center; gap:6px; margin-top:8px;">
-                        <i class="fas fa-thumbtack" style="color:var(--blue); font-size:11px;"></i>
-                        <span id="currentTaskName"
-                            style="font-size:13px; font-weight:500; color:var(--blue); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">任務名稱</span>
-                    </div>
-                </div>
-
-                <!-- Punch button -->
-                <button id="punchBtn" onclick="punchWithRipple(event)" class="ripple-container active-scale"
-                    style="width:100%; padding:16px; border-radius:var(--radius); font-size:17px; font-weight:600; color:white; background:linear-gradient(180deg, #2C2C2E 0%, #141414 100%); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:9px; margin-top:14px; box-shadow:0 3px 16px rgba(0,0,0,0.26), 0 1px 4px rgba(0,0,0,0.16), inset 0 0.5px 0 rgba(255,255,255,0.09); letter-spacing:0.2px;">
-                    <i class="fas fa-fingerprint anim-breathe"></i>
-                    <span id="btnText">上班</span>
-                </button>
-
-                <!-- Swipe to punch out -->
-                <div id="swipeTrack" class="swipe-track hidden" style="margin-top:14px;">
-                    <div class="swipe-progress"></div>
-                    <div class="swipe-label">← 滑動下班</div>
-                    <div class="swipe-handle"><i class="fas fa-arrow-right"></i></div>
-                </div>
-            </div>
-
-            <!-- === Sprite (compact inline) === -->
-            <div id="spriteTerrarium" class="sprite-terrarium anim-fade-in" onclick="interactWithSprite()">
-                <div class="sprite-core-container">
-                    <div class="sprite-ring ring-2"></div>
-                    <div class="sprite-ring ring-1"></div>
-                    <div class="sprite-core"></div>
-                </div>
-                <div style="flex:1; min-width:0;">
-                    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px;">
-                        <div style="font-size:14px; font-weight:600; color:var(--label);" id="spriteName">能量晶種 (Lv.1)
+                        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px;">
+                            <div style="font-size:13px; font-weight:400; color:var(--label); letter-spacing:0.02em;" id="spriteName">能量晶種 (Lv.1)</div>
+                            <div style="font-size:10px; font-weight:400; color:var(--blue); letter-spacing:0.04em;" id="spriteExp">EXP 0/10</div>
                         </div>
-                        <div style="font-size:10px; font-weight:600; color:var(--blue);" id="spriteExp">EXP 0/10</div>
+                        <div style="width:100%; height:2px; background:var(--fill-secondary); border-radius:2px; overflow:hidden; margin-bottom:5px;">
+                            <div id="spriteExpFill" style="height:100%; background:var(--blue); border-radius:2px; transition:width 0.8s ease-in-out; width:0%"></div>
+                        </div>
+                        <div style="font-size:11px; color:var(--label-tertiary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:0.04em;" id="spriteMessage">待機中</div>
                     </div>
-                    <div
-                        style="width:100%; height:3px; background:var(--fill-secondary); border-radius:2px; overflow:hidden; margin-bottom:4px;">
-                        <div id="spriteExpFill"
-                            style="height:100%; background:var(--blue); border-radius:2px; transition:width 0.7s; width:0%">
+                </div>
+
+            </section>
+
+            <!-- ===== TAB: 記錄 ===== -->
+            <section id="tabRecords" class="tab-panel">
+
+                <!-- Weekly Stats -->
+                <div>
+                    <div class="editorial-label">本週工時</div>
+                    <div class="zen-card" style="padding:20px 20px 18px;">
+                        <div style="display:flex; justify-content:flex-end; margin-bottom:14px;">
+                            <span id="weeklyAvg" style="font-size:11px; font-weight:400; color:var(--label-tertiary); letter-spacing:0.06em;">平均 —</span>
+                        </div>
+                        <div id="weeklyChart" style="display:flex; align-items:flex-end; gap:6px; height:90px;"></div>
+                    </div>
+                </div>
+
+                <!-- Punch Records -->
+                <div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <div class="editorial-label" style="margin:0;">工作階段</div>
+                        <div style="display:flex; gap:16px; align-items:center;">
+                            <button id="exportCalendarBtn" onclick="exportWorkSessions()"
+                                style="font-size:11px; color:var(--label-tertiary); font-weight:400; background:none; border:none; cursor:pointer; letter-spacing:0.06em;">匯出</button>
+                            <button id="undoBtn" onclick="undoLastPunch()"
+                                style="font-size:11px; color:var(--label-tertiary); font-weight:400; background:none; border:none; cursor:pointer; letter-spacing:0.06em;">復原</button>
+                            <button id="clearBtn" onclick="clearAll()"
+                                style="font-size:11px; color:var(--red); font-weight:400; background:none; border:none; cursor:pointer; letter-spacing:0.06em;">
+                                <span>清除</span>
+                            </button>
                         </div>
                     </div>
-                    <div style="font-size:11px; color:var(--label-tertiary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"
-                        id="spriteMessage">待機中</div>
-                </div>
-            </div>
-
-            <!-- === Punch Records === -->
-            <div>
-                <div
-                    style="display:flex; justify-content:space-between; align-items:center; padding:0 4px; margin-bottom:8px;">
-                    <h3 class="section-label" style="margin:0;">工作階段</h3>
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <button id="exportCalendarBtn" onclick="exportWorkSessions()" title="匯出紀錄至日曆"
-                            style="font-size:13px; color:var(--blue); font-weight:500; background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
-                            <i class="far fa-calendar-plus"></i>匯出
-                        </button>
-                        <div style="width:1px; height:12px; background:var(--separator);"></div>
-                        <button id="undoBtn" onclick="undoLastPunch()"
-                            style="font-size:13px; color:var(--blue); font-weight:500; background:none; border:none; cursor:pointer;">復原</button>
-                        <button id="clearBtn" onclick="clearAll()"
-                            style="font-size:13px; color:var(--red); font-weight:500; background:none; border:none; cursor:pointer;">
-                            <span>清除</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="inset-card" id="punchRecordsContainer">
-                    <div id="punchRecords">
-                        <div style="padding:16px; text-align:center; font-size:14px; color:var(--label-tertiary);">尚無紀錄
+                    <div id="punchRecordsContainer">
+                        <div id="punchRecords">
+                            <div style="padding:24px; text-align:center; font-size:13px; color:var(--label-tertiary); letter-spacing:0.04em;">今天還沒上班</div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- === Weekly Stats === -->
-            <div class="card" style="padding:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                    <span class="section-label" style="margin:0; padding:0;">本週工時</span>
-                    <span id="weeklyAvg" style="font-size:11px; font-weight:600; color:var(--label-tertiary);">平均
-                        —</span>
-                </div>
-                <div id="weeklyChart" style="display:flex; align-items:flex-end; gap:6px; height:100px;">
-                </div>
-            </div>
-
-
-            <div id="newsDigestContainer" class="card" style="padding:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <span class="section-label" style="margin:0; padding:0;">即時新聞</span>
-                    <button onclick="fetchNews(true)"
-                        style="font-size:12px; color:var(--blue); font-weight:500; background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
-                        <i class="fas fa-sync-alt" id="newsSyncIcon"></i> 更新
+                <!-- Calendar Reminder -->
+                <div style="padding-bottom:8px;">
+                    <button id="addCalendarBtn" onclick="addCalendarReminder()" disabled
+                        style="width:100%; padding:14px; border-radius:var(--radius); font-size:13px; font-weight:400; background:var(--card); color:var(--red); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:var(--shadow-card); opacity:0.5; letter-spacing:0.06em;">
+                        <i class="far fa-calendar-plus" style="font-size:12px;"></i>
+                        <span id="calendarBtnText">加入休息提醒</span>
                     </button>
                 </div>
-                <div id="newsList" style="display:flex; flex-direction:column; gap:10px;">
-                    <div class="animate-pulse" style="display:flex; gap:12px;">
-                        <div style="flex:1; display:flex; flex-direction:column; gap:6px; padding:4px 0;">
-                            <div style="height:10px; background:var(--fill-secondary); border-radius:4px; width:75%;">
+
+            </section>
+
+            <!-- ===== TAB: 洞察 ===== -->
+            <section id="tabInsights" class="tab-panel">
+
+                <!-- News Digest -->
+                <div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <div class="editorial-label" style="margin:0;">即時新聞</div>
+                        <button onclick="fetchNews(true)"
+                            style="font-size:11px; color:var(--label-tertiary); font-weight:400; background:none; border:none; cursor:pointer; letter-spacing:0.06em; display:flex; align-items:center; gap:4px;">
+                            <i class="fas fa-sync-alt" id="newsSyncIcon" style="font-size:9px;"></i> 更新
+                        </button>
+                    </div>
+                    <div id="newsDigestContainer" class="zen-card" style="padding:18px 20px;">
+                        <div id="newsList" style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="height:9px; background:var(--fill-secondary); border-radius:4px; width:75%;"></div>
+                            <div style="height:9px; background:var(--fill-secondary); border-radius:4px; width:55%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Life Guide -->
+                <div id="aiLifeGuideContainer">
+                    <div class="editorial-label">下班指引</div>
+                    <button id="insightBtn" onclick="generateAIContent()" disabled class="zen-card"
+                        style="width:100%; padding:18px 20px; border:none; cursor:pointer; display:flex; align-items:center; gap:14px; text-align:left;">
+                        <div style="width:38px; height:38px; border-radius:var(--radius-sm); background:var(--fill); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i class="fas fa-magic" style="color:var(--label-quaternary); font-size:13px;"></i>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size:14px; font-weight:400; color:var(--label); letter-spacing:0.02em;">生成下班生活指南</div>
+                            <div style="font-size:11px; color:var(--label-tertiary); margin-top:2px; letter-spacing:0.04em;">依據下班時段 AI 推薦</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:var(--label-quaternary); font-size:10px;"></i>
+                    </button>
+
+                    <div id="aiResultArea" class="zen-card hidden" style="margin-top:10px; padding:20px;">
+                        <div style="font-size:13px; font-weight:500; color:var(--label); margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; letter-spacing:0.02em;">
+                            <span>下班生活指南</span>
+                            <button onclick="copyReport()"
+                                style="font-size:11px; background:var(--fill-secondary); padding:4px 10px; border-radius:8px; color:var(--label-secondary); border:none; cursor:pointer; font-weight:400; letter-spacing:0.04em;">複製</button>
+                        </div>
+                        <div id="aiContent" style="font-size:13px; line-height:1.8; color:var(--label-secondary); letter-spacing:0.02em;"></div>
+                        <div style="margin-top:14px; padding-top:12px; border-top:0.5px solid var(--separator); font-size:10px; color:var(--orange); text-align:center; font-weight:400; letter-spacing:0.06em; text-transform:uppercase;">
+                            AI 產生內容，僅供參考
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar -->
+                <div>
+                    <button onclick="toggleCalendar()"
+                        style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:12px; background:none; border:none; cursor:pointer; padding:0;">
+                        <div class="editorial-label" style="margin:0;">假期日曆</div>
+                        <i id="calendarChevron" class="fas fa-chevron-down" style="font-size:10px; color:var(--label-quaternary); transition:transform 0.5s ease-in-out;"></i>
+                    </button>
+                    <div id="calendarCollapsible" class="collapsible-content">
+                        <div class="zen-card" style="padding:20px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                                <h3 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:18px; font-weight:400; color:var(--label); margin:0; letter-spacing:0.02em;" id="calendarTitle">Month Year</h3>
+                                <div style="display:flex; gap:4px;">
+                                    <button onclick="changeMonth(-1)" aria-label="上個月"
+                                        style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--label-tertiary); cursor:pointer;">
+                                        <i class="fas fa-chevron-left" style="font-size:9px;"></i>
+                                    </button>
+                                    <button onclick="changeMonth(1)" aria-label="下個月"
+                                        style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--label-tertiary); cursor:pointer;">
+                                        <i class="fas fa-chevron-right" style="font-size:9px;"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div style="height:10px; background:var(--fill-secondary); border-radius:4px; width:50%;">
+                            <div style="display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:10px; text-align:center;">
+                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">日</span>
+                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">一</span>
+                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">二</span>
+                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">三</span>
+                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">四</span>
+                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">五</span>
+                                <span style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">六</span>
+                            </div>
+                            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px 0; place-items:center;" id="calendarGrid"></div>
+                            <div style="margin-top:14px; padding-top:10px; border-top:0.5px solid var(--separator); display:flex; justify-content:center; gap:20px; font-size:10px; color:var(--label-tertiary); letter-spacing:0.06em;">
+                                <div style="display:flex; align-items:center; gap:5px;">
+                                    <div style="width:5px; height:5px; border-radius:50%; background:var(--blue);"></div>今日
+                                </div>
+                                <div style="display:flex; align-items:center; gap:5px;">
+                                    <div style="width:5px; height:5px; border-radius:50%; background:var(--fill-secondary);"></div>排休
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- === Calendar (collapsible) === -->
-            <div>
-                <button onclick="toggleCalendar()"
-                    style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 4px; margin-bottom:8px; background:none; border:none; cursor:pointer;">
-                    <h3 class="section-label" style="margin:0;">休假日曆</h3>
-                    <i id="calendarChevron" class="fas fa-chevron-down"
-                        style="font-size:12px; color:var(--label-tertiary); transition:transform 0.3s;"></i>
-                </button>
-                <div id="calendarCollapsible" class="collapsible-content">
-                    <div class="inset-card" style="padding:20px;">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                            <h3 style="font-size:17px; font-weight:700; color:var(--label); margin:0;"
-                                id="calendarTitle">Month Year</h3>
-                            <div style="display:flex; gap:4px;">
-                                <button onclick="changeMonth(-1)" aria-label="上個月"
-                                    style="width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--blue); cursor:pointer;">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <button onclick="changeMonth(1)" aria-label="下個月"
-                                    style="width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--blue); cursor:pointer;">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            style="display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:8px; text-align:center;">
-                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">日</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">一</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">二</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">三</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">四</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">五</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--label-quaternary);">六</span>
-                        </div>
-                        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px 0; place-items:center;"
-                            id="calendarGrid"></div>
-                        <div
-                            style="margin-top:14px; padding-top:10px; border-top:0.5px solid var(--separator); display:flex; justify-content:center; gap:16px; font-size:11px; color:var(--label-tertiary);">
-                            <div style="display:flex; align-items:center; gap:4px;">
-                                <div style="width:6px; height:6px; border-radius:50%; background:var(--blue);"></div>今日
-                            </div>
-                            <div style="display:flex; align-items:center; gap:4px;">
-                                <div
-                                    style="width:6px; height:6px; border-radius:50%; background:var(--fill-secondary);">
-                                </div>排休
-                            </div>
-                        </div>
-                    </div>
+                <!-- Footer -->
+                <div style="padding:12px 0 8px; text-align:center;">
+                    <p style="font-family:'Cormorant Garamond',Georgia,serif; font-size:10px; color:var(--label-quaternary); font-weight:300; letter-spacing:0.38em; text-transform:uppercase; margin:0; font-style:italic;">
+                        一 筆 · Ippitsu
+                    </p>
                 </div>
-            </div>
 
-            <!-- === AI Life Guide === -->
-            <div id="aiLifeGuideContainer" style="padding-bottom:8px;">
-                <button id="insightBtn" onclick="generateAIContent()" disabled class="active-scale card"
-                    style="width:100%; padding:14px 16px; border:none; cursor:pointer; display:flex; align-items:center; gap:12px; text-align:left; opacity:1;">
-                    <div
-                        style="width:40px; height:40px; border-radius:var(--radius-sm); background:linear-gradient(135deg, rgba(0,122,255,0.12) 0%, rgba(90,200,250,0.08) 100%); border:0.5px solid rgba(0,122,255,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <i class="fas fa-magic" style="color:var(--blue); font-size:16px;"></i>
-                    </div>
-                    <div style="flex:1;">
-                        <div style="font-size:15px; font-weight:600; color:var(--label);">下班生活指南</div>
-                        <div style="font-size:11px; color:var(--label-tertiary); font-weight:500;">依據下班時段推薦活動</div>
-                    </div>
-                    <i class="fas fa-chevron-right" style="color:var(--label-quaternary); font-size:13px;"></i>
-                </button>
+            </section>
 
-                <div id="aiResultArea" class="card hidden" style="margin-top:12px; padding:20px;">
-                    <div
-                        style="font-size:15px; font-weight:700; color:var(--label); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
-                        <div style="display:flex; align-items:center; gap:6px;"><i class="fas fa-sparkles"
-                                style="color:var(--blue);"></i> 下班生活指南</div>
-                        <button onclick="copyReport()"
-                            style="font-size:12px; background:var(--fill-secondary); padding:5px 10px; border-radius:8px; color:var(--label-secondary); border:none; cursor:pointer; font-weight:500;">複製</button>
-                    </div>
-                    <div id="aiContent" style="font-size:13px; line-height:1.6; color:var(--label-secondary);"></div>
-                    <div
-                        style="margin-top:12px; padding-top:10px; border-top:0.5px solid var(--separator); font-size:11px; color:var(--orange); text-align:center; font-weight:500;">
-                        <i class="fas fa-exclamation-circle" style="margin-right:3px;"></i> AI 產生內容，僅供參考
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calendar Reminder Button -->
-            <div id="calendarReminderContainer" style="padding-bottom:16px;">
-                <button id="addCalendarBtn" onclick="addCalendarReminder()" disabled class="active-scale"
-                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--card); color:var(--red); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:var(--shadow-card); opacity:0.5;">
-                    <i class="far fa-calendar-plus"></i>
-                    <span id="calendarBtnText">加入休息提醒</span>
-                </button>
-            </div>
-
-            <!-- Footer -->
-            <div style="padding-bottom:32px; text-align:center;">
-                <p
-                    style="font-size:10px; color:var(--label-quaternary); font-weight:500; letter-spacing:2px; text-transform:uppercase; margin:0;">
-                    TIME TRACKER</p>
-            </div>
         </main>
+        <!-- Bottom Navigation -->
+        <nav id="bottomNav">
+            <button class="nav-tab active" id="navTabToday" onclick="switchTab('Today')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="8.5"/>
+                    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+                </svg>
+                <span>今日</span>
+            </button>
+            <button class="nav-tab" id="navTabRecords" onclick="switchTab('Records')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                    <line x1="4" y1="7"  x2="20" y2="7"/>
+                    <line x1="4" y1="12" x2="16" y2="12"/>
+                    <line x1="4" y1="17" x2="20" y2="17"/>
+                </svg>
+                <span>記錄</span>
+            </button>
+            <button class="nav-tab" id="navTabInsights" onclick="switchTab('Insights')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3.5 L19.5 12 L12 20.5 L4.5 12 Z"/>
+                </svg>
+                <span>洞察</span>
+            </button>
+            <button class="nav-tab" id="navTabSettings" onclick="openSettings()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                    <line x1="4"  y1="6"  x2="20" y2="6"/>
+                    <line x1="4"  y1="18" x2="20" y2="18"/>
+                    <circle cx="9"  cy="6"  r="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.3"/>
+                    <circle cx="15" cy="18" r="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.3"/>
+                </svg>
+                <span>設定</span>
+            </button>
+        </nav>
+
     </div>
+
+    <!-- Ambient Glow (breathing while working) -->
+    <div id="ambientGlow"></div>
+
+    <!-- Ink Drop Overlay -->
+    <div id="inkDropOverlay"></div>
 
     <!-- Modals: iOS Action Sheet Style -->
 
@@ -1224,7 +1593,7 @@
                 </div>
             </div>
             <button onclick="closeInstallGuide()"
-                style="width:100%; padding:15px; background:var(--blue); color:white; border:none; border-radius:var(--radius); font-size:17px; font-weight:600; cursor:pointer; box-shadow:var(--shadow-blue);">了解</button>
+                style="width:100%; padding:15px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:15px; font-weight:400; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em;">了解</button>
         </div>
     </div>
 
@@ -1301,7 +1670,7 @@
             </div>
 
             <button onclick="saveSettings()" class="active-scale"
-                style="width:100%; padding:15px; border-radius:var(--radius); font-size:17px; font-weight:600; background:linear-gradient(180deg, #2C2C2E 0%, #141414 100%); color:white; border:none; cursor:pointer; box-shadow:0 3px 16px rgba(0,0,0,0.26), 0 1px 4px rgba(0,0,0,0.16), inset 0 0.5px 0 rgba(255,255,255,0.09);">儲存設定</button>
+                style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em; font-family:'Noto Sans TC',sans-serif;">儲存設定</button>
             </div><!-- /content padding -->
         </div><!-- /outer modal -->
     </div>
@@ -1313,7 +1682,7 @@
             <div style="font-size:20px; font-weight:700; color:var(--label); margin-bottom:8px;" id="alarmTitle">休息時間到！</div>
             <div style="font-size:15px; color:var(--label-tertiary); margin-bottom:24px; line-height:1.5;" id="alarmBody">你已經連續工作超過設定時間，起來動一動吧</div>
             <button onclick="dismissAlarm()" class="active-scale"
-                style="width:100%; padding:15px; border-radius:var(--radius); font-size:17px; font-weight:600; background:linear-gradient(180deg, #2C2C2E 0%, #141414 100%); color:white; border:none; cursor:pointer; box-shadow:0 3px 16px rgba(0,0,0,0.26), inset 0 0.5px 0 rgba(255,255,255,0.09);">我知道了</button>
+                style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em;">我知道了</button>
         </div>
     </div>
 
@@ -1350,14 +1719,78 @@
             icalUrl: ''
         };
 
-        // --- 漣漪效果 ---
+        // === IPPITSU: Tab Switching ===
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            const panel = document.getElementById('tab' + tabName);
+            const navBtn = document.getElementById('navTab' + tabName);
+            if (panel) panel.classList.add('active');
+            if (navBtn) navBtn.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if ('vibrate' in navigator) navigator.vibrate(8);
+        }
+
+        // === IPPITSU: Brushstroke Init & Update ===
+        function initBrushstroke() {
+            const path = document.getElementById('brushStroke');
+            if (!path) return;
+            const len = path.getTotalLength();
+            path.style.strokeDasharray = len;
+            path.style.strokeDashoffset = len;
+            window._brushLen = len;
+        }
+
+        function updateBrushstroke(pct, isComplete) {
+            const path = document.getElementById('brushStroke');
+            if (!path || !window._brushLen) return;
+            const offset = window._brushLen * (1 - Math.min(pct, 100) / 100);
+            path.style.strokeDashoffset = offset;
+            path.style.stroke = isComplete ? 'url(#strokeGradComplete)' : 'url(#strokeGrad)';
+            const pctEl = document.getElementById('strokePct');
+            if (pctEl) pctEl.textContent = Math.round(Math.min(pct, 100)) + '%';
+        }
+
+        // === IPPITSU: Ink Drop Punch Animation ===
+        function triggerInkDrop(clientX, clientY, isWorking) {
+            const overlay = document.getElementById('inkDropOverlay');
+            if (!overlay) return;
+            const drop = document.createElement('div');
+            drop.className = 'ink-drop-circle';
+            const size = 80;
+            drop.style.cssText = `
+                width:${size}px; height:${size}px;
+                left:${clientX}px; top:${clientY}px;
+                background: ${isWorking
+                    ? 'rgba(139,104,64,0.28)'
+                    : 'rgba(110,125,106,0.22)'};
+            `;
+            overlay.appendChild(drop);
+            setTimeout(() => drop.remove(), 950);
+        }
+
+        // === IPPITSU: Ambient Glow (working state) ===
+        function updateAmbientGlow(isWorking) {
+            const glow = document.getElementById('ambientGlow');
+            if (!glow) return;
+            if (isWorking) {
+                glow.classList.add('active');
+            } else {
+                glow.classList.remove('active');
+            }
+        }
+
+        // --- 漣漪效果 + 墨滴 ---
         function punchWithRipple(e) {
+            // Ink drop from touch point
+            triggerInkDrop(e.clientX, e.clientY, getNextPunchType() === 'in');
+
+            // Classic ripple on button
             const btn = document.getElementById('punchBtn');
             const rect = btn.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
             const x = e.clientX - rect.left - size / 2;
             const y = e.clientY - rect.top - size / 2;
-
             const ripple = document.createElement('span');
             ripple.className = 'ripple-effect';
             ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
@@ -2022,14 +2455,12 @@ END:VCALENDAR
                 let className = "w-8 h-8 rounded-full text-[14px] font-medium flex items-center justify-center transition-all ";
 
                 if (isOff) {
-                    // 休假樣式：灰色背景 + 刪除線
                     className += "bg-gray-100 text-gray-400 line-through decoration-gray-400";
                 } else if (isToday) {
-                    // 今日樣式：藍色實心
-                    className += "bg-blue-500 text-white shadow-md";
+                    btn.style.cssText = 'width:32px;height:32px;border-radius:50%;background:var(--blue);color:var(--card);font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;';
                 } else {
-                    // 一般日期
-                    className += "text-gray-900 hover:bg-gray-100";
+                    className += "hover:bg-gray-100";
+                    btn.style.cssText = 'width:32px;height:32px;border-radius:50%;font-size:13px;font-weight:400;color:var(--label);background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;';
                 }
 
                 btn.className = className;
@@ -2261,8 +2692,12 @@ END:VCALENDAR
 
         function updateCurrentTime() {
             const now = new Date();
-            document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-TW', { month: 'long', day: 'numeric', weekday: 'long' });
+            document.getElementById('currentTime').textContent =
+                now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            document.getElementById('currentDate').textContent =
+                `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
         }
 
         function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
@@ -2397,6 +2832,10 @@ END:VCALENDAR
                 statusIcon.className = "fas fa-mug-hot";
                 statusIcon.style.color = 'var(--label-tertiary)';
                 nextActionText.textContent = "休息中";
+                // Punch button: hollow circle
+                const glyph = document.getElementById('punchGlyph');
+                if (glyph) glyph.textContent = '◯';
+                updateAmbientGlow(false);
 
                 punchBtn.style.display = 'flex';
                 btnText.textContent = "上班";
@@ -2414,9 +2853,13 @@ END:VCALENDAR
 
             } else {
                 // 狀態：工作中/準備下班
-                statusIconBg.style.background = 'rgba(0,122,255,0.1)';
+                statusIconBg.style.background = 'rgba(110,125,106,0.12)';
                 statusIcon.className = "fas fa-briefcase";
                 statusIcon.style.color = 'var(--blue)';
+                // Punch button: filled circle (working)
+                const glyph2 = document.getElementById('punchGlyph');
+                if (glyph2) glyph2.textContent = '●';
+                updateAmbientGlow(true);
 
                 // 計算預計休息時間
                 const lastInTime = new Date(lastRecord.time).getTime();
@@ -2425,7 +2868,7 @@ END:VCALENDAR
 
                 // 4小時休息提醒邏輯
                 if (Date.now() > targetTime) {
-                    statusIconBg.style.background = 'rgba(255,59,48,0.1)';
+                    statusIconBg.style.background = 'rgba(154,64,64,0.10)';
                     statusIcon.className = "fas fa-exclamation-triangle";
                     statusIcon.style.color = 'var(--red)';
                     nextActionText.innerHTML = `<span style="color:var(--red);font-weight:700">工作過久！請立即休息</span>`;
@@ -2450,19 +2893,18 @@ END:VCALENDAR
                 document.getElementById('calendarBtnText').textContent = `加入休息提醒 (${appSettings.workReminderMinutes}分)`;
             }
 
-            // --- 進度條與計時 ---
-            // 修正：在 updateDisplay 中也更新間距，確保動態更新時樣式一致
+            // --- Hero display & brushstroke ---
             const timeObj = formatDurationFancy(result.total);
-            document.getElementById('totalHours').innerHTML = `
-                ${timeObj.h}<span style="font-size:18px;font-weight:500;color:var(--label-tertiary);margin:0 2px 0 3px;">h</span>
-                ${Math.round(timeObj.m)}<span style="font-size:16px;font-weight:500;color:var(--label-tertiary);margin-left:3px;">m</span>
-            `;
+            document.getElementById('totalHours').innerHTML =
+                `${timeObj.h}<span class="hero-unit">h</span>&thinsp;${Math.round(timeObj.m)}<span class="hero-unit">m</span>`;
 
             const targetMin = getTargetMinutes();
             const remainingMin = targetMin - result.total;
             const pct = Math.min((result.total / targetMin) * 100, 100);
             const ring = document.getElementById('progressRing');
             const circumference = 502.65;
+            // Update brushstroke progress
+            updateBrushstroke(pct, result.total >= targetMin);
 
             // 預計下班時間與 8小時提醒邏輯
             let progressInfo = `目標 ${appSettings.targetHours || 8} 小時`;
@@ -2524,10 +2966,8 @@ END:VCALENDAR
 
             if (result.isOngoing) {
                 document.getElementById('ongoingHint').classList.remove('opacity-0');
-                document.querySelector('svg')?.parentElement?.classList.add('ring-working');
             } else {
                 document.getElementById('ongoingHint').classList.add('opacity-0');
-                document.querySelector('svg')?.parentElement?.classList.remove('ring-working');
             }
 
             // --- 即時新聞 + 成就 + 工作精靈 + 情境橫幅 ---
@@ -2761,6 +3201,7 @@ END:VCALENDAR
         updateCurrentTime();
         updateWorkSprite();
         initSwipePunch();
+        initBrushstroke();  // Ippitsu brushstroke
         fetchNews(); // Fetch on initial load
 
         // --- Onboarding 首次引導 ---
