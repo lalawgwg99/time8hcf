@@ -820,11 +820,11 @@
                 <!-- Time display -->
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4px;">
                     <span
-                        style="font-size:13px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.3px;">今日工時</span>
+                        style="font-size:13px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.3px;">今日累計</span>
                     <span id="ongoingHint" class="opacity-0"
                         style="transition:opacity 0.3s; font-size:11px; font-weight:600; color:var(--blue);">
                         <i class="fas fa-circle"
-                            style="font-size:5px; vertical-align:middle; margin-right:3px; animation:pulse-glow 1.5s infinite;"></i>計時中
+                            style="font-size:5px; vertical-align:middle; margin-right:3px; animation:pulse-glow 1.5s infinite;"></i>工作中
                     </span>
                 </div>
                 <div style="margin-bottom:12px;">
@@ -842,7 +842,7 @@
                 </div>
                 <div
                     style="display:flex; justify-content:space-between; font-size:11px; font-weight:500; color:var(--label-tertiary); margin-bottom:12px;">
-                    <span id="progressText">目標 8h</span>
+                    <span id="progressText">目標 8 小時</span>
                 </div>
 
                 <!-- Life suggestion (dynamic) -->
@@ -853,7 +853,7 @@
                 <!-- Salary ticker (hidden by default) -->
                 <div id="salaryTicker" class="hidden"
                     style="text-align:center; padding:8px; background:var(--fill); border-radius:var(--radius-sm); margin-bottom:12px;">
-                    <div style="font-size:11px; color:var(--label-tertiary); font-weight:500; margin-bottom:2px;">💰 已賺到
+                    <div style="font-size:11px; color:var(--label-tertiary); font-weight:500; margin-bottom:2px;">已累計收入
                     </div>
                     <div class="salary-ticker" id="salaryAmount">$0</div>
                 </div>
@@ -868,13 +868,13 @@
                     <div style="flex:1; min-width:0;">
                         <div id="nextActionType"
                             style="font-size:15px; font-weight:600; color:var(--label); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            準備開始</div>
+                            休息中</div>
                     </div>
                 </div>
 
                 <!-- Task input (dynamic) -->
                 <div id="taskInputContainer" style="overflow:hidden; max-height:0; opacity:0; transition:all 0.3s;">
-                    <input type="text" id="taskInput" placeholder="輸入工作內容 (選填)..."
+                    <input type="text" id="taskInput" placeholder="今天做什麼？（選填）"
                         style="width:100%; padding:12px 14px; border-radius:var(--radius-sm); background:var(--fill); border:none; font-size:15px; color:var(--label); outline:none; margin-top:8px;">
                 </div>
 
@@ -898,7 +898,7 @@
                 <!-- Swipe to punch out -->
                 <div id="swipeTrack" class="swipe-track hidden" style="margin-top:14px;">
                     <div class="swipe-progress"></div>
-                    <div class="swipe-label">滑動確認下班 →</div>
+                    <div class="swipe-label">← 滑動下班</div>
                     <div class="swipe-handle"><i class="fas fa-arrow-right"></i></div>
                 </div>
             </div>
@@ -923,7 +923,7 @@
                         </div>
                     </div>
                     <div style="font-size:11px; color:var(--label-tertiary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"
-                        id="spriteMessage">精靈正在沉睡...等待上班喚醒。</div>
+                        id="spriteMessage">待機中</div>
                 </div>
             </div>
 
@@ -957,7 +957,7 @@
             <!-- === News Digest (moved below records) === -->
             <div id="newsDigestContainer" class="card" style="padding:16px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <span class="section-label" style="margin:0; padding:0;">📰 即時新聞</span>
+                    <span class="section-label" style="margin:0; padding:0;">即時新聞</span>
                     <button onclick="fetchNews(true)"
                         style="font-size:12px; color:var(--blue); font-weight:500; background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
                         <i class="fas fa-sync-alt" id="newsSyncIcon"></i> 更新
@@ -1037,7 +1037,7 @@
                     </div>
                     <div style="flex:1;">
                         <div style="font-size:15px; font-weight:600; color:var(--label);">下班生活指南</div>
-                        <div style="font-size:11px; color:var(--label-tertiary); font-weight:500;">AI 推薦晚餐與放鬆提案</div>
+                        <div style="font-size:11px; color:var(--label-tertiary); font-weight:500;">依據下班時段推薦活動</div>
                     </div>
                     <i class="fas fa-chevron-right" style="color:var(--label-quaternary); font-size:13px;"></i>
                 </button>
@@ -1053,7 +1053,7 @@
                     <div id="aiContent" style="font-size:13px; line-height:1.6; color:var(--label-secondary);"></div>
                     <div
                         style="margin-top:12px; padding-top:10px; border-top:0.5px solid var(--separator); font-size:11px; color:var(--orange); text-align:center; font-weight:500;">
-                        <i class="fas fa-exclamation-circle" style="margin-right:3px;"></i> 此為 AI 模擬範本，僅供參考
+                        <i class="fas fa-exclamation-circle" style="margin-right:3px;"></i> AI 產生內容，僅供參考
                     </div>
                 </div>
             </div>
@@ -1071,7 +1071,7 @@
             <div style="padding-bottom:32px; text-align:center;">
                 <p
                     style="font-size:10px; color:var(--label-quaternary); font-weight:500; letter-spacing:2px; text-transform:uppercase; margin:0;">
-                    Time Tracker</p>
+                    TIME TRACKER</p>
             </div>
         </main>
     </div>
@@ -1382,10 +1382,10 @@
 
             if (isWorking) {
                 terrarium.classList.add('sprite-working');
-                document.getElementById('spriteMessage').textContent = "正在吸收純粹的專注能量 ✨";
+                document.getElementById('spriteMessage').textContent = "專注能量吸收中";
             } else {
                 terrarium.classList.remove('sprite-working');
-                const msgs = ["Zzz... 好睏...", "上班才能餵我喔！", "陪伴模式：休眠中 💤"];
+                const msgs = ["待機中", "休眠中", "等待工作餵食"];
                 document.getElementById('spriteMessage').textContent = msgs[Math.floor(Math.random() * msgs.length)];
             }
         }
@@ -1405,10 +1405,10 @@
             const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
             const msgEl = document.getElementById('spriteMessage');
             if (isWorking) {
-                const msgs = ["好飽...專注能量真美味 🤤", "我感覺我快進化了！", "嗝...主人你太認真了。"];
+                const msgs = ["能量充沛", "感謝專注", "持續成長中"];
                 msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
             } else {
-                const msgs = ["Zzz... 讓我繼續睡...", "你現在沒上班，我沒東西吃！", "呼嚕嚕... (夢話)", "我要收集能量再長大！"];
+                const msgs = ["待機中", "等待工作能量", "休眠中"];
                 msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
             }
         }
@@ -1485,12 +1485,12 @@
             overlay.innerHTML = `
                 <div class="alarm-card" style="text-align:center">
                     <div class="text-5xl mb-3">🎉</div>
-                    <div class="text-xl font-bold text-gray-900 mb-1">今天辛苦了！</div>
+                    <div class="text-xl font-bold text-gray-900 mb-1">今天辛苦了</div>
                     <div style="background:var(--fill);border-radius:16px;padding:16px;margin:12px 0">
                         <div class="text-3xl font-bold tabular-nums">${dur.h}h ${Math.round(dur.m)}m</div>
                         <div class="text-[12px] text-gray-400 mt-1">今日工時</div>
                     </div>
-                    <button onclick="this.closest('.alarm-overlay').remove()" class="w-full py-3 bg-black text-white rounded-xl font-semibold active-scale mt-2">太棒了 ✓</button>
+                    <button onclick="this.closest('.alarm-overlay').remove()" class="w-full py-3 bg-black text-white rounded-xl font-semibold active-scale mt-2">完成</button>
                 </div>
             `;
             document.body.appendChild(overlay);
@@ -1510,32 +1510,32 @@
         // Life Suggestions Data
         const lifeSuggestions = {
             early: [
-                "今晚想吃點什麼好料的？😋",
-                "下班後去逛個書店沉澱一下？📚",
-                "這時間去健身房剛剛好！💪",
-                "去買杯手搖飲犒賞自己！🧋",
-                "這天氣適合去公園散散步。🌳"
+                "今晚想吃點什麼？",
+                "下班後去逛個書店",
+                "這時間去健身房剛剛好",
+                "買杯手搖犒賞自己",
+                "天氣不錯，去散個步"
             ],
             dinner: [
-                "下班後去逛個黃昏市場買菜吧？🥦",
-                "晚餐時間到，去吃頓好的吧！🍜",
-                "這時間回去剛好趕上倒垃圾。🚛",
-                "超市現在生鮮在打折喔！🥩",
-                "去吃那間排隊名店剛好不用等？🥘"
+                "下班後去逛黃昏市場買菜",
+                "晚餐時間到，去吃頓好的",
+                "回去剛好趕上倒垃圾",
+                "超市現在生鮮在打折",
+                "去吃那間排隊名店剛好不用等"
             ],
             late: [
-                "辛苦了，巷口那間鹹酥雞這時候剛好不用排隊。🍗",
-                "便利商店的微波食品其實也不錯吃。🍱",
-                "回家路上順便買個滷味吧？🥚",
-                "這時間去洗個頭放鬆一下？💆",
-                "別煮了，外送點起來！🛵"
+                "巷口鹹酥雞這時候不用排隊",
+                "便利商店的微波食品也不錯",
+                "回家路上順便買個滷味",
+                "這時間去洗個頭放鬆一下",
+                "別煮了，外送點起來"
             ],
             midnight: [
-                "太晚了，回家直接睡個好覺吧。💤",
-                "別加班了，回家泡個熱水澡吧！🛀",
-                "吃個宵夜再睡？泡麵是好朋友。🍜",
-                "明天再拚吧，身體要顧。🛌",
-                "看著窗外的月亮，深呼吸一下。🌕"
+                "太晚了，回家睡個好覺",
+                "別加班了，回家泡個熱水澡",
+                "吃個宵夜再睡？泡麵是好朋友",
+                "明天再拚，身體要顧",
+                "深呼吸一下，休息吧"
             ]
         };
 
@@ -2245,10 +2245,10 @@ END:VCALENDAR
             if (result.total >= targetMin) {
                 progressBar.style.width = '100%';
                 progressBar.className = 'progress-fill overtime pulse';
-                progressInfo = `<span style="color:var(--purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，快下班！</span>`;
+                progressInfo = `<span style="color:var(--purple);font-weight:700"><i class="fas fa-glass-cheers"></i> 已滿 8 小時，可以下班了</span>`;
 
                 // Show generic after-work message for overtime
-                lifeSuggestionEl.textContent = "別加班了，回家泡個熱水澡吧！🛀";
+                lifeSuggestionEl.textContent = "別加班了，回家好好休息吧";
                 lifeSuggestionEl.classList.remove('hidden');
 
             } else {
