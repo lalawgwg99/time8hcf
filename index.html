@@ -3152,6 +3152,59 @@ END:VCALENDAR
         }
 
         // --- 即時新聞摘要 (News Fetch) ---
+        async function fetchNewsFromSource(rssUrl, sourceName) {
+            const cacheBuster = `&_t=${Date.now()}`;
+            let newsData = [];
+
+            // Primary: rss2json.com
+            try {
+                const response = await fetch(
+                    `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}${cacheBuster}`,
+                    { cache: 'no-store' }
+                );
+                if (!response.ok) throw new Error(`rss2json failed for ${sourceName}`);
+                const data = await response.json();
+                if (data.status === 'ok' && data.items) {
+                    newsData = data.items.slice(0, 5).map(item => ({
+                        title: item.title,
+                        link: item.link || '#',
+                        source: sourceName,
+                        pubDate: item.pubDate || ''
+                    }));
+                } else {
+                    throw new Error(`rss2json bad data for ${sourceName}`);
+                }
+            } catch (e) {
+                // Fallback: allorigins proxy + XML parsing
+                console.warn(`rss2json failed for ${sourceName}, trying allorigins:`, e);
+                try {
+                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}&_t=${Date.now()}`;
+                    const response = await fetch(proxyUrl, { cache: 'no-store' });
+                    if (!response.ok) throw new Error(`allorigins failed for ${sourceName}`);
+                    const xmlText = await response.text();
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+                    const items = xmlDoc.querySelectorAll("item");
+                    for (let i = 0; i < Math.min(5, items.length); i++) {
+                        const titleEl = items[i].querySelector("title");
+                        const title = titleEl ? titleEl.textContent : '(無標題)';
+                        let link = '';
+                        const linkEl = items[i].querySelector("link");
+                        if (linkEl) {
+                            link = linkEl.textContent.trim();
+                            if (!link && linkEl.nextSibling) link = linkEl.nextSibling.textContent.trim();
+                        }
+                        const pubDateEl = items[i].querySelector("pubDate");
+                        const pubDate = pubDateEl ? pubDateEl.textContent : '';
+                        newsData.push({ title, link: link || '#', source: sourceName, pubDate });
+                    }
+                } catch (e2) {
+                    console.warn(`All methods failed for ${sourceName}:`, e2);
+                }
+            }
+            return newsData;
+        }
+
         async function fetchNews(forceUpdate = false) {
             const container = document.getElementById('newsList');
             const icon = document.getElementById('newsSyncIcon');
@@ -3188,48 +3241,30 @@ END:VCALENDAR
             `;
 
             try {
-                const rssUrl = 'https://tw.news.yahoo.com/rss';
-                const cacheBuster = `&_t=${Date.now()}`;
-                let newsData = [];
+                // Fetch from both Google News TW and Yahoo News TW in parallel
+                const [googleNews, yahooNews] = await Promise.all([
+                    fetchNewsFromSource('https://news.google.com/rss?hl=zh-TW&gl=TW&ceid=TW:zh-Hant', 'Google'),
+                    fetchNewsFromSource('https://tw.news.yahoo.com/rss', 'Yahoo')
+                ]);
 
-                // Primary: rss2json.com (returns JSON, no CORS issues)
-                try {
-                    const response = await fetch(
-                        `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}${cacheBuster}`,
-                        { cache: 'no-store' }
-                    );
-                    if (!response.ok) throw new Error('rss2json failed');
-                    const data = await response.json();
-                    if (data.status === 'ok' && data.items) {
-                        newsData = data.items.slice(0, 5).map(item => ({
-                            title: item.title,
-                            link: item.link || '#'
-                        }));
-                    } else {
-                        throw new Error('rss2json returned bad data');
-                    }
-                } catch (e) {
-                    // Fallback: allorigins proxy + XML parsing
-                    console.warn('rss2json failed, trying allorigins:', e);
-                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}&_t=${Date.now()}`;
-                    const response = await fetch(proxyUrl, { cache: 'no-store' });
-                    if (!response.ok) throw new Error('allorigins also failed');
-                    const xmlText = await response.text();
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-                    const items = xmlDoc.querySelectorAll("item");
-                    for (let i = 0; i < Math.min(5, items.length); i++) {
-                        const titleEl = items[i].querySelector("title");
-                        const title = titleEl ? titleEl.textContent : '(無標題)';
-                        let link = '';
-                        const linkEl = items[i].querySelector("link");
-                        if (linkEl) {
-                            link = linkEl.textContent.trim();
-                            if (!link && linkEl.nextSibling) link = linkEl.nextSibling.textContent.trim();
-                        }
-                        newsData.push({ title, link: link || '#' });
-                    }
-                }
+                // Merge and deduplicate by title similarity
+                let allNews = [...googleNews, ...yahooNews];
+                const seen = new Set();
+                allNews = allNews.filter(item => {
+                    const key = item.title.replace(/\s+/g, '').slice(0, 20);
+                    if (seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                });
+
+                // Sort by pubDate (newest first), then interleave sources
+                allNews.sort((a, b) => {
+                    if (a.pubDate && b.pubDate) return new Date(b.pubDate) - new Date(a.pubDate);
+                    return 0;
+                });
+
+                // Take top 5
+                const newsData = allNews.slice(0, 5);
 
                 if (newsData.length === 0) throw new Error('No news items found');
 
@@ -3248,7 +3283,7 @@ END:VCALENDAR
                     renderNews(JSON.parse(cachedNews));
                     if (forceUpdate) showReminder("無法更新，顯示快取新聞", "rest");
                 } else {
-                    container.innerHTML = `<div class="text-[13px] text-gray-400 text-center py-2">目前無法取得新聞 📡</div>`;
+                    container.innerHTML = `<div style="font-size:13px;color:var(--label-tertiary);text-align:center;padding:8px 0;">目前無法取得新聞 📡</div>`;
                 }
             } finally {
                 if (icon) icon.classList.remove('fa-spin');
@@ -3260,18 +3295,32 @@ END:VCALENDAR
             container.innerHTML = '';
 
             newsArray.forEach((item, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.style.cssText = 'padding-bottom:11px;border-bottom:0.5px solid var(--separator);position:relative;padding-left:15px;';
+
                 const a = document.createElement('a');
                 a.href = item.link;
                 a.target = "_blank";
-                a.style.cssText = 'display:block;font-size:13.5px;color:var(--label);line-height:1.55;padding-bottom:11px;border-bottom:0.5px solid var(--separator);position:relative;padding-left:15px;text-decoration:none;font-weight:400;';
+                a.style.cssText = 'display:block;font-size:13.5px;color:var(--label);line-height:1.55;text-decoration:none;font-weight:400;';
 
-                // Add a small bullet point dot
+                // Bullet dot — color-coded by source
                 const dot = document.createElement('span');
-                dot.style.cssText = 'position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:0.5';
+                const dotColor = item.source === 'Google' ? 'var(--green)' : 'var(--blue)';
+                dot.style.cssText = `position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:${dotColor};opacity:0.6`;
 
-                a.appendChild(dot);
                 a.appendChild(document.createTextNode(item.title));
-                container.appendChild(a);
+                wrapper.appendChild(dot);
+                wrapper.appendChild(a);
+
+                // Source label
+                if (item.source) {
+                    const src = document.createElement('span');
+                    src.textContent = item.source;
+                    src.style.cssText = 'font-size:10px;color:var(--label-tertiary);margin-left:0;display:inline-block;margin-top:3px;';
+                    wrapper.appendChild(src);
+                }
+
+                container.appendChild(wrapper);
             });
         }
 

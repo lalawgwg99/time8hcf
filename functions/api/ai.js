@@ -22,7 +22,7 @@ export async function onRequestPost({ request, env }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: "z-ai/glm-4.5-air:free",
+                model: "arcee-ai/trinity-mini:free",
                 messages: reqBody.messages
             })
         });
