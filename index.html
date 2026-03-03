@@ -1416,11 +1416,15 @@
                 </div>
 
                 <!-- Calendar Reminder -->
-                <div style="padding-bottom:8px;">
-                    <button id="addCalendarBtn" onclick="addCalendarReminder()" disabled
-                        style="width:100%; padding:14px; border-radius:var(--radius); font-size:13px; font-weight:400; background:var(--card); color:var(--red); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:var(--shadow-card); opacity:0.5; letter-spacing:0.06em;">
+                <div style="padding-bottom:8px; display:flex; gap:8px;">
+                    <button id="addCalendarBtn" onclick="addCalendarReminder('google')" disabled
+                        style="flex:1; padding:14px; border-radius:var(--radius); font-size:13px; font-weight:400; background:var(--card); color:var(--red); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:var(--shadow-card); opacity:0.5; letter-spacing:0.06em;">
                         <i class="far fa-calendar-plus" style="font-size:12px;"></i>
                         <span id="calendarBtnText">加入休息提醒</span>
+                    </button>
+                    <button id="addCalendarIcsBtn" onclick="addCalendarReminder('ics')" disabled
+                        style="padding:14px 16px; border-radius:var(--radius); font-size:13px; font-weight:400; background:var(--card); color:var(--label-secondary); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; box-shadow:var(--shadow-card); opacity:0.5; letter-spacing:0.06em;">
+                        <i class="fas fa-download" style="font-size:11px;"></i> ICS
                     </button>
                 </div>
 
@@ -2322,7 +2326,7 @@
             return `${year}${month}${day}T${hour}${minute}${second}Z`;
         }
 
-        function addCalendarReminder() {
+        function addCalendarReminder(mode) {
             const lastRecord = punchRecords.findLast(r => r.type === 'in');
             if (!lastRecord) {
                 showReminder("請先打卡上班！", 'rest');
@@ -2333,39 +2337,48 @@
             const workReminderMinutes = appSettings.workReminderMinutes;
             const reminderTime = new Date(startTime.getTime() + workReminderMinutes * 60000);
             const endTime = new Date(reminderTime.getTime() + 15 * 60000);
-
-            const dtstamp = formatDT(new Date());
-            const dtstart = formatDT(reminderTime);
-            const dtend = formatDT(endTime);
             const summary = `休息提醒：${taskName}`;
-            const description = `工作已進行 ${workReminderMinutes} 分鐘。任務：${taskName}。建議起身活動。`.replace(/(.{75})/g, '$1\r\n ');
+            const description = `工作已進行 ${workReminderMinutes} 分鐘，建議起身活動`;
 
-            const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//TimeTrackerApp//WorkRestReminder//ZH
-BEGIN:VEVENT
-UID:${Date.now()}@timetracker.app
-DTSTAMP:${dtstamp}
-DTSTART:${dtstart}
-DTEND:${dtend}
-SUMMARY:${summary}
-DESCRIPTION:${description}
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:休息時間到囉！
-TRIGGER:-PT5M
-END:VALARM
-END:VEVENT
-END:VCALENDAR
-`;
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `reminder.ics`;
-            document.body.appendChild(link);
-            try { link.click(); } catch (e) { showReminder("無法自動下載", 'rest'); }
-            document.body.removeChild(link);
-            showReminder("日曆提醒已下載", 'rest');
+            if (mode === 'google') {
+                // Google Calendar URL — works on any browser/device
+                const fmt = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+                const url = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+                    `&text=${encodeURIComponent(summary)}` +
+                    `&dates=${fmt(reminderTime)}/${fmt(endTime)}` +
+                    `&details=${encodeURIComponent(description)}`;
+                window.open(url, '_blank');
+                showReminder("已開啟 Google 日曆", 'rest');
+            } else {
+                // ICS download — Apple Calendar / Outlook
+                const dtstamp = formatDT(new Date());
+                const dtstart = formatDT(reminderTime);
+                const dtend = formatDT(endTime);
+                const icsLines = [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//TimeTrackerApp//WorkRestReminder//ZH',
+                    'BEGIN:VEVENT',
+                    `UID:${Date.now()}@timetracker.app`,
+                    `DTSTAMP:${dtstamp}`,
+                    `DTSTART:${dtstart}`,
+                    `DTEND:${dtend}`,
+                    `SUMMARY:${summary}`,
+                    `DESCRIPTION:${description}`,
+                    'BEGIN:VALARM',
+                    'ACTION:DISPLAY',
+                    'DESCRIPTION:休息時間到囉！',
+                    'TRIGGER:-PT5M',
+                    'END:VALARM',
+                    'END:VEVENT',
+                    'END:VCALENDAR'
+                ];
+                const icsContent = icsLines.join('\r\n');
+                // data: URI works better than blob on iOS
+                const dataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
+                window.open(dataUri);
+                showReminder("日曆提醒已產生", 'rest');
+            }
         }
 
         function exportWorkSessions() {
@@ -2974,6 +2987,8 @@ END:VCALENDAR
                 calendarBtn.disabled = true;
                 calendarBtn.style.opacity = '0.5';
                 document.getElementById('calendarBtnText').textContent = "加入休息提醒 (上班後可用)";
+                const icsBtn = document.getElementById('addCalendarIcsBtn');
+                if (icsBtn) { icsBtn.disabled = true; icsBtn.style.opacity = '0.5'; }
 
             } else {
                 // 狀態：工作中/準備下班
@@ -3015,6 +3030,8 @@ END:VCALENDAR
                 calendarBtn.disabled = false;
                 calendarBtn.style.opacity = '1';
                 document.getElementById('calendarBtnText').textContent = `加入休息提醒 (${appSettings.workReminderMinutes}分)`;
+                const icsBtn2 = document.getElementById('addCalendarIcsBtn');
+                if (icsBtn2) { icsBtn2.disabled = false; icsBtn2.style.opacity = '1'; }
             }
 
             // --- Hero display & brushstroke ---
