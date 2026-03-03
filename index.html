@@ -1450,6 +1450,54 @@
                     </div>
                 </div>
 
+                <!-- Weekly Summary -->
+                <div>
+                    <div class="editorial-label">本週總覽</div>
+                    <div class="zen-card" style="padding:18px 20px;">
+                        <div id="weeklySummaryContent" style="display:flex; gap:12px; justify-content:space-between;">
+                            <div style="flex:1; text-align:center;">
+                                <div style="font-size:22px; font-weight:700; color:var(--label); font-variant-numeric:tabular-nums;"
+                                    id="weekTotalHours">—</div>
+                                <div
+                                    style="font-size:10px; color:var(--label-tertiary); margin-top:3px; letter-spacing:0.04em;">
+                                    總工時</div>
+                            </div>
+                            <div style="width:0.5px; background:var(--separator);"></div>
+                            <div style="flex:1; text-align:center;">
+                                <div style="font-size:22px; font-weight:700; color:var(--label); font-variant-numeric:tabular-nums;"
+                                    id="weekAvgHours">—</div>
+                                <div
+                                    style="font-size:10px; color:var(--label-tertiary); margin-top:3px; letter-spacing:0.04em;">
+                                    日均工時</div>
+                            </div>
+                            <div style="width:0.5px; background:var(--separator);"></div>
+                            <div style="flex:1; text-align:center;">
+                                <div style="font-size:22px; font-weight:700; color:var(--blue); font-variant-numeric:tabular-nums;"
+                                    id="weekWorkDays">—</div>
+                                <div
+                                    style="font-size:10px; color:var(--label-tertiary); margin-top:3px; letter-spacing:0.04em;">
+                                    工作天數</div>
+                            </div>
+                        </div>
+                        <div id="weekBestDay"
+                            style="margin-top:14px; padding-top:12px; border-top:0.5px solid var(--separator); font-size:12px; color:var(--label-secondary); text-align:center; letter-spacing:0.02em;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Motivation -->
+                <div>
+                    <div class="editorial-label">每日一句</div>
+                    <div class="zen-card" style="padding:20px; text-align:center;">
+                        <div id="dailyQuote"
+                            style="font-size:14px; line-height:1.7; color:var(--label); font-weight:400; letter-spacing:0.02em;">
+                        </div>
+                        <div id="dailyQuoteAuthor"
+                            style="font-size:11px; color:var(--label-tertiary); margin-top:10px; letter-spacing:0.04em;">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- AI Life Guide -->
                 <div id="aiLifeGuideContainer">
                     <div class="editorial-label">下班指引</div>
@@ -1488,13 +1536,10 @@
 
                 <!-- Calendar -->
                 <div>
-                    <button onclick="toggleCalendar()"
-                        style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:12px; background:none; border:none; cursor:pointer; padding:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <div class="editorial-label" style="margin:0;">假期日曆</div>
-                        <i id="calendarChevron" class="fas fa-chevron-down"
-                            style="font-size:10px; color:var(--label-quaternary); transition:transform 0.5s ease-in-out;"></i>
-                    </button>
-                    <div id="calendarCollapsible" class="collapsible-content">
+                    </div>
+                    <div>
                         <div class="zen-card" style="padding:20px;">
                             <div
                                 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
@@ -1546,13 +1591,7 @@
                     </div>
                 </div>
 
-                <!-- Footer -->
-                <div style="padding:12px 0 8px; text-align:center;">
-                    <p
-                        style="font-family:'Cormorant Garamond',Georgia,serif; font-size:10px; color:var(--label-quaternary); font-weight:300; letter-spacing:0.38em; text-transform:uppercase; margin:0; font-style:italic;">
-                        一 筆 · Ippitsu
-                    </p>
-                </div>
+
 
             </section>
 
@@ -2782,10 +2821,9 @@ END:VCALENDAR
             const now = new Date();
             document.getElementById('currentTime').textContent =
                 now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const days = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
             document.getElementById('currentDate').textContent =
-                `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
+                `${days[now.getDay()]} · ${now.getMonth() + 1}月${now.getDate()}日`;
         }
 
         function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
@@ -3055,6 +3093,7 @@ END:VCALENDAR
             checkAchievement();
             updateWorkSprite();
             renderWeeklyChart();
+            if (typeof renderWeeklySummary === 'function') renderWeeklySummary();
 
             // 薪資跟蹤已移除
 
@@ -3332,7 +3371,93 @@ END:VCALENDAR
         updateWorkSprite();
         initSwipePunch();
         initBrushstroke();  // Ippitsu brushstroke
+        // --- 本週總覽 ---
+        function renderWeeklySummary() {
+            const dayNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+            const today = new Date();
+            let totalMins = 0;
+            let workDays = 0;
+            let bestDay = '', bestMins = 0;
+
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                const key = d.toISOString().slice(0, 10);
+                const mins = getDayTotalMinutes(key);
+                if (mins > 0) {
+                    totalMins += mins;
+                    workDays++;
+                    if (mins > bestMins) {
+                        bestMins = mins;
+                        bestDay = `${dayNames[d.getDay()]} (${d.getMonth() + 1}/${d.getDate()})`;
+                    }
+                }
+            }
+
+            const totalH = (totalMins / 60).toFixed(1);
+            const avgH = workDays > 0 ? (totalMins / 60 / workDays).toFixed(1) : '—';
+
+            document.getElementById('weekTotalHours').textContent = `${totalH}h`;
+            document.getElementById('weekAvgHours').textContent = workDays > 0 ? `${avgH}h` : '—';
+            document.getElementById('weekWorkDays').textContent = workDays > 0 ? `${workDays}天` : '—';
+
+            const bestDayEl = document.getElementById('weekBestDay');
+            if (workDays > 0 && bestDay) {
+                const bestH = (bestMins / 60).toFixed(1);
+                bestDayEl.innerHTML = `<i class="fas fa-trophy" style="color:var(--orange);margin-right:4px;font-size:10px;"></i>最高產日：${bestDay}（${bestH}h）`;
+            } else {
+                bestDayEl.textContent = '本週尚無工作紀錄';
+            }
+        }
+
+        // --- 每日一句 ---
+        function renderDailyQuote() {
+            const quotes = [
+                { text: '不是因為有了希望才堅持，而是因為堅持了才有希望。', author: '— 佚名' },
+                { text: '把每一天當成一生中最美好的一天。', author: '— 奧黛麗·赫本' },
+                { text: '生活不是等待暴風雨過去，而是學會在雨中跳舞。', author: '— 薇薇安·乖恩' },
+                { text: '你不需要很厲害才能開始，但你需要開始才能變得厲害。', author: '— Zig Ziglar' },
+                { text: '最好的時間是十年前，其次是現在。', author: '— 中國諺語' },
+                { text: '專注在你能控制的事情上，放下你無法控制的。', author: '— 愛比克泰德' },
+                { text: '每一個不起舞的日子，都是對生命的一種辜負。', author: '— 尼采' },
+                { text: '慢慢來，比較快。', author: '— 日本諺語' },
+                { text: '不怕慢，只怕站。', author: '— 中國諺語' },
+                { text: '休息是為了走更長遠的路。', author: '— 佚名' },
+                { text: '做你害怕做的事，然後你會發現恐懼消失了。', author: '— Ralph Waldo Emerson' },
+                { text: '今天的努力是明天的花開。', author: '— 佚名' },
+                { text: '不要追逐成功，讓自己變得有價值，成功會來追你。', author: '— 愛因斯坦' },
+                { text: '劈柴不照紋，累死劈柴人。做事要找對方法。', author: '— 民間智慧' },
+                { text: '人生就像騎腳踏車，要保持平衡就要不斷前進。', author: '— 愛因斯坦' },
+                { text: '如果你想走得快，就一個人走。如果你想走得遠，就一起走。', author: '— 非洲諺語' },
+                { text: '種一棵樹最好的時間是二十年前，其次是現在。', author: '— 中國諺語' },
+                { text: '與其用淚水悔恨昨天，不如用汗水拼搏今天。', author: '— 佚名' },
+                { text: '成功不是終點，失敗也不是致命的，重要的是繼續下去的勇氣。', author: '— 邱吉爾' },
+                { text: '越努力，越幸運。', author: '— 佚名' },
+                { text: '所有的堅持，終將美好。', author: '— 佚名' },
+                { text: '別讓今天的疲憊，偷走明天的快樂。', author: '— 佚名' },
+                { text: '最暗的夜，才看得到最亮的星。', author: '— 佚名' },
+                { text: '簡單的事重複做，你就是專家。重複的事用心做，你就是贏家。', author: '— 佚名' },
+                { text: '你現在的態度，決定十年後你是人物還是廢物。', author: '— 佚名' },
+                { text: '不要在最好的年紀，做一個最無聊的人。', author: '— 佚名' },
+                { text: '機會總是留給有準備的人。', author: '— Louis Pasteur' },
+                { text: '行動是治療恐懼的最好良藥。', author: '— 佚名' },
+                { text: '今日事，今日畢。明日復明日，明日何其多。', author: '— 文嘉' },
+                { text: '有時候，放慢腳步是為了欣賞沿途的風景。', author: '— 佚名' },
+                { text: '世界上最遙遠的距離，不是生與死，而是我站在你面前你卻不知道我愛你。錯了，是 deadline 就在眼前你還在滑手機。', author: '— 打工人語錄' }
+            ];
+            // Use day-of-year as seed for daily rotation
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((now - start) / 86400000);
+            const idx = dayOfYear % quotes.length;
+
+            document.getElementById('dailyQuote').textContent = `「${quotes[idx].text}」`;
+            document.getElementById('dailyQuoteAuthor').textContent = quotes[idx].author;
+        }
+
         fetchNews(); // Fetch on initial load
+        renderWeeklySummary();
+        renderDailyQuote();
 
         // --- Onboarding 首次引導 ---
         function showOnboarding() {
