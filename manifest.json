@@ -1,7 +1,9 @@
 {
     "name": "工時紀錄",
     "short_name": "工時紀錄",
-    "start_url": "./index.html",
+    "start_url": "/",
+    "scope": "/",
+    "id": "/",
     "display": "standalone",
     "background_color": "#F2F2F7",
     "theme_color": "#F2F2F7",

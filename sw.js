@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timecard-v5';
+const CACHE_NAME = 'timecard-v6';
 const ASSETS = [
     './',
     './index.html',
@@ -24,16 +24,48 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Network-first for API calls
-    if (event.request.url.includes('api.') || event.request.url.includes('rss')) {
+    const url = new URL(event.request.url);
+
+    // Skip non-GET requests
+    if (event.request.method !== 'GET') return;
+
+    // Network-first for API calls and news feeds
+    if (url.hostname !== location.hostname || event.request.url.includes('api.') || event.request.url.includes('rss')) {
         event.respondWith(
             fetch(event.request).catch(() => caches.match(event.request))
         );
         return;
     }
-    // Cache-first for static assets
+
+    // Network-first for HTML navigation requests (prevents stale PWA)
+    if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    // Update cache with fresh copy
+                    const clone = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+                    return response;
+                })
+                .catch(() => {
+                    // Offline: serve from cache
+                    return caches.match(event.request)
+                        .then(cached => cached || caches.match('./index.html'));
+                })
+        );
+        return;
+    }
+
+    // Cache-first for static assets (images, icons, etc.)
     event.respondWith(
-        caches.match(event.request).then(cached => cached || fetch(event.request))
+        caches.match(event.request).then(cached => {
+            if (cached) return cached;
+            return fetch(event.request).then(response => {
+                const clone = response.clone();
+                caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+                return response;
+            });
+        })
     );
 });
 
