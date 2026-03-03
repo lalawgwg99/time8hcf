@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timecard-v6';
+const CACHE_NAME = 'timecard-v7';
 const ASSETS = [
     './',
     './index.html',
@@ -29,8 +29,8 @@ self.addEventListener('fetch', (event) => {
     // Skip non-GET requests
     if (event.request.method !== 'GET') return;
 
-    // Network-first for API calls and news feeds
-    if (url.hostname !== location.hostname || event.request.url.includes('api.') || event.request.url.includes('rss')) {
+    // Network-first for API calls and news feeds (skip external origins)
+    if (url.hostname !== location.hostname) {
         event.respondWith(
             fetch(event.request).catch(() => caches.match(event.request))
         );

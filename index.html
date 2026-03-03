@@ -3189,57 +3189,72 @@ END:VCALENDAR
         }
 
         // --- 即時新聞摘要 (News Fetch) ---
+        function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            return fetch(url, { ...options, signal: controller.signal })
+                .finally(() => clearTimeout(timer));
+        }
+
+        function parseRssXml(xmlText, sourceName) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+            const items = xmlDoc.querySelectorAll("item");
+            const newsData = [];
+            for (let i = 0; i < Math.min(5, items.length); i++) {
+                const titleEl = items[i].querySelector("title");
+                const title = titleEl ? titleEl.textContent : '(無標題)';
+                let link = '';
+                const linkEl = items[i].querySelector("link");
+                if (linkEl) {
+                    link = linkEl.textContent.trim();
+                    if (!link && linkEl.nextSibling) link = linkEl.nextSibling.textContent.trim();
+                }
+                const pubDateEl = items[i].querySelector("pubDate");
+                const pubDate = pubDateEl ? pubDateEl.textContent : '';
+                newsData.push({ title, link: link || '#', source: sourceName, pubDate });
+            }
+            return newsData;
+        }
+
         async function fetchNewsFromSource(rssUrl, sourceName) {
             const cacheBuster = `&_t=${Date.now()}`;
-            let newsData = [];
 
             // Primary: rss2json.com
             try {
-                const response = await fetch(
+                const response = await fetchWithTimeout(
                     `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}${cacheBuster}`,
                     { cache: 'no-store' }
                 );
-                if (!response.ok) throw new Error(`rss2json failed for ${sourceName}`);
+                if (!response.ok) throw new Error(`rss2json HTTP ${response.status}`);
                 const data = await response.json();
-                if (data.status === 'ok' && data.items) {
-                    newsData = data.items.slice(0, 5).map(item => ({
+                if (data.status === 'ok' && data.items && data.items.length > 0) {
+                    return data.items.slice(0, 5).map(item => ({
                         title: item.title,
                         link: item.link || '#',
                         source: sourceName,
                         pubDate: item.pubDate || ''
                     }));
-                } else {
-                    throw new Error(`rss2json bad data for ${sourceName}`);
                 }
+                throw new Error('rss2json: no items');
             } catch (e) {
-                // Fallback: allorigins proxy + XML parsing
-                console.warn(`rss2json failed for ${sourceName}, trying allorigins:`, e);
-                try {
-                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}&_t=${Date.now()}`;
-                    const response = await fetch(proxyUrl, { cache: 'no-store' });
-                    if (!response.ok) throw new Error(`allorigins failed for ${sourceName}`);
-                    const xmlText = await response.text();
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-                    const items = xmlDoc.querySelectorAll("item");
-                    for (let i = 0; i < Math.min(5, items.length); i++) {
-                        const titleEl = items[i].querySelector("title");
-                        const title = titleEl ? titleEl.textContent : '(無標題)';
-                        let link = '';
-                        const linkEl = items[i].querySelector("link");
-                        if (linkEl) {
-                            link = linkEl.textContent.trim();
-                            if (!link && linkEl.nextSibling) link = linkEl.nextSibling.textContent.trim();
-                        }
-                        const pubDateEl = items[i].querySelector("pubDate");
-                        const pubDate = pubDateEl ? pubDateEl.textContent : '';
-                        newsData.push({ title, link: link || '#', source: sourceName, pubDate });
-                    }
-                } catch (e2) {
-                    console.warn(`All methods failed for ${sourceName}:`, e2);
-                }
+                console.warn(`rss2json failed for ${sourceName}:`, e.message);
             }
-            return newsData;
+
+            // Fallback: allorigins proxy + XML parsing
+            try {
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}&_t=${Date.now()}`;
+                const response = await fetchWithTimeout(proxyUrl, { cache: 'no-store' }, 6000);
+                if (!response.ok) throw new Error(`allorigins HTTP ${response.status}`);
+                const xmlText = await response.text();
+                const items = parseRssXml(xmlText, sourceName);
+                if (items.length > 0) return items;
+                throw new Error('allorigins: no items parsed');
+            } catch (e2) {
+                console.warn(`allorigins failed for ${sourceName}:`, e2.message);
+            }
+
+            return [];
         }
 
         async function fetchNews(forceUpdate = false) {
