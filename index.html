@@ -2754,9 +2754,26 @@
                 }
             }
 
-            // Load today's records from history
+            // Auto-settle past unclosed sessions before loading today
             const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-            punchRecords = history[getTodayKey()] || [];
+            const todayKey = getTodayKey();
+            let historyChanged = false;
+            for (const dateKey in history) {
+                if (dateKey >= todayKey) continue; // skip today & future
+                const recs = history[dateKey];
+                if (recs.length > 0 && recs.length % 2 !== 0) {
+                    // Unclosed session — auto clock-out at 23:59:59 of that day
+                    const autoOut = dateKey + 'T23:59:59';
+                    recs.push({ time: autoOut, type: 'out', task: '（自動結算）' });
+                    historyChanged = true;
+                }
+            }
+            if (historyChanged) {
+                localStorage.setItem('timecardHistory', JSON.stringify(history));
+            }
+
+            // Load today's records from history
+            punchRecords = history[todayKey] || [];
 
             const savedOffDays = localStorage.getItem('offDays');
             if (savedOffDays) offDays = new Set(JSON.parse(savedOffDays));
@@ -2779,7 +2796,15 @@
             for (let i = 0; i < records.length; i += 2) {
                 if (records[i] && records[i].type === 'in') {
                     const start = new Date(records[i].time);
-                    const end = (records[i + 1] && records[i + 1].type === 'out') ? new Date(records[i + 1].time) : (dateKey === getTodayKey() ? new Date() : start);
+                    let end;
+                    if (records[i + 1] && records[i + 1].type === 'out') {
+                        end = new Date(records[i + 1].time);
+                    } else if (dateKey === getTodayKey()) {
+                        end = new Date(); // ongoing session today
+                    } else {
+                        // Past day unclosed — count until end of that day
+                        end = new Date(dateKey + 'T23:59:59');
+                    }
                     total += (end - start) / 60000;
                 }
             }
@@ -2860,7 +2885,7 @@
                     const durationMinutes = (now - new Date(lastIn.time)) / 60000;
                     if (durationMinutes > 0) {
                         appSettings.elfExp = (appSettings.elfExp || 0) + durationMinutes;
-                        saveSettings();
+                        localStorage.setItem('appSettings', JSON.stringify(appSettings));
                     }
                 }
             }
@@ -2881,7 +2906,7 @@
                     if (lastIn && lastIn.type === 'in') {
                         const durationMinutes = (new Date(last.time) - new Date(lastIn.time)) / 60000;
                         appSettings.elfExp = Math.max(0, (appSettings.elfExp || 0) - durationMinutes);
-                        saveSettings();
+                        localStorage.setItem('appSettings', JSON.stringify(appSettings));
                     }
                 }
 
