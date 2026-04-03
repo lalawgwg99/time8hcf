@@ -12,7 +12,9 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <title>工時紀錄</title>
     <!-- iOS 系統字體優化 -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
@@ -24,20 +26,20 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', "SF Pro Text", -apple-system, BlinkMacSystemFont, 'sans-serif'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans TC', 'sans-serif'],
                         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
                     },
                     colors: {
                         ios: {
-                            bg: '#F2F2F7', // iOS 系統背景色
-                            card: '#FFFFFF',
-                            separator: '#E5E5EA',
-                            blue: '#007AFF',
-                            green: '#34C759',
-                            red: '#FF3B30',
-                            orange: '#FF9500',
-                            gray: '#8E8E93',
-                            lightGray: '#D1D1D6',
+                            bg: '#F4EFE6',
+                            card: '#FDFAF5',
+                            separator: '#EDE8DF',
+                            blue: '#6E7D6A',
+                            green: '#4D7A52',
+                            red: '#9A4040',
+                            orange: '#9A7040',
+                            gray: '#9C9086',
+                            lightGray: '#C4B8AE',
                         }
                     },
                     boxShadow: {
@@ -51,26 +53,26 @@
 
     <style>
         :root {
-            /* === APPLE HIG PALETTE === */
-            --bg: #F2F2F7;
-            --card: #FFFFFF;
-            --card-secondary: #E5E5EA;
-            --separator: rgba(60, 60, 67, 0.29);
-            --label: #000000;
-            --label-secondary: rgba(60, 60, 67, 0.6);
-            --label-tertiary: rgba(60, 60, 67, 0.3);
-            --label-quaternary: rgba(60, 60, 67, 0.18);
-            /* System Colors */
-            --blue: #007AFF;
-            --blue-light: rgba(0, 122, 255, 0.3);
-            --green: #34C759;
-            --red: #FF3B30;
-            --orange: #FF9500;
-            --purple: #AF52DE;
-            --teal: #5AC8FA;
-            --fill: rgba(120, 120, 128, 0.12);
-            --fill-secondary: rgba(120, 120, 128, 0.08);
-            --fill-tertiary: rgba(118, 118, 128, 0.12);
+            /* === IPPITSU ZEN PALETTE === */
+            --bg: #F4EFE6;
+            --card: #FDFAF5;
+            --card-secondary: #EDE8DF;
+            --separator: rgba(40, 32, 20, 0.07);
+            --label: #1C1712;
+            --label-secondary: #52493E;
+            --label-tertiary: #9C9086;
+            --label-quaternary: #C4B8AE;
+            /* Accent: bamboo green replaces iOS blue */
+            --blue: #6E7D6A;
+            --blue-light: #8BAB86;
+            --green: #4D7A52;
+            --red: #9A4040;
+            --orange: #9A7040;
+            --purple: #7A5A8A;
+            --teal: #4A788A;
+            --fill: rgba(40, 32, 20, 0.05);
+            --fill-secondary: rgba(40, 32, 20, 0.08);
+            --fill-tertiary: rgba(40, 32, 20, 0.03);
             --shadow-card: 0 2px 32px rgba(40, 30, 10, 0.05), 0 1px 6px rgba(40, 30, 10, 0.04);
             --shadow-elevated: 0 8px 48px rgba(40, 30, 10, 0.12), 0 2px 12px rgba(40, 30, 10, 0.07);
             --shadow-button: 0 2px 16px rgba(28, 23, 12, 0.18), 0 1px 4px rgba(28, 23, 12, 0.12);
@@ -96,7 +98,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", -apple-system, BlinkMacSystemFont, "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             -webkit-tap-highlight-color: transparent;
