@@ -269,8 +269,9 @@
         }
 
         @keyframes spriteFloat {
-            0%, 100% { transform: translateY(0); }
-            50%       { transform: translateY(-3px); }
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25%       { transform: translateY(-6px) rotate(0.5deg); }
+            75%       { transform: translateY(-2px) rotate(-0.5deg); }
         }
 
         /* --- Seiki Body (the pet blob) --- */
@@ -345,8 +346,10 @@
         }
 
         @keyframes spriteFloatWorking {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50%       { transform: translateY(-4px) scale(1.05); }
+            0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
+            20%       { transform: translateY(-8px) scale(1.04) rotate(1deg); }
+            50%       { transform: translateY(-10px) scale(1.05) rotate(-0.5deg); }
+            80%       { transform: translateY(-6px) scale(1.02) rotate(0.5deg); }
         }
 
         .sprite-working .seiki-body {
@@ -572,8 +575,9 @@
         }
 
         @keyframes particleFly {
-            0%   { transform: translate(0,0) scale(1.2); opacity: 1; }
-            100% { transform: translate(var(--dx),var(--dy)) scale(0); opacity: 0; }
+            0%   { transform: translate(0,0) scale(1) rotate(0deg); opacity: 1; }
+            60%  { opacity: 0.8; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(720deg); opacity: 0; }
         }
         .seiki-particle {
             position: absolute;
@@ -738,11 +742,22 @@
 
         /* --- Seiki Aura Effects --- */
         .aura-stardust {
-            box-shadow: inset 0 0 18px rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.08) !important;
+            box-shadow: inset 0 0 28px rgba(255,255,255,0.3), 0 0 0 1.5px rgba(255,255,255,0.25), 0 0 20px rgba(255,255,255,0.12) !important;
+            animation: spriteFloat 3s ease-in-out infinite, auraStardustPulse 2.5s ease-in-out infinite !important;
+        }
+        @keyframes auraStardustPulse {
+            0%, 100% { box-shadow: inset 0 0 24px rgba(255,255,255,0.25), 0 0 0 1px rgba(255,255,255,0.2), 0 0 16px rgba(255,255,255,0.08); }
+            50%       { box-shadow: inset 0 0 40px rgba(255,255,255,0.4), 0 0 0 2px rgba(255,255,255,0.35), 0 0 30px rgba(255,255,255,0.18); }
         }
         .aura-aurora {
-            background: radial-gradient(circle at 50% 60%, rgba(52,211,153,0.14), rgba(59,130,246,0.08), var(--fill)) !important;
-            box-shadow: 0 0 16px rgba(52,211,153,0.18) !important;
+            background: radial-gradient(circle at 50% 60%, rgba(52,211,153,0.35), rgba(59,130,246,0.2), transparent) !important;
+            box-shadow: 0 0 30px rgba(52,211,153,0.35), 0 0 60px rgba(59,130,246,0.15) !important;
+            animation: spriteFloat 3s ease-in-out infinite, auraAuroraShift 4s ease-in-out infinite !important;
+        }
+        @keyframes auraAuroraShift {
+            0%, 100% { box-shadow: 0 0 28px rgba(52,211,153,0.3), 0 0 50px rgba(59,130,246,0.12); filter: hue-rotate(0deg); }
+            33%       { box-shadow: 0 0 40px rgba(52,211,153,0.45), 0 0 70px rgba(59,130,246,0.2); filter: hue-rotate(15deg); }
+            66%       { box-shadow: 0 0 35px rgba(59,130,246,0.35), 0 0 60px rgba(52,211,153,0.2); filter: hue-rotate(-10deg); }
         }
 
         /* --- Animations --- */
@@ -2407,6 +2422,12 @@
                 SNARK:  (c) => `${c.totalH}小時，你終於認真起來了`,
                 CLINGY: (c) => `已經${c.totalH}小時了！每天都有你真的好開心！`,
             },
+            streak_broken: {
+                GENKI:  () => `哎！連續紀錄斷了！沒關係，今天重新開始！💪`,
+                CALM:   () => `斷了…不要緊，重新出發`,
+                SNARK:  () => `果然沒堅持住，再試一次吧`,
+                CLINGY: () => `不要啊！連續記錄斷掉了嗚嗚…重來吧！`,
+            },
         };
 
         const SEIKI_PERSONALITY_COLORS = {
@@ -2478,6 +2499,23 @@
             container.appendChild(txt);
             setTimeout(() => txt.remove(), 1800);
             addSeikiPoints(isFormChange ? 20 : 5);
+            const levelUpContainer = document.getElementById('seikiContainer');
+            if (levelUpContainer) {
+                const levelSyms = ['✦', '⭐', '✨', '★', '✧', '💫', '⚡', '🌟'];
+                for (let i = 0; i < 12; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'seiki-particle';
+                    p.textContent = levelSyms[Math.floor(Math.random() * levelSyms.length)];
+                    const angle = (Math.PI * 2 * i / 12) + Math.random() * 0.4;
+                    const dist = 80 + Math.random() * 40;
+                    p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+                    p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+                    p.style.color = `hsl(${30 + Math.random() * 60}, 90%, 72%)`;
+                    p.style.animationDelay = `${Math.random() * 0.2}s`;
+                    levelUpContainer.appendChild(p);
+                    setTimeout(() => p.remove(), 1100);
+                }
+            }
             if ('vibrate' in navigator) navigator.vibrate([20, 50, 20, 50, 40]);
             ['C5', 'E5', 'G5'].forEach((n, i) => setTimeout(() => playSingleClickSound(n), i * 80));
             const msgEl = document.getElementById('spriteMessage');
@@ -2497,8 +2535,8 @@
                 p.textContent = syms[Math.floor(Math.random() * syms.length)];
                 const angle = (Math.PI * 2 * i / 6) + Math.random() * 0.4;
                 const dist = 18 + Math.random() * 14;
-                p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
-                p.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+                p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+                p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
                 p.style.color = `hsl(${240 + Math.random() * 80}, 80%, 72%)`;
                 p.style.animationDelay = `${Math.random() * 0.15}s`;
                 container.appendChild(p);
@@ -2590,7 +2628,10 @@
             const pColor = SEIKI_PERSONALITY_COLORS[personality];
             document.getElementById('spriteExp').textContent = `EXP ${expInCurrentLevel}/${requiredExpForLevelUp}`;
             document.getElementById('spriteExpFill').style.width = `${progressPct}%`;
-            document.getElementById('spriteExpFill').style.background = pColor;
+            const activeColor = (appSettings.activeTheme && typeof SEIKI_THEMES !== 'undefined' && SEIKI_THEMES[appSettings.activeTheme])
+                ? SEIKI_THEMES[appSettings.activeTheme].color
+                : pColor;
+            document.getElementById('spriteExpFill').style.background = activeColor;
             document.getElementById('spriteName').textContent = `${name} (Lv.${level})`;
 
             const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
@@ -2599,8 +2640,13 @@
             const streak = appSettings.currentStreak || 0;
             const streakTag = streak >= 3 ? ` · 🔥${streak}天` : '';
 
-            terrarium.className = `sprite-terrarium anim-fade-in sprite-lv${visualLv} mood-${mood}`;
-            if (isWorking) terrarium.classList.add('sprite-working');
+            const newMoodClass = `sprite-terrarium sprite-lv${visualLv} mood-${mood}`;
+            const currentClean = terrarium.className.replace(/\banim-fade-in\b/g, '').replace(/\bsprite-working\b/g, '').trim().replace(/\s+/g, ' ');
+            if (currentClean !== newMoodClass) {
+                terrarium.className = newMoodClass + ' anim-fade-in';
+            } else {
+                terrarium.className = newMoodClass + (isWorking ? ' sprite-working' : '');
+            }
 
             const msgEl = document.getElementById('spriteMessage');
             const moodEl = document.getElementById('spriteMood');
@@ -3548,6 +3594,7 @@
                 // 打卡粒子特效
                 const container = document.getElementById('seikiContainer');
                 if (container) spawnParticles(container, ['✦', '⭐', '✨', '★', '✧']);
+                checkEasterEggs('punch_in', { taskName: appSettings.currentTask || '' });
             } else if (type === 'out') {
                 const lastIn = punchRecords[punchRecords.length - 1];
                 if (lastIn && lastIn.type === 'in') {
@@ -3557,6 +3604,7 @@
                         const earnedPts = Math.floor(durationMinutes / 30);
                         if (earnedPts > 0) addSeikiPoints(earnedPts);
                         localStorage.setItem('appSettings', JSON.stringify(appSettings));
+                        checkEasterEggs('punch_out', { durationMinutes });
                     }
                 }
                 window._seikiLastEvent = 'punch_out';
@@ -3577,6 +3625,12 @@
                     if (lastIn && lastIn.type === 'in') {
                         const durationMinutes = (new Date(last.time) - new Date(lastIn.time)) / 60000;
                         appSettings.elfExp = Math.max(0, (appSettings.elfExp || 0) - durationMinutes);
+                        const ptsToRevert = Math.floor(durationMinutes / 30);
+                        if (ptsToRevert > 0) {
+                            appSettings.seikiPoints = Math.max(0, (appSettings.seikiPoints || 0) - ptsToRevert);
+                            const ptsEl = document.getElementById('seikiPointsDisplay');
+                            if (ptsEl) ptsEl.textContent = appSettings.seikiPoints;
+                        }
                         localStorage.setItem('appSettings', JSON.stringify(appSettings));
                     }
                 }
