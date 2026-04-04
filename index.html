@@ -596,6 +596,69 @@
         .mood-deep     { --glow-rgb: 255, 100, 150; }
         .mood-tired    { --glow-rgb: 180, 180, 180; }
 
+        /* --- 情緒專屬肢體動畫 --- */
+        .sprite-terrarium.mood-happy {
+            animation: moodHappyBounce 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite, terrariumGlow 2.5s ease-in-out infinite !important;
+        }
+        @keyframes moodHappyBounce {
+            0%   { transform: translateY(0px) scale(1) rotate(0deg); }
+            20%  { transform: translateY(-14px) scale(1.05, 0.96) rotate(2deg); }
+            35%  { transform: translateY(-18px) scale(0.97, 1.06) rotate(-1deg); }
+            50%  { transform: translateY(-12px) scale(1.04, 0.97) rotate(1deg); }
+            65%  { transform: translateY(-16px) scale(0.98, 1.04) rotate(-1.5deg); }
+            80%  { transform: translateY(-8px) scale(1.02, 0.99) rotate(0.5deg); }
+            100% { transform: translateY(0px) scale(1) rotate(0deg); }
+        }
+
+        .sprite-terrarium.mood-excited {
+            animation: moodExcitedShake 0.6s ease-in-out infinite alternate, terrariumGlow 1.5s ease-in-out infinite !important;
+        }
+        @keyframes moodExcitedShake {
+            0%   { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
+            15%  { transform: translateX(-3px) translateY(-5px) rotate(-2deg) scale(1.03); }
+            30%  { transform: translateX(3px) translateY(-8px) rotate(2deg) scale(1.04); }
+            45%  { transform: translateX(-2px) translateY(-4px) rotate(-1deg) scale(1.02); }
+            60%  { transform: translateX(4px) translateY(-10px) rotate(2.5deg) scale(1.05); }
+            80%  { transform: translateX(-2px) translateY(-6px) rotate(-1.5deg) scale(1.03); }
+            100% { transform: translateX(0) translateY(-3px) rotate(0deg) scale(1.01); }
+        }
+
+        .sprite-terrarium.mood-sleepy {
+            animation: moodSleepyDroop 4s ease-in-out infinite, terrariumGlow 4s ease-in-out infinite !important;
+        }
+        @keyframes moodSleepyDroop {
+            0%   { transform: translateY(0px) rotate(0deg) scale(1); }
+            30%  { transform: translateY(4px) rotate(-3deg) scale(0.97, 1.02); }
+            50%  { transform: translateY(6px) rotate(-4deg) scale(0.96, 1.03); }
+            65%  { transform: translateY(3px) rotate(-2deg) scale(0.98, 1.01); }
+            80%  { transform: translateY(5px) rotate(-3.5deg) scale(0.97, 1.02); }
+            100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        }
+
+        .sprite-terrarium.mood-bored {
+            animation: moodBoredSway 5s ease-in-out infinite, terrariumGlow 5s ease-in-out infinite !important;
+        }
+        @keyframes moodBoredSway {
+            0%   { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
+            20%  { transform: translateX(-6px) translateY(2px) rotate(-4deg) scale(1); }
+            40%  { transform: translateX(0) translateY(0) rotate(0deg) scale(0.95); }
+            50%  { transform: translateX(0) translateY(0) rotate(0deg) scale(0.93); }
+            60%  { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
+            80%  { transform: translateX(6px) translateY(2px) rotate(4deg) scale(1); }
+            100% { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
+        }
+
+        .sprite-terrarium.mood-working {
+            animation: moodWorkingFloat 2.2s ease-in-out infinite, terrariumGlow 2s ease-in-out infinite !important;
+        }
+        @keyframes moodWorkingFloat {
+            0%   { transform: translateY(0px) scale(1) rotate(0deg); }
+            25%  { transform: translateY(-10px) scale(1.04) rotate(0.5deg); }
+            50%  { transform: translateY(-13px) scale(1.05) rotate(0deg); }
+            75%  { transform: translateY(-10px) scale(1.04) rotate(-0.5deg); }
+            100% { transform: translateY(0px) scale(1) rotate(0deg); }
+        }
+
         /* --- Seiki Special Animations --- */
         @keyframes seikiLevelFlash {
             0%   { filter: brightness(1) saturate(1); }
@@ -1995,6 +2058,101 @@
             seikiPoints: 0,
         };
 
+        // ===== 隨機微行為系統 =====
+        let _idleTimer = null;
+        let _idleCount = 0;
+
+        function triggerRandomIdleBehavior() {
+            const terrarium = document.querySelector('.sprite-terrarium');
+            if (!terrarium) return;
+
+            // 如果正在工作，不觸發 idle 行為
+            const isWorking = appSettings.currentPunchIn != null;
+            if (isWorking) return;
+
+            _idleCount++;
+
+            const behaviors = [
+                // 往左瞄一眼
+                () => {
+                    terrarium.style.transition = 'transform 0.2s ease';
+                    terrarium.style.transform = 'translateX(-8px) rotate(-5deg)';
+                    setTimeout(() => { terrarium.style.transform = ''; setTimeout(() => { terrarium.style.transition = ''; }, 300); }, 400);
+                },
+                // 往右瞄一眼
+                () => {
+                    terrarium.style.transition = 'transform 0.2s ease';
+                    terrarium.style.transform = 'translateX(8px) rotate(5deg)';
+                    setTimeout(() => { terrarium.style.transform = ''; setTimeout(() => { terrarium.style.transition = ''; }, 300); }, 400);
+                },
+                // 快速抖一下（被嚇到）
+                () => {
+                    terrarium.style.transition = 'none';
+                    let count = 0;
+                    const shakeInterval = setInterval(() => {
+                        terrarium.style.transform = count % 2 === 0 ? 'translateX(-4px)' : 'translateX(4px)';
+                        count++;
+                        if (count >= 6) {
+                            clearInterval(shakeInterval);
+                            terrarium.style.transform = '';
+                        }
+                    }, 60);
+                },
+                // 縮小再彈出（呼吸/嘆氣）
+                () => {
+                    terrarium.style.transition = 'transform 0.5s ease, filter 0.5s ease';
+                    terrarium.style.transform = 'scale(0.88)';
+                    terrarium.style.filter = 'brightness(0.9)';
+                    setTimeout(() => {
+                        terrarium.style.transform = 'scale(1.08)';
+                        terrarium.style.filter = 'brightness(1.1)';
+                        setTimeout(() => {
+                            terrarium.style.transform = '';
+                            terrarium.style.filter = '';
+                            setTimeout(() => { terrarium.style.transition = ''; }, 400);
+                        }, 300);
+                    }, 500);
+                },
+                // 向上跳一下（隨機高興）
+                () => {
+                    terrarium.style.transition = 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    terrarium.style.transform = 'translateY(-20px) scale(0.95, 1.1)';
+                    setTimeout(() => {
+                        terrarium.style.transform = 'translateY(0) scale(1.05, 0.95)';
+                        setTimeout(() => {
+                            terrarium.style.transform = '';
+                            setTimeout(() => { terrarium.style.transition = ''; }, 300);
+                        }, 200);
+                    }, 300);
+                },
+            ];
+
+            // 每 4 次 idle 強制做一個「看向鏡頭」效果
+            if (_idleCount % 4 === 0) {
+                terrarium.style.transition = 'transform 0.3s ease, filter 0.3s ease';
+                terrarium.style.transform = 'scale(1.12)';
+                terrarium.style.filter = 'brightness(1.2)';
+                setTimeout(() => {
+                    terrarium.style.transform = '';
+                    terrarium.style.filter = '';
+                    setTimeout(() => { terrarium.style.transition = ''; }, 400);
+                }, 600);
+                return;
+            }
+
+            const pick = behaviors[Math.floor(Math.random() * behaviors.length)];
+            pick();
+        }
+
+        function startIdleBehavior() {
+            if (_idleTimer) clearInterval(_idleTimer);
+            // 每 4~8 秒隨機觸發一次微行為
+            _idleTimer = setInterval(() => {
+                const delay = Math.random() * 4000;
+                setTimeout(triggerRandomIdleBehavior, delay);
+            }, 6000);
+        }
+
         // === IPPITSU: Tab Switching ===
         function switchTab(tabName) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -2649,6 +2807,21 @@
             if (moodEl) moodEl.textContent = `💭 回憶中…`;
             const container = document.getElementById('seikiContainer');
             if (container) spawnParticles(container, ['💭', '✨', '⭐', '✦']);
+            // 長按撫摸視覺反應
+            const t = document.querySelector('.sprite-terrarium');
+            if (t) {
+                t.style.transition = 'transform 0.2s ease, filter 0.2s ease';
+                t.style.transform = 'scale(1.15) rotate(3deg)';
+                t.style.filter = 'brightness(1.3) saturate(1.4)';
+                setTimeout(() => {
+                    t.style.transform = 'scale(1.1) rotate(-2deg)';
+                    setTimeout(() => {
+                        t.style.transform = '';
+                        t.style.filter = '';
+                        t.style.transition = '';
+                    }, 300);
+                }, 250);
+            }
         }
 
         // --- 工作精靈 (Work Sprite) 邏輯 ---
@@ -3662,6 +3835,25 @@
                 const container = document.getElementById('seikiContainer');
                 if (container) spawnParticles(container, ['✦', '⭐', '✨', '★', '✧']);
                 checkEasterEggs('punch_in', { taskName: appSettings.currentTask || '' });
+                // 打卡上班慶祝
+                (function punchInCelebrate() {
+                    const t = document.querySelector('.sprite-terrarium');
+                    if (!t) return;
+                    t.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease';
+                    t.style.transform = 'translateY(-25px) scale(0.9, 1.15)';
+                    t.style.filter = 'brightness(1.5) saturate(1.5)';
+                    setTimeout(() => {
+                        t.style.transform = 'translateY(0) scale(1.1, 0.9)';
+                        setTimeout(() => {
+                            t.style.transform = 'translateY(-8px) scale(1)';
+                            t.style.filter = '';
+                            setTimeout(() => {
+                                t.style.transform = '';
+                                t.style.transition = '';
+                            }, 300);
+                        }, 200);
+                    }, 300);
+                })();
             } else if (type === 'out') {
                 const lastIn = punchRecords[punchRecords.length - 1];
                 if (lastIn && lastIn.type === 'in') {
@@ -3675,6 +3867,22 @@
                     }
                 }
                 window._seikiLastEvent = 'punch_out';
+                // 打卡下班：疲倦感
+                (function punchOutTired() {
+                    const t = document.querySelector('.sprite-terrarium');
+                    if (!t) return;
+                    t.style.transition = 'transform 0.6s ease, filter 0.6s ease';
+                    t.style.transform = 'translateY(8px) rotate(-5deg) scale(0.92)';
+                    t.style.filter = 'brightness(0.85) saturate(0.8)';
+                    setTimeout(() => {
+                        t.style.transform = 'translateY(4px) rotate(-2deg)';
+                        setTimeout(() => {
+                            t.style.transform = '';
+                            t.style.filter = '';
+                            t.style.transition = '';
+                        }, 800);
+                    }, 800);
+                })();
             }
 
             punchRecords.push({ time: now.toISOString(), type: type, task: taskName });
@@ -4215,6 +4423,7 @@
         checkDailyBonus();
         renderShop();
         applySeikiCosmetics();
+        startIdleBehavior();
         // --- 本週總覽 ---
         function renderWeeklySummary() {
             const dayNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
