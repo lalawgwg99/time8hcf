@@ -1771,21 +1771,6 @@
                     </div>
                 </div>
 
-                <!-- Work Heatmap -->
-                <div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <div class="editorial-label" style="margin:0;">工作熱力圖</div>
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <span style="font-size:10px; color:var(--label-tertiary);">少</span>
-                            <div id="heatmapLegend" style="display:flex; gap:2px;"></div>
-                            <span style="font-size:10px; color:var(--label-tertiary);">多</span>
-                        </div>
-                    </div>
-                    <div class="zen-card" style="padding:14px 16px; overflow-x:auto;">
-                        <div id="workHeatmap" style="display:flex; gap:0;"></div>
-                    </div>
-                </div>
-
                 <!-- Seiki Shop -->
                 <div id="seikiShopContainer">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -2264,87 +2249,6 @@
         }
 
         // --- Alarm 系統 ---
-        // === 工作熱力圖 ===
-        function renderHeatmap() {
-            const container = document.getElementById('workHeatmap');
-            const legend = document.getElementById('heatmapLegend');
-            if (!container) return;
-
-            const WEEKS = 15;
-            const today = new Date();
-            today.setHours(23, 59, 59, 999);
-            const todayKey = getTodayKey();
-
-            // Theme color
-            const themeId = appSettings.activeTheme;
-            const baseColor = (themeId && SEIKI_THEMES[themeId])
-                ? SEIKI_THEMES[themeId].color
-                : SEIKI_PERSONALITY_COLORS[getSeikiPersonality()];
-            const r = parseInt(baseColor.slice(1, 3), 16);
-            const g = parseInt(baseColor.slice(3, 5), 16);
-            const b = parseInt(baseColor.slice(5, 7), 16);
-
-            // Start from Sunday of the week (WEEKS) ago
-            const start = new Date();
-            start.setDate(start.getDate() - WEEKS * 7);
-            start.setDate(start.getDate() - start.getDay()); // back to Sunday
-
-            // Build week columns
-            const weeks = [];
-            const cur = new Date(start);
-            while (cur <= today) {
-                const week = [];
-                for (let d = 0; d < 7; d++) {
-                    const key = cur.toISOString().slice(0, 10);
-                    const mins = getDayTotalMinutes(key);
-                    week.push({ key, mins, month: cur.getMonth(), dom: cur.getDate(), dow: cur.getDay() });
-                    cur.setDate(cur.getDate() + 1);
-                }
-                weeks.push(week);
-            }
-
-            const dayLabels = ['日', '', '二', '', '四', '', '六'];
-            let html = '';
-
-            // Day-of-week label column
-            html += `<div style="display:flex;flex-direction:column;gap:2px;margin-right:4px;margin-top:14px;flex-shrink:0;">`;
-            dayLabels.forEach(l => {
-                html += `<div style="height:11px;width:10px;font-size:8px;color:var(--label-tertiary);line-height:11px;text-align:right;">${l}</div>`;
-            });
-            html += `</div>`;
-
-            weeks.forEach((week, wi) => {
-                const firstDay = week[0];
-                const showMonth = wi === 0 || firstDay.dom <= 7;
-                const monthNames = ['1','2','3','4','5','6','7','8','9','10','11','12'];
-                const monthLabel = showMonth ? monthNames[firstDay.month] + '月' : '';
-                html += `<div style="display:flex;flex-direction:column;gap:2px;margin-right:2px;flex-shrink:0;">`;
-                html += `<div style="height:12px;font-size:8px;color:var(--label-tertiary);line-height:12px;white-space:nowrap;min-width:11px;">${monthLabel}</div>`;
-                week.forEach(cell => {
-                    const isFuture = cell.key > todayKey;
-                    let bg = 'var(--fill-secondary)';
-                    const isToday = cell.key === todayKey;
-                    if (!isFuture && cell.mins > 0) {
-                        const h = cell.mins / 60;
-                        const alpha = h < 2 ? 0.25 : h < 4 ? 0.45 : h < 6 ? 0.70 : 1;
-                        bg = `rgba(${r},${g},${b},${alpha})`;
-                    }
-                    const ring = isToday ? `box-shadow:0 0 0 1.5px rgba(${r},${g},${b},0.9);` : '';
-                    const title = `${cell.key} · ${(cell.mins/60).toFixed(1)}h`;
-                    html += `<div title="${title}" style="width:11px;height:11px;border-radius:2px;background:${bg};${ring}cursor:default;flex-shrink:0;"></div>`;
-                });
-                html += `</div>`;
-            });
-
-            container.innerHTML = html;
-
-            // Legend
-            if (legend) {
-                legend.innerHTML = [0, 0.25, 0.45, 0.70, 1].map(a =>
-                    `<div style="width:11px;height:11px;border-radius:2px;background:${a === 0 ? 'var(--fill-secondary)' : `rgba(${r},${g},${b},${a})`};"></div>`
-                ).join('');
-            }
-        }
 
         // === 彩蛋系統 ===
         function getTotalPunchCount() {
@@ -2971,6 +2875,7 @@
                 const totalH = Math.floor(totalMinutes / 60);
                 moodEl.textContent = `${icons} ${name}${totalH > 0 ? ` · 累計${totalH}h` : ''}${streakTag}`;
             }
+            applySeikiCosmetics();
         }
 
         function interactWithSprite() {
@@ -3618,16 +3523,30 @@
             const terrarium = document.getElementById('spriteTerrarium');
             const container = document.getElementById('seikiContainer');
             if (!terrarium || !container) return;
-            // Theme: update EXP bar color + terrarium border tint
+
             const themeId = appSettings.activeTheme;
-            const themeColor = themeId && SEIKI_THEMES[themeId]
-                ? SEIKI_THEMES[themeId].color
-                : SEIKI_PERSONALITY_COLORS[getSeikiPersonality()];
             const expFill = document.getElementById('spriteExpFill');
-            if (expFill) expFill.style.background = themeColor;
-            terrarium.style.borderColor = themeId
-                ? `${SEIKI_THEMES[themeId].color}44`
-                : '';
+
+            // 重置邊框與光暈
+            terrarium.style.borderColor = '';
+            terrarium.style.boxShadow = '';
+
+            if (themeId && typeof SEIKI_THEMES !== 'undefined' && SEIKI_THEMES[themeId]) {
+                const t = SEIKI_THEMES[themeId];
+                const c = t.color;
+                const r = parseInt(c.slice(1, 3), 16);
+                const g = parseInt(c.slice(3, 5), 16);
+                const b = parseInt(c.slice(5, 7), 16);
+                // EXP 條顏色
+                if (expFill) expFill.style.background = c;
+                // 卡片邊框 + 光暈（明顯可見）
+                terrarium.style.borderColor = c;
+                terrarium.style.boxShadow = `0 0 0 2px ${c}, 0 0 20px rgba(${r},${g},${b},0.4)`;
+            } else {
+                const pColor = SEIKI_PERSONALITY_COLORS[getSeikiPersonality()];
+                if (expFill) expFill.style.background = pColor;
+            }
+
             // Aura: class on container
             container.classList.remove('aura-stardust', 'aura-aurora');
             if (appSettings.activeAura) container.classList.add(appSettings.activeAura);
