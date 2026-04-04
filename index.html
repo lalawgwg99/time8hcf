@@ -2002,24 +2002,16 @@
                 <div class="section-label">🤖 晶靈 AI</div>
                 <div class="bg-white rounded-xl overflow-hidden mb-5">
                     <div class="p-4">
-                        <div style="font-size:12px;color:var(--label-tertiary);margin-bottom:8px;line-height:1.5;">
-                            輸入 OpenRouter API Key，讓晶靈根據你的工作狀態生成個人化回應。Key 只存在本機，不會上傳。
-                        </div>
-                        <div style="display:flex;gap:8px;align-items:center;">
-                            <input type="password" id="aiApiKeyInput" placeholder="sk-or-v1-..."
-                                style="flex:1;padding:8px 12px;border-radius:8px;border:1px solid var(--ios-separator);background:var(--fill-secondary);font-size:13px;outline:none;"
-                                oninput="this.dataset.changed='1'"
-                            />
-                            <button onclick="saveAiApiKey()"
-                                style="padding:8px 14px;border-radius:8px;background:#007AFF;color:white;border:none;font-size:13px;cursor:pointer;white-space:nowrap;">
-                                儲存
-                            </button>
-                        </div>
-                        <div id="aiKeyStatus" style="font-size:11px;margin-top:6px;color:var(--label-tertiary);min-height:16px;"></div>
-                        <div style="margin-top:10px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--ios-separator);padding-top:10px;">
-                            <label style="font-size:13px;flex:1;color:var(--label);">AI 對話模式</label>
-                            <input type="checkbox" id="aiModeToggle" onchange="toggleAiMode(this.checked)" style="width:16px;height:16px;cursor:pointer;">
-                            <span id="aiModeLabel" style="font-size:12px;color:var(--label-tertiary);">關閉</span>
+                        <div class="settings-section">
+                            <div class="settings-label">🤖 晶靈 AI 對話</div>
+                            <div class="settings-desc" style="font-size:12px;color:var(--label-tertiary);margin-bottom:8px;">
+                                開啟後晶靈會根據你的工作狀態生成個人化回應。
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <label style="font-size:13px;">AI 對話模式</label>
+                                <input type="checkbox" id="aiModeToggle" onchange="toggleAiMode(this.checked)" style="width:16px;height:16px;">
+                                <span id="aiModeLabel" style="font-size:12px;color:var(--label-tertiary);">關閉</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -4516,14 +4508,6 @@
 
         // ===== 晶靈 AI 對話系統 =====
 
-        function saveAiApiKey() {
-            const key = document.getElementById('aiApiKeyInput').value.trim();
-            if (!key) return;
-            localStorage.setItem('seiki_ai_key', key);
-            const statusEl = document.getElementById('aiKeyStatus');
-            if (statusEl) { statusEl.textContent = '✅ 已儲存'; setTimeout(() => { statusEl.textContent = ''; }, 2000); }
-        }
-
         function toggleAiMode(enabled) {
             appSettings.aiModeEnabled = enabled;
             localStorage.setItem('appSettings', JSON.stringify(appSettings));
@@ -4532,11 +4516,8 @@
         }
 
         function loadAiSettings() {
-            const key = localStorage.getItem('seiki_ai_key');
-            const input = document.getElementById('aiApiKeyInput');
             const toggle = document.getElementById('aiModeToggle');
             const label = document.getElementById('aiModeLabel');
-            if (input && key) input.value = key;
             if (toggle) toggle.checked = !!appSettings.aiModeEnabled;
             if (label) label.textContent = appSettings.aiModeEnabled ? '開啟 ✨' : '關閉';
         }
@@ -4573,8 +4554,7 @@
         }
 
         async function generateSeikiResponse(triggerType) {
-            const apiKey = localStorage.getItem('seiki_ai_key');
-            if (!apiKey || !appSettings.aiModeEnabled) return null;
+            if (!appSettings.aiModeEnabled) return null;
 
             const ctx = buildSeikiContext();
             const triggerDesc = {
@@ -4592,13 +4572,10 @@ ${triggerDesc}。
 根據人格特色說話：GENKI=活潑加油、CALM=平靜分析、SNARK=毒舌吐槽、CLINGY=撒嬌黏人。`;
 
             try {
-                const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json',
-                        'HTTP-Referer': 'https://time8hcf.pages.dev',
-                        'X-Title': 'time8hcf'
                     },
                     body: JSON.stringify({
                         model: 'qwen/qwen3-8b:free',
@@ -4616,7 +4593,7 @@ ${triggerDesc}。
         }
 
         async function seikiSpeak(triggerType) {
-            if (!appSettings.aiModeEnabled || !localStorage.getItem('seiki_ai_key')) return;
+            if (!appSettings.aiModeEnabled) return;
             const msgEl = document.getElementById('spriteMessage');
             if (!msgEl) return;
 
