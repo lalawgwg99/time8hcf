@@ -598,7 +598,10 @@
 
         /* --- 情緒專屬肢體動畫 --- */
         .sprite-terrarium.mood-happy {
-            animation: moodHappyBounce 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite, terrariumGlow 2.5s ease-in-out infinite !important;
+            animation: terrariumGlow 2.5s ease-in-out infinite !important;
+        }
+        .sprite-terrarium.mood-happy .seiki-container {
+            animation: moodHappyBounce 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite !important;
         }
         @keyframes moodHappyBounce {
             0%   { transform: translateY(0px) scale(1) rotate(0deg); }
@@ -611,7 +614,10 @@
         }
 
         .sprite-terrarium.mood-excited {
-            animation: moodExcitedShake 0.6s ease-in-out infinite alternate, terrariumGlow 1.5s ease-in-out infinite !important;
+            animation: terrariumGlow 1.5s ease-in-out infinite !important;
+        }
+        .sprite-terrarium.mood-excited .seiki-container {
+            animation: moodExcitedShake 0.6s ease-in-out infinite alternate !important;
         }
         @keyframes moodExcitedShake {
             0%   { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
@@ -624,7 +630,10 @@
         }
 
         .sprite-terrarium.mood-sleepy {
-            animation: moodSleepyDroop 4s ease-in-out infinite, terrariumGlow 4s ease-in-out infinite !important;
+            animation: terrariumGlow 4s ease-in-out infinite !important;
+        }
+        .sprite-terrarium.mood-sleepy .seiki-container {
+            animation: moodSleepyDroop 4s ease-in-out infinite !important;
         }
         @keyframes moodSleepyDroop {
             0%   { transform: translateY(0px) rotate(0deg) scale(1); }
@@ -636,7 +645,10 @@
         }
 
         .sprite-terrarium.mood-bored {
-            animation: moodBoredSway 5s ease-in-out infinite, terrariumGlow 5s ease-in-out infinite !important;
+            animation: terrariumGlow 5s ease-in-out infinite !important;
+        }
+        .sprite-terrarium.mood-bored .seiki-container {
+            animation: moodBoredSway 5s ease-in-out infinite !important;
         }
         @keyframes moodBoredSway {
             0%   { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
@@ -649,7 +661,10 @@
         }
 
         .sprite-terrarium.mood-working {
-            animation: moodWorkingFloat 2.2s ease-in-out infinite, terrariumGlow 2s ease-in-out infinite !important;
+            animation: terrariumGlow 2s ease-in-out infinite !important;
+        }
+        .sprite-terrarium.mood-working .seiki-container {
+            animation: moodWorkingFloat 2.2s ease-in-out infinite !important;
         }
         @keyframes moodWorkingFloat {
             0%   { transform: translateY(0px) scale(1) rotate(0deg); }
@@ -2063,7 +2078,7 @@
         let _idleCount = 0;
 
         function triggerRandomIdleBehavior() {
-            const terrarium = document.querySelector('.sprite-terrarium');
+            const terrarium = document.querySelector('.seiki-container');
             if (!terrarium) return;
 
             // 如果正在工作，不觸發 idle 行為
@@ -3837,7 +3852,7 @@
                 checkEasterEggs('punch_in', { taskName: appSettings.currentTask || '' });
                 // 打卡上班慶祝
                 (function punchInCelebrate() {
-                    const t = document.querySelector('.sprite-terrarium');
+                    const t = document.querySelector('.seiki-container');
                     if (!t) return;
                     t.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease';
                     t.style.transform = 'translateY(-25px) scale(0.9, 1.15)';
@@ -3869,7 +3884,7 @@
                 window._seikiLastEvent = 'punch_out';
                 // 打卡下班：疲倦感
                 (function punchOutTired() {
-                    const t = document.querySelector('.sprite-terrarium');
+                    const t = document.querySelector('.seiki-container');
                     if (!t) return;
                     t.style.transition = 'transform 0.6s ease, filter 0.6s ease';
                     t.style.transform = 'translateY(8px) rotate(-5deg) scale(0.92)';
