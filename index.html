@@ -696,6 +696,20 @@
             background: rgba(214, 214, 214, 0.9);
             box-shadow: 0 0 5px rgba(210, 210, 210, 0.55);
         }
+        .seiki-thought-orbit.trail-glacier .seiki-thought-dot {
+            background: rgba(197, 238, 255, 0.95);
+            box-shadow: 0 0 9px rgba(138, 218, 255, 0.72);
+        }
+        .seiki-thought-orbit.trail-glacier {
+            filter: hue-rotate(64deg) saturate(1.35);
+        }
+        .seiki-thought-orbit.trail-ember .seiki-thought-dot {
+            background: rgba(255, 212, 164, 0.95);
+            box-shadow: 0 0 10px rgba(255, 170, 106, 0.82);
+        }
+        .seiki-thought-orbit.trail-ember {
+            filter: hue-rotate(-38deg) saturate(1.34);
+        }
 
         /* --- Mood Glow Colors --- */
         .mood-happy    { --glow-rgb: 255, 200, 50; }
@@ -1015,6 +1029,32 @@
             33%  { outline-color: rgba(59,200,180,0.85); box-shadow: 0 0 0 8px rgba(52,211,153,0.28), 0 0 36px rgba(52,211,153,0.55), 0 0 60px rgba(59,130,246,0.25); }
             66%  { outline-color: rgba(59,130,246,0.8);  box-shadow: 0 0 0 7px rgba(59,130,246,0.22), 0 0 30px rgba(59,130,246,0.45), 0 0 55px rgba(52,211,153,0.2); }
             100% { outline-color: rgba(52,211,153,0.75); box-shadow: 0 0 0 6px rgba(52,211,153,0.2), 0 0 24px rgba(52,211,153,0.4), 0 0 48px rgba(59,130,246,0.15); }
+        }
+        .aura-solar {
+            outline: 2.5px solid rgba(255, 191, 103, 0.82) !important;
+            outline-offset: 3px !important;
+            box-shadow:
+                0 0 0 6px rgba(255, 191, 103, 0.2),
+                0 0 26px rgba(255, 168, 76, 0.45),
+                0 0 52px rgba(255, 111, 76, 0.18) !important;
+            animation: spriteFloat 3s ease-in-out infinite, auraSolarFlare 2.4s ease-in-out infinite !important;
+        }
+        @keyframes auraSolarFlare {
+            0%, 100% { outline-color: rgba(255, 191, 103, 0.78); }
+            50% { outline-color: rgba(255, 153, 74, 0.95); }
+        }
+        .aura-void {
+            outline: 2.5px solid rgba(156, 132, 255, 0.8) !important;
+            outline-offset: 3px !important;
+            box-shadow:
+                0 0 0 6px rgba(156, 132, 255, 0.22),
+                0 0 30px rgba(120, 98, 219, 0.48),
+                0 0 56px rgba(73, 47, 142, 0.22) !important;
+            animation: spriteFloat 3s ease-in-out infinite, auraVoidPulse 2.8s ease-in-out infinite !important;
+        }
+        @keyframes auraVoidPulse {
+            0%, 100% { outline-color: rgba(156, 132, 255, 0.74); }
+            50% { outline-color: rgba(130, 102, 255, 0.95); }
         }
 
         /* --- Animations --- */
@@ -2272,6 +2312,23 @@
                 0 0 0 6px rgba(126, 178, 158, 0.16),
                 0 16px 34px rgba(74, 120, 138, 0.18) !important;
         }
+        .sprite-terrarium.secondary-surface .seiki-container.aura-solar {
+            outline: 1px solid rgba(232, 182, 110, 0.78) !important;
+            outline-offset: 5px !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.58),
+                0 0 0 7px rgba(232, 182, 110, 0.14),
+                0 16px 34px rgba(184, 121, 62, 0.2) !important;
+        }
+
+        .sprite-terrarium.secondary-surface .seiki-container.aura-void {
+            outline: 1px solid rgba(124, 108, 164, 0.78) !important;
+            outline-offset: 5px !important;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.58),
+                0 0 0 7px rgba(124, 108, 164, 0.16),
+                0 16px 34px rgba(72, 60, 105, 0.2) !important;
+        }
 
         .sprite-lv1.secondary-surface {
             --seiki-accent: #8B6840;
@@ -2399,6 +2456,10 @@
             border-color: var(--shop-accent);
             box-shadow: 0 0 0 1px color-mix(in srgb, var(--shop-accent), transparent 72%), 0 12px 24px rgba(63, 47, 20, 0.08);
         }
+        .seiki-shop-card.is-locked {
+            border-style: dashed;
+            filter: grayscale(0.16);
+        }
 
         .seiki-shop-preview {
             width: 32px;
@@ -2421,6 +2482,12 @@
             color: var(--label-tertiary);
             line-height: 1.35;
             margin-top: 2px;
+        }
+        .seiki-shop-meta {
+            font-size: 10px;
+            color: var(--label-quaternary);
+            margin-top: 3px;
+            letter-spacing: 0.02em;
         }
 
         .seiki-shop-badge {
@@ -3060,7 +3127,7 @@
                     <!-- Swipe to punch out -->
                     <div id="swipeTrack" class="swipe-track hidden" style="margin-top:14px;">
                         <div class="swipe-progress"></div>
-                        <div class="swipe-label">向右滑動收筆</div>
+                        <div class="swipe-label">滑動下班休息</div>
                         <div class="swipe-handle"><i class="fas fa-arrow-right"></i></div>
                     </div>
                 </div>
@@ -3380,8 +3447,11 @@
                 <div id="seikiShopContainer">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <div class="editorial-label" style="margin:0;">晶靈商店</div>
-                        <div style="font-size:12px; color:var(--blue); font-weight:500; letter-spacing:0.04em;">
+                        <div style="text-align:right;">
+                            <div style="font-size:12px; color:var(--blue); font-weight:500; letter-spacing:0.04em;">
                             ✦ <span id="seikiPointsDisplay">0</span> 積分
+                            </div>
+                            <div id="shopProgressMeta" style="font-size:10px; color:var(--label-quaternary); letter-spacing:0.03em; margin-top:2px;">Lv.1 · 0 已收藏</div>
                         </div>
                     </div>
                     <div class="zen-card" style="padding:16px 16px 12px;">
@@ -5036,14 +5106,14 @@
                     : ['我等你好久了，今天也一起工作吧', '終於開始了！不要丟下我喔', '第一段工作我陪你，先深呼吸一下'],
             },
             punch_out: {
-                GENKI:  (c) => [`收筆！這段 ${c.sessionText} 有確實累積到`, `完成 ${c.sessionText}！先把肩膀放鬆一下`, `漂亮收尾，這一段工作能量被我存好了`],
+                GENKI:  (c) => [`下班！這段 ${c.sessionText} 有確實累積到`, `完成 ${c.sessionText}！先把肩膀放鬆一下`, `漂亮收尾，這一段工作能量被我存好了`],
                 CALM:   (c) => c.sessionMins > 120
                     ? ['這段很長，請先離開螢幕休息一下', '工時已經拉長了，補水和伸展比繼續硬撐重要', '辛苦了，現在該把注意力還給身體']
                     : ['這段到這裡很好，先讓腦袋換氣', '收得剛好，休息一下再決定下一筆', '完成一個段落，節奏有被保存下來'],
                 SNARK:  (c) => c.sessionMins < 30
                     ? ['這段有點短，但至少有開始', '就這樣？好吧，短段也算累積', '先記下來，下段請更像工作一點']
-                    : ['還行，這段不是只有假裝忙', '可以，至少這段有撐住', '收筆吧，成果最好也跟時間一樣存在'],
-                CLINGY: (c) => [`辛苦了，${c.sessionText} 我都有陪你`, '先休息一下，不准累壞自己', '收筆了也不要跑太遠，我還在這裡'],
+                    : ['還行，這段不是只有假裝忙', '可以，至少這段有撐住', '下班吧，成果最好也跟時間一樣存在'],
+                CLINGY: (c) => [`辛苦了，${c.sessionText} 我都有陪你`, '先休息一下，不准累壞自己', '下班了也不要跑太遠，我還在這裡'],
             },
             working_warming: {
                 GENKI:  () => ['暖機中！先把第一個小任務推過去', '能量剛亮起來，保持呼吸就好', '開始的十幾分鐘最重要，我陪你衝進狀態'],
@@ -5572,7 +5642,13 @@
                 currentX = Math.max(0, Math.min(x - startX, maxX()));
                 handle.style.left = (4 + currentX) + 'px';
                 progress.style.width = (currentX + handle.clientWidth + 4) + 'px';
-                label.style.opacity = 1 - (currentX / maxX());
+                const max = maxX();
+                if (max <= 0) {
+                    label.style.opacity = '1';
+                } else {
+                    const opacity = 1 - (currentX / max);
+                    label.style.opacity = String(Math.max(0, Math.min(1, opacity)));
+                }
             }
             function onEnd() {
                 if (!isDragging) return;
@@ -5586,8 +5662,8 @@
                     progress.style.width = '100%';
                     if ('vibrate' in navigator) navigator.vibrate(100);
                     setTimeout(() => {
-                        punch();
-                        showPunchOutCelebration();
+                        const didPunch = punch();
+                        if (didPunch) showPunchOutCelebration();
                         resetSwipe();
                     }, 200);
                 } else {
@@ -6212,28 +6288,34 @@
         // === 晶靈商店 + 日登入系統 ===
 
         const SEIKI_THEMES = {
-            'theme-rose':   { name: '緋玫', color: '#B45F7A', cost: 15, icon: '✦', desc: '柔霧玫瑰晶色' },
-            'theme-orange': { name: '晨曦', color: '#B8793E', cost: 15, icon: '◆', desc: '溫暖日出琥珀' },
-            'theme-green':  { name: '翡翠', color: '#4D7A52', cost: 15, icon: '◇', desc: '清透竹青光澤' },
-            'theme-sky':    { name: '晴空', color: '#4A788A', cost: 20, icon: '✧', desc: '淡藍水晶折光' },
+            'theme-rose':   { name: '緋玫', color: '#B45F7A', cost: 15, icon: '✦', rarity: 'N', levelRequired: 1, desc: '柔霧玫瑰晶色' },
+            'theme-orange': { name: '晨曦', color: '#B8793E', cost: 15, icon: '◆', rarity: 'N', levelRequired: 1, desc: '溫暖日出琥珀' },
+            'theme-green':  { name: '翡翠', color: '#4D7A52', cost: 15, icon: '◇', rarity: 'N', levelRequired: 1, desc: '清透竹青光澤' },
+            'theme-sky':    { name: '晴空', color: '#4A788A', cost: 20, icon: '✧', rarity: 'R', levelRequired: 2, desc: '淡藍水晶折光' },
+            'theme-midnight': { name: '夜幕', color: '#5C628F', cost: 28, icon: '⬢', rarity: 'SR', levelRequired: 4, desc: '低調深藍夜景光澤' },
+            'theme-golden': { name: '鎏金', color: '#B48A3C', cost: 34, icon: '✺', rarity: 'SR', levelRequired: 5, desc: '高能金色核心鍍層' },
         };
 
         const SEIKI_AURAS = {
-            'aura-stardust': { name: '星塵', cost: 25, icon: '✶', desc: '細碎銀光環繞' },
-            'aura-aurora':   { name: '極光', cost: 35, icon: '◒', desc: '青藍柔光流動' },
+            'aura-stardust': { name: '星塵', cost: 25, icon: '✶', rarity: 'R', levelRequired: 2, desc: '細碎銀光環繞' },
+            'aura-aurora':   { name: '極光', cost: 35, icon: '◒', rarity: 'SR', levelRequired: 4, desc: '青藍柔光流動' },
+            'aura-solar':    { name: '日珥', cost: 42, icon: '☀︎', rarity: 'SR', levelRequired: 5, desc: '暖金能量向外擴散' },
+            'aura-void':     { name: '虛界', cost: 50, icon: '✹', rarity: 'SSR', levelRequired: 6, desc: '深紫暗光收束邊緣' },
         };
 
         const SEIKI_EXPRESSIONS = {
-            'expr-serene':  { name: '靜心', cost: 18, icon: '─', desc: '平穩冷靜的表情' },
-            'expr-curious': { name: '探究', cost: 22, icon: '•', desc: '眼神更靈動' },
-            'expr-fierce':  { name: '決心', cost: 24, icon: '▲', desc: '專注攻堅神情' },
-            'expr-dreamy':  { name: '冥想', cost: 20, icon: '◌', desc: '夜間柔和表情' },
+            'expr-serene':  { name: '靜心', cost: 18, icon: '─', rarity: 'N', levelRequired: 1, desc: '平穩冷靜的表情' },
+            'expr-curious': { name: '探究', cost: 22, icon: '•', rarity: 'R', levelRequired: 2, desc: '眼神更靈動' },
+            'expr-fierce':  { name: '決心', cost: 24, icon: '▲', rarity: 'R', levelRequired: 3, desc: '專注攻堅神情' },
+            'expr-dreamy':  { name: '冥想', cost: 20, icon: '◌', rarity: 'N', levelRequired: 2, desc: '夜間柔和表情' },
         };
 
         const SEIKI_THOUGHT_TRAILS = {
-            'trail-zen':   { name: '禪環', cost: 20, icon: '◌', desc: '低頻思考環，平穩節奏', speed: 1.12, opacity: 1.08 },
-            'trail-runes': { name: '符紋', cost: 28, icon: '✶', desc: '高敏思考，靈感波動', speed: 0.88, opacity: 1.2 },
-            'trail-comet': { name: '流影', cost: 32, icon: '◇', desc: '衝刺思考，意圖感更強', speed: 0.78, opacity: 1.26 },
+            'trail-zen':      { name: '禪環', cost: 20, icon: '◌', rarity: 'N', levelRequired: 1, desc: '低頻思考環，平穩節奏', speed: 1.12, opacity: 1.08 },
+            'trail-runes':    { name: '符紋', cost: 28, icon: '✶', rarity: 'R', levelRequired: 3, desc: '高敏思考，靈感波動', speed: 0.88, opacity: 1.2 },
+            'trail-comet':    { name: '流影', cost: 32, icon: '◇', rarity: 'SR', levelRequired: 4, desc: '衝刺思考，意圖感更強', speed: 0.78, opacity: 1.26 },
+            'trail-glacier':  { name: '冰脈', cost: 34, icon: '❄︎', rarity: 'SR', levelRequired: 5, desc: '冷靜推演，脈衝穩定', speed: 0.96, opacity: 1.24 },
+            'trail-ember':    { name: '燼火', cost: 38, icon: '✦', rarity: 'SSR', levelRequired: 6, desc: '高溫靈感，衝刺輸出', speed: 0.72, opacity: 1.3 },
         };
 
         const SEIKI_UTILITIES = {
@@ -6242,6 +6324,8 @@
                 cost: 12,
                 icon: '⚗️',
                 desc: '立即 +8 晶靈 EXP',
+                rarity: 'N',
+                levelRequired: 1,
                 consume: ({ settings }) => {
                     settings.elfExp = (settings.elfExp || 0) + 8;
                     return '⚗️ 能量注入完成，晶靈 EXP +8';
@@ -6252,6 +6336,8 @@
                 cost: 14,
                 icon: '🛡️',
                 desc: '今日分心次數 -1（最低 0）',
+                rarity: 'R',
+                levelRequired: 2,
                 consume: ({ settings }) => {
                     const focus = settings.focusSession || {};
                     focus.distractionCount = Math.max(0, (focus.distractionCount || 0) - 1);
@@ -6264,6 +6350,8 @@
                 cost: 10,
                 icon: '🫧',
                 desc: '上班提醒 +15 分鐘（單次）',
+                rarity: 'N',
+                levelRequired: 1,
                 consume: ({ settings }) => {
                     settings.workReminderMinutes = Math.min(360, Math.max(30, (settings.workReminderMinutes || 120) + 15));
                     return `🫧 今日提醒已放寬為 ${settings.workReminderMinutes} 分鐘`;
@@ -6274,9 +6362,40 @@
                 cost: 11,
                 icon: '🎟️',
                 desc: '休息提醒 +5 分鐘（單次）',
+                rarity: 'R',
+                levelRequired: 2,
                 consume: ({ settings }) => {
                     settings.restReminderMinutes = Math.min(120, Math.max(5, (settings.restReminderMinutes || 20) + 5));
                     return `🎟️ 休息提醒已調整為 ${settings.restReminderMinutes} 分鐘`;
+                },
+            },
+            'util-point-voucher': {
+                name: '積分券',
+                cost: 16,
+                icon: '🎁',
+                desc: '立即返還 +5 商店積分',
+                rarity: 'SR',
+                levelRequired: 4,
+                consume: ({ settings }) => {
+                    settings.seikiPoints = (settings.seikiPoints || 0) + 5;
+                    return '🎁 積分券啟用，返還 +5 積分';
+                },
+            },
+            'util-clean-slate': {
+                name: '重整水晶',
+                cost: 18,
+                icon: '🧼',
+                desc: '專注計時重置為 25 分鐘',
+                rarity: 'SR',
+                levelRequired: 4,
+                consume: ({ settings }) => {
+                    const focus = settings.focusSession || {};
+                    focus.mode = 'focus';
+                    focus.durationMinutes = 25;
+                    focus.elapsedSeconds = 0;
+                    focus.isRunning = false;
+                    settings.focusSession = focus;
+                    return '🧼 計時已重整，下一輪為 25 分鐘';
                 },
             },
         };
@@ -6288,6 +6407,10 @@
             thought: { items: SEIKI_THOUGHT_TRAILS, activeKey: 'activeThoughtTrail', accent: () => 'var(--purple)' },
             utility: { items: SEIKI_UTILITIES, activeKey: null, accent: () => 'var(--orange)' },
         };
+
+        function getCurrentSeikiLevel() {
+            return Math.floor((appSettings.elfExp || 0) / 30) + 1;
+        }
 
         function addSeikiPoints(n) {
             appSettings.seikiPoints = (appSettings.seikiPoints || 0) + n;
@@ -6338,6 +6461,12 @@
             if (!catalog) return;
             const def = catalog.items[itemId];
             if (!def) return;
+            const level = getCurrentSeikiLevel();
+            const requiredLevel = def.levelRequired || 1;
+            if (level < requiredLevel) {
+                showReminder(`需要晶靈 Lv.${requiredLevel} 才能解鎖`, 'work');
+                return;
+            }
 
             const unlocks = appSettings.seikiUnlocks || [];
             const isOwned = unlocks.includes(itemId);
@@ -6429,7 +6558,7 @@
             }
 
             // Aura: class on container
-            container.classList.remove('aura-stardust', 'aura-aurora');
+            container.classList.remove('aura-stardust', 'aura-aurora', 'aura-solar', 'aura-void');
             if (appSettings.activeAura) container.classList.add(appSettings.activeAura);
 
             // Expression: class on terrarium
@@ -6440,7 +6569,7 @@
 
             // Thought trail: class + tone on orbit
             if (thoughtOrbit) {
-                thoughtOrbit.classList.remove('trail-zen', 'trail-runes', 'trail-comet');
+                thoughtOrbit.classList.remove('trail-zen', 'trail-runes', 'trail-comet', 'trail-glacier', 'trail-ember');
                 if (appSettings.activeThoughtTrail && SEIKI_THOUGHT_TRAILS[appSettings.activeThoughtTrail]) {
                     thoughtOrbit.classList.add(appSettings.activeThoughtTrail);
                 }
@@ -6456,6 +6585,7 @@
             if (!themeGrid || !auraGrid || !expressionGrid || !thoughtGrid || !utilityGrid) return;
             const pts     = appSettings.seikiPoints || 0;
             const unlocks = appSettings.seikiUnlocks || [];
+            const level = getCurrentSeikiLevel();
 
             const renderGridByType = (grid, itemType) => {
                 const catalog = SHOP_CATALOGS[itemType];
@@ -6463,12 +6593,22 @@
                     const isUtility = itemType === 'utility';
                     const owned  = unlocks.includes(id);
                     const active = catalog.activeKey ? appSettings[catalog.activeKey] === id : false;
+                    const requiredLevel = def.levelRequired || 1;
+                    const isLockedByLevel = level < requiredLevel;
                     const canAfford = pts >= def.cost;
-                    const badge = isUtility ? `${def.cost}✦ 使用` : active ? '裝備中' : owned ? '已擁有' : `${def.cost}✦`;
+                    const badge = isLockedByLevel
+                        ? `Lv.${requiredLevel} 解鎖`
+                        : isUtility
+                            ? `${def.cost}✦ 使用`
+                            : active
+                                ? '裝備中'
+                                : owned
+                                    ? '已擁有'
+                                    : `${def.cost}✦`;
                     const activeColor = catalog.accent(def);
-                    const badgeColor = active ? activeColor : owned ? 'var(--green)' : canAfford ? 'var(--label-secondary)' : 'var(--label-quaternary)';
-                    const opacity = (!owned && !canAfford) ? '0.72' : '1';
-                    const activeClass = active ? ' is-active' : '';
+                    const badgeColor = isLockedByLevel ? 'var(--label-quaternary)' : active ? activeColor : owned ? 'var(--green)' : canAfford ? 'var(--label-secondary)' : 'var(--label-quaternary)';
+                    const opacity = isLockedByLevel ? '0.58' : (!owned && !canAfford) ? '0.72' : '1';
+                    const activeClass = `${active ? ' is-active' : ''}${isLockedByLevel ? ' is-locked' : ''}`;
                     return `<button data-shop-id="${id}" data-shop-type="${itemType}"
                         class="seiki-shop-card${activeClass}"
                         style="--shop-accent:${activeColor};--shop-badge-color:${badgeColor};opacity:${opacity}">
@@ -6476,6 +6616,7 @@
                         <span>
                             <span class="seiki-shop-title">${def.name}</span>
                             ${def.desc ? `<span class="seiki-shop-desc">${def.desc}</span>` : ''}
+                            <span class="seiki-shop-meta">${def.rarity || 'N'} · Lv.${requiredLevel}</span>
                             <span class="seiki-shop-badge">${badge}</span>
                         </span>
                     </button>`;
@@ -6491,6 +6632,17 @@
             // Points display
             const el = document.getElementById('seikiPointsDisplay');
             if (el) el.textContent = pts;
+            const metaEl = document.getElementById('shopProgressMeta');
+            if (metaEl) {
+                const collectibleCount = Object.keys(SEIKI_THEMES).length
+                    + Object.keys(SEIKI_AURAS).length
+                    + Object.keys(SEIKI_EXPRESSIONS).length
+                    + Object.keys(SEIKI_THOUGHT_TRAILS).length;
+                const ownedCollectibles = unlocks.filter((id) =>
+                    !!SEIKI_THEMES[id] || !!SEIKI_AURAS[id] || !!SEIKI_EXPRESSIONS[id] || !!SEIKI_THOUGHT_TRAILS[id]
+                ).length;
+                metaEl.textContent = `Lv.${level} · ${ownedCollectibles}/${collectibleCount} 已收藏`;
+            }
         }
 
         function getActiveThoughtTrailConfig() {
@@ -6635,7 +6787,10 @@
         }
 
         function punch() {
-            if (punchRecords.length >= 20) { showReminder("已達今日紀錄上限", 'work'); return; }
+            if (punchRecords.length >= 20) {
+                showReminder("已達今日紀錄上限", 'work');
+                return false;
+            }
             haptic(getNextPunchType() === 'in' ? 'light' : 'medium');
             playSingleClickSound("A4");
             requestNotificationPermission();
@@ -6729,6 +6884,7 @@
             });
             saveData();
             updateDisplay();
+            return true;
         }
 
         function undoLastPunch() {
@@ -6923,7 +7079,7 @@
 
             if (result.total >= targetMin) {
                 const targetH = appSettings.targetHours || 8;
-                progressInfo = `已達 ${targetH} 小時，今天可以收筆了`;
+                progressInfo = `已達 ${targetH} 小時，今天可以下班了`;
 
                 lifeSuggestionEl.textContent = '已經達標，先把節奏留給生活吧';
                 lifeSuggestionEl.classList.remove('hidden');
@@ -6934,7 +7090,7 @@
                 if (result.isOngoing) {
                     const offTime = new Date(Date.now() + remainingMin * 60000);
                     const offStr = offTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-                    progressInfo = `尚餘 ${remainingDuration.h}h ${Math.round(remainingDuration.m)}m，預計 ${offStr} 收筆`;
+                    progressInfo = `尚餘 ${remainingDuration.h}h ${Math.round(remainingDuration.m)}m，預計 ${offStr} 下班`;
 
                     // Life Suggestion Logic (Randomized)
                     // Only update if text is empty to prevent flickering on every tick, 
@@ -7480,12 +7636,25 @@
         }
 
         // ===== 晶靈 AI 對話系統 =====
+        const SEIKI_AI_REPLY_TIMEOUT_MS = 9000;
+        const seikiAiRuntimeState = {
+            latestRequestId: 0,
+        };
 
         function toggleAiMode(enabled) {
             appSettings.aiModeEnabled = enabled;
             localStorage.setItem('appSettings', JSON.stringify(appSettings));
             const label = document.getElementById('aiModeLabel');
             if (label) label.textContent = enabled ? '開啟 ✨' : '關閉';
+            if (!enabled) {
+                // 讓所有既有請求結果失效，避免關閉後舊回覆再覆蓋畫面
+                seikiAiRuntimeState.latestRequestId += 1;
+                const msgEl = document.getElementById('spriteMessage');
+                if (msgEl && msgEl.textContent === '…思考中…') {
+                    msgEl.style.opacity = '1';
+                    updateWorkSprite();
+                }
+            }
         }
 
         function loadAiSettings() {
@@ -7548,12 +7717,15 @@ ${triggerDesc}。
 請用繁體中文，以第一人稱說一句話（15-30字，不要標點符號結尾，不要解釋，不要說你是AI）。
 根據人格特色說話：GENKI=活潑加油、CALM=平靜分析、SNARK=毒舌吐槽、CLINGY=撒嬌黏人。`;
 
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), SEIKI_AI_REPLY_TIMEOUT_MS);
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    signal: controller.signal,
                     body: JSON.stringify({
                         model: 'stepfun/step-3.5-flash:free',
                         messages: [{ role: 'user', content: systemPrompt }],
@@ -7566,6 +7738,8 @@ ${triggerDesc}。
                 return data.choices?.[0]?.message?.content?.trim() || null;
             } catch (e) {
                 return null;
+            } finally {
+                clearTimeout(timeoutId);
             }
         }
 
@@ -7574,17 +7748,28 @@ ${triggerDesc}。
             const msgEl = document.getElementById('spriteMessage');
             if (!msgEl) return;
 
+            const requestId = seikiAiRuntimeState.latestRequestId + 1;
+            seikiAiRuntimeState.latestRequestId = requestId;
             const originalText = msgEl.textContent;
             msgEl.textContent = '…思考中…';
             msgEl.style.opacity = '0.6';
 
             const aiReply = await generateSeikiResponse(triggerType);
 
+            // 有更新的請求在後面完成，丟棄舊結果，避免蓋掉新訊息
+            if (requestId !== seikiAiRuntimeState.latestRequestId) {
+                if (msgEl.textContent === '…思考中…') msgEl.style.opacity = '1';
+                return;
+            }
+
             msgEl.style.opacity = '1';
             if (aiReply) {
                 msgEl.textContent = aiReply;
             } else {
-                msgEl.textContent = originalText;
+                // 只在仍處於思考中時回復，避免覆蓋掉期間其他邏輯已更新的文字
+                if (msgEl.textContent === '…思考中…') {
+                    msgEl.textContent = originalText;
+                }
             }
         }
 
