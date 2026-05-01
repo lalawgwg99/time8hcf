@@ -1,78 +1,65 @@
-# Time8hcf / 一筆 Ippitsu
+# 一筆 Ippitsu — 工時紀錄
 
-一個以「工時追蹤 + 專注管理 + 晶靈陪伴」為核心的 PWA。  
-前端為單頁應用，主要資料儲存在本機瀏覽器。
+帶有禪意美學的工時追蹤 Web App。純前端 PWA，資料僅存於瀏覽器 localStorage。
 
-## 主要功能
+## 設計理念
 
-- 打卡上下班、今日工時圓環、每日目標進度
-- 專注 session（25/50/90）與休息循環、分心紀錄
-- 晶靈 Seiki 成長、成就系統、商店外觀與道具
-- 通知提醒（工作提醒 / 休息提醒 / 久坐伸展）與策略模板
-- 行事曆匯出（ICS）與資料 JSON 備份匯入匯出
-- 休假 iCal 同步、AI 對話與摘要（經 `/api/chat` 代理）
+以日本書道「一筆書き」為核心隱喻——整個工作日是一道不間斷的筆觸。
 
-## 通知策略模板
+- **色彩**：宣紙米白 `#F4EFE6` + 竹青 `#6E7D6A` + 墨棕 `#8B6840`，低彩度和風系統
+- **排版**：Cormorant Garamond 巨型工時數字 + Noto Sans TC / Noto Serif TC 正文
+- **進度**：有機弧度 SVG 筆觸環，即時呈現工時百分比
+- **互動**：墨滴打卡動畫、環境呼吸光、水墨緩動曲線
+- **夜間**：20:00 後自動切換為墨水深黑模式
 
-設定頁內建三種提醒模板，可一鍵套用：
+## 功能
 
-- 溫和：較長工作時段、較寬鬆休息節奏
-- 嚴格：較密集提醒，適合防過勞
-- 深度工作日：平衡專注時段與短休息
+### 核心
+- 一鍵打卡上下班，滑動確認下班
+- 筆觸進度環即時顯示工時百分比
+- 工作備註（選填）記錄每日工作內容
 
-另外可手動調整：
+### 精靈系統（Seiki 能量晶種）
+- 7 階段進化：晶卵 → 晶芽 → 晶童 → 晶騎 → 晶尊 → 晶皇 → 晶神
+- 累計工時獲得經驗值，自動升級並觸發視覺特效
+- 精靈具備表情系統（暖機、專注、疲倦、沉睡等情緒）
+- 靈氣光環（Stardust / Aurora）隨等級與狀態切換
 
-- 上班後提醒（分鐘）
-- 休息結束提醒（分鐘）
-- 久坐伸展提醒（分鐘）
+### 統計與洞察
+- 本週工時圖表與平均統計
+- 工作階段時間軸（上下班紀錄）
+- 匯出工時紀錄至日曆 (.ics)
+- 匯入 / 復原資料功能
 
-## 晶靈商店
+### 生活輔助
+- AI 下班生活指南（依時段推薦活動）
+- 即時新聞摘要
+- 休假日曆同步（支援 Google 日曆 / iCal）
+- 久坐伸展提醒 / 工時超時警報
 
-商店包含五類內容：
+## 技術
 
-- 色系主題
-- 光暈效果
-- 表情模組
-- 思考軌跡
-- 實用道具（消耗型，即買即用）
+- HTML5 / Vanilla JS / Tailwind CSS (CDN)
+- Cormorant Garamond + Noto Serif TC + Noto Sans TC (Google Fonts)
+- Tone.js 音效回饋 / Font Awesome 圖示
+- AI 接口：`/api/ai` proxy
+- PWA：離線可用，可加入主畫面
+- Service Worker：network-first 策略
 
-積分來源包含日登入、互動、專注完成、升等等事件。
+## 檔案結構
 
-## 專案結構
-
-```text
-index.html              # 主頁（目前為 inline script 架構）
-manifest.json           # PWA manifest
-sw.js                   # Service Worker
-functions/api/chat.js   # 聊天/AI 代理 API
-src/domain/timecard.js  # 工時領域邏輯（可測試模組）
-tests/timecard.test.js  # 工時領域測試
+```
+index.html    — 主頁面（含 HTML + inline CSS + JS）
+style.css     — Ippitsu Zen 設計系統樣式
+app.js        — 核心邏輯（打卡、精靈、統計、AI）
+manifest.json — PWA manifest
+sw.js         — Service Worker
 ```
 
-## 本機執行
+## 使用
 
-直接開啟 `index.html` 可使用主要功能。  
-若要測試 PWA/SW 行為，建議用本機伺服器啟動（避免 `file://` 限制）。
+開啟 `index.html` 即可使用，支援 iOS / Android 加入主畫面。
 
-## 測試
+## 隱私
 
-```bash
-node tests/timecard.test.js
-```
-
-## 資料與隱私
-
-- 使用者工時與設定主要存放在 `localStorage`
-- 匯入 JSON 會覆蓋目前資料，建議先匯出備份
-- AI 功能僅透過 `functions/api/chat.js` 代理請求，不直接暴露前端金鑰
-
-## 部署
-
-此 repo 可直接部署為靜態站，並搭配 `functions/api/chat.js` 提供 API。  
-若部署到 Cloudflare Pages，請確認函式路徑與環境變數設定完整。
-
-## 後續建議
-
-- 將 `index.html` script 拆分為模組化檔案（UI / domain / infra）
-- 將 focus 與 shop 行為補上更多自動化測試
-- 匯入流程加入「預覽差異 + 二次確認」
+打卡資料僅儲存於瀏覽器 localStorage，不上傳任何伺服器。AI 功能僅傳送打卡時間片段。

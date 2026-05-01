@@ -1,28 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="工時紀錄">
-    <meta name="description" content="簡潔的工時追蹤工具，記錄每日上下班時間，查看週統計。">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <title>工時紀錄</title>
-    <!-- iOS 系統字體優化 -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="manifest.json">
-    <!-- 移除 Chart.js，加入 Tone.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-
-    <script>
-        tailwind.config = {
+tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
@@ -31,15 +7,15 @@
                     },
                     colors: {
                         ios: {
-                            bg: '#F4EFE6',
-                            card: '#FDFAF5',
-                            separator: '#EDE8DF',
-                            blue: '#6E7D6A',
-                            green: '#4D7A52',
-                            red: '#9A4040',
-                            orange: '#9A7040',
-                            gray: '#9C9086',
-                            lightGray: '#C4B8AE',
+                            bg: '#F2F2F7', // iOS 系統背景色
+                            card: '#FFFFFF',
+                            separator: '#E5E5EA',
+                            blue: '#007AFF',
+                            green: '#34C759',
+                            red: '#FF3B30',
+                            orange: '#FF9500',
+                            gray: '#8E8E93',
+                            lightGray: '#D1D1D6',
                         }
                     },
                     boxShadow: {
@@ -51,1478 +27,7 @@
         }
     </script>
 
-    <style>
-        :root {
-            /* === IPPITSU ZEN PALETTE === */
-            --bg: #F4EFE6;
-            --card: #FDFAF5;
-            --card-secondary: #EDE8DF;
-            --separator: rgba(40, 32, 20, 0.07);
-            --label: #1C1712;
-            --label-secondary: #52493E;
-            --label-tertiary: #9C9086;
-            --label-quaternary: #C4B8AE;
-            /* Accent: bamboo green replaces iOS blue */
-            --blue: #6E7D6A;
-            --blue-light: #8BAB86;
-            --green: #4D7A52;
-            --red: #9A4040;
-            --orange: #9A7040;
-            --purple: #7A5A8A;
-            --teal: #4A788A;
-            --fill: rgba(40, 32, 20, 0.05);
-            --fill-secondary: rgba(40, 32, 20, 0.08);
-            --fill-tertiary: rgba(40, 32, 20, 0.03);
-            --shadow-card: 0 2px 32px rgba(40, 30, 10, 0.05), 0 1px 6px rgba(40, 30, 10, 0.04);
-            --shadow-elevated: 0 8px 48px rgba(40, 30, 10, 0.12), 0 2px 12px rgba(40, 30, 10, 0.07);
-            --shadow-button: 0 2px 16px rgba(28, 23, 12, 0.18), 0 1px 4px rgba(28, 23, 12, 0.12);
-            --shadow-blue: 0 4px 20px rgba(110, 125, 106, 0.22);
-            --radius: 22px;
-            --radius-sm: 14px;
-            --radius-xs: 10px;
-            --radius-pill: 100px;
-            /* Slower, water-like transitions */
-            --spring: cubic-bezier(0.4, 0, 0.2, 1);
-            --spring-bounce: cubic-bezier(0.4, 0, 0.2, 1);
-            --nav-height: 68px;
-            /* Ippitsu brushstroke accent */
-            --ink: #8B6840;
-            --ink-light: #C4A87A;
-            --ink-gold: #E8C17A;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased;
-            color: var(--label);
-            background: var(--bg);
-        }
-
-
-
-        /* Ring draw-in animation on load */
-        @keyframes ring-draw {
-            from {
-                stroke-dashoffset: 565.49;
-            }
-        }
-
-        #progressRing {
-            animation: ring-draw 1.2s var(--spring) forwards;
-        }
-
-        /* Ring breathe effect during work */
-        @keyframes ring-breathe {
-
-            0%,
-            100% {
-                stroke-width: 7;
-                opacity: 1;
-            }
-
-            50% {
-                stroke-width: 9;
-                opacity: 0.85;
-            }
-        }
-
-        .ring-working #progressRing {
-            animation: ring-breathe 3s ease-in-out infinite;
-        }
-
-        /* --- Cards --- */
-        .card {
-            background: var(--card);
-            border: 0.5px solid var(--separator);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .inset-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-            border: 0.5px solid var(--separator);
-        }
-
-        /* --- Typography --- */
-        .time-display {
-            font-size: 48px;
-            font-weight: 700;
-            letter-spacing: -2.5px;
-            line-height: 1;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .section-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--label-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            padding: 0 4px;
-            margin-bottom: 8px;
-        }
-
-        .tabular-nums {
-            font-variant-numeric: tabular-nums;
-            font-feature-settings: 'tnum';
-        }
-
-        /* --- Interactive --- */
-        .active-scale {
-            transition: transform 0.12s var(--spring), opacity 0.12s;
-        }
-
-        .active-scale:active {
-            transform: scale(0.97);
-            opacity: 0.85;
-        }
-
-        .ios-input {
-            background: var(--fill);
-            border-radius: var(--radius-sm);
-            border: none;
-            font-size: 15px;
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-
-        .ios-input:focus {
-            background: var(--fill-secondary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
-        }
-
-        /* --- Progress --- */
-        .progress-track {
-            width: 100%;
-            height: 6px;
-            background: var(--fill-secondary);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 3px;
-            background: var(--blue);
-            transition: width 0.7s ease-out;
-        }
-
-        .progress-fill.overtime {
-            background: var(--purple);
-        }
-
-        .progress-fill.pulse {
-            animation: pulse-glow 1.5s ease-in-out infinite;
-        }
-
-        /* --- Badge --- */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        /* --- Sprite (compact) --- */
-        .sprite-terrarium {
-            background: var(--card);
-            border: 0.5px solid var(--separator);
-            border-radius: var(--radius);
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            box-shadow: var(--shadow-card);
-            overflow: visible;
-            transition: all 0.3s var(--spring);
-            position: relative;
-            animation: terrariumGlow 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 6px rgba(var(--glow-rgb, 255,180,50), 0.5));
-        }
-        @keyframes terrariumGlow {
-            0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 160, 30, 0.4)) brightness(1); }
-            50%       { filter: drop-shadow(0 0 16px rgba(255, 180, 50, 0.75)) brightness(1.08); }
-        }
-        .sprite-terrarium::before {
-            content: '✦';
-            position: absolute;
-            top: -8px;
-            right: -6px;
-            font-size: 10px;
-            color: rgba(255, 200, 80, 0.9);
-            animation: starTwinkle 1.8s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 10;
-        }
-        .sprite-terrarium::after {
-            content: '✦';
-            position: absolute;
-            bottom: -6px;
-            left: -5px;
-            font-size: 8px;
-            color: rgba(180, 140, 255, 0.85);
-            animation: starTwinkle 2.3s ease-in-out infinite 0.9s;
-            pointer-events: none;
-            z-index: 10;
-        }
-        @keyframes starTwinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
-            50%       { opacity: 1; transform: scale(1.3) rotate(180deg); }
-        }
-
-        /* --- Seiki Container (replaces sprite-core-container) --- */
-        .seiki-container {
-            width: 52px;
-            height: 52px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: var(--fill);
-            flex-shrink: 0;
-            animation: spriteFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes spriteFloat {
-            0%   { transform: translateY(0px) rotate(0deg) scale(1); }
-            25%  { transform: translateY(-9px) rotate(1deg) scale(1.02); }
-            50%  { transform: translateY(-12px) rotate(0deg) scale(1.03); }
-            75%  { transform: translateY(-6px) rotate(-1deg) scale(1.01); }
-            100% { transform: translateY(0px) rotate(0deg) scale(1); }
-        }
-
-        /* --- Seiki Body (the pet blob) --- */
-        .seiki-body {
-            position: relative;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.85), #A5B4FC);
-            box-shadow: 0 0 8px #A5B4FC, 0 0 16px #818CF8;
-            transition: width 0.8s ease, height 0.8s ease, background 0.8s ease,
-                        box-shadow 0.8s ease, border-radius 0.8s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 18px;
-            height: 16px;
-            overflow: visible;
-        }
-
-        .seiki-face { position: absolute; inset: 0; }
-
-        .seiki-eye {
-            position: absolute;
-            width: 4px; height: 4px;
-            background: #1a1a2e;
-            border-radius: 50%;
-            top: 33%;
-            transition: all 0.3s ease;
-            opacity: 0;
-            overflow: hidden;
-        }
-        .seiki-eye.left  { left: 18%; }
-        .seiki-eye.right { right: 18%; }
-
-        .seiki-pupil {
-            width: 1.5px; height: 1.5px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 50%;
-            position: absolute;
-            top: 0.5px; right: 0.5px;
-        }
-
-        .seiki-mouth {
-            position: absolute;
-            top: 63%; left: 50%;
-            transform: translateX(-50%);
-            width: 8px; height: 3px;
-            border-radius: 0 0 4px 4px;
-            background: rgba(26,26,46,0.75);
-            transition: all 0.3s ease;
-            opacity: 0;
-        }
-
-        .seiki-glow {
-            position: absolute; inset: 0;
-            border-radius: inherit;
-            background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.45), transparent 60%);
-            pointer-events: none;
-        }
-
-        .sprite-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(165, 180, 252, 0.5);
-            opacity: 0;
-            transition: all 0.8s ease;
-            box-sizing: border-box;
-        }
-
-        /* --- Working State --- */
-        .sprite-working .seiki-container {
-            animation: spriteFloatWorking 2.5s ease-in-out infinite;
-        }
-
-        @keyframes spriteFloatWorking {
-            0%   { transform: translateY(0px) scale(1) rotate(0deg); }
-            15%  { transform: translateY(-10px) scale(1.04) rotate(1.5deg); }
-            40%  { transform: translateY(-15px) scale(1.06) rotate(0deg); }
-            65%  { transform: translateY(-8px) scale(1.03) rotate(-1.5deg); }
-            85%  { transform: translateY(-12px) scale(1.05) rotate(0.5deg); }
-            100% { transform: translateY(0px) scale(1) rotate(0deg); }
-        }
-
-        .sprite-working .seiki-body {
-            animation: breatheAlive 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes breatheAlive {
-            0%   { filter: brightness(1) saturate(1); }
-            50%  { filter: brightness(1.25) saturate(1.4); }
-            100% { filter: brightness(1) saturate(1); }
-        }
-
-        .sprite-working .sprite-ring { animation: spin 8s linear infinite; }
-
-        /* --- Level Visual Styles --- */
-
-        /* Lv.1 晶卵 */
-        .sprite-lv1 .seiki-body { width: 14px; height: 14px; }
-
-        /* Lv.2 晶芽 */
-        .sprite-lv2 .seiki-body {
-            width: 20px; height: 20px;
-            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9), #818CF8);
-            box-shadow: 0 0 10px #818CF8, 0 0 20px #6366F1;
-        }
-        .sprite-lv2 .seiki-eye { opacity: 1; width: 3px; height: 3px; }
-        .sprite-lv2 .sprite-ring.ring-1 {
-            width: 28px; height: 28px; opacity: 1;
-            border-width: 2px; border-color: rgba(129,140,248,0.6);
-        }
-
-        /* Lv.3 晶童 */
-        .sprite-lv3 .seiki-body {
-            width: 24px; height: 23px;
-            border-radius: 55% 55% 50% 50%;
-            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9), #C084FC);
-            box-shadow: 0 0 16px #C084FC, 0 0 32px #A855F7;
-        }
-        .sprite-lv3 .seiki-eye { opacity: 1; width: 4px; height: 4px; }
-        .sprite-lv3 .seiki-mouth { opacity: 1; }
-        .sprite-lv3 .sprite-ring.ring-1 {
-            width: 34px; height: 34px; opacity: 1;
-            border-width: 2px; border-color: rgba(192,132,252,0.7); border-style: dashed;
-        }
-        .sprite-lv3 .sprite-ring.ring-2 {
-            width: 42px; height: 42px; opacity: 1;
-            border-width: 1px; border-color: rgba(168,85,247,0.4);
-            animation: spinReverse 12s linear infinite;
-        }
-
-        /* Lv.4 晶騎 */
-        .sprite-lv4 .seiki-body {
-            width: 27px; height: 25px;
-            border-radius: 55% 55% 50% 50%;
-            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9), #F97316);
-            box-shadow: 0 0 20px #F97316, 0 0 40px #EA580C;
-        }
-        .sprite-lv4 .seiki-eye { opacity: 1; width: 4px; height: 4px; }
-        .sprite-lv4 .seiki-mouth { opacity: 1; width: 10px; }
-        .sprite-lv4 .seiki-body::before,
-        .sprite-lv4 .seiki-body::after {
-            content: '';
-            position: absolute;
-            width: 5px; height: 7px;
-            background: radial-gradient(circle, rgba(255,255,255,0.6), #F97316);
-            border-radius: 50%;
-            top: 38%;
-            box-shadow: 0 0 5px #F97316;
-        }
-        .sprite-lv4 .seiki-body::before { left: -6px; }
-        .sprite-lv4 .seiki-body::after  { right: -6px; }
-        .sprite-lv4 .sprite-ring.ring-1 {
-            width: 38px; height: 38px; opacity: 1;
-            border-width: 2px; border-color: rgba(249,115,22,0.7); border-style: dashed;
-        }
-        .sprite-lv4 .sprite-ring.ring-2 {
-            width: 44px; height: 44px; opacity: 1;
-            border-width: 1px; border-color: rgba(234,88,12,0.5);
-            animation: spinReverse 8s linear infinite;
-        }
-
-        /* Lv.5 晶尊 */
-        .sprite-lv5 .seiki-body {
-            width: 30px; height: 29px;
-            border-radius: 50% 50% 45% 45%;
-            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9), #FBBF24);
-            box-shadow: 0 0 24px #FBBF24, 0 0 48px #D97706;
-        }
-        .sprite-lv5 .seiki-eye { opacity: 1; width: 5px; height: 5px; }
-        .sprite-lv5 .seiki-mouth { opacity: 1; width: 12px; }
-        .sprite-lv5 .seiki-body::before,
-        .sprite-lv5 .seiki-body::after {
-            content: '';
-            position: absolute;
-            width: 6px; height: 9px;
-            background: radial-gradient(circle, rgba(255,255,255,0.6), #FBBF24);
-            border-radius: 50%;
-            top: 32%;
-            box-shadow: 0 0 7px #FBBF24;
-        }
-        .sprite-lv5 .seiki-body::before { left: -7px; }
-        .sprite-lv5 .seiki-body::after  { right: -7px; }
-        .sprite-lv5 .sprite-ring.ring-1 {
-            width: 42px; height: 42px; opacity: 1;
-            border-width: 2px; border-color: rgba(251,191,36,0.8);
-            animation: spin 6s linear infinite;
-        }
-        .sprite-lv5 .sprite-ring.ring-2 {
-            width: 44px; height: 44px; opacity: 0.8;
-            border-width: 2px; border-color: rgba(217,119,6,0.4); border-style: dotted;
-            animation: spinReverse 10s linear infinite;
-        }
-
-        /* Lv.6 晶皇 */
-        .sprite-lv6 .seiki-body {
-            width: 32px; height: 31px;
-            border-radius: 45% 55% 50% 50%;
-            background: radial-gradient(circle at 35% 30%, #E0E7FF, #4338CA);
-            box-shadow: 0 0 32px #4338CA, 0 0 64px #312E81;
-        }
-        .sprite-lv6 .seiki-eye { opacity: 1; width: 5px; height: 5px; filter: drop-shadow(0 0 3px #818CF8); }
-        .sprite-lv6 .seiki-mouth { opacity: 1; width: 12px; }
-        .sprite-lv6 .seiki-body::before,
-        .sprite-lv6 .seiki-body::after {
-            content: '';
-            position: absolute;
-            width: 8px; height: 12px;
-            background: linear-gradient(to bottom, rgba(224,231,255,0.7), rgba(67,56,202,0.3));
-            border-radius: 50% 50% 30% 30%;
-            top: 18%;
-            box-shadow: 0 0 8px rgba(67,56,202,0.5);
-        }
-        .sprite-lv6 .seiki-body::before { left: -9px; transform: rotate(-15deg); }
-        .sprite-lv6 .seiki-body::after  { right: -9px; transform: rotate(15deg); }
-        .sprite-lv6 .sprite-ring.ring-1 {
-            width: 44px; height: 44px; opacity: 1;
-            border-width: 2px; border-color: rgba(67,56,202,0.8);
-            animation: spin 5s linear infinite;
-        }
-        .sprite-lv6 .sprite-ring.ring-2 {
-            width: 44px; height: 44px; opacity: 0.9;
-            border-width: 1px; border-color: rgba(99,102,241,0.5);
-            animation: spinReverse 7s linear infinite;
-        }
-
-        /* Lv.7 晶神 */
-        .sprite-lv7 .seiki-body {
-            width: 36px; height: 34px;
-            border-radius: 40% 60% 55% 45% / 60% 40% 45% 55%;
-            background: linear-gradient(135deg, #A855F7, #EC4899, #3B82F6);
-            background-size: 200% 200%;
-            animation: gradientShift 3s ease infinite, seikiMorph 8s ease-in-out infinite;
-            box-shadow: 0 0 40px #EC4899, 0 0 80px #3B82F6;
-        }
-        .sprite-lv7 .seiki-eye { opacity: 1; width: 5px; height: 5px; background: white; box-shadow: 0 0 5px white; }
-        .sprite-lv7 .seiki-pupil { background: #A855F7; }
-        .sprite-lv7 .seiki-mouth { opacity: 1; width: 14px; background: rgba(255,255,255,0.85); }
-        .sprite-lv7 .seiki-body::before,
-        .sprite-lv7 .seiki-body::after {
-            content: '';
-            position: absolute;
-            width: 10px; height: 16px;
-            background: linear-gradient(to bottom, rgba(168,85,247,0.7), transparent);
-            border-radius: 50% 50% 20% 20%;
-            top: 10%;
-            box-shadow: 0 0 10px rgba(168,85,247,0.4);
-            animation: wingFloat 2.5s ease-in-out infinite;
-        }
-        .sprite-lv7 .seiki-body::before { left: -11px; transform-origin: right center; }
-        .sprite-lv7 .seiki-body::after  { right: -11px; transform-origin: left center; animation-delay: 0.4s; }
-        .sprite-lv7 .sprite-ring.ring-1 {
-            width: 44px; height: 44px; opacity: 1;
-            border-width: 2px; border-color: rgba(236,72,153,0.8);
-            border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%;
-            animation: spin 4s linear infinite;
-        }
-        .sprite-lv7 .sprite-ring.ring-2 {
-            width: 44px; height: 44px; opacity: 1;
-            border-width: 2px; border-color: rgba(59,130,246,0.6);
-            border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%;
-            animation: spinReverse 6s linear infinite;
-        }
-
-        /* --- Mood Classes --- */
-        .mood-warming .seiki-eye { border-radius: 50% 50% 30% 30%; }
-        .mood-warming .seiki-mouth { border-radius: 0 0 6px 6px; height: 4px; }
-
-        .mood-flow .seiki-eye { height: 3px !important; border-radius: 3px; }
-        .mood-flow .seiki-mouth { width: 5px !important; height: 2px; border-radius: 2px; }
-
-        .mood-deep .seiki-eye { filter: drop-shadow(0 0 2px rgba(255,255,255,0.4)); }
-
-        .mood-tired .seiki-eye { height: 2px !important; transform: translateY(2px); border-radius: 2px; }
-        .mood-tired .seiki-mouth { border-radius: 4px 4px 0 0 !important; width: 7px !important; height: 2px; }
-
-        .mood-sleepy .seiki-eye.right { height: 1px !important; border-radius: 1px; }
-        .mood-sleepy .seiki-mouth { width: 5px !important; height: 2px; border-radius: 2px; }
-
-        /* --- Mood Glow Colors --- */
-        .mood-happy    { --glow-rgb: 255, 200, 50; }
-        .mood-excited  { --glow-rgb: 255, 100, 150; }
-        .mood-sleepy   { --glow-rgb: 150, 150, 255; }
-        .mood-bored    { --glow-rgb: 180, 180, 180; }
-        .mood-working  { --glow-rgb: 80, 200, 120; }
-        .mood-warming  { --glow-rgb: 255, 200, 50; }
-        .mood-flow     { --glow-rgb: 80, 200, 120; }
-        .mood-deep     { --glow-rgb: 255, 100, 150; }
-        .mood-tired    { --glow-rgb: 180, 180, 180; }
-
-        /* --- 情緒專屬肢體動畫 --- */
-        .sprite-terrarium.mood-happy {
-            animation: terrariumGlow 2.5s ease-in-out infinite !important;
-        }
-        .sprite-terrarium.mood-happy .seiki-container {
-            animation: moodHappyBounce 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite !important;
-        }
-        @keyframes moodHappyBounce {
-            0%   { transform: translateY(0px) scale(1) rotate(0deg); }
-            20%  { transform: translateY(-14px) scale(1.05, 0.96) rotate(2deg); }
-            35%  { transform: translateY(-18px) scale(0.97, 1.06) rotate(-1deg); }
-            50%  { transform: translateY(-12px) scale(1.04, 0.97) rotate(1deg); }
-            65%  { transform: translateY(-16px) scale(0.98, 1.04) rotate(-1.5deg); }
-            80%  { transform: translateY(-8px) scale(1.02, 0.99) rotate(0.5deg); }
-            100% { transform: translateY(0px) scale(1) rotate(0deg); }
-        }
-
-        .sprite-terrarium.mood-excited {
-            animation: terrariumGlow 1.5s ease-in-out infinite !important;
-        }
-        .sprite-terrarium.mood-excited .seiki-container {
-            animation: moodExcitedShake 0.6s ease-in-out infinite alternate !important;
-        }
-        @keyframes moodExcitedShake {
-            0%   { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
-            15%  { transform: translateX(-3px) translateY(-5px) rotate(-2deg) scale(1.03); }
-            30%  { transform: translateX(3px) translateY(-8px) rotate(2deg) scale(1.04); }
-            45%  { transform: translateX(-2px) translateY(-4px) rotate(-1deg) scale(1.02); }
-            60%  { transform: translateX(4px) translateY(-10px) rotate(2.5deg) scale(1.05); }
-            80%  { transform: translateX(-2px) translateY(-6px) rotate(-1.5deg) scale(1.03); }
-            100% { transform: translateX(0) translateY(-3px) rotate(0deg) scale(1.01); }
-        }
-
-        .sprite-terrarium.mood-sleepy {
-            animation: terrariumGlow 4s ease-in-out infinite !important;
-        }
-        .sprite-terrarium.mood-sleepy .seiki-container {
-            animation: moodSleepyDroop 4s ease-in-out infinite !important;
-        }
-        @keyframes moodSleepyDroop {
-            0%   { transform: translateY(0px) rotate(0deg) scale(1); }
-            30%  { transform: translateY(4px) rotate(-3deg) scale(0.97, 1.02); }
-            50%  { transform: translateY(6px) rotate(-4deg) scale(0.96, 1.03); }
-            65%  { transform: translateY(3px) rotate(-2deg) scale(0.98, 1.01); }
-            80%  { transform: translateY(5px) rotate(-3.5deg) scale(0.97, 1.02); }
-            100% { transform: translateY(0px) rotate(0deg) scale(1); }
-        }
-
-        .sprite-terrarium.mood-bored {
-            animation: terrariumGlow 5s ease-in-out infinite !important;
-        }
-        .sprite-terrarium.mood-bored .seiki-container {
-            animation: moodBoredSway 5s ease-in-out infinite !important;
-        }
-        @keyframes moodBoredSway {
-            0%   { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
-            20%  { transform: translateX(-6px) translateY(2px) rotate(-4deg) scale(1); }
-            40%  { transform: translateX(0) translateY(0) rotate(0deg) scale(0.95); }
-            50%  { transform: translateX(0) translateY(0) rotate(0deg) scale(0.93); }
-            60%  { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
-            80%  { transform: translateX(6px) translateY(2px) rotate(4deg) scale(1); }
-            100% { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
-        }
-
-        .sprite-terrarium.mood-working {
-            animation: terrariumGlow 2s ease-in-out infinite !important;
-        }
-        .sprite-terrarium.mood-working .seiki-container {
-            animation: moodWorkingFloat 2.2s ease-in-out infinite !important;
-        }
-        @keyframes moodWorkingFloat {
-            0%   { transform: translateY(0px) scale(1) rotate(0deg); }
-            25%  { transform: translateY(-10px) scale(1.04) rotate(0.5deg); }
-            50%  { transform: translateY(-13px) scale(1.05) rotate(0deg); }
-            75%  { transform: translateY(-10px) scale(1.04) rotate(-0.5deg); }
-            100% { transform: translateY(0px) scale(1) rotate(0deg); }
-        }
-
-        /* --- Seiki Special Animations --- */
-        @keyframes seikiLevelFlash {
-            0%   { filter: brightness(1) saturate(1); }
-            15%  { filter: brightness(3.5) saturate(3) hue-rotate(30deg); }
-            30%  { filter: brightness(1.5) saturate(2); }
-            50%  { filter: brightness(4) saturate(3.5) hue-rotate(-20deg); }
-            70%  { filter: brightness(1.8) saturate(2.5); }
-            85%  { filter: brightness(3) saturate(3) hue-rotate(15deg); }
-            100% { filter: brightness(1) saturate(1); }
-        }
-        .seiki-levelup-flash { animation: seikiLevelFlash 1.2s ease-out forwards !important; }
-
-        @keyframes seikiTextFly {
-            0%   { transform: translateX(-50%) translateY(0); opacity: 1; }
-            80%  { opacity: 0.8; }
-            100% { transform: translateX(-50%) translateY(-32px); opacity: 0; }
-        }
-        .seiki-levelup-text {
-            position: absolute;
-            top: -2px; left: 50%;
-            transform: translateX(-50%);
-            font-size: 9px; font-weight: 700;
-            color: white; white-space: nowrap;
-            animation: seikiTextFly 1.8s ease-out forwards;
-            z-index: 100; pointer-events: none;
-            text-shadow: 0 0 8px rgba(255,255,255,0.9), 0 1px 3px rgba(0,0,0,0.4);
-            letter-spacing: 0.06em;
-        }
-
-        @keyframes particleFly {
-            0%   { transform: translate(0,0) scale(1) rotate(0deg); opacity: 1; }
-            60%  { opacity: 0.8; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(720deg); opacity: 0; }
-        }
-        .seiki-particle {
-            position: absolute;
-            font-size: 9px;
-            animation: particleFly 0.9s ease-out forwards;
-            pointer-events: none; z-index: 10;
-            top: 50%; left: 50%;
-            margin-top: -5px; margin-left: -4px;
-            line-height: 1;
-        }
-
-        @keyframes seikiMorph {
-            0%, 100% { border-radius: 40% 60% 55% 45% / 60% 40% 45% 55%; }
-            33%       { border-radius: 55% 45% 40% 60% / 45% 55% 60% 40%; }
-            66%       { border-radius: 50% 50% 60% 40% / 40% 60% 50% 50%; }
-        }
-
-        @keyframes wingFloat {
-            0%, 100% { transform: rotate(-8deg) scaleY(0.9); }
-            50%       { transform: rotate(6deg) scaleY(1.1); }
-        }
-
-        /* --- Swipe Slider --- */
-        .swipe-track {
-            position: relative;
-            width: 100%;
-            height: 58px;
-            border-radius: var(--radius);
-            background: linear-gradient(90deg, rgba(255, 59, 48, 0.92) 0%, var(--red) 60%);
-            overflow: hidden;
-            touch-action: none;
-            -webkit-user-select: none;
-            user-select: none;
-            box-shadow: 0 4px 16px rgba(255, 59, 48, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-        }
-
-        .swipe-label {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.55);
-            font-size: 15px;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-
-        .swipe-handle {
-            position: absolute;
-            left: 5px;
-            top: 5px;
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-sm);
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
-            cursor: grab;
-            transition: left 0.1s linear;
-            z-index: 2;
-        }
-
-        .swipe-handle i {
-            color: var(--red);
-            font-size: 18px;
-        }
-
-        .swipe-progress {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.08);
-            border-radius: var(--radius);
-            transition: width 0.1s linear;
-            pointer-events: none;
-        }
-
-        /* --- Alarm/Modal Overlay --- */
-        .alarm-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.5);
-            -webkit-backdrop-filter: blur(24px);
-            backdrop-filter: blur(24px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        .alarm-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .alarm-card {
-            background: var(--card);
-            border-radius: 28px;
-            padding: 40px 28px 32px;
-            text-align: center;
-            max-width: 300px;
-            width: 88%;
-            box-shadow: var(--shadow-elevated);
-            animation: fadeInUp 0.35s var(--spring);
-        }
-
-        /* Sheet Handle (bottom modal handle indicator) */
-        .sheet-handle {
-            width: 40px;
-            height: 4px;
-            background: rgba(60, 60, 67, 0.20);
-            border-radius: 2px;
-            margin: 0 auto 18px;
-            flex-shrink: 0;
-        }
-
-
-
-        /* --- Ripple --- */
-        .ripple-container {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ripple-effect {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            animation: ripple 0.6s ease-out forwards;
-            pointer-events: none;
-        }
-
-        /* Salary ticker */
-        .salary-ticker {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--green);
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* Collapsible */
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.35s var(--spring), opacity 0.3s;
-            opacity: 0;
-        }
-
-        .collapsible-content.open {
-            max-height: 600px;
-            opacity: 1;
-        }
-
-        /* --- Seiki Aura Effects --- */
-        .aura-stardust {
-            outline: 2.5px solid rgba(200, 160, 255, 0.7) !important;
-            outline-offset: 3px !important;
-            box-shadow:
-                0 0 0 5px rgba(200, 160, 255, 0.2),
-                0 0 20px rgba(200, 160, 255, 0.35),
-                inset 0 0 12px rgba(200, 160, 255, 0.15) !important;
-            animation: spriteFloat 3s ease-in-out infinite, auraStardustPulse 2s ease-in-out infinite !important;
-        }
-        @keyframes auraStardustPulse {
-            0%, 100% {
-                outline-color: rgba(200, 160, 255, 0.6);
-                box-shadow: 0 0 0 5px rgba(200, 160, 255, 0.15), 0 0 18px rgba(200, 160, 255, 0.3), inset 0 0 10px rgba(200, 160, 255, 0.1);
-            }
-            50% {
-                outline-color: rgba(220, 180, 255, 0.9);
-                box-shadow: 0 0 0 8px rgba(200, 160, 255, 0.25), 0 0 32px rgba(200, 160, 255, 0.55), inset 0 0 18px rgba(200, 160, 255, 0.2);
-            }
-        }
-        .aura-aurora {
-            outline: 2.5px solid rgba(52, 211, 153, 0.75) !important;
-            outline-offset: 3px !important;
-            box-shadow:
-                0 0 0 6px rgba(52, 211, 153, 0.2),
-                0 0 25px rgba(52, 211, 153, 0.45),
-                0 0 50px rgba(59, 130, 246, 0.2) !important;
-            animation: spriteFloat 3s ease-in-out infinite, auraAuroraShift 3s ease-in-out infinite !important;
-        }
-        @keyframes auraAuroraShift {
-            0%   { outline-color: rgba(52,211,153,0.75); box-shadow: 0 0 0 6px rgba(52,211,153,0.2), 0 0 24px rgba(52,211,153,0.4), 0 0 48px rgba(59,130,246,0.15); }
-            33%  { outline-color: rgba(59,200,180,0.85); box-shadow: 0 0 0 8px rgba(52,211,153,0.28), 0 0 36px rgba(52,211,153,0.55), 0 0 60px rgba(59,130,246,0.25); }
-            66%  { outline-color: rgba(59,130,246,0.8);  box-shadow: 0 0 0 7px rgba(59,130,246,0.22), 0 0 30px rgba(59,130,246,0.45), 0 0 55px rgba(52,211,153,0.2); }
-            100% { outline-color: rgba(52,211,153,0.75); box-shadow: 0 0 0 6px rgba(52,211,153,0.2), 0 0 24px rgba(52,211,153,0.4), 0 0 48px rgba(59,130,246,0.15); }
-        }
-
-        /* --- Animations --- */
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0.8);
-                opacity: 0.6;
-            }
-
-            100% {
-                transform: scale(2.5);
-                opacity: 0;
-            }
-        }
-
-        @keyframes pulse-glow {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes breathe {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.04);
-            }
-        }
-
-        @keyframes countUp {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20%,
-            60% {
-                transform: translateX(-3px);
-            }
-
-            40%,
-            80% {
-                transform: translateX(3px);
-            }
-        }
-
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes spinReverse {
-            100% {
-                transform: rotate(-360deg);
-            }
-        }
-
-        .modal-enter {
-            animation: slideUp 0.35s var(--spring) forwards;
-        }
-
-        .anim-fade-in {
-            animation: fadeInUp 0.35s var(--spring) forwards;
-        }
-
-        .anim-breathe {
-            animation: breathe 2.5s ease-in-out infinite;
-        }
-
-        .anim-count {
-            animation: countUp 0.4s var(--spring) forwards;
-        }
-
-        /* Hide scrollbar */
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Week bar */
-        .week-bar {
-            flex: 1;
-            border-radius: 4px 4px 2px 2px;
-            background: var(--blue);
-            min-height: 3px;
-            transition: height 0.7s ease-in-out;
-        }
-
-        .week-bar.overtime {
-            background: var(--orange);
-        }
-
-        .week-bar.today {
-            background: linear-gradient(180deg, var(--ink-light), var(--ink));
-            box-shadow: 0 2px 8px rgba(139, 104, 64, 0.2);
-        }
-
-        .week-bar.empty {
-            background: var(--fill-secondary);
-            min-height: 3px;
-        }
-
-        /* =============================================
-           IPPITSU ZEN DESIGN SYSTEM
-           ============================================= */
-
-        /* --- Body & App --- */
-        body {
-            background: var(--bg);
-            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-        }
-
-        /* --- Header --- */
-        #appHeader {
-            padding: calc(env(safe-area-inset-top, 12px) + 8px) 24px 10px;
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            background: rgba(244, 239, 230, 0.88);
-            border-bottom: 0.5px solid var(--separator);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            backdrop-filter: blur(24px) saturate(180%);
-            transition: background 0.5s ease-in-out, border-color 0.5s ease-in-out;
-        }
-
-        .header-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-date {
-            font-size: 13px;
-            font-weight: 400;
-            color: var(--label-tertiary);
-            letter-spacing: 0.06em;
-        }
-
-        .header-brand {
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Georgia, serif;
-            font-size: 11px;
-            font-weight: 400;
-            color: var(--label-quaternary);
-            letter-spacing: 0.32em;
-            text-transform: uppercase;
-        }
-
-        .header-time {
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Georgia, serif;
-            font-size: 20px;
-            font-weight: 300;
-            color: var(--label);
-            letter-spacing: -0.5px;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* --- Tab Panels --- */
-        .tab-panel {
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-            padding-top: 4px;
-        }
-
-        .tab-panel.active {
-            display: flex;
-            animation: zenFadeIn 0.55s ease-in-out;
-        }
-
-        @keyframes zenFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* --- Bottom Nav --- */
-        #bottomNav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 430px;
-            z-index: 30;
-            background: rgba(253, 250, 245, 0.92);
-            border-top: 0.5px solid var(--separator);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            backdrop-filter: blur(24px) saturate(180%);
-            padding: 8px 0 env(safe-area-inset-bottom, 0px);
-            display: flex;
-            align-items: flex-start;
-            transition: background 0.5s ease-in-out;
-        }
-
-        .nav-tab {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 6px 0 4px;
-            color: var(--label-quaternary);
-            transition: color 0.5s ease-in-out;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .nav-tab.active {
-            color: var(--label);
-        }
-
-        .nav-tab svg {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.4s ease-in-out;
-        }
-
-        .nav-tab.active svg {
-            transform: scale(1.08);
-        }
-
-        .nav-tab span {
-            font-size: 10px;
-            font-weight: 400;
-            letter-spacing: 0.08em;
-            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        /* --- Hero Section (Circular Ring) --- */
-        .hero-section {
-            padding: 20px 0 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .ring-container {
-            position: relative;
-            width: 220px;
-            height: 220px;
-            margin-bottom: 8px;
-        }
-
-        .ring-container svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .ring-inner-content {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 2px;
-        }
-
-        .hero-eyebrow {
-            font-size: 12px;
-            font-weight: 400;
-            color: var(--label-quaternary);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-        }
-
-        #totalHours {
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Georgia, serif;
-            font-size: 48px;
-            font-weight: 300;
-            line-height: 1;
-            letter-spacing: -2px;
-            color: var(--label);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .hero-unit {
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Georgia, serif;
-            font-size: 22px;
-            font-weight: 300;
-            color: var(--label-tertiary);
-            letter-spacing: 0;
-            margin: 0 2px 0 1px;
-        }
-
-        #ongoingHint {
-            font-size: 12px;
-            font-weight: 400;
-            color: var(--blue);
-            letter-spacing: 0.06em;
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        .ring-pct {
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Georgia, serif;
-            font-size: 14px;
-            color: var(--label-quaternary);
-            letter-spacing: 0.04em;
-        }
-
-        .ring-target-info {
-            font-size: 13px;
-            color: var(--label-tertiary);
-            font-weight: 400;
-            letter-spacing: 0.02em;
-            text-align: center;
-        }
-
-        /* --- Ring track glow --- */
-        #progressRing {
-            transition: stroke-dashoffset 0.9s ease-in-out, stroke 0.6s ease-in-out;
-        }
-
-        /* --- Action Card --- */
-        .action-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow-card);
-            transition: background 0.5s;
-        }
-
-        .status-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 16px;
-            border-bottom: 0.5px solid var(--separator);
-        }
-
-        .status-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-sm);
-            background: var(--fill);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            transition: background 0.5s, color 0.5s;
-            flex-shrink: 0;
-            color: var(--label-tertiary);
-        }
-
-        .status-label {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--label);
-            flex: 1;
-            letter-spacing: 0.02em;
-        }
-
-        .task-input-zen {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: var(--radius-sm);
-            background: var(--fill);
-            border: none;
-            font-size: 14px;
-            color: var(--label);
-            outline: none;
-            margin-top: 12px;
-            letter-spacing: 0.02em;
-            transition: background 0.5s;
-            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        .task-input-zen:focus {
-            background: var(--fill-secondary);
-        }
-
-        .current-task-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(110, 125, 106, 0.08);
-            border-radius: var(--radius-sm);
-            padding: 10px 14px;
-            margin-top: 10px;
-            font-size: 12px;
-            color: var(--blue);
-            letter-spacing: 0.04em;
-        }
-
-        /* --- Punch Button (Zen) --- */
-        .punch-btn-zen {
-            width: 100%;
-            padding: 18px;
-            border-radius: var(--radius);
-            font-size: 15px;
-            font-weight: 400;
-            color: var(--bg);
-            background: var(--label);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 16px;
-            box-shadow: 0 4px 28px rgba(28, 23, 12, 0.16), 0 1px 6px rgba(28, 23, 12, 0.10);
-            letter-spacing: 0.12em;
-            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, background 0.5s;
-            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .punch-btn-zen:active {
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-
-        .punch-glyph {
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Georgia, serif;
-            font-size: 22px;
-            font-weight: 300;
-            line-height: 1;
-        }
-
-        /* Working state: circle fills */
-        .punch-btn-zen.working .punch-glyph {
-            content: '●';
-        }
-
-        /* --- Zen Card (generic) --- */
-        .zen-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-            transition: background 0.5s, box-shadow 0.5s;
-        }
-
-        /* --- Editorial Label --- */
-        .editorial-label {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--label-tertiary);
-            letter-spacing: 0.08em;
-            margin-bottom: 12px;
-            padding-left: 12px;
-            position: relative;
-        }
-
-        .editorial-label::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 2px;
-            height: 12px;
-            background: var(--ink-light);
-            border-radius: 1px;
-        }
-
-        /* --- Life Pill --- */
-        .life-pill {
-            font-size: 12px;
-            font-weight: 400;
-            color: var(--label-secondary);
-            background: var(--fill);
-            border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            letter-spacing: 0.04em;
-            line-height: 1.65;
-        }
-
-        /* --- Ink Drop Overlay --- */
-        #inkDropOverlay {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 45;
-            overflow: hidden;
-        }
-
-        .ink-drop-circle {
-            position: absolute;
-            border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            pointer-events: none;
-            animation: inkSpread 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes inkSpread {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0.45;
-            }
-
-            55% {
-                opacity: 0.2;
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(22);
-                opacity: 0;
-            }
-        }
-
-        /* --- Ambient Breathing (working state) --- */
-        @keyframes ambientBreathe {
-
-            0%,
-            100% {
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 1;
-            }
-        }
-
-        #ambientGlow {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            background: radial-gradient(ellipse at 50% 20%, rgba(196, 168, 122, 0.05) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
-        #ambientGlow.active {
-            animation: ambientBreathe 4s ease-in-out infinite;
-        }
-
-
-
-        /* --- Swipe track zen style --- */
-        .swipe-track {
-            background: linear-gradient(90deg, rgba(154, 64, 64, 0.85) 0%, var(--red) 60%);
-        }
-
-        .swipe-handle i {
-            color: var(--red);
-        }
-
-        /* Sprite terrarium zen adjustments */
-        .sprite-terrarium {
-            border-radius: var(--radius);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body style="min-height:100vh; background:var(--bg); overflow-x:hidden;">
@@ -1641,18 +146,11 @@
                 </div>
 
                 <!-- Sprite (companion) -->
-                <div id="spriteTerrarium" class="sprite-terrarium">
-                    <div class="seiki-container" id="seikiContainer">
+                <div id="spriteTerrarium" class="sprite-terrarium" onclick="interactWithSprite()">
+                    <div class="sprite-core-container">
                         <div class="sprite-ring ring-2"></div>
                         <div class="sprite-ring ring-1"></div>
-                        <div class="seiki-body" id="seikiBody">
-                            <div class="seiki-face">
-                                <div class="seiki-eye left"><div class="seiki-pupil"></div></div>
-                                <div class="seiki-eye right"><div class="seiki-pupil"></div></div>
-                                <div class="seiki-mouth"></div>
-                            </div>
-                            <div class="seiki-glow"></div>
-                        </div>
+                        <div class="sprite-core"></div>
                     </div>
                     <div style="flex:1; min-width:0;">
                         <div
@@ -1771,22 +269,52 @@
                     </div>
                 </div>
 
-                <!-- Seiki Shop -->
-                <div id="seikiShopContainer">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <div class="editorial-label" style="margin:0;">晶靈商店</div>
-                        <div style="font-size:12px; color:var(--blue); font-weight:500; letter-spacing:0.04em;">
-                            ✦ <span id="seikiPointsDisplay">0</span> 積分
+                <!-- Daily Motivation -->
+                <div>
+                    <div class="editorial-label">每日一句</div>
+                    <div class="zen-card" style="padding:20px; text-align:center;">
+                        <div id="dailyQuote"
+                            style="font-size:14px; line-height:1.7; color:var(--label); font-weight:400; letter-spacing:0.02em;">
+                        </div>
+                        <div id="dailyQuoteAuthor"
+                            style="font-size:11px; color:var(--label-tertiary); margin-top:10px; letter-spacing:0.04em;">
                         </div>
                     </div>
-                    <div class="zen-card" style="padding:16px 16px 12px;">
-                        <div style="font-size:10px; color:var(--label-tertiary); margin-bottom:14px; letter-spacing:0.04em; line-height:1.6;">
-                            下班每30分 +1 · 升等 +5 · 形態進化 +20 · 日登入 +1 · 互動最多+10/天
+                </div>
+
+                <!-- AI Life Guide -->
+                <div id="aiLifeGuideContainer">
+                    <div class="editorial-label">下班指引</div>
+                    <button id="insightBtn" onclick="generateAIContent()" disabled class="zen-card"
+                        style="width:100%; padding:18px 20px; border:none; cursor:pointer; display:flex; align-items:center; gap:14px; text-align:left;">
+                        <div
+                            style="width:38px; height:38px; border-radius:var(--radius-sm); background:var(--fill); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i class="fas fa-magic" style="color:var(--label-quaternary); font-size:13px;"></i>
                         </div>
-                        <div style="font-size:11px; font-weight:600; color:var(--label-secondary); margin-bottom:8px; letter-spacing:0.06em;">色系主題</div>
-                        <div id="shopThemeGrid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px;"></div>
-                        <div style="font-size:11px; font-weight:600; color:var(--label-secondary); margin-bottom:8px; letter-spacing:0.06em;">光暈效果</div>
-                        <div id="shopAuraGrid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px;"></div>
+                        <div style="flex:1;">
+                            <div style="font-size:14px; font-weight:400; color:var(--label); letter-spacing:0.02em;">
+                                生成下班生活指南</div>
+                            <div
+                                style="font-size:11px; color:var(--label-tertiary); margin-top:2px; letter-spacing:0.04em;">
+                                依據下班時段 AI 推薦</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:var(--label-quaternary); font-size:10px;"></i>
+                    </button>
+
+                    <div id="aiResultArea" class="zen-card hidden" style="margin-top:10px; padding:20px;">
+                        <div
+                            style="font-size:13px; font-weight:500; color:var(--label); margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; letter-spacing:0.02em;">
+                            <span>下班生活指南</span>
+                            <button onclick="copyReport()"
+                                style="font-size:11px; background:var(--fill-secondary); padding:4px 10px; border-radius:8px; color:var(--label-secondary); border:none; cursor:pointer; font-weight:400; letter-spacing:0.04em;">複製</button>
+                        </div>
+                        <div id="aiContent"
+                            style="font-size:13px; line-height:1.8; color:var(--label-secondary); letter-spacing:0.02em;">
+                        </div>
+                        <div
+                            style="margin-top:14px; padding-top:12px; border-top:0.5px solid var(--separator); font-size:10px; color:var(--orange); text-align:center; font-weight:400; letter-spacing:0.06em; text-transform:uppercase;">
+                            AI 產生內容，僅供參考
+                        </div>
                     </div>
                 </div>
 
@@ -1799,7 +327,7 @@
                         <div class="zen-card" style="padding:20px;">
                             <div
                                 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-                                <h3 style="font-family:"SF Pro Display", -apple-system, BlinkMacSystemFont,Georgia,serif; font-size:18px; font-weight:400; color:var(--label); margin:0; letter-spacing:0.02em;"
+                                <h3 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:18px; font-weight:400; color:var(--label); margin:0; letter-spacing:0.02em;"
                                     id="calendarTitle">Month Year</h3>
                                 <div style="display:flex; gap:4px;">
                                     <button onclick="changeMonth(-1)" aria-label="上個月"
@@ -1998,26 +526,8 @@
                     </div>
                 </div>
 
-                <!-- 晶靈 AI 設定 -->
-                <div class="section-label">🤖 晶靈 AI</div>
-                <div class="bg-white rounded-xl overflow-hidden mb-5">
-                    <div class="p-4">
-                        <div class="settings-section">
-                            <div class="settings-label">🤖 晶靈 AI 對話</div>
-                            <div class="settings-desc" style="font-size:12px;color:var(--label-tertiary);margin-bottom:8px;">
-                                開啟後晶靈會根據你的工作狀態生成個人化回應。
-                            </div>
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <label style="font-size:13px;">AI 對話模式</label>
-                                <input type="checkbox" id="aiModeToggle" onchange="toggleAiMode(this.checked)" style="width:16px;height:16px;">
-                                <span id="aiModeLabel" style="font-size:12px;color:var(--label-tertiary);">關閉</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <button onclick="saveSettings()" class="active-scale"
-                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em; font-family:"SF Pro Text", -apple-system, BlinkMacSystemFont,sans-serif;">儲存設定</button>
+                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em; font-family:'Noto Sans TC',sans-serif;">儲存設定</button>
             </div><!-- /content padding -->
         </div><!-- /outer modal -->
     </div>
@@ -2067,109 +577,8 @@
             consecutiveOnTime: 0,
             bestStreak: 0,
             elfExp: 0,
-            icalUrl: '',
-            firstUseDate: null,
-            seikiPersonality: null,
-            lastWorkDate: null,
-            currentStreak: 0,
-            lastLevel: 1,
-            seikiPoints: 0,
+            icalUrl: ''
         };
-
-        // ===== 隨機微行為系統 =====
-        let _idleTimer = null;
-        let _idleCount = 0;
-
-        function triggerRandomIdleBehavior() {
-            const terrarium = document.querySelector('.seiki-container');
-            if (!terrarium) return;
-
-            // 如果正在工作，不觸發 idle 行為
-            const isWorking = appSettings.currentPunchIn != null;
-            if (isWorking) return;
-
-            _idleCount++;
-
-            const behaviors = [
-                // 往左瞄一眼
-                () => {
-                    terrarium.style.transition = 'transform 0.2s ease';
-                    terrarium.style.transform = 'translateX(-8px) rotate(-5deg)';
-                    setTimeout(() => { terrarium.style.transform = ''; setTimeout(() => { terrarium.style.transition = ''; }, 300); }, 400);
-                },
-                // 往右瞄一眼
-                () => {
-                    terrarium.style.transition = 'transform 0.2s ease';
-                    terrarium.style.transform = 'translateX(8px) rotate(5deg)';
-                    setTimeout(() => { terrarium.style.transform = ''; setTimeout(() => { terrarium.style.transition = ''; }, 300); }, 400);
-                },
-                // 快速抖一下（被嚇到）
-                () => {
-                    terrarium.style.transition = 'none';
-                    let count = 0;
-                    const shakeInterval = setInterval(() => {
-                        terrarium.style.transform = count % 2 === 0 ? 'translateX(-4px)' : 'translateX(4px)';
-                        count++;
-                        if (count >= 6) {
-                            clearInterval(shakeInterval);
-                            terrarium.style.transform = '';
-                        }
-                    }, 60);
-                },
-                // 縮小再彈出（呼吸/嘆氣）
-                () => {
-                    terrarium.style.transition = 'transform 0.5s ease, filter 0.5s ease';
-                    terrarium.style.transform = 'scale(0.88)';
-                    terrarium.style.filter = 'brightness(0.9)';
-                    setTimeout(() => {
-                        terrarium.style.transform = 'scale(1.08)';
-                        terrarium.style.filter = 'brightness(1.1)';
-                        setTimeout(() => {
-                            terrarium.style.transform = '';
-                            terrarium.style.filter = '';
-                            setTimeout(() => { terrarium.style.transition = ''; }, 400);
-                        }, 300);
-                    }, 500);
-                },
-                // 向上跳一下（隨機高興）
-                () => {
-                    terrarium.style.transition = 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    terrarium.style.transform = 'translateY(-20px) scale(0.95, 1.1)';
-                    setTimeout(() => {
-                        terrarium.style.transform = 'translateY(0) scale(1.05, 0.95)';
-                        setTimeout(() => {
-                            terrarium.style.transform = '';
-                            setTimeout(() => { terrarium.style.transition = ''; }, 300);
-                        }, 200);
-                    }, 300);
-                },
-            ];
-
-            // 每 4 次 idle 強制做一個「看向鏡頭」效果
-            if (_idleCount % 4 === 0) {
-                terrarium.style.transition = 'transform 0.3s ease, filter 0.3s ease';
-                terrarium.style.transform = 'scale(1.12)';
-                terrarium.style.filter = 'brightness(1.2)';
-                setTimeout(() => {
-                    terrarium.style.transform = '';
-                    terrarium.style.filter = '';
-                    setTimeout(() => { terrarium.style.transition = ''; }, 400);
-                }, 600);
-                return;
-            }
-
-            const pick = behaviors[Math.floor(Math.random() * behaviors.length)];
-            pick();
-        }
-
-        function startIdleBehavior() {
-            if (_idleTimer) clearInterval(_idleTimer);
-            // 每 4~8 秒隨機觸發一次微行為
-            _idleTimer = setInterval(() => {
-                const delay = Math.random() * 4000;
-                setTimeout(triggerRandomIdleBehavior, delay);
-            }, 6000);
-        }
 
         // === IPPITSU: Tab Switching ===
         function switchTab(tabName) {
@@ -2267,139 +676,10 @@
         }
 
         // --- Alarm 系統 ---
-
-        // === 彩蛋系統 ===
-        function getTotalPunchCount() {
-            const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-            return Object.values(history).reduce((sum, recs) => sum + recs.length, 0);
-        }
-
-        function _seikiEgg(msgEl, moodEl, container, messages, moodText, pts) {
-            const p = getSeikiPersonality();
-            const msg = messages[p] || messages.GENKI;
-            if (msgEl) msgEl.textContent = msg;
-            if (moodEl) moodEl.textContent = moodText;
-            if (container) spawnParticles(container, ['✦', '⭐', '🎉', '✨', '★']);
-            if ('vibrate' in navigator) navigator.vibrate([30, 50, 30, 50, 60]);
-            if (pts) addSeikiPoints(pts);
-        }
-
-        function checkEasterEggs(trigger, ctx) {
-            const p = getSeikiPersonality();
-            const msgEl = document.getElementById('spriteMessage');
-            const moodEl = document.getElementById('spriteMood');
-            const container = document.getElementById('seikiContainer');
-            const eggs = appSettings.easterEggsFound || [];
-            ctx = ctx || {};
-
-            if (trigger === 'punch_in') {
-                // 凌晨打卡
-                const h = new Date().getHours();
-                if (h >= 0 && h < 6) {
-                    _seikiEgg(msgEl, moodEl, container, {
-                        GENKI:  '深夜打卡！！你是超人嗎！！',
-                        CALM:   '這麼晚了…你還好嗎',
-                        SNARK:  '深夜打卡，你到底在幹嘛',
-                        CLINGY: '這麼晚還工作…我陪著你',
-                    }, '🌙 深夜戰士', null);
-                }
-                // 久違回歸
-                if (appSettings.lastWorkDate) {
-                    const daysSince = Math.floor((Date.now() - new Date(appSettings.lastWorkDate + 'T00:00:00').getTime()) / 86400000);
-                    if (daysSince >= 5) {
-                        const eggKey = `comeback_${appSettings.lastWorkDate}`;
-                        if (!eggs.includes(eggKey)) {
-                            eggs.push(eggKey);
-                            _seikiEgg(msgEl, moodEl, container, {
-                                GENKI:  `${daysSince}天！！！你回來了！！！`,
-                                CALM:   `${daysSince}天了…我一直在等`,
-                                SNARK:  `消失了${daysSince}天，突然想到我了？`,
-                                CLINGY: `你去哪了！！嗚嗚 ${daysSince}天…`,
-                            }, `😭 闊別 ${daysSince} 天`, null);
-                        }
-                    }
-                }
-                // 打卡里程碑
-                const total = getTotalPunchCount();
-                [50, 100, 200, 500].forEach(milestone => {
-                    if (total >= milestone && !eggs.includes(`punch_${milestone}`)) {
-                        eggs.push(`punch_${milestone}`);
-                        setTimeout(() => _seikiEgg(msgEl, moodEl, container, {
-                            GENKI:  `第 ${milestone} 次打卡！！歷史性時刻！！`,
-                            CALM:   `第 ${milestone} 次…每一次我都記得`,
-                            SNARK:  `第 ${milestone} 次了，你終於意識到這件事`,
-                            CLINGY: `第 ${milestone} 次！！我超感動！！`,
-                        }, `✦ 第 ${milestone} 次打卡`, 10), 1500);
-                    }
-                });
-                // 任務關鍵字
-                const task = (ctx.taskName || '').toLowerCase();
-                if (task.includes('午餐') || task.includes('吃飯') || task.includes('lunch')) {
-                    const msgs = { GENKI:'去吃好料！早點回來！', CALM:'好好吃飯…', SNARK:'去吃飯，別拖太久', CLINGY:'去吃飯！要想著我！' };
-                    if (msgEl) msgEl.textContent = msgs[p] || msgs.GENKI;
-                    if (moodEl) moodEl.textContent = '🍱 吃飯時間';
-                } else if (task.includes('加班') || task.includes('overtime')) {
-                    const msgs = { GENKI:'加班我支持！但要吃飯！', CALM:'加班了…注意身體', SNARK:'又加班，你是工具人嗎', CLINGY:'加班…我陪你！要照顧自己！' };
-                    if (msgEl) msgEl.textContent = msgs[p] || msgs.GENKI;
-                    if (moodEl) moodEl.textContent = '⚡ 加班模式';
-                } else if (task.includes('開會') || task.includes('會議') || task.includes('meeting')) {
-                    const msgs = { GENKI:'開會加油！！', CALM:'開會…耐心是最重要的', SNARK:'又開會，不累嗎', CLINGY:'開會加油！快點回來！' };
-                    if (msgEl) msgEl.textContent = msgs[p] || msgs.GENKI;
-                    if (moodEl) moodEl.textContent = '💼 會議中';
-                }
-            }
-
-            if (trigger === 'quick_undo') {
-                const msgs = { GENKI:'打錯了嗎！！再來一次！', CALM:'撤銷了…想清楚再打', SNARK:'猶豫不決，想好了再說', CLINGY:'不要撤銷嘛！！' };
-                if (msgEl) msgEl.textContent = msgs[p] || msgs.GENKI;
-                if (moodEl) moodEl.textContent = '🤔 猶豫中';
-            }
-
-            if (trigger === 'streak_7_warrior') {
-                if (!eggs.includes('streak_7_warrior')) {
-                    eggs.push('streak_7_warrior');
-                    _seikiEgg(msgEl, moodEl, container, {
-                        GENKI:  '連續7天全勤！！！無敵！！！',
-                        CALM:   '7天了…你是認真的',
-                        SNARK:  '連續7天，我承認你不錯',
-                        CLINGY: '7天都這麼努力！我好愛你！！',
-                    }, '🏆 連續7天全勤', 50);
-                }
-            }
-
-            appSettings.easterEggsFound = eggs;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-        }
-
-        // === 通知人格化 ===
-        function getSeikiAlarmText() {
-            const p = getSeikiPersonality();
-            const mins = appSettings.workReminderMinutes;
-            const texts = {
-                GENKI:  { title: '該休息了！', body: `連續工作 ${mins} 分鐘！起來動一動！`, emoji: '⚡' },
-                CALM:   { title: '休息一下吧', body: `已工作 ${mins} 分鐘，適時休息很重要`, emoji: '🌿' },
-                SNARK:  { title: '休息時間到', body: `${mins} 分鐘了，你不是機器人，去休息`, emoji: '🙄' },
-                CLINGY: { title: '快去休息！', body: `你已經工作 ${mins} 分鐘了！我擔心你！`, emoji: '🥺' },
-            };
-            return texts[p] || texts.CALM;
-        }
-
-        function getSeikiStretchText() {
-            const p = getSeikiPersonality();
-            const texts = {
-                GENKI:  '坐了90分鐘了！！快起來動一動！！',
-                CALM:   '已久坐90分鐘…起來伸展一下吧',
-                SNARK:  '90分鐘了，你的背不痛嗎',
-                CLINGY: '90分鐘了！！我擔心你！快起來動！',
-            };
-            return texts[p] || texts.CALM;
-        }
-
         function triggerAlarm(title, body, emoji) {
-            const seikiText = getSeikiAlarmText();
-            document.getElementById('alarmTitle').textContent = seikiText.title;
-            document.getElementById('alarmBody').textContent = seikiText.body;
-            document.getElementById('alarmEmoji').textContent = seikiText.emoji;
+            document.getElementById('alarmTitle').textContent = title || '休息時間到！';
+            document.getElementById('alarmBody').textContent = body || '起來動一動吧';
+            document.getElementById('alarmEmoji').textContent = emoji || '⏰';
             document.getElementById('alarmModal').classList.add('active');
 
             if ("vibrate" in navigator) navigator.vibrate([500, 300, 500, 300, 500]);
@@ -2485,289 +765,13 @@
 
 
 
-        // === 晶靈 Seiki 系統 ===
-
-        const SEIKI_DIALOGUE = {
-            punch_in: {
-                GENKI:  (c) => c.streak > 3 ? `連續第${c.streak}天！今天也衝！` : c.hasWorkedToday ? `繼續加油！` : `好耶！開始工作囉！`,
-                CALM:   (c) => c.isMonday ? `新的一週…一起慢慢來` : c.hasWorkedToday ? `再來一段…` : `嗯，來了呢`,
-                SNARK:  (c) => c.streak <= 1 ? `今天才想起來打卡啊` : `準時，難得`,
-                CLINGY: (c) => c.hasWorkedToday ? `又開始了！我陪你！` : `終於來了！等你好久了！`,
-            },
-            punch_out: {
-                GENKI:  (c) => `今天工作了${c.sessionText}！棒！`,
-                CALM:   (c) => c.sessionMins > 120 ? `辛苦了…好好休息` : `今天到這裡吧`,
-                SNARK:  (c) => c.sessionMins < 30 ? `就這樣？` : `還行，比我預期的久`,
-                CLINGY: (c) => `不要走嘛…${c.sessionMins > 60 ? '辛苦了！' : '明天早點來'}`,
-            },
-            working_warming: {
-                GENKI:  () => `剛開始暖身，繼續！`,
-                CALM:   () => `慢慢進入狀態…`,
-                SNARK:  () => `剛開始別鬆懈`,
-                CLINGY: () => `一起加油！我陪你！`,
-            },
-            working_flow: {
-                GENKI:  () => `感覺到你的能量了！`,
-                CALM:   () => `你在專注，我感覺到了`,
-                SNARK:  () => `還不錯，繼續`,
-                CLINGY: () => `你好厲害！繼續保持！`,
-            },
-            working_deep: {
-                GENKI:  () => `超過一小時了！超強！`,
-                CALM:   () => `深度專注中…別忘了喝水`,
-                SNARK:  () => `居然撐到現在，刮目相看`,
-                CLINGY: () => `一直都在你身邊！加油！`,
-            },
-            working_tired: {
-                GENKI:  () => `三小時了！記得休息喔`,
-                CALM:   () => `辛苦了，適時休息也很重要`,
-                SNARK:  () => `你還撐著呢，注意身體`,
-                CLINGY: () => `這麼久了…你累了嗎？我陪你`,
-            },
-            idle_morning: {
-                GENKI:  () => `早安！今天要一起加油嗎？`,
-                CALM:   () => `早安…新的一天`,
-                SNARK:  () => `來了，今天要工作嗎`,
-                CLINGY: () => `早安！等你打卡等好久了！`,
-            },
-            idle_afternoon: {
-                GENKI:  () => `下午了！繼續衝！`,
-                CALM:   () => `下午的時光也很珍貴`,
-                SNARK:  () => `下午了，今天有在動嗎`,
-                CLINGY: () => `想你了，快點打卡啦`,
-            },
-            idle_evening: {
-                GENKI:  () => `今天辛苦了，明天繼續！`,
-                CALM:   () => `傍晚了，好好休息`,
-                SNARK:  () => `一天又過了`,
-                CLINGY: () => `今天的你辛苦了，我看著你`,
-            },
-            idle_night: {
-                GENKI:  () => `深夜了！記得睡覺！`,
-                CALM:   () => `夜深了，在靜謐中蓄積能量`,
-                SNARK:  () => `這麼晚還不睡`,
-                CLINGY: () => `還沒睡嗎…我陪你`,
-            },
-            touch_working: {
-                GENKI:  () => `嘿！感謝你的專注！`,
-                CALM:   () => `嗯…繼續`,
-                SNARK:  () => `摸我不如繼續工作`,
-                CLINGY: () => `謝謝你記得我～繼續努力！`,
-            },
-            touch_idle: {
-                GENKI:  () => `幹嘛幹嘛，癢癢的！`,
-                CALM:   () => `輕輕的就好`,
-                SNARK:  () => `戳我幹嘛，去工作啦`,
-                CLINGY: () => `再摸一下！再一下！`,
-            },
-            level_up: {
-                GENKI:  (n) => `哇！我升到Lv.${n}了！！`,
-                CALM:   (n) => `Lv.${n}了…感覺有點不一樣`,
-                SNARK:  (n) => `Lv.${n}，總算`,
-                CLINGY: (n) => `我升級了！你看到了嗎！Lv.${n}！`,
-            },
-            form_evolve: {
-                GENKI:  (n) => `哇哇哇！！我進化了！！我是${n}了！！`,
-                CALM:   (n) => `…好像不一樣了。${n}。這就是我`,
-                SNARK:  (n) => `終於。${n}。我一直在等`,
-                CLINGY: (n) => `進化了！你看我！我是${n}了！！`,
-            },
-            streak_milestone: {
-                GENKI:  (n) => `連續${n}天！我們超強的！`,
-                CALM:   (n) => `${n}天了…我一直都在`,
-                SNARK:  (n) => `連續${n}天，沒想到`,
-                CLINGY: (n) => `${n}天！每天都有你好開心！`,
-            },
-            memory: {
-                GENKI:  (c) => `我們一起工作了${c.totalH}小時，超厲害吧！`,
-                CALM:   (c) => `${c.totalH}小時了…每一分鐘我都記得`,
-                SNARK:  (c) => `${c.totalH}小時，你終於認真起來了`,
-                CLINGY: (c) => `已經${c.totalH}小時了！每天都有你真的好開心！`,
-            },
-            streak_broken: {
-                GENKI:  () => `哎！連續紀錄斷了！沒關係，今天重新開始！💪`,
-                CALM:   () => `斷了…不要緊，重新出發`,
-                SNARK:  () => `果然沒堅持住，再試一次吧`,
-                CLINGY: () => `不要啊！連續記錄斷掉了嗚嗚…重來吧！`,
-            },
-        };
-
-        const SEIKI_PERSONALITY_COLORS = {
-            GENKI:  '#F97316',
-            CALM:   '#818CF8',
-            SNARK:  '#A855F7',
-            CLINGY: '#EC4899',
-        };
-
-        function getSeikiPersonality() {
-            if (appSettings.seikiPersonality) return appSettings.seikiPersonality;
-            if (!appSettings.firstUseDate) {
-                appSettings.firstUseDate = new Date().toISOString();
-            }
-            let h = 0;
-            for (const c of appSettings.firstUseDate) h = (Math.imul(31, h) + c.charCodeAt(0)) | 0;
-            const types = ['GENKI', 'CALM', 'SNARK', 'CLINGY'];
-            appSettings.seikiPersonality = types[Math.abs(h) % 4];
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            return appSettings.seikiPersonality;
-        }
-
-        function getSeikiDialogue(event, ctx) {
-            const p = getSeikiPersonality();
-            const pool = SEIKI_DIALOGUE[event];
-            if (!pool) return '';
-            const fn = pool[p];
-            return fn ? fn(ctx) : '';
-        }
-
-        function calcSeikiMood(isWorking, sessionMins) {
-            if (isWorking) {
-                if (sessionMins < 30) return 'warming';
-                if (sessionMins < 90) return 'flow';
-                if (sessionMins < 180) return 'deep';
-                return 'tired';
-            }
-            const h = new Date().getHours();
-            if (h >= 22 || h < 6) return 'sleepy';
-            return 'idle';
-        }
-
-        function updateStreak() {
-            const today = new Date().toISOString().slice(0, 10);
-            const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-            if (!appSettings.lastWorkDate) {
-                appSettings.currentStreak = 1;
-            } else if (appSettings.lastWorkDate === yesterday) {
-                appSettings.currentStreak = (appSettings.currentStreak || 0) + 1;
-            } else if (appSettings.lastWorkDate !== today) {
-                appSettings.currentStreak = 1;
-                window._seikiLastEvent = 'streak_broken';
-            }
-            appSettings.lastWorkDate = today;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-        }
-
-        function triggerLevelUp(level, name, isFormChange) {
-            const container = document.getElementById('seikiContainer');
-            if (!container) return;
-            const body = document.getElementById('seikiBody');
-            if (body) {
-                body.classList.add('seiki-levelup-flash');
-                setTimeout(() => body.classList.remove('seiki-levelup-flash'), 1200);
-            }
-            const txt = document.createElement('div');
-            txt.className = 'seiki-levelup-text';
-            txt.textContent = isFormChange ? `✦ 進化！${name} ✦` : `✦ Lv.${level} ✦`;
-            container.appendChild(txt);
-            setTimeout(() => txt.remove(), 1800);
-            addSeikiPoints(isFormChange ? 20 : 5);
-            const levelUpContainer = document.getElementById('seikiContainer');
-            if (levelUpContainer) {
-                const levelSyms = ['✦', '⭐', '✨', '★', '✧', '💫', '⚡', '🌟'];
-                for (let i = 0; i < 12; i++) {
-                    const p = document.createElement('div');
-                    p.className = 'seiki-particle';
-                    p.textContent = levelSyms[Math.floor(Math.random() * levelSyms.length)];
-                    const angle = (Math.PI * 2 * i / 12) + Math.random() * 0.4;
-                    const dist = 80 + Math.random() * 40;
-                    p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
-                    p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
-                    p.style.color = `hsl(${30 + Math.random() * 60}, 90%, 72%)`;
-                    p.style.animationDelay = `${Math.random() * 0.2}s`;
-                    levelUpContainer.appendChild(p);
-                    setTimeout(() => p.remove(), 1100);
-                }
-            }
-            if ('vibrate' in navigator) navigator.vibrate([20, 50, 20, 50, 40]);
-            ['C5', 'E5', 'G5'].forEach((n, i) => setTimeout(() => playSingleClickSound(n), i * 80));
-            const msgEl = document.getElementById('spriteMessage');
-            const moodEl = document.getElementById('spriteMood');
-            const event = isFormChange ? 'form_evolve' : 'level_up';
-            const ctx = isFormChange ? name : level;
-            const msg = getSeikiDialogue(event, ctx);
-            if (msg && msgEl) msgEl.textContent = msg;
-            if (moodEl) moodEl.textContent = isFormChange ? `✨ 形態進化解鎖！` : `🌟 等級提升！`;
-        }
-
-        function spawnParticles(container, symbols) {
-            const syms = symbols || ['✦', '✧', '⋆', '·', '★'];
-            for (let i = 0; i < 6; i++) {
-                const p = document.createElement('div');
-                p.className = 'seiki-particle';
-                p.textContent = syms[Math.floor(Math.random() * syms.length)];
-                const angle = (Math.PI * 2 * i / 6) + Math.random() * 0.4;
-                const dist = 18 + Math.random() * 14;
-                p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
-                p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
-                p.style.color = `hsl(${240 + Math.random() * 80}, 80%, 72%)`;
-                p.style.animationDelay = `${Math.random() * 0.15}s`;
-                container.appendChild(p);
-                setTimeout(() => p.remove(), 1100);
-            }
-        }
-
-        let _seikiLongPressTimer = null;
-        let _seikiLongPressed = false;
-
-        function initSeikiInteraction() {
-            const terrarium = document.getElementById('spriteTerrarium');
-            if (!terrarium) return;
-            terrarium.style.cursor = 'pointer';
-
-            const startFn = () => {
-                _seikiLongPressed = false;
-                _seikiLongPressTimer = setTimeout(() => {
-                    _seikiLongPressed = true;
-                    interactWithSpriteLong();
-                }, 600);
-            };
-            const endFn = () => {
-                if (_seikiLongPressTimer) { clearTimeout(_seikiLongPressTimer); _seikiLongPressTimer = null; }
-            };
-
-            terrarium.addEventListener('mousedown', startFn);
-            terrarium.addEventListener('mouseup', endFn);
-            terrarium.addEventListener('mouseleave', endFn);
-            terrarium.addEventListener('touchstart', startFn, { passive: true });
-            terrarium.addEventListener('touchend', endFn);
-            terrarium.addEventListener('click', interactWithSprite);
-        }
-
-        function interactWithSpriteLong() {
-            if ('vibrate' in navigator) navigator.vibrate([30, 60, 30]);
-            playSingleClickSound('C4');
-            const totalH = Math.floor((appSettings.elfExp || 0) / 60);
-            const msg = getSeikiDialogue('memory', { totalH });
-            const msgEl = document.getElementById('spriteMessage');
-            const moodEl = document.getElementById('spriteMood');
-            if (msgEl && msg) msgEl.textContent = msg;
-            if (moodEl) moodEl.textContent = `💭 回憶中…`;
-            seikiSpeak('poke');
-            const container = document.getElementById('seikiContainer');
-            if (container) spawnParticles(container, ['💭', '✨', '⭐', '✦']);
-            // 長按撫摸視覺反應
-            const t = document.querySelector('.sprite-terrarium');
-            if (t) {
-                t.style.transition = 'transform 0.2s ease, filter 0.2s ease';
-                t.style.transform = 'scale(1.15) rotate(3deg)';
-                t.style.filter = 'brightness(1.3) saturate(1.4)';
-                setTimeout(() => {
-                    t.style.transform = 'scale(1.1) rotate(-2deg)';
-                    setTimeout(() => {
-                        t.style.transform = '';
-                        t.style.filter = '';
-                        t.style.transition = '';
-                    }, 300);
-                }, 250);
-            }
-        }
-
         // --- 工作精靈 (Work Sprite) 邏輯 ---
         function updateWorkSprite() {
             const terrarium = document.getElementById('spriteTerrarium');
             if (!terrarium) return;
 
             let totalMinutes = appSettings.elfExp || 0;
+
             let currentSessionMinutes = 0;
             if (punchRecords.length > 0 && punchRecords.length % 2 !== 0) {
                 const now = new Date();
@@ -2783,142 +787,110 @@
             const requiredExpForLevelUp = expForNextLevel - expForCurrentLevel;
             const progressPct = Math.min((expInCurrentLevel / requiredExpForLevelUp) * 100, 100);
 
-            // 名稱 & 視覺等級
-            let name = "晶卵"; let visualLv = 1;
-            if (level >= 5   && level < 15)  { name = "晶芽"; visualLv = 2; }
-            if (level >= 15  && level < 30)  { name = "晶童"; visualLv = 3; }
-            if (level >= 30  && level < 50)  { name = "晶騎"; visualLv = 4; }
-            if (level >= 50  && level < 80)  { name = "晶尊"; visualLv = 5; }
-            if (level >= 80  && level < 100) { name = "晶皇"; visualLv = 6; }
-            if (level >= 100)                { name = "晶神"; visualLv = 7; }
-
-            // 升級偵測
-            const prevLevel = appSettings.lastLevel || 1;
-            const FORM_THRESHOLDS = [5, 15, 30, 50, 80, 100];
-            if (level > prevLevel) {
-                appSettings.lastLevel = level;
-                localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                setTimeout(() => triggerLevelUp(level, name, FORM_THRESHOLDS.includes(level)), 200);
-            }
-
-            // EXP 顯示 + 人格顏色
-            const personality = getSeikiPersonality();
-            const pColor = SEIKI_PERSONALITY_COLORS[personality];
             document.getElementById('spriteExp').textContent = `EXP ${expInCurrentLevel}/${requiredExpForLevelUp}`;
             document.getElementById('spriteExpFill').style.width = `${progressPct}%`;
-            const activeColor = (appSettings.activeTheme && typeof SEIKI_THEMES !== 'undefined' && SEIKI_THEMES[appSettings.activeTheme])
-                ? SEIKI_THEMES[appSettings.activeTheme].color
-                : pColor;
-            document.getElementById('spriteExpFill').style.background = activeColor;
+
+            let name = "能量晶種";
+            let visualLv = 1;
+            let desc = "初始型態，蘊含無限可能";
+            if (level >= 5 && level < 15) { name = "浮游光帶"; visualLv = 2; desc = "光芒漸強，意識正在覺醒"; }
+            else if (level >= 15 && level < 30) { name = "幾何星體"; visualLv = 3; desc = "結構成形，穩定運轉中"; }
+            else if (level >= 30 && level < 50) { name = "脈衝星"; visualLv = 4; desc = "能量脈動，輻射溫暖光芒"; }
+            else if (level >= 50 && level < 80) { name = "恆星序列"; visualLv = 5; desc = "恆穩燃燒，照亮工作時光"; }
+            else if (level >= 80 && level < 100) { name = "超新星"; visualLv = 6; desc = "即將綻放，蓄勢待發"; }
+            else if (level >= 100) { name = "宇宙微波"; visualLv = 7; desc = "超越極限，與宇宙共鳴"; }
+
             document.getElementById('spriteName').textContent = `${name} (Lv.${level})`;
 
+            terrarium.className = `sprite-terrarium anim-fade-in sprite-lv${visualLv}`;
             const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
-            const sessionMins = Math.floor(currentSessionMinutes);
-            const mood = calcSeikiMood(isWorking, sessionMins);
-            const streak = appSettings.currentStreak || 0;
-            const streakTag = streak >= 3 ? ` · 🔥${streak}天` : '';
-
-            const newMoodClass = `sprite-terrarium sprite-lv${visualLv} mood-${mood}`;
-            const currentClean = terrarium.className.replace(/\banim-fade-in\b/g, '').replace(/\bsprite-working\b/g, '').trim().replace(/\s+/g, ' ');
-            if (currentClean !== newMoodClass) {
-                terrarium.className = newMoodClass + ' anim-fade-in';
-            } else {
-                terrarium.className = newMoodClass + (isWorking ? ' sprite-working' : '');
-            }
-
             const msgEl = document.getElementById('spriteMessage');
             const moodEl = document.getElementById('spriteMood');
 
-            // 消耗事件（打卡觸發）
-            const lastEvent = window._seikiLastEvent;
-            window._seikiLastEvent = null;
-
-            // 階段追蹤（避免每秒更新訊息）
-            const newPhase = isWorking ? mood : `idle_${new Date().getHours()}`;
-            const phaseChanged = window._seikiPhase !== newPhase;
-            if (phaseChanged) window._seikiPhase = newPhase;
-
-            if (lastEvent === 'punch_in') {
-                const today = new Date().toISOString().slice(0, 10);
-                const hasWorkedToday = punchRecords.filter(r => r.time.slice(0,10) === today && r.type === 'out').length > 0;
-                msgEl.textContent = getSeikiDialogue('punch_in', { streak, hasWorkedToday, isMonday: new Date().getDay() === 1 });
-                moodEl.textContent = streak >= 3 ? `🔥 連續${streak}天 · 打卡！${streakTag}` : `✨ 打卡成功！`;
-                // Streak milestone
-                if ([3, 5, 7, 14, 30].includes(streak)) {
-                    setTimeout(() => {
-                        msgEl.textContent = getSeikiDialogue('streak_milestone', streak);
-                        moodEl.textContent = `🔥 連續${streak}天里程碑！`;
-                    }, 2500);
-                }
-            } else if (lastEvent === 'punch_out') {
-                // 取最後一筆 out 的時長
-                let lastSessionMins = 0;
-                for (let i = punchRecords.length - 1; i >= 1; i--) {
-                    if (punchRecords[i].type === 'out' && punchRecords[i-1].type === 'in') {
-                        lastSessionMins = Math.floor((new Date(punchRecords[i].time) - new Date(punchRecords[i-1].time)) / 60000);
-                        break;
-                    }
-                }
-                const sessionText = lastSessionMins >= 60 ? `${Math.floor(lastSessionMins/60)}h${lastSessionMins%60}m` : `${lastSessionMins}分鐘`;
-                msgEl.textContent = getSeikiDialogue('punch_out', { sessionMins: lastSessionMins, sessionText });
-                const totalH = Math.floor(totalMinutes / 60);
-                moodEl.textContent = `📊 累計 ${totalH}h${streakTag}`;
-            } else if (lastEvent === 'streak_broken') {
-                msgEl.textContent = getSeikiDialogue('streak_broken', {});
-                moodEl.textContent = `😔 連續紀錄重置`;
-            } else if (isWorking) {
-                if (phaseChanged) {
-                    const workKey = `working_${mood}`;
-                    msgEl.textContent = getSeikiDialogue(workKey, {});
-                }
+            if (isWorking) {
+                terrarium.classList.add('sprite-working');
+                const sessionMins = Math.floor(currentSessionMinutes);
+                const workMsgs = [
+                    "正在吸收你的專注能量",
+                    "感受到穩定的工作節奏",
+                    "與你一起進入心流狀態",
+                    "每一分鐘都在悄悄成長",
+                    "你的專注就是最好的養分",
+                    "能量場正在擴大中"
+                ];
+                msgEl.textContent = workMsgs[Math.floor(Math.random() * workMsgs.length)];
                 if (sessionMins < 30) {
-                    moodEl.textContent = `✨ 暖身中 · ${sessionMins}m${streakTag}`;
-                } else if (sessionMins < 90) {
-                    moodEl.textContent = `🔥 節奏流動 · ${sessionMins}m${streakTag}`;
-                } else if (sessionMins < 180) {
-                    moodEl.textContent = `🌟 深度專注 · ${Math.floor(sessionMins/60)}h${sessionMins%60}m${streakTag}`;
+                    moodEl.textContent = `✨ 剛開始暖身 · 已工作 ${sessionMins} 分鐘`;
+                } else if (sessionMins < 60) {
+                    moodEl.textContent = `🔥 漸入佳境 · 已工作 ${sessionMins} 分鐘`;
+                } else if (sessionMins < 120) {
+                    moodEl.textContent = `🌟 深度專注中 · 已工作 ${Math.floor(sessionMins / 60)}h${sessionMins % 60}m`;
                 } else {
-                    moodEl.textContent = `💫 超長續航 · ${Math.floor(sessionMins/60)}h${sessionMins%60}m${streakTag}`;
+                    moodEl.textContent = `💫 超長續航！· 已工作 ${Math.floor(sessionMins / 60)}h${sessionMins % 60}m`;
                 }
             } else {
-                if (phaseChanged) {
-                    const h = new Date().getHours();
-                    let idleKey = 'idle_afternoon';
-                    if (h >= 6  && h < 12) idleKey = 'idle_morning';
-                    if (h >= 18 && h < 22) idleKey = 'idle_evening';
-                    if (h >= 22 || h < 6)  idleKey = 'idle_night';
-                    msgEl.textContent = getSeikiDialogue(idleKey, {});
-                }
+                terrarium.classList.remove('sprite-working');
                 const h = new Date().getHours();
-                const icons = h >= 22 || h < 6 ? '💤' : h >= 18 ? '🌙' : h >= 12 ? '🌤' : '☀️';
-                const totalH = Math.floor(totalMinutes / 60);
-                moodEl.textContent = `${icons} ${name}${totalH > 0 ? ` · 累計${totalH}h` : ''}${streakTag}`;
+                let idleMsgs, moodText;
+                if (h >= 6 && h < 12) {
+                    idleMsgs = ["早安，新的一天充滿可能", "陽光正好，適合開始工作", "期待今天的第一次打卡"];
+                    moodText = `☀️ 早晨 · ${desc}`;
+                } else if (h >= 12 && h < 14) {
+                    idleMsgs = ["午餐時間，記得好好休息", "補充能量後繼續加油", "短暫的休息是為了走更遠"];
+                    moodText = `🍙 午間 · ${desc}`;
+                } else if (h >= 14 && h < 18) {
+                    idleMsgs = ["下午的時光也很珍貴", "靜靜等待你回來工作", "每段專注都值得被記錄"];
+                    moodText = `🌤 午後 · ${desc}`;
+                } else if (h >= 18 && h < 22) {
+                    idleMsgs = ["晚間模式，放慢腳步", "今天辛苦了，好好休息", "回顧今天的成果吧"];
+                    moodText = `🌙 傍晚 · ${desc}`;
+                } else {
+                    idleMsgs = ["深夜了，注意休息", "在安靜中蓄積能量", "明天又是新的開始"];
+                    moodText = `💤 深夜 · ${desc}`;
+                }
+                msgEl.textContent = idleMsgs[Math.floor(Math.random() * idleMsgs.length)];
+                moodEl.textContent = moodText;
             }
-            applySeikiCosmetics();
         }
 
         function interactWithSprite() {
-            if (_seikiLongPressed) { _seikiLongPressed = false; return; }
             if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
-            playSingleClickSound('E5');
-            tryInteractBonus();
+            playSingleClickSound("E5");
 
-            const container = document.getElementById('seikiContainer');
-            if (container) {
-                const ripple = document.createElement('div');
-                ripple.className = 'ripple-effect w-full h-full';
-                container.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
-                spawnParticles(container);
-            }
+            const container = document.querySelector('.sprite-core-container');
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple-effect w-full h-full';
+            container.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
 
             const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
             const msgEl = document.getElementById('spriteMessage');
             const moodEl = document.getElementById('spriteMood');
-            const msg = getSeikiDialogue(isWorking ? 'touch_working' : 'touch_idle', {});
-            if (msgEl) msgEl.textContent = msg;
-            if (moodEl) moodEl.textContent = isWorking ? '🫧 互動中 · 能量共鳴' : '🫧 輕輕觸碰';
-            seikiSpeak('poke');
+            if (isWorking) {
+                const msgs = [
+                    "嘿！感謝你的專注 ✦",
+                    "能量共鳴中，繼續保持！",
+                    "你的觸碰讓我更有活力",
+                    "一起努力，一起成長",
+                    "專注是最強大的力量",
+                    "工作節奏很穩定呢！",
+                    "距離升級又近了一步"
+                ];
+                msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+                moodEl.textContent = '🫧 互動中 · 能量 +1';
+            } else {
+                const msgs = [
+                    "你好呀，想開始工作了嗎？",
+                    "點一下打卡按鈕就能餵食我",
+                    "輕輕觸碰，感受我的存在",
+                    "工作時間就是我的養分",
+                    "在休息中慢慢恢復能量",
+                    "每次工作都讓我更強大",
+                    "期待你的下一次專注"
+                ];
+                msgEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+                moodEl.textContent = '🫧 互動中 · 等待工作能量';
+            }
         }
 
         // --- 滑動打卡確認 ---
@@ -3436,190 +1408,95 @@
             renderCalendar();
         }
 
-        // === 晶靈商店 + 日登入系統 ===
+        async function generateAIContent() {
+            const result = calculateHours();
+            const completedSessions = result.sessions;
+            const btn = document.getElementById('insightBtn');
+            const originalHTML = btn.innerHTML;
 
-        const SEIKI_THEMES = {
-            'theme-rose':   { name: '緋玫', color: '#EC4899', cost: 15, icon: '🌸' },
-            'theme-orange': { name: '晨曦', color: '#F97316', cost: 15, icon: '🍊' },
-            'theme-green':  { name: '翡翠', color: '#10B981', cost: 15, icon: '🍃' },
-            'theme-sky':    { name: '晴空', color: '#0EA5E9', cost: 20, icon: '☁️' },
-        };
-
-        const SEIKI_AURAS = {
-            'aura-stardust': { name: '星塵', cost: 25, icon: '✨', desc: '銀白粒子漂浮' },
-            'aura-aurora':   { name: '極光', cost: 35, icon: '🌌', desc: '藍綠光暈流動' },
-        };
-
-        function addSeikiPoints(n) {
-            appSettings.seikiPoints = (appSettings.seikiPoints || 0) + n;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            const el = document.getElementById('seikiPointsDisplay');
-            if (el) el.textContent = appSettings.seikiPoints;
-        }
-
-        function checkDailyBonus() {
-            const today = new Date().toISOString().slice(0, 10);
-            if (appSettings.lastBonusDate === today) return;
-            appSettings.lastBonusDate = today;
-            appSettings.elfExp = (appSettings.elfExp || 0) + 5;
-            addSeikiPoints(1);
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            const p = getSeikiPersonality();
-            const msgs = {
-                GENKI:  '今天也來了！給你5點能量！',
-                CALM:   '你來了…今天也加一點能量給你',
-                SNARK:  '哦，終於想到要來，給你5點',
-                CLINGY: '你來了！每天都要來喔！+5能量！',
-            };
-            setTimeout(() => {
-                const msgEl = document.getElementById('spriteMessage');
-                const moodEl = document.getElementById('spriteMood');
-                if (msgEl) msgEl.textContent = msgs[p] || msgs.GENKI;
-                if (moodEl) moodEl.textContent = '🎁 日登入 · +5 EXP +1 積分';
-            }, 1200);
-        }
-
-        function tryInteractBonus() {
-            const today = new Date().toISOString().slice(0, 10);
-            if (appSettings.todayInteractDate !== today) {
-                appSettings.todayInteractDate = today;
-                appSettings.todayInteractCount = 0;
-            }
-            if ((appSettings.todayInteractCount || 0) < 10) {
-                appSettings.todayInteractCount++;
-                appSettings.elfExp = (appSettings.elfExp || 0) + 1;
-                localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                return true;
-            }
-            return false;
-        }
-
-        function handleShopPurchase(itemId, itemType) {
-            const def = itemType === 'theme' ? SEIKI_THEMES[itemId] : SEIKI_AURAS[itemId];
-            if (!def) return;
-            const unlocks = appSettings.seikiUnlocks || [];
-            const isOwned = unlocks.includes(itemId);
-            const isActive = itemType === 'theme'
-                ? appSettings.activeTheme === itemId
-                : appSettings.activeAura === itemId;
-
-            if (isActive) {
-                // 取消裝備
-                if (itemType === 'theme') appSettings.activeTheme = null;
-                else appSettings.activeAura = null;
-                localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                applySeikiCosmetics();
-                renderShop();
+            if (completedSessions.length === 0) {
+                showReminder("沒有足夠的資料生成指南喔", 'work');
                 return;
             }
-            if (isOwned) {
-                // 已擁有，裝備
-                if (itemType === 'theme') appSettings.activeTheme = itemId;
-                else appSettings.activeAura = itemId;
-                localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                applySeikiCosmetics();
-                renderShop();
-                showReminder(`✦ 已裝備 ${def.name}`, 'work');
-                return;
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> AI 正在為您規劃下班生活...`;
+
+            const totalH = Math.floor(result.total / 60);
+            const totalM = Math.round(result.total % 60);
+            const recordsText = punchRecords.map(r =>
+                `[${formatTime(r.time)}] ${r.type === 'in' ? '開始' : '結束'} ${r.task ? ':' + r.task : ''}`
+            ).join('\n');
+
+            let weatherText = "無天氣資訊";
+            try {
+                const wRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=25.0330&longitude=121.5654&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTaipei&forecast_days=2");
+                const wData = await wRes.json();
+                weatherText = `明日天氣預測：最高 ${wData.daily.temperature_2m_max[1]}°C, 最低 ${wData.daily.temperature_2m_min[1]}°C, 降雨機率 ${wData.daily.precipitation_probability_max[1]}%`;
+            } catch (e) { }
+
+            const promptText = `
+            【角色設定】
+            你是一個打卡APP的「下班生活助理」。你不寫工作日報！
+            你現在的人格屬性是：【暖心陪伴教練】說話極度溫柔、充滿正能量，會適時給予安慰與鼓勵，像一位認識很久的知心好友。
+            
+            【當前狀態】
+            當地時間：${new Date().toLocaleString('zh-TW')}
+            今日工時：${totalH} 小時 ${totalM} 分鐘
+            天氣預報：${weatherText}
+            
+            【使用者今日工作紀錄】
+            ${recordsText}
+            
+            【任務】
+            請根據上述情境，生成一份給使用者的「下班生活指南」。
+            
+            【格式要求】 (請直接使用 HTML 格式排版輸出，善用 <b>、<br>)
+            <div style="margin-bottom: 8px;">💬 <b>教練碎碎念</b><br>用你的人格屬性，針對「今日工時總長」與「下班時間點」進行 2-3 句話的點評。</div>
+            <div style="margin-bottom: 8px;">🍽️ <b>下班解壓縮提案</b><br>推薦一個符合現在時間點的「晚餐選擇」或「放鬆活動」(例如宵夜、Netflix)，並直接結合【天氣預報】給出一個隔日的貼心提醒。</div>
+            <div style="margin-bottom: 8px;">📰 <b>無用冷知識/趣聞</b><br>隨便分享一個有趣無用的冷知識或迷因話題，讓人會心一笑。</div>
+            
+            規則：請直接輸出上述 HTML 內容，不要加上 "好的"、"這是一份指南" 等開頭與結尾語。
+            `;
+
+            try {
+                const response = await fetch('/api/ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [{ role: "user", content: promptText }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorJson = await response.json();
+                    throw new Error(errorJson.error || 'Server responded with an error');
+                }
+
+                const json = await response.json();
+                let content = json.choices?.[0]?.message?.content || '無回應';
+
+                content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                content = content.replace(/\n/g, '<br>');
+
+                document.getElementById('aiContent').innerHTML = content;
+                document.getElementById('aiResultArea').classList.remove('hidden');
+                document.getElementById('aiResultArea').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (e) {
+                console.error(e);
+                showReminder("AI 連線錯誤，請確認網路狀態", 'work');
             }
-            // 購買
-            const pts = appSettings.seikiPoints || 0;
-            if (pts < def.cost) {
-                showReminder(`積分不足（需要 ${def.cost} 積分）`, 'work');
-                return;
-            }
-            appSettings.seikiPoints = pts - def.cost;
-            appSettings.seikiUnlocks = [...unlocks, itemId];
-            if (itemType === 'theme') appSettings.activeTheme = itemId;
-            else appSettings.activeAura = itemId;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            applySeikiCosmetics();
-            renderShop();
-            if ('vibrate' in navigator) navigator.vibrate([15, 30, 15]);
-            showReminder(`✦ 解鎖 ${def.icon} ${def.name}！`, 'work');
+
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
         }
 
-        function applySeikiCosmetics() {
-            const terrarium = document.getElementById('spriteTerrarium');
-            const container = document.getElementById('seikiContainer');
-            if (!terrarium || !container) return;
-
-            const themeId = appSettings.activeTheme;
-            const expFill = document.getElementById('spriteExpFill');
-
-            // 重置邊框與光暈
-            terrarium.style.borderColor = '';
-            terrarium.style.boxShadow = '';
-
-            if (themeId && typeof SEIKI_THEMES !== 'undefined' && SEIKI_THEMES[themeId]) {
-                const t = SEIKI_THEMES[themeId];
-                const c = t.color;
-                const r = parseInt(c.slice(1, 3), 16);
-                const g = parseInt(c.slice(3, 5), 16);
-                const b = parseInt(c.slice(5, 7), 16);
-                // EXP 條顏色
-                if (expFill) expFill.style.background = c;
-                // 卡片邊框 + 光暈（明顯可見）
-                terrarium.style.borderColor = c;
-                terrarium.style.boxShadow = `0 0 0 2px ${c}, 0 0 20px rgba(${r},${g},${b},0.4)`;
-            } else {
-                const pColor = SEIKI_PERSONALITY_COLORS[getSeikiPersonality()];
-                if (expFill) expFill.style.background = pColor;
-            }
-
-            // Aura: class on container
-            container.classList.remove('aura-stardust', 'aura-aurora');
-            if (appSettings.activeAura) container.classList.add(appSettings.activeAura);
-        }
-
-        function renderShop() {
-            const themeGrid = document.getElementById('shopThemeGrid');
-            const auraGrid  = document.getElementById('shopAuraGrid');
-            if (!themeGrid || !auraGrid) return;
-            const pts     = appSettings.seikiPoints || 0;
-            const unlocks = appSettings.seikiUnlocks || [];
-            const cardStyle = `padding:10px 12px; border-radius:12px; border:1px solid var(--separator);
-                background:var(--fill); display:flex; flex-direction:column; gap:4px; cursor:pointer;
-                transition:all 0.2s ease; text-align:left;`;
-
-            // Themes
-            themeGrid.innerHTML = Object.entries(SEIKI_THEMES).map(([id, def]) => {
-                const owned  = unlocks.includes(id);
-                const active = appSettings.activeTheme === id;
-                const canAfford = pts >= def.cost;
-                const badge = active ? '裝備中' : owned ? '已擁有' : `${def.cost}✦`;
-                const badgeColor = active ? def.color : owned ? 'var(--green)' : canAfford ? 'var(--label-secondary)' : 'var(--label-quaternary)';
-                const opacity = (!owned && !canAfford) ? '0.5' : '1';
-                const border = active ? `border:1.5px solid ${def.color}` : '';
-                return `<button onclick="handleShopPurchase('${id}','theme')"
-                    style="${cardStyle} ${border} opacity:${opacity}">
-                    <span style="font-size:16px">${def.icon}</span>
-                    <span style="font-size:12px; font-weight:500; color:var(--label)">${def.name}</span>
-                    <span style="font-size:10px; color:${badgeColor}">${badge}</span>
-                </button>`;
-            }).join('');
-
-            // Auras
-            auraGrid.innerHTML = Object.entries(SEIKI_AURAS).map(([id, def]) => {
-                const owned  = unlocks.includes(id);
-                const active = appSettings.activeAura === id;
-                const canAfford = pts >= def.cost;
-                const badge = active ? '裝備中' : owned ? '已擁有' : `${def.cost}✦`;
-                const badgeColor = active ? 'var(--blue)' : owned ? 'var(--green)' : canAfford ? 'var(--label-secondary)' : 'var(--label-quaternary)';
-                const opacity = (!owned && !canAfford) ? '0.5' : '1';
-                const border = active ? `border:1.5px solid var(--blue)` : '';
-                return `<button onclick="handleShopPurchase('${id}','aura')"
-                    style="${cardStyle} ${border} opacity:${opacity}">
-                    <span style="font-size:16px">${def.icon}</span>
-                    <span style="font-size:12px; font-weight:500; color:var(--label)">${def.name}</span>
-                    <span style="font-size:10px; color:var(--label-tertiary); line-height:1.3">${def.desc}</span>
-                    <span style="font-size:10px; color:${badgeColor}">${badge}</span>
-                </button>`;
-            }).join('');
-
-            // Points display
-            const el = document.getElementById('seikiPointsDisplay');
-            if (el) el.textContent = pts;
+        function copyReport() {
+            const content = document.getElementById('aiContent').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                showReminder("日報已複製！", 'work');
+            });
         }
 
         // --- WLB 健康度計算 ---
@@ -3783,62 +1660,16 @@
             if (type === 'in' && taskInput) {
                 taskName = taskInput.value.trim();
                 taskInput.value = "";
-                updateStreak();
-                window._seikiLastEvent = 'punch_in';
-                seikiSpeak('punch_in');
-                // 打卡粒子特效
-                const container = document.getElementById('seikiContainer');
-                if (container) spawnParticles(container, ['✦', '⭐', '✨', '★', '✧']);
-                checkEasterEggs('punch_in', { taskName: appSettings.currentTask || '' });
-                // 打卡上班慶祝
-                (function punchInCelebrate() {
-                    const t = document.querySelector('.seiki-container');
-                    if (!t) return;
-                    t.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease';
-                    t.style.transform = 'translateY(-25px) scale(0.9, 1.15)';
-                    t.style.filter = 'brightness(1.5) saturate(1.5)';
-                    setTimeout(() => {
-                        t.style.transform = 'translateY(0) scale(1.1, 0.9)';
-                        setTimeout(() => {
-                            t.style.transform = 'translateY(-8px) scale(1)';
-                            t.style.filter = '';
-                            setTimeout(() => {
-                                t.style.transform = '';
-                                t.style.transition = '';
-                            }, 300);
-                        }, 200);
-                    }, 300);
-                })();
             } else if (type === 'out') {
+                // Persistent Elf EXP Accumulation
                 const lastIn = punchRecords[punchRecords.length - 1];
                 if (lastIn && lastIn.type === 'in') {
                     const durationMinutes = (now - new Date(lastIn.time)) / 60000;
                     if (durationMinutes > 0) {
                         appSettings.elfExp = (appSettings.elfExp || 0) + durationMinutes;
-                        const earnedPts = Math.floor(durationMinutes / 30);
-                        if (earnedPts > 0) addSeikiPoints(earnedPts);
                         localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                        checkEasterEggs('punch_out', { durationMinutes });
                     }
                 }
-                window._seikiLastEvent = 'punch_out';
-                seikiSpeak('punch_out');
-                // 打卡下班：疲倦感
-                (function punchOutTired() {
-                    const t = document.querySelector('.seiki-container');
-                    if (!t) return;
-                    t.style.transition = 'transform 0.6s ease, filter 0.6s ease';
-                    t.style.transform = 'translateY(8px) rotate(-5deg) scale(0.92)';
-                    t.style.filter = 'brightness(0.85) saturate(0.8)';
-                    setTimeout(() => {
-                        t.style.transform = 'translateY(4px) rotate(-2deg)';
-                        setTimeout(() => {
-                            t.style.transform = '';
-                            t.style.filter = '';
-                            t.style.transition = '';
-                        }, 800);
-                    }, 800);
-                })();
             }
 
             punchRecords.push({ time: now.toISOString(), type: type, task: taskName });
@@ -3851,17 +1682,12 @@
                 playSingleClickSound("G4");
                 const last = punchRecords.pop();
 
+                // Revert Persistent Elf EXP if we undo an OUT punch
                 if (last.type === 'out') {
                     const lastIn = punchRecords[punchRecords.length - 1];
                     if (lastIn && lastIn.type === 'in') {
                         const durationMinutes = (new Date(last.time) - new Date(lastIn.time)) / 60000;
                         appSettings.elfExp = Math.max(0, (appSettings.elfExp || 0) - durationMinutes);
-                        const ptsToRevert = Math.floor(durationMinutes / 30);
-                        if (ptsToRevert > 0) {
-                            appSettings.seikiPoints = Math.max(0, (appSettings.seikiPoints || 0) - ptsToRevert);
-                            const ptsEl = document.getElementById('seikiPointsDisplay');
-                            if (ptsEl) ptsEl.textContent = appSettings.seikiPoints;
-                        }
                         localStorage.setItem('appSettings', JSON.stringify(appSettings));
                     }
                 }
@@ -4168,7 +1994,14 @@
                 });
             }
 
-            document.getElementById('undoBtn').disabled = punchRecords.length === 0;
+            // --- Render Work Sessions (移除原有的 Work Sessions 區塊，統一由 records 取代) ---
+            // 由於前述已整合，這裡只需判定 "獲取下班指引" 按鈕的狀態
+            const insightBtn = document.getElementById('insightBtn');
+            if (result.sessions.length > 0) {
+                insightBtn.disabled = false;
+            } else {
+                insightBtn.disabled = true;
+            } document.getElementById('undoBtn').disabled = punchRecords.length === 0;
 
             // Clear 按鈕狀態 (如果正在確認中，重置它)
             if (punchRecords.length === 0) {
@@ -4374,12 +2207,7 @@
         updateCurrentTime();
         updateWorkSprite();
         initSwipePunch();
-        initBrushstroke();
-        initSeikiInteraction();
-        checkDailyBonus();
-        renderShop();
-        applySeikiCosmetics();
-        startIdleBehavior();
+        initBrushstroke();  // Ippitsu brushstroke
         // --- 本週總覽 ---
         function renderWeeklySummary() {
             const dayNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
@@ -4419,8 +2247,54 @@
             }
         }
 
+        // --- 每日一句 ---
+        function renderDailyQuote() {
+            const quotes = [
+                { text: '不是因為有了希望才堅持，而是因為堅持了才有希望。', author: '— 佚名' },
+                { text: '把每一天當成一生中最美好的一天。', author: '— 奧黛麗·赫本' },
+                { text: '生活不是等待暴風雨過去，而是學會在雨中跳舞。', author: '— 薇薇安·乖恩' },
+                { text: '你不需要很厲害才能開始，但你需要開始才能變得厲害。', author: '— Zig Ziglar' },
+                { text: '最好的時間是十年前，其次是現在。', author: '— 中國諺語' },
+                { text: '專注在你能控制的事情上，放下你無法控制的。', author: '— 愛比克泰德' },
+                { text: '每一個不起舞的日子，都是對生命的一種辜負。', author: '— 尼采' },
+                { text: '慢慢來，比較快。', author: '— 日本諺語' },
+                { text: '不怕慢，只怕站。', author: '— 中國諺語' },
+                { text: '休息是為了走更長遠的路。', author: '— 佚名' },
+                { text: '做你害怕做的事，然後你會發現恐懼消失了。', author: '— Ralph Waldo Emerson' },
+                { text: '今天的努力是明天的花開。', author: '— 佚名' },
+                { text: '不要追逐成功，讓自己變得有價值，成功會來追你。', author: '— 愛因斯坦' },
+                { text: '劈柴不照紋，累死劈柴人。做事要找對方法。', author: '— 民間智慧' },
+                { text: '人生就像騎腳踏車，要保持平衡就要不斷前進。', author: '— 愛因斯坦' },
+                { text: '如果你想走得快，就一個人走。如果你想走得遠，就一起走。', author: '— 非洲諺語' },
+                { text: '種一棵樹最好的時間是二十年前，其次是現在。', author: '— 中國諺語' },
+                { text: '與其用淚水悔恨昨天，不如用汗水拼搏今天。', author: '— 佚名' },
+                { text: '成功不是終點，失敗也不是致命的，重要的是繼續下去的勇氣。', author: '— 邱吉爾' },
+                { text: '越努力，越幸運。', author: '— 佚名' },
+                { text: '所有的堅持，終將美好。', author: '— 佚名' },
+                { text: '別讓今天的疲憊，偷走明天的快樂。', author: '— 佚名' },
+                { text: '最暗的夜，才看得到最亮的星。', author: '— 佚名' },
+                { text: '簡單的事重複做，你就是專家。重複的事用心做，你就是贏家。', author: '— 佚名' },
+                { text: '你現在的態度，決定十年後你是人物還是廢物。', author: '— 佚名' },
+                { text: '不要在最好的年紀，做一個最無聊的人。', author: '— 佚名' },
+                { text: '機會總是留給有準備的人。', author: '— Louis Pasteur' },
+                { text: '行動是治療恐懼的最好良藥。', author: '— 佚名' },
+                { text: '今日事，今日畢。明日復明日，明日何其多。', author: '— 文嘉' },
+                { text: '有時候，放慢腳步是為了欣賞沿途的風景。', author: '— 佚名' },
+                { text: '世界上最遙遠的距離，不是生與死，而是我站在你面前你卻不知道我愛你。錯了，是 deadline 就在眼前你還在滑手機。', author: '— 打工人語錄' }
+            ];
+            // Use day-of-year as seed for daily rotation
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((now - start) / 86400000);
+            const idx = dayOfYear % quotes.length;
+
+            document.getElementById('dailyQuote').textContent = `「${quotes[idx].text}」`;
+            document.getElementById('dailyQuoteAuthor').textContent = quotes[idx].author;
+        }
+
         fetchNews(); // Fetch on initial load
         renderWeeklySummary();
+        renderDailyQuote();
 
         // --- Onboarding 首次引導 ---
         function showOnboarding() {
@@ -4487,7 +2361,8 @@
                 'punchBtn': '打卡',
                 'undoBtn': '復原上一筆紀錄',
                 'clearBtn': '清除所有紀錄',
-                'exportCalendarBtn': '匯出至日曆'
+                'exportCalendarBtn': '匯出至日曆',
+                'insightBtn': '取得下班建議'
             };
             Object.entries(labels).forEach(([id, label]) => {
                 const el = document.getElementById(id);
@@ -4506,123 +2381,12 @@
             }
         }
 
-        // ===== 晶靈 AI 對話系統 =====
-
-        function toggleAiMode(enabled) {
-            appSettings.aiModeEnabled = enabled;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            const label = document.getElementById('aiModeLabel');
-            if (label) label.textContent = enabled ? '開啟 ✨' : '關閉';
-        }
-
-        function loadAiSettings() {
-            const toggle = document.getElementById('aiModeToggle');
-            const label = document.getElementById('aiModeLabel');
-            if (toggle) toggle.checked = !!appSettings.aiModeEnabled;
-            if (label) label.textContent = appSettings.aiModeEnabled ? '開啟 ✨' : '關閉';
-        }
-
-        function buildSeikiContext() {
-            const now = new Date();
-            const hour = now.getHours();
-            const timeOfDay = hour < 6 ? '深夜' : hour < 12 ? '早上' : hour < 18 ? '下午' : hour < 22 ? '晚上' : '深夜';
-
-            // 計算今日工時（用全域 punchRecords）
-            const todayStr = now.toDateString();
-            let todayMinutes = 0;
-            let lastIn = null;
-            for (const r of punchRecords) {
-                if (new Date(r.time).toDateString() !== todayStr) continue;
-                if (r.type === 'in') lastIn = new Date(r.time);
-                else if (r.type === 'out' && lastIn) {
-                    todayMinutes += (new Date(r.time) - lastIn) / 60000;
-                    lastIn = null;
-                }
-            }
-            if (lastIn) todayMinutes += (now - lastIn) / 60000;
-            const todayHours = (todayMinutes / 60).toFixed(1);
-
-            const totalHours = Math.floor((appSettings.elfExp || 0) / 60);
-            const streak = appSettings.currentStreak || 0;
-            const level = Math.floor((appSettings.elfExp || 0) / 30) + 1;
-            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
-            const personality = getSeikiPersonality();
-            const personalityMap = { GENKI: '活潑開朗', CALM: '冷靜理性', SNARK: '毒舌但可愛', CLINGY: '黏人撒嬌' };
-            const personalityDesc = personalityMap[personality] || '活潑開朗';
-
-            return { timeOfDay, todayHours, totalHours, streak, level, isWorking, personality, personalityDesc };
-        }
-
-        async function generateSeikiResponse(triggerType) {
-            if (!appSettings.aiModeEnabled) return null;
-
-            const ctx = buildSeikiContext();
-            const triggerDesc = {
-                poke: '用戶戳了一下我',
-                punch_in: '用戶剛剛打卡上班',
-                punch_out: '用戶剛剛打卡下班',
-                idle: '用戶很久沒有互動',
-            }[triggerType] || '用戶互動了';
-
-            const systemPrompt = `你是一個叫做晶靈的虛擬寵物，住在用戶的工作計時 app 裡。
-你的人格是「${ctx.personalityDesc}」（${ctx.personality}）。
-現在是${ctx.timeOfDay}。用戶今天已工作 ${ctx.todayHours} 小時，累積 ${ctx.totalHours} 小時，連續打卡 ${ctx.streak} 天，晶靈等級 Lv.${ctx.level}，${ctx.isWorking ? '目前正在工作中' : '目前休息中'}。
-${triggerDesc}。
-請用繁體中文，以第一人稱說一句話（15-30字，不要標點符號結尾，不要解釋，不要說你是AI）。
-根據人格特色說話：GENKI=活潑加油、CALM=平靜分析、SNARK=毒舌吐槽、CLINGY=撒嬌黏人。`;
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'stepfun/step-3.5-flash:free',
-                        messages: [{ role: 'user', content: systemPrompt }],
-                        max_tokens: 80,
-                        temperature: 0.9
-                    })
-                });
-                if (!res.ok) return null;
-                const data = await res.json();
-                return data.choices?.[0]?.message?.content?.trim() || null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        async function seikiSpeak(triggerType) {
-            if (!appSettings.aiModeEnabled) return;
-            const msgEl = document.getElementById('spriteMessage');
-            if (!msgEl) return;
-
-            const originalText = msgEl.textContent;
-            msgEl.textContent = '…思考中…';
-            msgEl.style.opacity = '0.6';
-
-            const aiReply = await generateSeikiResponse(triggerType);
-
-            msgEl.style.opacity = '1';
-            if (aiReply) {
-                msgEl.textContent = aiReply;
-            } else {
-                msgEl.textContent = originalText;
-            }
-        }
-
         // 初始化
         showOnboarding();
         initA11y();
-        loadAiSettings();
 
         // --- Loops ---
         setInterval(updateDisplay, 10000);
         setInterval(updateCurrentTime, 1000);
         setInterval(checkStretchReminder, 60000);
         setInterval(playTickSound, 1000);
-
-    </script>
-</body>
-
-</html>

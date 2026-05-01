@@ -1,9 +1,8 @@
-const CACHE_NAME = 'timecard-v8';
+const CACHE_NAME = 'timecard-v7';
 const ASSETS = [
     './',
     './index.html',
     './manifest.json',
-    './src/domain/timecard.js',
     './icon-192.png',
     './icon-512.png'
 ];
