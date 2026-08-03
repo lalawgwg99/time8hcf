@@ -1,4 +1,4 @@
-# 一筆 Ippitsu — 工時紀錄
+工時紀錄
 
 帶有禪意美學的工時追蹤 Web App。純前端 PWA，資料僅存於瀏覽器 localStorage。
 
