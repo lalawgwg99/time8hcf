@@ -2981,134 +2981,62 @@
             </div>
             <div style="padding:16px 24px 32px;">
 
-                <!-- ✦ 設計理念與操作手冊 -->
-                <div class="section-label">✦ 設計理念與操作手冊</div>
+                <!-- 關於 TIME 8 (極簡純粹) -->
+                <div class="section-label">關於</div>
                 <div class="bg-white rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    
-                    <!-- 設計理念 -->
-                    <div style="padding:16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                            <span style="font-size:16px;">🌿</span>
-                            <span style="font-size:14px; font-weight:600; color:var(--label); letter-spacing:0.02em;">禪意心流與克制美學</span>
+                    <div style="padding:16px; display:flex; flex-direction:column; gap:6px;">
+                        <div style="font-size:14.5px; font-weight:600; color:var(--label); display:flex; align-items:center; gap:6px;">
+                            <span>🌿</span> TIME 8 · 禪意專注工時
                         </div>
-                        <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            TIME 8 遵循 Apple 原生設計哲學，剔除一切浮誇動畫與視覺噪音。以充足留白、溫潤微漸層與物理光影，為專注工作者打造沉靜、無壓力的心流追蹤空間。
+                        <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            專為追求心流的專業工作者設計。結合 Apple 原生極簡美學、1 分鐘正念深呼吸與 432Hz 空靈頌缽，讓專注與生活從容平衡。
                         </p>
                     </div>
 
-                    <!-- 操作手冊 -->
-                    <div style="padding:16px; display:flex; flex-direction:column; gap:12px;">
-                        
-                        <div style="display:flex; gap:12px; align-items:flex-start;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:var(--fill); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:var(--label);">
-                                ◯
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">上班打卡</div>
-                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">點擊黑曜石膠囊按鈕，啟動心流計時與中心微光呼吸。</div>
-                            </div>
+                    <!-- 加入主畫面 Quick Action Row -->
+                    <div onclick="showInstallGuide()" style="padding:13px 16px; border-top:0.5px solid var(--separator); display:flex; align-items:center; justify-content:space-between; cursor:pointer;" class="active:bg-gray-50">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-mobile-screen" style="color:var(--blue); font-size:15px; width:18px; text-align:center;"></i>
+                            <span style="font-size:13.5px; color:var(--label); font-weight:500;">加入手機主畫面 (全螢幕 App 體驗)</span>
                         </div>
-
-                        <div style="display:flex; gap:12px; align-items:flex-start;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:rgba(154,64,64,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:var(--red);">
-                                <i class="fas fa-chevron-right"></i>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">滑動下班</div>
-                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">平滑滑動白瓷按鈕，完成打卡並切回初始狀態，無彈窗打擾。</div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; gap:12px; align-items:flex-start;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:rgba(196,168,122,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:#9C7747;">
-                                <i class="fas fa-circle-notch"></i>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">光環模式切換</div>
-                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">輕觸 264px 工時大光環，即可在「今日累計」與「尚餘工時」間無縫切換。</div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; gap:12px; align-items:flex-start;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:var(--fill); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:var(--blue);">
-                                <i class="fas fa-quote-left"></i>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">心靈哲思輪換</div>
-                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">點擊光環下方的哲思名言卡片，隨機輪換 30+ 句精選心流名言。</div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; gap:12px; align-items:flex-start;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:rgba(91,138,96,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:#436B48;">
-                                <i class="fas fa-wind"></i>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">正念呼吸與 432Hz 頌缽</div>
-                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">休息時輕按「正念深呼吸」，首頁 264px 光環即刻展開 1 分鐘箱式呼吸指引，伴隨空靈頌缽與物理脈衝。</div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; gap:12px; align-items:flex-start;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:rgba(154,120,180,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:#7A5A8A;">
-                                ✨
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">星軌碎片與夥伴</div>
-                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">每日達成 8 小時標準工時自動凝聚 1 顆碎片，集滿 7 顆可在「夥伴」頁喚醒專屬晶靈。</div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; gap:12px; align-items:flex-start; padding-top:10px; border-top:0.5px solid var(--separator);">
-                            <div style="width:28px; height:28px; border-radius:8px; background:rgba(0,122,255,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:var(--blue);">
-                                <i class="fas fa-mobile-screen"></i>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">加入主畫面 (推薦全螢幕體驗)</div>
-                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5; margin-bottom:8px;">
-                                    將 TIME 8 加到手機主畫面即可隱藏瀏覽器網址列，獲得 100% 原生 App 沉浸體驗。
-                                </div>
-                                <button onclick="showInstallGuide()" style="padding:6px 12px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator); font-size:11.5px; font-weight:500; color:var(--blue); cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
-                                    <i class="fas fa-arrow-up-from-bracket" style="font-size:10px;"></i>
-                                    查看加入主畫面引導
-                                </button>
-                            </div>
-                        </div>
-
+                        <i class="fas fa-chevron-right" style="font-size:11px; color:var(--label-quaternary);"></i>
                     </div>
                 </div>
 
-                <!-- 提醒設定 -->
-                <div class="section-label">提醒</div>
-                <div class="bg-white rounded-xl overflow-hidden mb-5">
-                    <div class="p-4 flex items-center justify-between"
-                        style="border-bottom:1px solid var(--ios-separator)">
-                        <label for="workReminderInput" class="text-[15px] text-gray-900">上班後提醒 (分鐘)</label>
-                        <input type="number" id="workReminderInput" placeholder="120"
-                            class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="120">
+                <!-- 工時與提醒 -->
+                <div class="section-label">工時與提醒</div>
+                <div class="bg-white rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div class="p-4 flex items-center justify-between" style="border-bottom:0.5px solid var(--separator);">
+                        <label for="targetHoursInput" class="text-[14.5px] text-gray-900 font-medium">每日工時目標</label>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <input type="number" id="targetHoursInput" placeholder="8" min="1" max="24" step="0.5"
+                                class="w-16 text-right bg-gray-100 rounded-lg px-2 py-1 text-base font-semibold text-gray-900" value="8">
+                            <span style="font-size:13px; color:var(--label-tertiary);">小時</span>
+                        </div>
+                    </div>
+                    <div class="p-4 flex items-center justify-between" style="border-bottom:0.5px solid var(--separator);">
+                        <label for="workReminderInput" class="text-[14.5px] text-gray-900 font-medium">連續專注提醒</label>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <input type="number" id="workReminderInput" placeholder="120"
+                                class="w-16 text-right bg-gray-100 rounded-lg px-2 py-1 text-base font-semibold text-gray-900" value="120">
+                            <span style="font-size:13px; color:var(--label-tertiary);">分鐘</span>
+                        </div>
                     </div>
                     <div class="p-4 flex items-center justify-between">
-                        <label for="restReminderInput" class="text-[15px] text-gray-900">休息結束提醒 (分鐘)</label>
-                        <input type="number" id="restReminderInput" placeholder="20"
-                            class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="20">
-                    </div>
-                </div>
-
-                <!-- 工時設定 -->
-                <div class="section-label">工時</div>
-                <div class="bg-white rounded-xl overflow-hidden mb-5">
-                    <div class="p-4 flex items-center justify-between">
-                        <label for="targetHoursInput" class="text-[15px] text-gray-900">每日目標 (小時)</label>
-                        <input type="number" id="targetHoursInput" placeholder="8" min="1" max="24" step="0.5"
-                            class="w-20 text-right bg-gray-100 rounded-lg px-2 py-1.5 text-base" value="8">
+                        <label for="restReminderInput" class="text-[14.5px] text-gray-900 font-medium">休息結束提醒</label>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <input type="number" id="restReminderInput" placeholder="20"
+                                class="w-16 text-right bg-gray-100 rounded-lg px-2 py-1 text-base font-semibold text-gray-900" value="20">
+                            <span style="font-size:13px; color:var(--label-tertiary);">分鐘</span>
+                        </div>
                     </div>
                 </div>
 
                 <button onclick="saveSettings()" class="active-scale"
-                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:500; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">儲存設定</button>
+                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:500; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">儲存設定</button>
 
                 <!-- Designer Badge: Design 德 -->
-                <div style="margin-top:28px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
+                <div style="margin-top:24px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
                     <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator);">
                         <span style="font-size:10px; color:var(--label-tertiary); letter-spacing:0.12em; text-transform:uppercase; font-weight:500;">Design</span>
                         <span style="width:3px; height:3px; border-radius:50%; background:var(--label-quaternary);"></span>
