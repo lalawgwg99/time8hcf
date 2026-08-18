@@ -2755,38 +2755,52 @@
 
     <!-- Modals: iOS Action Sheet Style -->
 
-    <!-- Install Guide -->
+    <!-- Install Guide (Apple Action Sheet) -->
     <div id="installGuideModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeInstallGuide()">
         </div>
         <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
-            style="background:var(--bg); padding:14px 24px 32px;">
+            style="background:var(--bg); padding:14px 24px 32px; max-height:85vh; overflow-y:auto;">
             <div class="sheet-handle"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h3 style="font-size:17px; font-weight:700; color:var(--label);">安裝到主畫面</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="font-size:17px; font-weight:700; color:var(--label);">加入手機主畫面</h3>
                 <button onclick="closeInstallGuide()"
                     style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
                     <i class="fas fa-times" style="font-size:12px;"></i>
                 </button>
             </div>
+            
+            <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.5; margin-bottom:16px;">
+                加入主畫面後即可隱藏瀏覽器網址列，享受 100% 全螢幕原生 App 的沉浸體驗與極速啟動：
+            </p>
+
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+                <div style="font-size:12px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-top:4px;">🍎 iOS (Safari 瀏覽器)</div>
                 <div
-                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
-                    <i class="fas fa-share-square"
-                        style="color:var(--blue); font-size:20px; width:24px; text-align:center;"></i>
-                    <div style="font-size:14px; color:var(--label-secondary); line-height:1.5;">點擊 Safari
-                        瀏覽器下方的<br><span style="font-weight:700; color:var(--label);">分享按鈕</span></div>
+                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="fas fa-arrow-up-from-bracket"
+                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
+                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">1. 點擊 Safari 底部中央的<br><span style="font-weight:700; color:var(--label);">「分享」按鈕</span></div>
                 </div>
                 <div
-                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
                     <i class="far fa-plus-square"
-                        style="color:var(--blue); font-size:20px; width:24px; text-align:center;"></i>
-                    <div style="font-size:14px; color:var(--label-secondary); line-height:1.5;">往下滑動並選擇<br><span
-                            style="font-weight:700; color:var(--label);">加入主畫面</span></div>
+                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
+                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">2. 選單往下滑動，點選<br><span
+                            style="font-weight:700; color:var(--label);">「加入主畫面」</span> ➔ 按右上角「新增」</div>
+                </div>
+
+                <div style="font-size:12px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-top:8px;">🤖 Android (Chrome 瀏覽器)</div>
+                <div
+                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="fas fa-ellipsis-vertical"
+                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
+                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">點擊右上角「更多選單 (⋮)」➔ 選擇 <span style="font-weight:700; color:var(--label);">「安裝應用程式」</span> 或 <span style="font-weight:700; color:var(--label);">「新增至主螢幕」</span></div>
                 </div>
             </div>
+
             <button onclick="closeInstallGuide()"
-                style="width:100%; padding:15px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:15px; font-weight:400; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em;">了解</button>
+                style="width:100%; padding:15px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:15px; font-weight:500; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em;">了解並返回</button>
         </div>
     </div>
 
@@ -2874,6 +2888,22 @@
                             <div style="flex:1;">
                                 <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">星軌碎片與夥伴</div>
                                 <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">每日達成 8 小時標準工時自動凝聚 1 顆碎片，集滿 7 顆可在「夥伴」頁喚醒專屬晶靈。</div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:12px; align-items:flex-start; padding-top:10px; border-top:0.5px solid var(--separator);">
+                            <div style="width:28px; height:28px; border-radius:8px; background:rgba(0,122,255,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:var(--blue);">
+                                <i class="fas fa-mobile-screen"></i>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">加入主畫面 (推薦全螢幕體驗)</div>
+                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5; margin-bottom:8px;">
+                                    將 TIME 8 加到手機主畫面即可隱藏瀏覽器網址列，獲得 100% 原生 App 沉浸體驗。
+                                </div>
+                                <button onclick="showInstallGuide()" style="padding:6px 12px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator); font-size:11.5px; font-weight:500; color:var(--blue); cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+                                    <i class="fas fa-arrow-up-from-bracket" style="font-size:10px;"></i>
+                                    查看加入主畫面引導
+                                </button>
                             </div>
                         </div>
 
