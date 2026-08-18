@@ -3379,7 +3379,7 @@
 
                 <!-- 關於 TIME 8 (極簡純粹) -->
                 <div class="section-label">關於</div>
-                <div class="bg-white rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div style="padding:16px; display:flex; flex-direction:column; gap:6px;">
                         <div style="font-size:14.5px; font-weight:600; color:var(--label); display:flex; align-items:center; gap:6px;">
                             <span>🌿</span> TIME 8 · 禪意專注工時
@@ -3390,13 +3390,29 @@
                     </div>
 
                     <!-- 加入主畫面 Quick Action Row -->
-                    <div onclick="showInstallGuide()" style="padding:13px 16px; border-top:0.5px solid var(--separator); display:flex; align-items:center; justify-content:space-between; cursor:pointer;" class="active:bg-gray-50">
+                    <div onclick="showInstallGuide()" style="padding:13px 16px; border-top:0.5px solid var(--separator); display:flex; align-items:center; justify-content:space-between; cursor:pointer;" class="active:opacity-70">
                         <div style="display:flex; align-items:center; gap:10px;">
                             <i class="fas fa-mobile-screen" style="color:var(--blue); font-size:15px; width:18px; text-align:center;"></i>
                             <span style="font-size:13.5px; color:var(--label); font-weight:500;">加入手機主畫面 (全螢幕 App 體驗)</span>
                         </div>
                         <i class="fas fa-chevron-right" style="font-size:11px; color:var(--label-quaternary);"></i>
                     </div>
+
+                    <!-- HRIS 出勤系統 Link Row -->
+                    <a href="https://hris.uni-prosperity.com.tw/NewRadar/Account/LogOn" target="_blank" rel="noopener noreferrer"
+                        style="padding:13px 16px; border-top:0.5px solid var(--separator); display:flex; align-items:center; justify-content:space-between; text-decoration:none; cursor:pointer; -webkit-tap-highlight-color:transparent;" class="active:opacity-70">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-building-user" style="color:var(--blue); font-size:15px; width:18px; text-align:center;"></i>
+                            <div>
+                                <div style="font-size:13.5px; color:var(--label); font-weight:500;">HRIS 出勤系統</div>
+                                <div style="font-size:11px; color:var(--label-tertiary);">快速跳轉企業人資系統</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:4px; color:var(--label-quaternary);">
+                            <span style="font-size:11px; font-weight:400;">前往</span>
+                            <i class="fas fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+                        </div>
+                    </a>
                 </div>
 
                 <!-- 工時與提醒 -->
