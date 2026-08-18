@@ -931,7 +931,6 @@ tailwind.config = {
                     if ('vibrate' in navigator) navigator.vibrate(100);
                     setTimeout(() => {
                         punch();
-                        showPunchOutCelebration();
                         resetSwipe();
                     }, 200);
                 } else {
@@ -951,40 +950,6 @@ tailwind.config = {
             document.addEventListener('touchmove', onMove, { passive: false });
             document.addEventListener('mouseup', onEnd);
             document.addEventListener('touchend', onEnd);
-        }
-
-        // --- 下班慶祝 ---
-        function showPunchOutCelebration() {
-            const result = calculateHours();
-            const dur = formatDurationFancy(result.total);
-
-            // 建立慶祝 overlay
-            const overlay = document.createElement('div');
-            overlay.className = 'alarm-overlay active';
-            overlay.id = 'celebrationOverlay';
-            overlay.innerHTML = `
-                <div class="alarm-card" style="text-align:center">
-                    <div class="text-5xl mb-3">🎉</div>
-                    <div class="text-xl font-bold text-gray-900 mb-1">今天辛苦了</div>
-                    <div style="background:var(--fill);border-radius:16px;padding:16px;margin:12px 0">
-                        <div class="text-3xl font-bold tabular-nums">${dur.h}h ${Math.round(dur.m)}m</div>
-                        <div class="text-[12px] text-gray-400 mt-1">今日工時</div>
-                    </div>
-                    <button onclick="this.closest('.alarm-overlay').remove()" class="w-full py-3 bg-black text-white rounded-xl font-semibold active-scale mt-2">完成</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-
-            // 播放慶祝音效
-            try {
-                Tone.start();
-                const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-                const now = Tone.now();
-                synth.triggerAttackRelease('C5', 0.15, now);
-                synth.triggerAttackRelease('E5', 0.15, now + 0.15);
-                synth.triggerAttackRelease('G5', 0.15, now + 0.3);
-                synth.triggerAttackRelease(['C6', 'E6'], 0.4, now + 0.5);
-            } catch (e) { }
         }
 
         // Zen Flow & Evening Reflections (禪意心流暮晚寄語)
