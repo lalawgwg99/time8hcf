@@ -1684,32 +1684,39 @@
 
             <section id="tabPartner" class="tab-panel">
                 <div class="partner-room">
-                    <div class="partner-card partner-hatch-card">
-                        <div class="partner-title">夥伴房間</div>
-                        <div id="partnerEggVisual" class="partner-egg-stage" aria-label="神秘晶核蛋"></div>
-                        <div class="partner-egg-heading">節奏蛋</div>
-                        <div id="partnerHatchHint" class="partner-subtitle partner-hatch-hint">再完成 7 個正常工作日</div>
-                        <div class="partner-progress-row">
-                            <div class="partner-progress"><div id="partnerFragmentProgress" style="width:0%"></div></div>
-                            <div id="partnerFragmentCount" class="partner-progress-count">0 / 7</div>
+                    <!-- Hero Zen Companion Stage Card -->
+                    <div class="partner-stage-card">
+                        <div class="partner-stage-header">
+                            <span class="partner-stage-title">✦ 靈魂夥伴展台</span>
+                            <span id="partnerStageBadge" class="partner-pill-badge">凝聚中</span>
                         </div>
-                        <div id="partnerHatchStatus" class="partner-hatch-status">尚未達到開啟條件</div>
-                        <button id="hatchPetButton" class="partner-button primary partner-hatch-button" onclick="hatchPartnerEgg()">開啟節奏蛋</button>
+
+                        <!-- 7-Segment Orbital Halo Stage -->
+                        <div id="partnerStageContainer"></div>
+
+                        <!-- Hero Information Hierarchy -->
+                        <div class="partner-hero-meta">
+                            <div id="partnerHeroTitle" class="partner-hero-title">0 / 7 蛋殼碎片</div>
+                            <div id="partnerHeroSub" class="partner-hero-sub">完成今日標準工時，即可凝聚第 1 顆星軌碎片</div>
+                            <div class="partner-feature-row">
+                                <span class="partner-feature-pill">✦ 獨特外觀</span>
+                                <span class="partner-feature-pill">✦ 陪伴呼吸</span>
+                                <span class="partner-feature-pill">✦ 工時成長</span>
+                            </div>
+                        </div>
+
+                        <!-- Action / Guidance Area -->
+                        <div id="partnerActionArea"></div>
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
                     </div>
 
-                    <div class="partner-card partner-current-card">
-                        <div class="partner-title">我的夥伴</div>
-                        <div id="partnerPetArt" class="partner-current-art" aria-label="目前夥伴"></div>
-                        <div class="partner-meta">
-                            <div>
-                                <div id="partnerPetName" class="partner-name">尚未取得夥伴</div>
-                                <div id="partnerPetSeries" class="partner-subtitle">第一顆節奏蛋保證稀有以上</div>
-                            </div>
-                            <div id="partnerPetRarity" class="partner-badge partner-badge-hidden"></div>
+                    <!-- Companion Codex Badge Wall -->
+                    <div class="partner-codex-card">
+                        <div class="codex-header">
+                            <span class="codex-title">夥伴圖鑑</span>
+                            <span id="partnerCodexCount" class="codex-count">已解鎖 0 / 8</span>
                         </div>
-                        <div id="partnerPetStatus" class="partner-subtitle partner-current-status">尚未取得夥伴</div>
-                        <div id="partnerCollection" class="partner-collection"></div>
+                        <div id="partnerCodexGrid" class="codex-grid"></div>
                     </div>
                 </div>
             </section>
