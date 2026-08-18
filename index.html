@@ -1992,26 +1992,8 @@
                     </div>
                 </div>
 
-                <!-- 晶靈 AI 設定 -->
-                <div class="section-label">🤖 晶靈 AI</div>
-                <div class="bg-white rounded-xl overflow-hidden mb-5">
-                    <div class="p-4">
-                        <div class="settings-section">
-                            <div class="settings-label">🤖 晶靈 AI 對話</div>
-                            <div class="settings-desc" style="font-size:12px;color:var(--label-tertiary);margin-bottom:8px;">
-                                開啟後晶靈會根據你的工作狀態生成個人化回應。
-                            </div>
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <label style="font-size:13px;">AI 對話模式</label>
-                                <input type="checkbox" id="aiModeToggle" onchange="toggleAiMode(this.checked)" style="width:16px;height:16px;">
-                                <span id="aiModeLabel" style="font-size:12px;color:var(--label-tertiary);">關閉</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <button onclick="saveSettings()" class="active-scale"
-                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em; font-family:"SF Pro Text", -apple-system, BlinkMacSystemFont,sans-serif;">儲存設定</button>
+                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">儲存設定</button>
             </div><!-- /content padding -->
         </div><!-- /outer modal -->
     </div>
@@ -2743,7 +2725,6 @@
             const moodEl = document.getElementById('spriteMood');
             if (msgEl && msg) msgEl.textContent = msg;
             if (moodEl) moodEl.textContent = `💭 回憶中…`;
-            seikiSpeak('poke');
             const container = document.getElementById('seikiContainer');
             if (container) spawnParticles(container, ['💭', '✨', '⭐', '✦']);
             // 長按撫摸視覺反應
@@ -2918,7 +2899,6 @@
             const msg = getSeikiDialogue(isWorking ? 'touch_working' : 'touch_idle', {});
             if (msgEl) msgEl.textContent = msg;
             if (moodEl) moodEl.textContent = isWorking ? '🫧 互動中 · 能量共鳴' : '🫧 輕輕觸碰';
-            seikiSpeak('poke');
         }
 
         // --- 滑動打卡確認 ---
@@ -3015,35 +2995,47 @@
             } catch (e) { }
         }
 
-        // Life Suggestions Data
+        // Zen Flow & Evening Reflections (禪意心流暮晚寄語)
         const lifeSuggestions = {
             early: [
-                "今晚想吃點什麼？",
-                "下班後去逛個書店",
-                "這時間去健身房剛剛好",
-                "買杯手搖犒賞自己",
-                "天氣不錯，去散個步"
+                "一日專注圓滿，迎著微風漫步回歸生活",
+                "日落時分，給心靈留一片溫柔的留白",
+                "提早完成心流，享受屬於自己的餘裕時光",
+                "心神澄明，步履從容，今天辛苦了",
+                "趁著天光尚好，去街角走走，感受自然的呼吸",
+                "專注與放鬆自如切換，這就是最佳的生活節奏",
+                "放下所有任務清單，把剩下的白天留給自己",
+                "夕陽正好，漫步回家，聽聽風吹過樹梢的聲音"
             ],
             dinner: [
-                "下班後去逛黃昏市場買菜",
-                "晚餐時間到，去吃頓好的",
-                "回去剛好趕上倒垃圾",
-                "超市現在生鮮在打折",
-                "去吃那間排隊名店剛好不用等"
+                "心流已定，讓思緒如水歸於平靜",
+                "暮色漸濃，闔上螢幕，享受一頓溫暖的晚餐",
+                "工作留給白天，溫暖留給夜晚",
+                "暮光溫柔，卸下一天的忙碌，好好犒賞自己",
+                "食物的香氣與安寧的氛圍，是此刻最好的陪伴",
+                "專注告一段落，讓身心沐浴在晚風之中",
+                "今日的耕耘已然結果，靜享此刻安寧",
+                "餐桌上的煙火氣，是安撫疲憊最好的良藥"
             ],
             late: [
-                "巷口鹹酥雞這時候不用排隊",
-                "便利商店的微波食品也不錯",
-                "回家路上順便買個滷味",
-                "這時間去洗個頭放鬆一下",
-                "別煮了，外送點起來"
+                "夜色漸深，闔上螢幕，感受當下的呼吸與寧靜",
+                "心無罣礙，將今日的思緒輕輕收起",
+                "泡一杯溫熱的茶，讓緊繃一整天的肩頸鬆弛下來",
+                "把時間還給自己，聽一首舒緩的音樂或翻開一頁書",
+                "安靜的夜晚，是心靈最好的療癒之所",
+                "今日已竭盡全力，是時候換上舒適的睡衣放鬆了",
+                "月色靜好，讓大腦從繁雜的邏輯中慢慢沈澱",
+                "留一段不受打擾的獨處時光，與自己溫柔對話"
             ],
             midnight: [
-                "太晚了，回家睡個好覺",
-                "別加班了，回家泡個熱水澡",
-                "吃個宵夜再睡？泡麵是好朋友",
-                "明天再拚，身體要顧",
-                "深呼吸一下，休息吧"
+                "夜色深沉，辛苦了，今晚讓身心好好歇息",
+                "深呼吸三次，把所有未完的思緒留給明天",
+                "星光引路，洗去一身疲憊，今晚做個好夢",
+                "工作永遠做不完，但你的健康與平靜最為珍貴",
+                "萬籟俱寂，關掉燈光，讓大腦徹底進入休眠",
+                "今日功德圓滿，沉入夢鄉，明天又是清新的開始",
+                "辛苦了一整天，好好蓋上被子，道一聲晚安",
+                "讓心事隨夜風散去，安然入眠，養精蓄銳"
             ]
         };
 
@@ -3599,7 +3591,6 @@
                 taskInput.value = "";
                 updateStreak();
                 window._seikiLastEvent = 'punch_in';
-                seikiSpeak('punch_in');
                 // 打卡粒子特效
                 const container = document.getElementById('seikiContainer');
                 if (container) spawnParticles(container, ['✦', '⭐', '✨', '★', '✧']);
@@ -3635,7 +3626,6 @@
                     }
                 }
                 window._seikiLastEvent = 'punch_out';
-                seikiSpeak('punch_out');
                 // 打卡下班：疲倦感
                 (function punchOutTired() {
                     const t = document.querySelector('.seiki-container');
@@ -4310,115 +4300,9 @@
             }
         }
 
-        // ===== 晶靈 AI 對話系統 =====
-
-        function toggleAiMode(enabled) {
-            appSettings.aiModeEnabled = enabled;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            const label = document.getElementById('aiModeLabel');
-            if (label) label.textContent = enabled ? '開啟 ✨' : '關閉';
-        }
-
-        function loadAiSettings() {
-            const toggle = document.getElementById('aiModeToggle');
-            const label = document.getElementById('aiModeLabel');
-            if (toggle) toggle.checked = !!appSettings.aiModeEnabled;
-            if (label) label.textContent = appSettings.aiModeEnabled ? '開啟 ✨' : '關閉';
-        }
-
-        function buildSeikiContext() {
-            const now = new Date();
-            const hour = now.getHours();
-            const timeOfDay = hour < 6 ? '深夜' : hour < 12 ? '早上' : hour < 18 ? '下午' : hour < 22 ? '晚上' : '深夜';
-
-            // 計算今日工時（用全域 punchRecords）
-            const todayStr = now.toDateString();
-            let todayMinutes = 0;
-            let lastIn = null;
-            for (const r of punchRecords) {
-                if (new Date(r.time).toDateString() !== todayStr) continue;
-                if (r.type === 'in') lastIn = new Date(r.time);
-                else if (r.type === 'out' && lastIn) {
-                    todayMinutes += (new Date(r.time) - lastIn) / 60000;
-                    lastIn = null;
-                }
-            }
-            if (lastIn) todayMinutes += (now - lastIn) / 60000;
-            const todayHours = (todayMinutes / 60).toFixed(1);
-
-            const totalHours = Math.floor((appSettings.elfExp || 0) / 60);
-            const streak = appSettings.currentStreak || 0;
-            const level = Math.floor((appSettings.elfExp || 0) / 30) + 1;
-            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
-            const personality = getSeikiPersonality();
-            const personalityMap = { GENKI: '活潑開朗', CALM: '冷靜理性', SNARK: '毒舌但可愛', CLINGY: '黏人撒嬌' };
-            const personalityDesc = personalityMap[personality] || '活潑開朗';
-
-            return { timeOfDay, todayHours, totalHours, streak, level, isWorking, personality, personalityDesc };
-        }
-
-        async function generateSeikiResponse(triggerType) {
-            if (!appSettings.aiModeEnabled) return null;
-
-            const ctx = buildSeikiContext();
-            const triggerDesc = {
-                poke: '用戶戳了一下我',
-                punch_in: '用戶剛剛打卡上班',
-                punch_out: '用戶剛剛打卡下班',
-                idle: '用戶很久沒有互動',
-            }[triggerType] || '用戶互動了';
-
-            const systemPrompt = `你是一個叫做晶靈的虛擬寵物，住在用戶的工作計時 app 裡。
-你的人格是「${ctx.personalityDesc}」（${ctx.personality}）。
-現在是${ctx.timeOfDay}。用戶今天已工作 ${ctx.todayHours} 小時，累積 ${ctx.totalHours} 小時，連續打卡 ${ctx.streak} 天，晶靈等級 Lv.${ctx.level}，${ctx.isWorking ? '目前正在工作中' : '目前休息中'}。
-${triggerDesc}。
-請用繁體中文，以第一人稱說一句話（15-30字，不要標點符號結尾，不要解釋，不要說你是AI）。
-根據人格特色說話：GENKI=活潑加油、CALM=平靜分析、SNARK=毒舌吐槽、CLINGY=撒嬌黏人。`;
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'stepfun/step-3.5-flash:free',
-                        messages: [{ role: 'user', content: systemPrompt }],
-                        max_tokens: 80,
-                        temperature: 0.9
-                    })
-                });
-                if (!res.ok) return null;
-                const data = await res.json();
-                return data.choices?.[0]?.message?.content?.trim() || null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        async function seikiSpeak(triggerType) {
-            if (!appSettings.aiModeEnabled) return;
-            const msgEl = document.getElementById('spriteMessage');
-            if (!msgEl) return;
-
-            const originalText = msgEl.textContent;
-            msgEl.textContent = '…思考中…';
-            msgEl.style.opacity = '0.6';
-
-            const aiReply = await generateSeikiResponse(triggerType);
-
-            msgEl.style.opacity = '1';
-            if (aiReply) {
-                msgEl.textContent = aiReply;
-            } else {
-                msgEl.textContent = originalText;
-            }
-        }
-
         // 初始化
         showOnboarding();
         initA11y();
-        loadAiSettings();
 
         // --- Loops ---
         setInterval(updateDisplay, 10000);
