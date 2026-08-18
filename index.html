@@ -53,8 +53,8 @@
     </script>
 
     <style>
-        :root {
-            /* === IPPITSU ZEN PALETTE === */
+        /* === ZEN THEME 1: 和風暖白 (Alabaster - Default) === */
+        :root, [data-zen-theme="alabaster"] {
             --bg: #F4EFE6;
             --card: #FDFAF5;
             --card-secondary: #EDE8DF;
@@ -63,7 +63,6 @@
             --label-secondary: #52493E;
             --label-tertiary: #9C9086;
             --label-quaternary: #C4B8AE;
-            /* Accent: bamboo green replaces iOS blue */
             --blue: #6E7D6A;
             --blue-light: #8BAB86;
             --green: #4D7A52;
@@ -74,6 +73,10 @@
             --fill: rgba(40, 32, 20, 0.05);
             --fill-secondary: rgba(40, 32, 20, 0.08);
             --fill-tertiary: rgba(40, 32, 20, 0.03);
+            --header-bg: rgba(244, 239, 230, 0.88);
+            --nav-bg: rgba(253, 250, 245, 0.92);
+            --ring-warm-1: #D4B688;
+            --ring-warm-2: #9C7747;
             --shadow-card: 0 2px 32px rgba(40, 30, 10, 0.05), 0 1px 6px rgba(40, 30, 10, 0.04);
             --shadow-elevated: 0 8px 48px rgba(40, 30, 10, 0.12), 0 2px 12px rgba(40, 30, 10, 0.07);
             --shadow-button: 0 2px 16px rgba(28, 23, 12, 0.18), 0 1px 4px rgba(28, 23, 12, 0.12);
@@ -82,14 +85,111 @@
             --radius-sm: 14px;
             --radius-xs: 10px;
             --radius-pill: 100px;
-            /* Slower, water-like transitions */
             --spring: cubic-bezier(0.4, 0, 0.2, 1);
             --spring-bounce: cubic-bezier(0.4, 0, 0.2, 1);
             --nav-height: 68px;
-            /* Ippitsu brushstroke accent */
             --ink: #8B6840;
             --ink-light: #C4A87A;
             --ink-gold: #E8C17A;
+        }
+
+        /* === ZEN THEME 2: 黑曜夜色 (Obsidian Dark) === */
+        [data-zen-theme="obsidian"] {
+            --bg: #121110;
+            --card: #1C1A18;
+            --card-secondary: #262320;
+            --separator: rgba(255, 255, 255, 0.08);
+            --label: #F5F2EB;
+            --label-secondary: #B5ACA0;
+            --label-tertiary: #7D756B;
+            --label-quaternary: #4E4740;
+            --blue: #8BAB86;
+            --blue-light: #A5C7A0;
+            --green: #5D9E64;
+            --red: #C45B5B;
+            --orange: #C48E5B;
+            --purple: #9E7AB2;
+            --teal: #5B9AA5;
+            --fill: rgba(255, 255, 255, 0.06);
+            --fill-secondary: rgba(255, 255, 255, 0.10);
+            --fill-tertiary: rgba(255, 255, 255, 0.03);
+            --header-bg: rgba(18, 17, 16, 0.88);
+            --nav-bg: rgba(28, 26, 24, 0.92);
+            --ring-warm-1: #E2C799;
+            --ring-warm-2: #A88554;
+            --shadow-card: 0 2px 32px rgba(0, 0, 0, 0.35), 0 1px 6px rgba(0, 0, 0, 0.25);
+            --shadow-elevated: 0 8px 48px rgba(0, 0, 0, 0.5), 0 2px 12px rgba(0, 0, 0, 0.3);
+            --shadow-button: 0 2px 16px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.25);
+            --shadow-blue: 0 4px 20px rgba(139, 171, 134, 0.22);
+            --ink: #A88554;
+            --ink-light: #E2C799;
+            --ink-gold: #F2DAB3;
+        }
+
+        /* === ZEN THEME 3: 竹影森綠 (Sage & Bamboo) === */
+        [data-zen-theme="sage"] {
+            --bg: #EFF4EE;
+            --card: #FAFDF9;
+            --card-secondary: #E3EDE2;
+            --separator: rgba(30, 50, 32, 0.07);
+            --label: #17241A;
+            --label-secondary: #3D5441;
+            --label-tertiary: #718C75;
+            --label-quaternary: #A6BFA9;
+            --blue: #4D7A52;
+            --blue-light: #6E9E73;
+            --green: #4D7A52;
+            --red: #9A4040;
+            --orange: #9A7040;
+            --purple: #7A5A8A;
+            --teal: #4A788A;
+            --fill: rgba(30, 50, 32, 0.05);
+            --fill-secondary: rgba(30, 50, 32, 0.09);
+            --fill-tertiary: rgba(30, 50, 32, 0.03);
+            --header-bg: rgba(239, 244, 238, 0.88);
+            --nav-bg: rgba(250, 253, 249, 0.92);
+            --ring-warm-1: #72A979;
+            --ring-warm-2: #3D6E44;
+            --shadow-card: 0 2px 32px rgba(30, 50, 30, 0.05), 0 1px 6px rgba(30, 50, 30, 0.04);
+            --shadow-elevated: 0 8px 48px rgba(30, 50, 30, 0.12), 0 2px 12px rgba(30, 50, 30, 0.07);
+            --shadow-button: 0 2px 16px rgba(23, 36, 26, 0.18), 0 1px 4px rgba(23, 36, 26, 0.12);
+            --shadow-blue: 0 4px 20px rgba(77, 122, 82, 0.22);
+            --ink: #3D6E44;
+            --ink-light: #72A979;
+            --ink-gold: #9ACFA0;
+        }
+
+        /* === ZEN THEME 4: 暮光煙紫 (Twilight Heather) === */
+        [data-zen-theme="twilight"] {
+            --bg: #F4EFF4;
+            --card: #FAF6FA;
+            --card-secondary: #EDE4EE;
+            --separator: rgba(50, 30, 60, 0.07);
+            --label: #221726;
+            --label-secondary: #543E5C;
+            --label-tertiary: #8C7594;
+            --label-quaternary: #BEA9C4;
+            --blue: #7A5A8A;
+            --blue-light: #9B7AB0;
+            --green: #4D7A52;
+            --red: #9A4040;
+            --orange: #9A7040;
+            --purple: #7A5A8A;
+            --teal: #4A788A;
+            --fill: rgba(50, 30, 60, 0.05);
+            --fill-secondary: rgba(50, 30, 60, 0.09);
+            --fill-tertiary: rgba(50, 30, 60, 0.03);
+            --header-bg: rgba(244, 239, 244, 0.88);
+            --nav-bg: rgba(250, 246, 250, 0.92);
+            --ring-warm-1: #A584BE;
+            --ring-warm-2: #6A4780;
+            --shadow-card: 0 2px 32px rgba(50, 30, 60, 0.05), 0 1px 6px rgba(50, 30, 60, 0.04);
+            --shadow-elevated: 0 8px 48px rgba(50, 30, 60, 0.12), 0 2px 12px rgba(50, 30, 60, 0.07);
+            --shadow-button: 0 2px 16px rgba(34, 23, 38, 0.18), 0 1px 4px rgba(34, 23, 38, 0.12);
+            --shadow-blue: 0 4px 20px rgba(122, 90, 138, 0.22);
+            --ink: #6A4780;
+            --ink-light: #A584BE;
+            --ink-gold: #CDB3DF;
         }
 
         * {
@@ -1131,11 +1231,11 @@
             position: sticky;
             top: 0;
             z-index: 20;
-            background: rgba(244, 239, 230, 0.88);
+            background: var(--header-bg);
             border-bottom: 0.5px solid var(--separator);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
             backdrop-filter: blur(24px) saturate(180%);
-            transition: background 0.5s ease-in-out, border-color 0.5s ease-in-out;
+            transition: background 0.4s ease-in-out, border-color 0.4s ease-in-out;
         }
 
         .header-inner {
@@ -1154,10 +1254,26 @@
         .header-brand {
             font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Georgia, serif;
             font-size: 11px;
-            font-weight: 400;
+            font-weight: 500;
             color: var(--label-quaternary);
             letter-spacing: 0.32em;
             text-transform: uppercase;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            padding: 4px 8px;
+            margin-right: -8px;
+            border-radius: 999px;
+            transition: opacity 0.15s ease, background 0.2s ease, color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header-brand:active {
+            opacity: 0.6;
+            background: var(--fill);
+            color: var(--label);
         }
 
         .header-time {
@@ -1203,14 +1319,14 @@
             width: 100%;
             max-width: 430px;
             z-index: 30;
-            background: rgba(253, 250, 245, 0.92);
+            background: var(--nav-bg);
             border-top: 0.5px solid var(--separator);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
             backdrop-filter: blur(24px) saturate(180%);
             padding: 8px 0 env(safe-area-inset-bottom, 0px);
             display: flex;
             align-items: flex-start;
-            transition: background 0.5s ease-in-out;
+            transition: background 0.4s ease-in-out;
         }
 
         .nav-tab {
@@ -1548,6 +1664,69 @@
             align-items: center;
             gap: 3px;
             margin-left: 6px;
+        }
+
+        /* --- Zen Theme Picker Cards --- */
+        .theme-card-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card);
+            padding: 13px 16px;
+            border-radius: var(--radius-sm);
+            border: 0.5px solid var(--separator);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-card-option:active {
+            transform: scale(0.98);
+            background: var(--fill);
+        }
+
+        .theme-card-option.active {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 1px var(--blue);
+        }
+
+        .theme-palette-preview {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 4px;
+            flex-shrink: 0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-palette-preview span {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .theme-check-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--fill);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .theme-card-option.active .theme-check-icon {
+            background: var(--blue);
+            color: #FFFFFF;
         }
 
         /* --- Action Card --- */
@@ -2494,7 +2673,10 @@
         <header id="appHeader">
             <div class="header-inner">
                 <span class="header-date" id="currentDate">載入中...</span>
-                <span class="header-brand">TIME 8</span>
+                <span class="header-brand" id="headerBrandBtn" onclick="openThemePicker()" title="點擊切換禪意主題風格">
+                    <span>TIME 8</span>
+                    <span style="font-size:8px; opacity:0.6;">✦</span>
+                </span>
             </div>
         </header>
 
@@ -2912,6 +3094,102 @@
     <div id="inkDropOverlay"></div>
 
     <!-- Modals: iOS Action Sheet Style -->
+
+    <!-- Zen Theme Picker Modal (Apple Action Sheet) -->
+    <div id="themePickerModal" class="fixed inset-0 hidden" style="z-index: 105;">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)" onclick="closeThemePicker()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:16px 22px 32px; max-height:85vh; overflow-y:auto;">
+            <div class="sheet-handle" style="margin-bottom:14px;"></div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:0 2px;">
+                <div>
+                    <h3 style="font-size:17px; font-weight:700; color:var(--label); margin:0;">禪意主題色彩</h3>
+                    <div style="font-size:12px; color:var(--label-tertiary); margin-top:2px;">4 款極致克制之自然調色</div>
+                </div>
+                <button onclick="closeThemePicker()" aria-label="關閉"
+                    style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:12px;"></i>
+                </button>
+            </div>
+
+            <!-- Theme Cards List (Apple Inset Grouped) -->
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+                
+                <!-- 1. 和風暖白 -->
+                <div class="theme-card-option" id="themeOpt_alabaster" onclick="selectZenTheme('alabaster')">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="theme-palette-preview" style="background:#F4EFE6; border:1px solid rgba(40,32,20,0.12);">
+                            <span style="background:#D4B688;"></span>
+                            <span style="background:#6E7D6A;"></span>
+                        </div>
+                        <div>
+                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">和風暖白</div>
+                            <div style="font-size:12px; color:var(--label-tertiary);">日本和紙白 · 大地金褐光環</div>
+                        </div>
+                    </div>
+                    <div class="theme-check-icon" id="themeCheck_alabaster">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <!-- 2. 黑曜夜色 -->
+                <div class="theme-card-option" id="themeOpt_obsidian" onclick="selectZenTheme('obsidian')">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="theme-palette-preview" style="background:#121110; border:1px solid rgba(255,255,255,0.15);">
+                            <span style="background:#E2C799;"></span>
+                            <span style="background:#8BAB86;"></span>
+                        </div>
+                        <div>
+                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">黑曜夜色</div>
+                            <div style="font-size:12px; color:var(--label-tertiary);">極簡深空黑 · 琉璃微光</div>
+                        </div>
+                    </div>
+                    <div class="theme-check-icon" id="themeCheck_obsidian">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <!-- 3. 竹影森綠 -->
+                <div class="theme-card-option" id="themeOpt_sage" onclick="selectZenTheme('sage')">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="theme-palette-preview" style="background:#EFF4EE; border:1px solid rgba(30,50,32,0.12);">
+                            <span style="background:#72A979;"></span>
+                            <span style="background:#4D7A52;"></span>
+                        </div>
+                        <div>
+                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">竹影森綠</div>
+                            <div style="font-size:12px; color:var(--label-tertiary);">清幽鼠尾草灰綠 · 翠竹光環</div>
+                        </div>
+                    </div>
+                    <div class="theme-check-icon" id="themeCheck_sage">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <!-- 4. 暮光煙紫 -->
+                <div class="theme-card-option" id="themeOpt_twilight" onclick="selectZenTheme('twilight')">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="theme-palette-preview" style="background:#F4EFF4; border:1px solid rgba(50,30,60,0.12);">
+                            <span style="background:#A584BE;"></span>
+                            <span style="background:#7A5A8A;"></span>
+                        </div>
+                        <div>
+                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">暮光煙紫</div>
+                            <div style="font-size:12px; color:var(--label-tertiary);">靜謐薰衣草霧灰 · 暮靄光環</div>
+                        </div>
+                    </div>
+                    <div class="theme-check-icon" id="themeCheck_twilight">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <button onclick="closeThemePicker()" class="active-scale"
+                style="width:100%; padding:14px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:14.5px; font-weight:600; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em;">完成</button>
+        </div>
+    </div>
 
     <!-- Install Guide (Apple Action Sheet) -->
     <div id="installGuideModal" class="fixed inset-0 hidden" style="z-index: 100;">
@@ -5126,7 +5404,114 @@
             if (modal) modal.classList.add('hidden');
         }
 
-        // ===== APPLE SHAREABLE FOCUS ACHIEVEMENT CARD (今日專注留白日報卡) =====
+        // ===== ZEN THEME CONTROLLER (Apple 禪意主題色彩切換) =====
+        const ZEN_THEMES = {
+            alabaster: {
+                name: '和風暖白',
+                ringWarm1: '#D4B688',
+                ringWarm2: '#9C7747',
+                ringGreen1: '#72A979',
+                ringGreen2: '#46734C',
+                ringPurple1: '#A584BE',
+                ringPurple2: '#7B578F'
+            },
+            obsidian: {
+                name: '黑曜夜色',
+                ringWarm1: '#E2C799',
+                ringWarm2: '#A88554',
+                ringGreen1: '#8BAB86',
+                ringGreen2: '#5D9E64',
+                ringPurple1: '#C49EE2',
+                ringPurple2: '#9E7AB2'
+            },
+            sage: {
+                name: '竹影森綠',
+                ringWarm1: '#72A979',
+                ringWarm2: '#3D6E44',
+                ringGreen1: '#5B9E64',
+                ringGreen2: '#2F6E38',
+                ringPurple1: '#8BA58E',
+                ringPurple2: '#5C7A60'
+            },
+            twilight: {
+                name: '暮光煙紫',
+                ringWarm1: '#A584BE',
+                ringWarm2: '#6A4780',
+                ringGreen1: '#8B749E',
+                ringGreen2: '#5C4472',
+                ringPurple1: '#C49EE2',
+                ringPurple2: '#8E67A8'
+            }
+        };
+
+        function openThemePicker() {
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            playSingleClickSound("G4");
+
+            const currentTheme = appSettings.zenTheme || 'alabaster';
+            updateThemePickerUI(currentTheme);
+
+            const modal = document.getElementById('themePickerModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeThemePicker() {
+            const modal = document.getElementById('themePickerModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function selectZenTheme(themeKey) {
+            if (!ZEN_THEMES[themeKey]) return;
+            if ('vibrate' in navigator) navigator.vibrate(12);
+            playSingleClickSound("C5");
+
+            applyZenTheme(themeKey);
+            updateThemePickerUI(themeKey);
+
+            appSettings.zenTheme = themeKey;
+            localStorage.setItem('appSettings', JSON.stringify(appSettings));
+        }
+
+        function applyZenTheme(themeKey) {
+            const theme = ZEN_THEMES[themeKey] || ZEN_THEMES.alabaster;
+            document.documentElement.setAttribute('data-zen-theme', themeKey);
+
+            // Update SVG Gradient stops
+            const ringWarm1 = document.querySelector('#ringGradientWarm stop:first-child');
+            const ringWarm2 = document.querySelector('#ringGradientWarm stop:last-child');
+            if (ringWarm1 && ringWarm2) {
+                ringWarm1.setAttribute('stop-color', theme.ringWarm1);
+                ringWarm2.setAttribute('stop-color', theme.ringWarm2);
+            }
+
+            const ringGreen1 = document.querySelector('#ringGradientGreen stop:first-child');
+            const ringGreen2 = document.querySelector('#ringGradientGreen stop:last-child');
+            if (ringGreen1 && ringGreen2) {
+                ringGreen1.setAttribute('stop-color', theme.ringGreen1);
+                ringGreen2.setAttribute('stop-color', theme.ringGreen2);
+            }
+
+            const ringPurple1 = document.querySelector('#ringGradientPurple stop:first-child');
+            const ringPurple2 = document.querySelector('#ringGradientPurple stop:last-child');
+            if (ringPurple1 && ringPurple2) {
+                ringPurple1.setAttribute('stop-color', theme.ringPurple1);
+                ringPurple2.setAttribute('stop-color', theme.ringPurple2);
+            }
+        }
+
+        function updateThemePickerUI(activeThemeKey) {
+            ['alabaster', 'obsidian', 'sage', 'twilight'].forEach(k => {
+                const card = document.getElementById(`themeOpt_${k}`);
+                if (card) {
+                    if (k === activeThemeKey) {
+                        card.classList.add('active');
+                    } else {
+                        card.classList.remove('active');
+                    }
+                }
+            });
+        }
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed', err));
@@ -5224,6 +5609,7 @@
                 }
             }
             if (!appSettings.targetHours) appSettings.targetHours = 8;
+            applyZenTheme(appSettings.zenTheme || 'alabaster');
 
             // Migrate old flat data to per-day if needed
             const oldData = localStorage.getItem('timecardData');
