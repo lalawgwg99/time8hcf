@@ -2611,16 +2611,20 @@
                         </div>
                     </div>
 
-                    <!-- Zen Rest Toolbar: In-place Mindfulness & Soundscape -->
+                    <!-- Zen Rest Toolbar: In-place Mindfulness, Soundscape & Share Card -->
                     <div id="zenRestBar" class="zen-rest-bar">
                         <button class="zen-tool-btn" id="breatheToolBtn" onclick="toggleZenBreathe()" title="開啟 1 分鐘正念深呼吸">
                             <i class="fas fa-wind zen-tool-icon"></i>
-                            <span>正念深呼吸</span>
+                            <span>正念呼吸</span>
                             <span class="zen-tool-badge">1 min</span>
                         </button>
                         <button class="zen-tool-btn" id="soundscapeToolBtn" onclick="toggleZenSoundscape()" title="播放 432Hz 舒壓頌缽音景">
                             <i class="fas fa-bell zen-tool-icon" id="soundscapeToolIcon"></i>
                             <span id="soundscapeToolText">432Hz 頌缽</span>
+                        </button>
+                        <button class="zen-tool-btn" id="shareCardToolBtn" onclick="openShareFocusCard()" title="產生今日專注成就日報卡">
+                            <i class="fas fa-arrow-up-from-bracket zen-tool-icon"></i>
+                            <span>專注日報</span>
                         </button>
                     </div>
                 </div>
@@ -2959,6 +2963,50 @@
 
             <button onclick="closeInstallGuide()"
                 style="width:100%; padding:15px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:15px; font-weight:500; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em;">了解並返回</button>
+        </div>
+    </div>
+
+    <!-- Share Focus Card Modal (Apple Action Sheet / Card Preview) -->
+    <div id="shareFocusCardModal" class="fixed inset-0 hidden" style="z-index: 110;">
+        <div class="absolute inset-0 bg-black/60" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)" onclick="closeShareFocusCard()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:16px 20px 32px; max-height:92vh; overflow-y:auto; display:flex; flex-direction:column; align-items:center;">
+            <div class="sheet-handle" style="margin-bottom:12px;"></div>
+            
+            <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding:0 4px;">
+                <div>
+                    <h3 style="font-size:17px; font-weight:700; color:var(--label); margin:0;">今日專注日報卡</h3>
+                    <div style="font-size:12px; color:var(--label-tertiary); margin-top:2px;">Apple 留白美學 · 記錄每日心流</div>
+                </div>
+                <button onclick="closeShareFocusCard()" aria-label="關閉"
+                    style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:12px;"></i>
+                </button>
+            </div>
+
+            <!-- Card Image Preview Stage -->
+            <div style="width:100%; display:flex; justify-content:center; margin-bottom:16px; position:relative;">
+                <canvas id="focusCardCanvas" style="display:none;"></canvas>
+                <img id="focusCardPreviewImg" src="" alt="今日專注日報卡"
+                    style="max-width:290px; width:82%; height:auto; border-radius:18px; box-shadow: 0 12px 36px rgba(0,0,0,0.12); border: 0.5px solid var(--separator); background: #FAF6F0; transition: transform 0.2s ease;" />
+            </div>
+
+            <div style="font-size:11.5px; color:var(--label-tertiary); margin-bottom:16px; text-align:center;">
+                💡 長按圖片可直接「儲存至照片」或「拷貝」
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="width:100%; display:flex; gap:10px;">
+                <button id="nativeShareBtn" onclick="shareFocusCardNative()" class="active-scale"
+                    style="flex:1; padding:14px; border-radius:var(--radius); font-size:14.5px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i class="fas fa-arrow-up-from-bracket" style="font-size:13px;"></i>
+                    <span>分享 / 儲存</span>
+                </button>
+                <button onclick="downloadFocusCardImage()" class="active-scale" title="下載高解析度圖檔"
+                    style="padding:14px 18px; border-radius:var(--radius); font-size:14.5px; font-weight:500; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); cursor:pointer;">
+                    <i class="fas fa-download" style="font-size:13px;"></i>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -5126,6 +5174,301 @@
             if (modal) modal.classList.add('hidden');
         }
 
+        // ===== APPLE SHAREABLE FOCUS ACHIEVEMENT CARD (今日專注留白日報卡) =====
+        let _currentFocusCardBlob = null;
+
+        function openShareFocusCard() {
+            if ('vibrate' in navigator) navigator.vibrate(12);
+            playSingleClickSound("E5");
+
+            const modal = document.getElementById('shareFocusCardModal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+
+            renderFocusCardCanvas();
+        }
+
+        function closeShareFocusCard() {
+            const modal = document.getElementById('shareFocusCardModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function renderFocusCardCanvas() {
+            const canvas = document.getElementById('focusCardCanvas');
+            const img = document.getElementById('focusCardPreviewImg');
+            if (!canvas || !img) return;
+
+            const ctx = canvas.getContext('2d');
+            const W = 800;
+            const H = 1200;
+            canvas.width = W;
+            canvas.height = H;
+
+            // 1. Background: Warm Alabaster Paper
+            ctx.fillStyle = '#FAF6F0';
+            ctx.fillRect(0, 0, W, H);
+
+            // Subtle Warm Glow at Top
+            const topGlow = ctx.createRadialGradient(W / 2, 220, 20, W / 2, 220, 480);
+            topGlow.addColorStop(0, 'rgba(212, 182, 136, 0.18)');
+            topGlow.addColorStop(0.7, 'rgba(212, 182, 136, 0.04)');
+            topGlow.addColorStop(1, 'rgba(250, 246, 240, 0)');
+            ctx.fillStyle = topGlow;
+            ctx.fillRect(0, 0, W, H);
+
+            // Card Inner Border (Subtle Paper Line)
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(24, 24, W - 48, H - 48);
+
+            // 2. Top Header: Date & App Brand
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+            const dateStr = `${year}.${month}.${day} · 星期${weekDays[now.getDay()]}`;
+
+            ctx.font = '500 24px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+            ctx.fillStyle = 'rgba(60, 60, 67, 0.6)';
+            ctx.textAlign = 'left';
+            ctx.fillText(dateStr, 56, 78);
+
+            ctx.textAlign = 'right';
+            ctx.font = '600 24px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+            ctx.fillStyle = '#1C1712';
+            ctx.fillText('🌿 TIME 8', W - 56, 78);
+
+            // 3. Circular Ring & Total Work Hours
+            const result = calculateTotalHours();
+            const targetMin = getTargetMinutes();
+            const timeObj = formatDurationFancy(result.total);
+            const pct = Math.min((result.total / targetMin) * 100, 100);
+
+            const ringCX = W / 2;
+            const ringCY = 340;
+            const ringR = 150;
+            const strokeW = 18;
+
+            // Ring Background Track
+            ctx.beginPath();
+            ctx.arc(ringCX, ringCY, ringR, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.lineWidth = strokeW;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            // Active Progress Ring Arc
+            if (pct > 0) {
+                const startAngle = -Math.PI / 2;
+                const endAngle = startAngle + (Math.PI * 2 * (pct / 100));
+
+                const ringGrad = ctx.createLinearGradient(ringCX - ringR, ringCY + ringR, ringCX + ringR, ringCY - ringR);
+                if (result.total >= targetMin) {
+                    ringGrad.addColorStop(0, '#72A979');
+                    ringGrad.addColorStop(1, '#46734C');
+                } else {
+                    ringGrad.addColorStop(0, '#D4B688');
+                    ringGrad.addColorStop(1, '#9C7747');
+                }
+
+                ctx.beginPath();
+                ctx.arc(ringCX, ringCY, ringR, startAngle, endAngle);
+                ctx.strokeStyle = ringGrad;
+                ctx.lineWidth = strokeW;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+
+            // Ring Center Text
+            ctx.textAlign = 'center';
+
+            // "今日累積工時"
+            ctx.font = '500 20px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+            ctx.fillStyle = 'rgba(60, 60, 67, 0.55)';
+            ctx.fillText('今日專注工時', ringCX, ringCY - 48);
+
+            // "8h 15m" SF Pro Display
+            ctx.font = '700 70px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+            ctx.fillStyle = '#1C1712';
+            const hoursDisplay = `${timeObj.h}h ${Math.round(timeObj.m)}m`;
+            ctx.fillText(hoursDisplay, ringCX, ringCY + 22);
+
+            // Lifecycle Pill / Percentage
+            const statusLabel = result.total >= targetMin ? '✨ 暮光賦歸 · 達成' : (result.isOngoing ? '🟢 心流專注中' : '☕ 身心歇息中');
+            ctx.font = '600 20px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+            ctx.fillStyle = result.total >= targetMin ? '#436B48' : '#7A5A8A';
+            ctx.fillText(`${statusLabel} (${Math.round(pct)}%)`, ringCX, ringCY + 64);
+
+            // 4. Metric Capsules (3 Columns: Streak, Sessions, Target)
+            const streak = getWorkStreak();
+            const sessionCount = Math.ceil(punchRecords.length / 2);
+            const targetH = appSettings.targetHours || 8;
+
+            const metrics = [
+                { icon: '🔥', label: '連續心流', val: `${streak} 天` },
+                { icon: '⏱', label: '工作階段', val: `${sessionCount} 次` },
+                { icon: '🎯', label: '目標設定', val: `${targetH} 小時` }
+            ];
+
+            const colW = (W - 112 - 32) / 3;
+            const startX = 56;
+            const metricY = 570;
+
+            metrics.forEach((m, i) => {
+                const x = startX + i * (colW + 16);
+                
+                // Capsule card
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
+                ctx.roundRect(x, metricY, colW, 96, 16);
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+
+                // Icon + Label
+                ctx.textAlign = 'center';
+                ctx.font = '500 17px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+                ctx.fillStyle = 'rgba(60, 60, 67, 0.6)';
+                ctx.fillText(`${m.icon} ${m.label}`, x + colW / 2, metricY + 36);
+
+                // Value
+                ctx.font = '700 24px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+                ctx.fillStyle = '#1C1712';
+                ctx.fillText(m.val, x + colW / 2, metricY + 74);
+            });
+
+            // 5. Zen Quote Card Box
+            const quoteY = 705;
+            const quoteW = W - 112;
+            const quoteH = 260;
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.beginPath();
+            ctx.roundRect(56, quoteY, quoteW, quoteH, 20);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.06)';
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+
+            // Quote Watermark
+            ctx.font = '700 52px serif';
+            ctx.fillStyle = 'rgba(110, 125, 106, 0.15)';
+            ctx.textAlign = 'left';
+            ctx.fillText('“', 84, quoteY + 60);
+
+            // Quote Text
+            const currentQuote = zenQuotes[_currentQuoteIndex] || zenQuotes[0];
+            ctx.font = '400 26px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+            ctx.fillStyle = '#2C251E';
+            ctx.textAlign = 'center';
+
+            // Multi-line wrap
+            wrapCanvasText(ctx, currentQuote, W / 2, quoteY + 95, quoteW - 64, 38);
+
+            // 6. Companion Pet Silhouette / Constellation (if unlocked)
+            const petState = loadPetState();
+            if (petState && petState.unlockedPartners && petState.unlockedPartners.length > 0) {
+                const partner = petState.unlockedPartners[0];
+                ctx.font = '500 18px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+                ctx.fillStyle = 'rgba(60, 60, 67, 0.6)';
+                ctx.fillText(`✨ 守護晶靈 · ${partner.name || '星軌晶靈'}`, W / 2, quoteY + 225);
+            }
+
+            // 7. Footer: Designer Badge "DESIGN • 德" & Brand
+            const footerY = 1030;
+
+            // Badge Pill
+            const badgeW = 160;
+            const badgeH = 34;
+            const badgeX = (W - badgeW) / 2;
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.035)';
+            ctx.beginPath();
+            ctx.roundRect(badgeX, footerY, badgeW, badgeH, 17);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.06)';
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+
+            ctx.font = '600 16px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+            ctx.fillStyle = '#1C1712';
+            ctx.textAlign = 'center';
+            ctx.fillText('DESIGN • 德', W / 2, footerY + 23);
+
+            // Tagline
+            ctx.font = '400 18px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+            ctx.fillStyle = 'rgba(60, 60, 67, 0.45)';
+            ctx.fillText('Crafted for Mindful Focus & Flow · TIME 8', W / 2, footerY + 70);
+
+            // Convert to image preview and blob
+            canvas.toBlob(blob => {
+                _currentFocusCardBlob = blob;
+                img.src = URL.createObjectURL(blob);
+            }, 'image/png');
+        }
+
+        function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split('');
+            let line = '';
+
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n];
+                const metrics = ctx.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n];
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
+        async function shareFocusCardNative() {
+            if ('vibrate' in navigator) navigator.vibrate(15);
+
+            if (_currentFocusCardBlob && navigator.share) {
+                try {
+                    const file = new File([_currentFocusCardBlob], `TIME8_FocusCard_${new Date().toISOString().slice(0, 10)}.png`, { type: 'image/png' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'TIME 8 · 今日專注成就卡',
+                            text: '今天專注圓滿，身心澄澈。'
+                        });
+                        return;
+                    }
+                } catch (e) {
+                    if (e.name !== 'AbortError') {
+                        downloadFocusCardImage();
+                    }
+                    return;
+                }
+            }
+
+            // Fallback to direct download
+            downloadFocusCardImage();
+        }
+
+        function downloadFocusCardImage() {
+            const canvas = document.getElementById('focusCardCanvas');
+            if (!canvas) return;
+
+            const link = document.createElement('a');
+            link.download = `TIME8_FocusCard_${new Date().toISOString().slice(0, 10)}.png`;
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showReminder("專注日報卡已儲存", 'work');
+            playSingleClickSound("C5");
+        }
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed', err));
@@ -5653,14 +5996,20 @@
                     } else if (punchRecords.length > 0) {
                         if (result.total >= targetMin) {
                             liveHint.classList.add('status-completed');
-                            statusText.textContent = '暮光賦歸';
+                            statusText.innerHTML = '暮光賦歸 <i class="fas fa-arrow-up-from-bracket" style="font-size:9.5px; opacity:0.75; margin-left:3px;"></i>';
+                            liveHint.title = '點擊開啟今日專注日報卡';
+                            liveHint.onclick = (e) => { e.stopPropagation(); openShareFocusCard(); };
                         } else {
                             liveHint.classList.add('status-resting');
                             statusText.textContent = '身心歇息中';
+                            liveHint.onclick = null;
+                            liveHint.title = '';
                         }
                     } else {
                         liveHint.classList.add('status-idle');
                         statusText.textContent = '靜待啟程';
+                        liveHint.onclick = null;
+                        liveHint.title = '';
                     }
                 }
             }
