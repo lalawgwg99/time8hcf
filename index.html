@@ -1554,6 +1554,649 @@
         .sprite-terrarium {
             border-radius: var(--radius);
         }
+
+        /* ===== TIME8 ZEN ORBITAL COMPANION STAGE & CODEX (APPLE NATIVE DESIGN) ===== */
+        .partner-room {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 12px 0 24px;
+        }
+
+        /* --- Hero Companion Stage Card --- */
+        .partner-stage-card {
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s var(--spring);
+        }
+
+        .partner-stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .partner-stage-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--label-secondary);
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .partner-pill-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3.5px 11px;
+            border-radius: 999px;
+            background: var(--fill);
+            color: var(--label-tertiary);
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+        }
+
+        .partner-pill-badge.active {
+            background: rgba(122, 90, 138, 0.12);
+            color: var(--purple);
+            border: 0.5px solid rgba(122, 90, 138, 0.25);
+        }
+
+        /* --- 7-Segment Orbital Halo Center --- */
+        .partner-orbital-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 8px auto 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orbital-stage-bg {
+            position: absolute;
+            inset: 12px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.95) 0%, rgba(246, 240, 232, 0.45) 60%, transparent 85%);
+            pointer-events: none;
+        }
+
+        .orbital-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .orbital-track-segment {
+            fill: none;
+            stroke: var(--fill-secondary);
+            stroke-width: 4.5;
+            stroke-linecap: round;
+            opacity: 0.45;
+            transition: all 0.4s ease;
+        }
+
+        .orbital-active-segment {
+            fill: none;
+            stroke: url(#orbitalGradient);
+            stroke-width: 6;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 4px rgba(122, 90, 138, 0.55));
+            transition: all 0.6s var(--spring);
+        }
+
+        .orbital-star-node {
+            fill: #FFFFFF;
+            stroke: var(--purple);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 5px rgba(122, 90, 138, 0.9));
+            animation: starPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes starPulse {
+            0%, 100% { r: 4; filter: drop-shadow(0 0 4px rgba(122, 90, 138, 0.7)); }
+            50% { r: 5.5; filter: drop-shadow(0 0 8px rgba(122, 90, 138, 1)); }
+        }
+
+        /* Center Egg Visual */
+        .orbital-center-egg {
+            position: relative;
+            width: 110px;
+            height: 146px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: eggBreathe 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes eggBreathe {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-4px) scale(1.015); }
+        }
+
+        .egg-shadow {
+            position: absolute;
+            bottom: 2px;
+            width: 86px;
+            height: 14px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at center, rgba(40, 28, 16, 0.16) 0%, rgba(40, 28, 16, 0) 72%);
+            filter: blur(3.5px);
+        }
+
+        .egg-shell {
+            position: relative;
+            width: 98px;
+            height: 132px;
+            border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FAF6F0 25%, #EBE0D0 68%, #D4C3AF 100%);
+            box-shadow:
+                inset 7px 8px 14px rgba(255, 255, 255, 0.95),
+                inset -7px -8px 16px rgba(100, 80, 60, 0.15),
+                inset 0 2px 3px rgba(255, 255, 255, 0.8),
+                0 8px 20px rgba(50, 35, 20, 0.08);
+            overflow: hidden;
+            transition: box-shadow 0.5s ease;
+        }
+
+        .egg-sheen {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            width: 32px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 78%);
+            transform: rotate(-24deg);
+            pointer-events: none;
+        }
+
+        .egg-core-glow {
+            position: absolute;
+            inset: 16px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 48% 46%, rgba(122, 90, 138, 0.38), rgba(139, 104, 64, 0.16) 55%, transparent 72%);
+            mix-blend-mode: multiply;
+            opacity: 0.5;
+            transition: opacity 0.6s ease;
+        }
+
+        .egg-facet {
+            position: absolute;
+            opacity: 0.28;
+            mix-blend-mode: soft-light;
+            pointer-events: none;
+        }
+        .facet-a {
+            width: 52px; height: 86px; left: -8px; top: 22px;
+            background: linear-gradient(145deg, #fff, rgba(200, 180, 216, 0.2));
+            clip-path: polygon(28% 0, 100% 18%, 76% 100%, 0 74%);
+        }
+        .facet-b {
+            width: 54px; height: 78px; right: -8px; top: 16px;
+            background: linear-gradient(215deg, rgba(255, 255, 255, 0.9), rgba(122, 90, 138, 0.2));
+            clip-path: polygon(0 12%, 72% 0, 100% 74%, 26% 100%);
+        }
+
+        .egg-glint {
+            position: absolute;
+            width: 28px;
+            height: 52px;
+            left: 18px;
+            top: 20px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), transparent);
+            transform: rotate(20deg);
+            filter: blur(1.8px);
+            opacity: 0.4;
+        }
+
+        .egg-crack {
+            position: absolute;
+            width: 2.2px;
+            height: 0;
+            background: linear-gradient(180deg, #FFFFFF, rgba(220, 195, 238, 0.95));
+            box-shadow: 0 0 6px rgba(122, 90, 138, 0.7);
+            border-radius: 2px;
+            opacity: 0;
+            transition: height 0.6s ease, opacity 0.4s ease;
+            transform-origin: top center;
+        }
+        .crack-a { top: 46px; left: 44px; transform: rotate(10deg); }
+        .crack-b { top: 72px; left: 48px; transform: rotate(-24deg); }
+        .crack-c { top: 88px; left: 40px; transform: rotate(14deg); }
+
+        /* Progress Crack Stages */
+        .egg-progress-1 .egg-glint { opacity: 0.55; }
+        .egg-progress-3 .egg-crack.crack-a { height: 34px; opacity: 0.8; }
+        .egg-progress-5 .egg-crack.crack-a { height: 58px; opacity: 0.9; }
+        .egg-progress-5 .egg-crack.crack-b { height: 30px; opacity: 0.8; }
+        .egg-progress-7 .egg-crack.crack-a { height: 68px; opacity: 1; }
+        .egg-progress-7 .egg-crack.crack-b { height: 42px; opacity: 0.95; }
+        .egg-progress-7 .egg-crack.crack-c { height: 26px; opacity: 0.9; }
+        .egg-progress-7 .egg-shell {
+            box-shadow:
+                inset 7px 8px 14px rgba(255, 255, 255, 0.98),
+                inset -7px -8px 16px rgba(100, 80, 60, 0.15),
+                0 0 24px rgba(122, 90, 138, 0.4),
+                0 10px 24px rgba(50, 35, 20, 0.1);
+        }
+        .egg-progress-7 .orbital-center-egg {
+            animation: eggReadyGlow 2.2s ease-in-out infinite;
+        }
+        @keyframes eggReadyGlow {
+            0%, 100% { transform: translateY(0) scale(1.02); filter: drop-shadow(0 0 8px rgba(122, 90, 138, 0.35)); }
+            50% { transform: translateY(-5px) scale(1.045); filter: drop-shadow(0 0 16px rgba(122, 90, 138, 0.55)); }
+        }
+
+        /* Center Living Pet Stage (When pet is hatched) */
+        .orbital-center-pet {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .partner-art {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            flex: 0 0 auto;
+        }
+
+        .pet-layer {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .pet-layer.body {
+            width: 82px;
+            height: 74px;
+            top: 55%;
+            background: radial-gradient(circle at 35% 25%, #FFFFFF, #C9B6D7 35%, #8F76A5 100%);
+            border-radius: 48% 48% 44% 44%;
+            box-shadow: 0 8px 18px rgba(80, 54, 95, 0.16);
+        }
+
+        .pet-layer.body::after {
+            content: "";
+            position: absolute;
+            inset: 5px 8px auto 8px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .pet-layer.eyes::before,
+        .pet-layer.eyes::after {
+            content: "";
+            position: absolute;
+            width: 9px;
+            height: 12px;
+            top: 48%;
+            border-radius: 50%;
+            background: #2D2230;
+            box-shadow: inset 2px 1.5px rgba(255, 255, 255, 0.7);
+        }
+        .pet-layer.eyes::before { left: 40%; transform: rotate(-6deg); }
+        .pet-layer.eyes::after { right: 40%; transform: rotate(6deg); }
+
+        .pet-layer.mouth {
+            top: 66%;
+            width: 14px;
+            height: 5px;
+            border-bottom: 2px solid #4B3B4E;
+            border-radius: 0 0 14px 14px;
+        }
+
+        .pet-layer.ears::before,
+        .pet-layer.ears::after {
+            content: "";
+            position: absolute;
+            top: 25%;
+            width: 22px;
+            height: 36px;
+            background: #A78BB8;
+            border-radius: 70% 25% 65% 25%;
+        }
+        .pet-layer.ears::before { left: 26%; transform: rotate(-22deg); }
+        .pet-layer.ears::after { right: 26%; transform: scaleX(-1) rotate(-22deg); }
+
+        .pet-layer.tail {
+            width: 36px;
+            height: 52px;
+            left: 78%;
+            top: 62%;
+            background: #9B80AD;
+            border-radius: 70% 30% 70% 30%;
+            transform: translate(-50%, -50%) rotate(24deg);
+            z-index: 0;
+        }
+
+        .pet-layer.arms::before,
+        .pet-layer.arms::after {
+            content: "";
+            position: absolute;
+            top: 56%;
+            width: 26px;
+            height: 12px;
+            background: #AA92BB;
+            border-radius: 50%;
+        }
+        .pet-layer.arms::before { left: 20%; transform: rotate(16deg); }
+        .pet-layer.arms::after { right: 20%; transform: rotate(-16deg); }
+
+        .pet-layer.feet::before,
+        .pet-layer.feet::after {
+            content: "";
+            position: absolute;
+            top: 76%;
+            width: 24px;
+            height: 13px;
+            background: #80698E;
+            border-radius: 50%;
+        }
+        .pet-layer.feet::before { left: 35%; }
+        .pet-layer.feet::after { right: 35%; }
+
+        .pet-layer.bodyAccessory {
+            top: 60%;
+            width: 38px;
+            height: 16px;
+            border: 2.5px solid #77707C;
+            border-radius: 6px;
+        }
+
+        .pet-layer.headAccessory {
+            top: 22%;
+            width: 44px;
+            height: 14px;
+            border-top: 3.5px solid #80659B;
+            border-radius: 50%;
+        }
+
+        .pet-layer.effectBack {
+            width: 120px;
+            height: 120px;
+            border: 1px solid rgba(128, 101, 155, 0.25);
+            border-radius: 50%;
+        }
+
+        .pet-layer.effectFront {
+            width: 95px;
+            height: 95px;
+            border: 1px dashed rgba(122, 90, 138, 0.2);
+            border-radius: 50%;
+        }
+
+        /* --- Hero Meta & Information Hierarchy --- */
+        .partner-hero-meta {
+            text-align: center;
+            margin-top: 14px;
+        }
+
+        .partner-hero-title {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--label);
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+
+        .partner-hero-sub {
+            font-size: 13px;
+            color: var(--label-secondary);
+            line-height: 1.45;
+        }
+
+        .partner-feature-row {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .partner-feature-pill {
+            font-size: 11px;
+            color: var(--label-secondary);
+            background: var(--fill);
+            border: 0.5px solid var(--separator);
+            padding: 3.5px 10px;
+            border-radius: 999px;
+            letter-spacing: 0.02em;
+        }
+
+        /* --- Actions & Status Guidance --- */
+        .partner-status-box {
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: var(--fill);
+            border: 0.5px solid var(--separator);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--label-secondary);
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+
+        .partner-primary-btn {
+            width: 100%;
+            min-height: 48px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s var(--spring);
+            margin-top: 14px;
+            background: linear-gradient(135deg, #2D241E 0%, #1C1712 100%);
+            color: #FFFDF9;
+            box-shadow: 0 4px 18px rgba(122, 90, 138, 0.3);
+            animation: readyPulse 2.4s ease-in-out infinite;
+        }
+
+        .partner-primary-btn:active {
+            transform: scale(0.98);
+            opacity: 0.92;
+        }
+
+        @keyframes readyPulse {
+            0%, 100% { box-shadow: 0 4px 16px rgba(122, 90, 138, 0.25); }
+            50% { box-shadow: 0 6px 24px rgba(122, 90, 138, 0.45); }
+        }
+
+        /* --- Companion Codex Badge Wall --- */
+        .partner-codex-card {
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            border-radius: var(--radius);
+            padding: 18px 18px 20px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .codex-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .codex-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--label-secondary);
+            letter-spacing: 0.04em;
+        }
+
+        .codex-count {
+            font-size: 12px;
+            color: var(--label-tertiary);
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .codex-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .codex-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 4px 8px;
+            border-radius: 14px;
+            background: var(--fill-tertiary);
+            border: 0.5px solid var(--separator);
+            cursor: pointer;
+            transition: all 0.25s var(--spring);
+            position: relative;
+        }
+
+        .codex-item:active {
+            transform: scale(0.95);
+        }
+
+        .codex-item.unlocked {
+            background: var(--card);
+            box-shadow: 0 2px 8px rgba(40, 30, 10, 0.04);
+            border-color: rgba(122, 90, 138, 0.22);
+        }
+
+        .codex-badge-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .codex-item.locked .codex-badge-icon {
+            background: var(--fill);
+            color: var(--label-quaternary);
+            border: 1px dashed var(--separator);
+        }
+
+        .codex-item.unlocked .codex-badge-icon {
+            background: radial-gradient(circle at 35% 35%, #FFFFFF, #EADBEE);
+            border: 1px solid rgba(122, 90, 138, 0.3);
+            box-shadow: 0 2px 10px rgba(122, 90, 138, 0.25);
+        }
+
+        .codex-item-name {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--label-secondary);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 66px;
+        }
+
+        .codex-item.locked .codex-item-name {
+            color: var(--label-tertiary);
+        }
+
+        .codex-item-rarity {
+            font-size: 9px;
+            color: var(--label-tertiary);
+            letter-spacing: 0.02em;
+        }
+
+        /* Rarity Badges */
+        .partner-badge {
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 3px 8.5px;
+            border-radius: 999px;
+            letter-spacing: 0.04em;
+        }
+        .partner-badge-hidden { display: none !important; }
+        .rarity-common { background: var(--fill-secondary); color: var(--label-secondary); }
+        .rarity-rare { background: rgba(110, 125, 106, 0.14); color: var(--blue); border: 0.5px solid rgba(110, 125, 106, 0.25); }
+        .rarity-epic { background: rgba(122, 90, 138, 0.14); color: var(--purple); border: 0.5px solid rgba(122, 90, 138, 0.25); }
+        .rarity-hidden { background: rgba(212, 163, 62, 0.16); color: #9E7412; border: 0.5px solid rgba(212, 163, 62, 0.35); }
+
+        /* --- Notice Banners & Apple Toast --- */
+        .partner-notice {
+            display: none;
+            margin: 12px 0 0;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(110, 125, 106, 0.12);
+            color: var(--label);
+            font-size: 12px;
+            line-height: 1.4;
+            border: 0.5px solid rgba(110, 125, 106, 0.2);
+        }
+        .partner-notice.visible { display: block; }
+
+        .partner-toast {
+            position: fixed;
+            bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 16px);
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1C1712;
+            color: #FFFDF9;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-size: 12.5px;
+            box-shadow: var(--shadow-elevated);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s var(--spring);
+            z-index: 120;
+            max-width: 90vw;
+            text-align: center;
+        }
+        .partner-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .orbital-center-egg,
+            .orbital-star-node,
+            .partner-primary-btn {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -1562,12 +2205,11 @@
     <div style="max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;"
         id="app">
 
-        <!-- Header: Minimal Editorial -->
+        <!-- Header: Minimal Editorial (No redundant system time) -->
         <header id="appHeader">
             <div class="header-inner">
                 <span class="header-date" id="currentDate">載入中...</span>
-                <span class="header-brand"></span>
-                <span class="header-time" id="currentTime">00:00</span>
+                <span class="header-brand">TIME 8</span>
             </div>
         </header>
 
@@ -1723,7 +2365,40 @@
                         </div>
 
                         <!-- 7-Segment Orbital Halo Stage -->
-                        <div id="partnerStageContainer"></div>
+                        <div id="partnerStageContainer">
+                            <div class="partner-orbital-container" aria-label="7 段工時星軌光環，進度 0 / 7">
+                                <div class="orbital-stage-bg"></div>
+                                <svg class="orbital-svg" viewBox="0 0 220 220">
+                                    <defs>
+                                        <linearGradient id="orbitalGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#C4A87A" />
+                                            <stop offset="50%" stop-color="#9A78B4" />
+                                            <stop offset="100%" stop-color="#7A5A8A" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M 110.00 16.00 A 94 94 0 0 0 183.15 50.84" class="orbital-track-segment"></path>
+                                    <path d="M 185.34 54.49 A 94 94 0 0 0 203.88 128.84" class="orbital-track-segment"></path>
+                                    <path d="M 203.20 133.00 A 94 94 0 0 0 153.22 193.36" class="orbital-track-segment"></path>
+                                    <path d="M 149.33 195.14 A 94 94 0 0 0 70.67 195.14" class="orbital-track-segment"></path>
+                                    <path d="M 66.78 193.36 A 94 94 0 0 0 16.80 133.00" class="orbital-track-segment"></path>
+                                    <path d="M 16.12 128.84 A 94 94 0 0 0 34.66 54.49" class="orbital-track-segment"></path>
+                                    <path d="M 36.85 50.84 A 94 94 0 0 0 110.00 16.00" class="orbital-track-segment"></path>
+                                </svg>
+                                <div class="orbital-center-egg egg-progress-0" aria-hidden="true">
+                                    <div class="egg-shadow"></div>
+                                    <div class="egg-shell">
+                                        <div class="egg-sheen"></div>
+                                        <div class="egg-core-glow"></div>
+                                        <div class="egg-facet facet-a"></div>
+                                        <div class="egg-facet facet-b"></div>
+                                        <div class="egg-glint"></div>
+                                        <div class="egg-crack crack-a"></div>
+                                        <div class="egg-crack crack-b"></div>
+                                        <div class="egg-crack crack-c"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Hero Information Hierarchy -->
                         <div class="partner-hero-meta">
@@ -1737,17 +2412,30 @@
                         </div>
 
                         <!-- Action / Guidance Area -->
-                        <div id="partnerActionArea"></div>
+                        <div id="partnerActionArea">
+                            <div class="partner-status-box">
+                                <span>🔒 每日達成 8 小時標準工時即可獲 1 顆碎片</span>
+                            </div>
+                        </div>
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
                     </div>
 
                     <!-- Companion Codex Badge Wall -->
                     <div class="partner-codex-card">
                         <div class="codex-header">
-                            <span class="codex-title">夥伴圖鑑</span>
+                            <span class="codex-title">✦ 夥伴圖鑑</span>
                             <span id="partnerCodexCount" class="codex-count">已解鎖 0 / 8</span>
                         </div>
-                        <div id="partnerCodexGrid" class="codex-grid"></div>
+                        <div id="partnerCodexGrid" class="codex-grid">
+                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">紫晶幼靈</div><div class="codex-item-rarity">一般</div></div>
+                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">碧苔石精</div><div class="codex-item-rarity">一般</div></div>
+                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">熾焰火精</div><div class="codex-item-rarity">一般</div></div>
+                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">幻月晶靈</div><div class="codex-item-rarity">稀有</div></div>
+                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">翠蔓石靈</div><div class="codex-item-rarity">稀有</div></div>
+                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">幻火行者</div><div class="codex-item-rarity">稀有</div></div>
+                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">紫耀天晶</div><div class="codex-item-rarity">珍稀</div></div>
+                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">熾皇晶魄</div><div class="codex-item-rarity">隱藏</div></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -2040,12 +2728,415 @@
         </div>
     </div>
 
-    <script src="./pet-parts.js"></script>
-    <script src="./pet-generator.js"></script>
-    <script src="./pet-storage.js"></script>
-    <script src="./pet-rewards.js"></script>
-    <script src="./pet-renderer.js"></script>
-    <script src="./pet-ui.js"></script>
+    <script>
+    // ===== PET PARTS CATALOG =====
+    (function (root) {
+        const part = (id, category, series, rarity, colorFamily, style, assetPath, extra = {}) => ({
+            id, category, series, rarity, colorFamily, style, assetPath,
+            weight: 1, compatibleBodies: ['*'], conflicts: [], ...extra,
+        });
+        const petParts = [
+            part('body_crystal_round_purple_01', 'body', 'crystal', 'common', 'purple', 'round', 'assets/pets/crystal/body-round-purple.svg'),
+            part('body_crystal_round_purple_rare_01', 'body', 'crystal', 'rare', 'purple', 'round', 'assets/pets/crystal/body-round-purple-rare.svg'),
+            part('body_crystal_round_purple_epic_01', 'body', 'crystal', 'epic', 'purple', 'round', 'assets/pets/crystal/body-round-purple-epic.svg'),
+            part('body_moss_round_green_01', 'body', 'moss', 'common', 'green', 'round', 'assets/pets/moss/body-round-green.svg'),
+            part('body_moss_round_green_rare_01', 'body', 'moss', 'rare', 'green', 'round', 'assets/pets/moss/body-round-green-rare.svg'),
+            part('body_ember_round_red_01', 'body', 'ember', 'common', 'red', 'round', 'assets/pets/ember/body-round-red.svg'),
+            part('body_ember_round_red_epic_01', 'body', 'ember', 'epic', 'red', 'round', 'assets/pets/ember/body-round-red-epic.svg'),
+            part('eye_crystal_moon_purple_01', 'eyes', 'crystal', 'common', 'purple', 'moon', 'assets/pets/crystal/eyes-moon-purple.svg'),
+            part('eye_crystal_moon_purple_rare_01', 'eyes', 'crystal', 'rare', 'purple', 'moon', 'assets/pets/crystal/eyes-moon-purple-rare.svg'),
+            part('eye_moss_leaf_green_01', 'eyes', 'moss', 'common', 'green', 'leaf', 'assets/pets/moss/eyes-leaf-green.svg'),
+            part('eye_ember_spark_red_epic_01', 'eyes', 'ember', 'epic', 'red', 'spark', 'assets/pets/ember/eyes-spark-red-epic.svg'),
+            part('mouth_crystal_line_01', 'mouth', 'crystal', 'common', 'purple', 'line', 'assets/pets/crystal/mouth-line.svg'),
+            part('mouth_moss_smile_01', 'mouth', 'moss', 'common', 'green', 'smile', 'assets/pets/moss/mouth-smile.svg'),
+            part('mouth_ember_smirk_rare_01', 'mouth', 'ember', 'rare', 'red', 'smirk', 'assets/pets/ember/mouth-smirk-rare.svg'),
+            part('ears_crystal_horn_purple_01', 'ears', 'crystal', 'rare', 'purple', 'horn', 'assets/pets/crystal/ears-horn-purple.svg', { large: true }),
+            part('ears_moss_leaf_green_01', 'ears', 'moss', 'common', 'green', 'leaf', 'assets/pets/moss/ears-leaf-green.svg'),
+            part('ears_ember_flame_red_01', 'ears', 'ember', 'common', 'red', 'flame', 'assets/pets/ember/ears-flame-red.svg'),
+            part('tail_crystal_drop_purple_01', 'tail', 'crystal', 'common', 'purple', 'drop', 'assets/pets/crystal/tail-drop-purple.svg'),
+            part('tail_crystal_drop_purple_epic_01', 'tail', 'crystal', 'epic', 'purple', 'drop', 'assets/pets/crystal/tail-drop-purple-epic.svg'),
+            part('tail_moss_vine_green_01', 'tail', 'moss', 'common', 'green', 'vine', 'assets/pets/moss/tail-vine-green.svg'),
+            part('tail_ember_flame_red_rare_01', 'tail', 'ember', 'rare', 'red', 'flame', 'assets/pets/ember/tail-flame-red-rare.svg'),
+            part('feet_crystal_short_purple_01', 'feet', 'crystal', 'common', 'purple', 'short', 'assets/pets/crystal/feet-short-purple.svg'),
+            part('feet_moss_root_green_01', 'feet', 'moss', 'common', 'green', 'root', 'assets/pets/moss/feet-root-green.svg'),
+            part('feet_ember_boot_red_rare_01', 'feet', 'ember', 'rare', 'red', 'boot', 'assets/pets/ember/feet-boot-red-rare.svg'),
+            part('arms_crystal_float_purple_01', 'arms', 'crystal', 'common', 'purple', 'float', 'assets/pets/crystal/arms-float-purple.svg'),
+            part('arms_moss_vine_green_01', 'arms', 'moss', 'common', 'green', 'vine', 'assets/pets/moss/arms-vine-green.svg'),
+            part('arms_ember_paw_red_epic_01', 'arms', 'ember', 'epic', 'red', 'paw', 'assets/pets/ember/arms-paw-red-epic.svg'),
+            part('head_crystal_crown_purple_01', 'head', 'crystal', 'hidden', 'purple', 'crown', 'assets/pets/crystal/head-crown-purple.svg'),
+            part('accessory_badge_gray_01', 'bodyAccessory', 'crystal', 'common', 'gray', 'badge', 'assets/pets/shared/accessory-badge-gray.svg', { accessoryType: 'main' }),
+            part('accessory_leaf_green_rare_01', 'bodyAccessory', 'moss', 'rare', 'green', 'leaf', 'assets/pets/moss/accessory-leaf-green-rare.svg', { accessoryType: 'main' }),
+            part('accessory_star_red_epic_01', 'bodyAccessory', 'ember', 'epic', 'red', 'star', 'assets/pets/ember/accessory-star-red-epic.svg', { accessoryType: 'main' }),
+            part('accessory_headband_purple_rare_01', 'headAccessory', 'crystal', 'rare', 'purple', 'headband', 'assets/pets/crystal/accessory-headband-purple.svg', { accessoryType: 'main', compatibleWithLargeEars: false }),
+            part('effect_back_crystal_rare_01', 'effectBack', 'crystal', 'rare', 'purple', 'sparkle', 'assets/pets/crystal/effect-back.svg', { accessoryType: 'effect' }),
+            part('effect_front_crystal_epic_01', 'effectFront', 'crystal', 'epic', 'purple', 'glow', 'assets/pets/crystal/effect-front.svg', { accessoryType: 'effect', conflicts: ['effect_back_crystal_rare_01'] }),
+            part('effect_back_moss_rare_01', 'effectBack', 'moss', 'rare', 'green', 'leaf-fall', 'assets/pets/moss/effect-back.svg', { accessoryType: 'effect' }),
+            part('effect_front_ember_epic_01', 'effectFront', 'ember', 'epic', 'red', 'flame', 'assets/pets/ember/effect-front.svg', { accessoryType: 'effect' }),
+        ];
+        root.petParts = petParts;
+        root.rarityWeights = { common: 60, rare: 28, epic: 10, hidden: 2 };
+    })(window);
+
+    // ===== PET STORAGE =====
+    (function (root) {
+        const STORAGE_KEY = 'time8hcf_pet_system';
+        const SCHEMA_VERSION = 1;
+        function emptyState() {
+            return {
+                schemaVersion: SCHEMA_VERSION,
+                resources: { eggFragments: 0, crystalDust: 0 },
+                pets: [], activePetId: null, rewards: [],
+                hatchState: { totalHatches: 0, firstHatchCompleted: false, firstHatchRerollUsed: false },
+            };
+        }
+        function readPetSystem() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return emptyState();
+                const parsed = JSON.parse(raw);
+                return {
+                    ...emptyState(), ...parsed,
+                    resources: { ...emptyState().resources, ...(parsed.resources || {}) },
+                    hatchState: { ...emptyState().hatchState, ...(parsed.hatchState || {}) },
+                    pets: Array.isArray(parsed.pets) ? parsed.pets : [],
+                    rewards: Array.isArray(parsed.rewards) ? parsed.rewards : [],
+                };
+            } catch (e) { return emptyState(); }
+        }
+        function writePetSystem(state) {
+            const next = { ...state, schemaVersion: SCHEMA_VERSION };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+            return next;
+        }
+        function activePet(state = readPetSystem()) {
+            return state.pets.find(pet => pet.petId === state.activePetId) || null;
+        }
+        root.PET_STORAGE_KEY = STORAGE_KEY;
+        root.readPetSystem = readPetSystem;
+        root.writePetSystem = writePetSystem;
+        root.activePet = activePet;
+    })(window);
+
+    // ===== PET REWARDS =====
+    (function (root) {
+        const DAILY_REWARD = 'dailyWorkCompleted';
+        const HATCH_COST = 7;
+        const signatureFor = parts => Object.keys(parts || {}).sort().map(k => `${k}:${parts[k] || ''}`).join('|');
+        function taiwanDateKey(date = new Date()) {
+            return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei' }).format(date);
+        }
+        function hasReward(state, date, rewardType = DAILY_REWARD) {
+            return state.rewards.some(r => r.date === date && r.rewardType === rewardType);
+        }
+        function grantDailyFragment(state, date = taiwanDateKey()) {
+            if (hasReward(state, date)) return { state, granted: false };
+            const reward = { date, rewardType: DAILY_REWARD, amount: 1, source: DAILY_REWARD, grantedAt: new Date().toISOString() };
+            return {
+                granted: true,
+                state: { ...state, resources: { ...state.resources, eggFragments: state.resources.eggFragments + 1 }, rewards: [...state.rewards, reward] },
+            };
+        }
+        function canHatch(state) { return state.resources.eggFragments >= HATCH_COST; }
+        function duplicateReward(rarity) { return { common: 10, rare: 20, epic: 50, hidden: 100 }[rarity] || 10; }
+        function commitHatch(state, pet) {
+            if (!canHatch(state)) throw new Error('Not enough egg fragments');
+            const signature = signatureFor(pet.parts);
+            const duplicate = state.pets.some(existing => signatureFor(existing.parts) === signature);
+            const next = {
+                ...state,
+                resources: { ...state.resources, eggFragments: state.resources.eggFragments - HATCH_COST },
+                hatchState: { ...state.hatchState, totalHatches: state.hatchState.totalHatches + 1, firstHatchCompleted: true },
+            };
+            if (duplicate) {
+                return { duplicate: true, dust: duplicateReward(pet.rarity), state: { ...next, resources: { ...next.resources, crystalDust: next.resources.crystalDust + duplicateReward(pet.rarity) } } };
+            }
+            return { duplicate: false, dust: 0, state: { ...next, pets: [...next.pets, pet], activePetId: next.activePetId || pet.petId } };
+        }
+        root.HATCH_COST = HATCH_COST;
+        root.DAILY_REWARD = DAILY_REWARD;
+        root.taiwanDateKey = taiwanDateKey;
+        root.hasReward = hasReward;
+        root.grantDailyFragment = grantDailyFragment;
+        root.canHatch = canHatch;
+        root.commitHatch = commitHatch;
+    })(window);
+
+    // ===== PET RENDERER =====
+    (function (root) {
+        const LAYER_ORDER = ['effectBack', 'tail', 'body', 'feet', 'arms', 'head', 'eyes', 'mouth', 'ears', 'headAccessory', 'bodyAccessory', 'effectFront'];
+        const CLASS_BY_CATEGORY = Object.fromEntries(LAYER_ORDER.map(cat => [cat, `pet-layer ${cat}`]));
+        function renderPet(container, pet, resolvedParts) {
+            if (!container) return;
+            container.innerHTML = '';
+            const art = document.createElement('div');
+            art.className = 'partner-art';
+            for (const category of LAYER_ORDER) {
+                if (!resolvedParts?.[category]) continue;
+                const layer = document.createElement('div');
+                layer.className = CLASS_BY_CATEGORY[category];
+                art.appendChild(layer);
+            }
+            container.appendChild(art);
+        }
+        root.renderPet = renderPet;
+    })(window);
+
+    // ===== PET GENERATOR =====
+    (function (root) {
+        const RARITY_ORDER = { common: 0, rare: 1, epic: 2, hidden: 3 };
+        const DRAW_CATEGORIES = ['eyes', 'mouth', 'ears', 'tail', 'feet', 'arms', 'head', 'headAccessory', 'bodyAccessory', 'effectBack', 'effectFront'];
+        const FIRST_HATCH_WEIGHTS = { rare: 75, epic: 22, hidden: 3 };
+        const PART_CATEGORIES = new Set(['body', ...DRAW_CATEGORIES]);
+
+        function weightedRandom(items, weightKey = 'weight', random = Math.random) {
+            if (!Array.isArray(items) || items.length === 0) return null;
+            const normalized = items.map(item => ({ ...item, [weightKey]: Math.max(Number(item[weightKey]) || 0, 0) }));
+            const total = normalized.reduce((sum, item) => sum + item[weightKey], 0);
+            if (total <= 0) return normalized[0];
+            let roll = random() * total;
+            for (const item of normalized) {
+                roll -= item[weightKey];
+                if (roll <= 0) return item;
+            }
+            return normalized[normalized.length - 1];
+        }
+        function randomId() {
+            return `pet_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        }
+        function rollRarity(isFirstHatch, random = Math.random) {
+            const weights = isFirstHatch ? FIRST_HATCH_WEIGHTS : root.rarityWeights;
+            return weightedRandom(Object.entries(weights).map(([rarity, weight]) => ({ rarity, weight })), 'weight', random)?.rarity || 'common';
+        }
+        function isRarityAllowed(partRarity, targetRarity) {
+            return partRarity === 'common' || RARITY_ORDER[partRarity] === RARITY_ORDER[targetRarity];
+        }
+        function resolveParts(parts, catalog = root.petParts) {
+            const byId = new Map((catalog || []).map(part => [part.id, part]));
+            return Object.fromEntries([...PART_CATEGORIES].map(category => {
+                const id = parts?.[category];
+                const exact = id ? byId.get(id) : null;
+                if (exact) return [category, exact];
+                const fallback = (catalog || []).find(part => part.category === category && part.rarity === 'common') || null;
+                return [category, fallback];
+            }));
+        }
+        function generatePet({ isFirstHatch = false, random = Math.random } = {}) {
+            const catalog = root.petParts || [];
+            const targetRarity = rollRarity(isFirstHatch, random);
+            const seriesList = ['crystal', 'moss', 'ember'];
+            const series = seriesList[Math.floor(random() * seriesList.length)];
+            const body = catalog.find(p => p.category === 'body' && p.series === series) || catalog[0];
+            const selected = { body };
+            for (const cat of DRAW_CATEGORIES) {
+                const candidates = catalog.filter(p => p.category === cat && p.series === series && isRarityAllowed(p.rarity, targetRarity));
+                if (candidates.length) selected[cat] = weightedRandom(candidates, 'weight', random);
+            }
+            return {
+                schemaVersion: 1, petId: randomId(), name: `${series === 'crystal' ? '紫晶幼靈' : series === 'moss' ? '碧苔石精' : '熾焰火精'}`,
+                series, rarity: targetRarity, colorFamily: body.colorFamily,
+                parts: Object.fromEntries([...PART_CATEGORIES].map(c => [c, selected[c]?.id || null])),
+                obtainedFrom: 'rhythm_egg', generatedAt: new Date().toISOString(), isFavorite: false,
+            };
+        }
+        function generateBestPet(options = {}, attempts = 3) {
+            return generatePet(options);
+        }
+        function validatePetParts() { return { valid: true, errors: [] }; }
+        root.resolveParts = resolveParts;
+        root.generatePet = generatePet;
+        root.generateBestPet = generateBestPet;
+        root.validatePetParts = validatePetParts;
+    })(window);
+
+    // ===== PET UI & CODEX =====
+    (function (root) {
+        const HATCH_COST = 7;
+        const RARITY_LABELS = { common: '一般', rare: '稀有', epic: '珍稀', hidden: '隱藏' };
+        const CODEX_SPECIES = [
+            { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '💎', desc: '初生紫晶靈體，能感應專注的心流波動。' },
+            { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common', icon: '🌿', desc: '生長於靜心土壤，散發自然安寧氣息。' },
+            { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common', icon: '🔥', desc: '工時熱忱凝聚而成，充滿朝氣與動力。' },
+            { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare', icon: '🌙', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。' },
+            { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare', icon: '🍃', desc: '藤蔓綿延不息，代表持之以恆的工作節奏。' },
+            { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare', icon: '⚡', desc: '敏捷靈動，激發源源不絕的靈感與熱情。' },
+            { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✨', desc: '珍稀晶靈，體內流動著純粹的星辰結晶。' },
+            { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden', icon: '👑', desc: '傳說級隱藏靈獸，唯有極致專注方能召喚。' },
+        ];
+        let hatchLocked = false;
+        let toastTimer = null;
+        function byId(id) { return document.getElementById(id); }
+        function showToast(message) {
+            let toast = byId('partnerToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'partnerToast';
+                toast.className = 'partner-toast';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.classList.add('show');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+        }
+        function eggProgressStage(fragmentCount) {
+            const p = Math.min(Math.max(Number(fragmentCount) || 0, 0), HATCH_COST);
+            return p >= 7 ? 7 : p >= 6 ? 6 : p >= 5 ? 5 : p >= 3 ? 3 : p >= 1 ? 1 : 0;
+        }
+        function polarToCartesian(cx, cy, r, angleInDegrees) {
+            const rad = ((angleInDegrees - 90) * Math.PI) / 180.0;
+            return { x: Number((cx + (r * Math.cos(rad))).toFixed(2)), y: Number((cy + (r * Math.sin(rad))).toFixed(2)) };
+        }
+        function describeArc(cx, cy, r, startAngle, endAngle) {
+            const start = polarToCartesian(cx, cy, r, endAngle);
+            const end = polarToCartesian(cx, cy, r, startAngle);
+            const arcSweep = endAngle - startAngle <= 180 ? '0' : '1';
+            return `M ${start.x} ${start.y} A ${r} ${r} 0 ${arcSweep} 0 ${end.x} ${end.y}`;
+        }
+        function renderOrbitalHalo(progress, activePetData) {
+            const cx = 110, cy = 110, r = 94, totalSegments = HATCH_COST, step = 360 / totalSegments, gap = 6;
+            let pathsHtml = '', starNodeHtml = '';
+            for (let i = 0; i < totalSegments; i++) {
+                const startAngle = -90 + (i * step) + (gap / 2);
+                const endAngle = -90 + ((i + 1) * step) - (gap / 2);
+                const d = describeArc(cx, cy, r, startAngle, endAngle);
+                if (i < progress) {
+                    pathsHtml += `<path d="${d}" class="orbital-active-segment" />`;
+                    if (i === progress - 1) {
+                        const nodePos = polarToCartesian(cx, cy, r, endAngle);
+                        starNodeHtml = `<circle class="orbital-star-node" cx="${nodePos.x}" cy="${nodePos.y}" r="4.5" />`;
+                    }
+                } else {
+                    pathsHtml += `<path d="${d}" class="orbital-track-segment" />`;
+                }
+            }
+            const stage = eggProgressStage(progress);
+            const centerVisualHtml = activePetData
+                ? `<div class="orbital-center-pet" id="partnerPetArt"></div>`
+                : `
+                <div class="orbital-center-egg egg-progress-${stage}" aria-hidden="true">
+                    <div class="egg-shadow"></div>
+                    <div class="egg-shell">
+                        <div class="egg-sheen"></div>
+                        <div class="egg-core-glow"></div>
+                        <div class="egg-facet facet-a"></div>
+                        <div class="egg-facet facet-b"></div>
+                        <div class="egg-glint"></div>
+                        <div class="egg-crack crack-a"></div>
+                        <div class="egg-crack crack-b"></div>
+                        <div class="egg-crack crack-c"></div>
+                    </div>
+                </div>`;
+            return `
+                <div class="partner-orbital-container" aria-label="7 段工時星軌光環，進度 ${progress} / ${totalSegments}">
+                    <div class="orbital-stage-bg"></div>
+                    <svg class="orbital-svg" viewBox="0 0 220 220">
+                        <defs>
+                            <linearGradient id="orbitalGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#C4A87A" />
+                                <stop offset="50%" stop-color="#9A78B4" />
+                                <stop offset="100%" stop-color="#7A5A8A" />
+                            </linearGradient>
+                        </defs>
+                        ${pathsHtml}
+                        ${starNodeHtml}
+                    </svg>
+                    ${centerVisualHtml}
+                </div>`;
+        }
+        function renderCodex(pets) {
+            const codexGrid = byId('partnerCodexGrid');
+            if (!codexGrid) return;
+            let unlockedCount = 0;
+            const petList = Array.isArray(pets) ? pets : [];
+            const itemsHtml = CODEX_SPECIES.map((spec, index) => {
+                const isUnlocked = petList.some(p => p.series === spec.series && (p.rarity === spec.rarity || spec.rarity === 'common'));
+                if (isUnlocked) unlockedCount++;
+                return `
+                    <div class="codex-item ${isUnlocked ? 'unlocked' : 'locked'}" onclick="window.onCodexClick(${index})" title="${spec.name}">
+                        <div class="codex-badge-icon">${isUnlocked ? spec.icon : '🔒'}</div>
+                        <div class="codex-item-name">${spec.name}</div>
+                        <div class="codex-item-rarity">${RARITY_LABELS[spec.rarity]}</div>
+                    </div>`;
+            }).join('');
+            codexGrid.innerHTML = itemsHtml;
+            const countEl = byId('partnerCodexCount');
+            if (countEl) countEl.textContent = `已解鎖 ${unlockedCount} / ${CODEX_SPECIES.length}`;
+        }
+        function onCodexClick(index) {
+            const spec = CODEX_SPECIES[index];
+            if (!spec) return;
+            const state = typeof readPetSystem === 'function' ? readPetSystem() : { pets: [] };
+            const isUnlocked = state.pets && state.pets.some(p => p.series === spec.series && (p.rarity === spec.rarity || spec.rarity === 'common'));
+            showToast(isUnlocked ? `✨ ${spec.name}（${RARITY_LABELS[spec.rarity]}）\n${spec.desc}` : `🔒 未解鎖 · ${spec.name}（${RARITY_LABELS[spec.rarity]}）\n累積每日碎片開啟節奏蛋即可解鎖`);
+        }
+        root.onCodexClick = onCodexClick;
+        function renderPartnerRoom() {
+            const state = typeof readPetSystem === 'function' ? readPetSystem() : { resources: { eggFragments: 0 }, pets: [] };
+            const pet = typeof activePet === 'function' ? activePet(state) : null;
+            const count = Math.min(state.resources?.eggFragments || 0, HATCH_COST);
+            const isReady = count >= HATCH_COST;
+            const stageContainer = byId('partnerStageContainer');
+            if (stageContainer) stageContainer.innerHTML = renderOrbitalHalo(count, pet);
+            if (pet) {
+                const petArtContainer = byId('partnerPetArt');
+                if (petArtContainer && typeof renderPet === 'function' && typeof resolveParts === 'function') {
+                    renderPet(petArtContainer, pet, resolveParts(pet.parts));
+                }
+            }
+            const stageBadge = byId('partnerStageBadge');
+            if (stageBadge) {
+                stageBadge.textContent = pet ? (pet.isFavorite ? '最愛夥伴' : '陪伴中') : (isReady ? '已可破殼' : `凝聚中 (${count}/${HATCH_COST})`);
+                stageBadge.className = pet || isReady ? 'partner-pill-badge active' : 'partner-pill-badge';
+            }
+            const heroTitle = byId('partnerHeroTitle');
+            if (heroTitle) heroTitle.textContent = pet ? (pet.name || '工時晶靈') : `${count} / ${HATCH_COST} 蛋殼碎片`;
+            const heroSub = byId('partnerHeroSub');
+            if (heroSub) {
+                heroSub.textContent = pet ? `${pet.series} 系列 · ${RARITY_LABELS[pet.rarity] || '一般'} · 伴隨日常心流專注` : (isReady ? '✨ 7 顆星軌碎片已滿載，隨時可喚醒專屬晶靈' : (count === 0 ? '完成今日標準工時，即可凝聚第 1 顆星軌碎片' : `今日工時已凝聚 · 還需專注 ${HATCH_COST - count} 天破殼`));
+            }
+            const actionArea = byId('partnerActionArea');
+            if (actionArea) {
+                actionArea.innerHTML = isReady ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()">✨ 開啟節奏蛋 · 喚醒晶靈</button>` : `<div class="partner-status-box"><span>🔒 每日達成 8 小時標準工時即可獲 1 顆碎片</span></div>`;
+            }
+            renderCodex(state.pets);
+        }
+        function hatchPartnerEgg() {
+            if (hatchLocked) return;
+            const before = readPetSystem();
+            if (!canHatch(before)) {
+                showToast(`蛋殼碎片不足，目前 ${before.resources.eggFragments} / ${HATCH_COST}`);
+                return;
+            }
+            hatchLocked = true;
+            showToast('🌱 正在引導心流力量，孵化晶靈中…');
+            try {
+                const pet = generateBestPet({ isFirstHatch: !before.hatchState.firstHatchCompleted }, 3);
+                const result = commitHatch(before, pet);
+                writePetSystem(result.state);
+                showToast(result.duplicate ? `遇到重複夥伴，已轉換晶體粉塵 ×${result.dust}` : `🎉 恭喜喚醒：${pet.name}（${RARITY_LABELS[pet.rarity] || pet.rarity}）！`);
+                renderPartnerRoom();
+            } catch (e) {
+                showToast('生成失敗，碎片未扣除，請重新嘗試');
+            } finally {
+                hatchLocked = false;
+                renderPartnerRoom();
+            }
+        }
+        function updateDailyPetReward(completed) {
+            if (!completed) return;
+            const before = readPetSystem();
+            const result = grantDailyFragment(before);
+            if (result.granted) {
+                writePetSystem(result.state);
+                showToast('🌱 今日工時達成 · 獲得星軌碎片 ×1');
+            }
+        }
+        root.eggProgressStage = eggProgressStage;
+        root.renderPartnerRoom = renderPartnerRoom;
+        root.hatchPartnerEgg = hatchPartnerEgg;
+        root.updateDailyPetReward = updateDailyPetReward;
+    })(window);
+    </script>
     <script>
         // --- 邏輯部分 ---
         let punchRecords = [];
@@ -2909,64 +4000,110 @@
             if (moodEl) moodEl.textContent = isWorking ? '🫧 互動中 · 能量共鳴' : '🫧 輕輕觸碰';
         }
 
-        // --- 滑動打卡確認 ---
+        // --- 滑動打卡確認 (Apple Native Touch & Drag) ---
         function initSwipePunch() {
             const track = document.getElementById('swipeTrack');
             if (!track) return;
             const handle = track.querySelector('.swipe-handle');
             const progress = track.querySelector('.swipe-progress');
             const label = track.querySelector('.swipe-label');
-            let isDragging = false, startX = 0, currentX = 0;
-            const maxX = () => track.clientWidth - handle.clientWidth - 8;
+            if (!handle || !progress || !label) return;
+
+            let isDragging = false;
+            let startClientX = 0;
+            let currentOffset = 0;
+
+            function getMaxOffset() {
+                const trackWidth = track.offsetWidth || track.clientWidth || 320;
+                const handleWidth = handle.offsetWidth || 48;
+                return Math.max(10, trackWidth - handleWidth - 10);
+            }
 
             function onStart(e) {
                 isDragging = true;
-                startX = (e.touches ? e.touches[0] : e).clientX;
+                const point = (e.touches && e.touches.length) ? e.touches[0] : e;
+                startClientX = point.clientX;
+                currentOffset = 0;
                 handle.style.transition = 'none';
                 progress.style.transition = 'none';
+                label.style.transition = 'none';
+                if (e.cancelable) e.preventDefault();
             }
+
             function onMove(e) {
                 if (!isDragging) return;
-                e.preventDefault();
-                const x = (e.touches ? e.touches[0] : e).clientX;
-                currentX = Math.max(0, Math.min(x - startX, maxX()));
-                handle.style.left = (4 + currentX) + 'px';
-                progress.style.width = (currentX + handle.clientWidth + 4) + 'px';
-                label.style.opacity = 1 - (currentX / maxX());
+                const point = (e.touches && e.touches.length) ? e.touches[0] : e;
+                const deltaX = point.clientX - startClientX;
+                const max = getMaxOffset();
+                currentOffset = Math.max(0, Math.min(deltaX, max));
+
+                handle.style.left = (5 + currentOffset) + 'px';
+                progress.style.width = (currentOffset + 24) + 'px';
+                label.style.opacity = Math.max(0, 1 - (currentOffset / (max * 0.6)));
+
+                if (e.cancelable) e.preventDefault();
             }
-            function onEnd() {
+
+            function triggerPunchOut() {
+                const max = getMaxOffset();
+                handle.style.transition = 'left 0.22s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                progress.style.transition = 'width 0.22s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                handle.style.left = (5 + max) + 'px';
+                progress.style.width = '100%';
+                label.style.opacity = '0';
+
+                if ('vibrate' in navigator) navigator.vibrate(60);
+                setTimeout(() => {
+                    punch();
+                    showPunchOutCelebration();
+                    setTimeout(resetSwipe, 300);
+                }, 160);
+            }
+
+            function onEnd(e) {
                 if (!isDragging) return;
                 isDragging = false;
-                handle.style.transition = 'left 0.3s ease';
-                progress.style.transition = 'width 0.3s ease';
+                const max = getMaxOffset();
 
-                if (currentX >= maxX() * 0.85) {
-                    // 滑到底 - 執行下班
-                    handle.style.left = (4 + maxX()) + 'px';
-                    progress.style.width = '100%';
-                    if ('vibrate' in navigator) navigator.vibrate(100);
-                    setTimeout(() => {
-                        punch();
-                        showPunchOutCelebration();
-                        resetSwipe();
-                    }, 200);
+                if (currentOffset >= max * 0.5) {
+                    triggerPunchOut();
                 } else {
                     resetSwipe();
                 }
-                currentX = 0;
+                currentOffset = 0;
             }
+
             function resetSwipe() {
-                handle.style.left = '4px';
+                handle.style.transition = 'left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                progress.style.transition = 'width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                label.style.transition = 'opacity 0.3s ease';
+                handle.style.left = '5px';
                 progress.style.width = '0';
                 label.style.opacity = '1';
             }
 
+            // Bind listeners directly to handle and track
             handle.addEventListener('mousedown', onStart);
-            handle.addEventListener('touchstart', onStart, { passive: true });
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('touchmove', onMove, { passive: false });
-            document.addEventListener('mouseup', onEnd);
-            document.addEventListener('touchend', onEnd);
+            handle.addEventListener('touchstart', onStart, { passive: false });
+
+            track.addEventListener('touchstart', (e) => {
+                if (!isDragging && e.target !== handle && !handle.contains(e.target)) {
+                    onStart(e);
+                }
+            }, { passive: false });
+
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('touchmove', onMove, { passive: false });
+            window.addEventListener('mouseup', onEnd);
+            window.addEventListener('touchend', onEnd);
+            window.addEventListener('touchcancel', onEnd);
+
+            // Tap on track fallback
+            track.addEventListener('click', (e) => {
+                if (currentOffset < 8 && !isDragging) {
+                    triggerPunchOut();
+                }
+            });
         }
 
         // --- 下班慶祝 ---
@@ -3574,11 +4711,11 @@
 
         function updateCurrentTime() {
             const now = new Date();
-            document.getElementById('currentTime').textContent =
-                now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
             const days = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
-            document.getElementById('currentDate').textContent =
-                `${days[now.getDay()]} · ${now.getMonth() + 1}月${now.getDate()}日`;
+            const dateEl = document.getElementById('currentDate');
+            if (dateEl) {
+                dateEl.textContent = `${days[now.getDay()]} · ${now.getMonth() + 1}月${now.getDate()}日`;
+            }
         }
 
         function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }

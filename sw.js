@@ -1,8 +1,15 @@
-const CACHE_NAME = 'timecard-v7';
+const CACHE_NAME = 'timecard-v10';
 const ASSETS = [
     './',
     './index.html',
     './manifest.json',
+    './pet.css',
+    './pet-parts.js',
+    './pet-generator.js',
+    './pet-storage.js',
+    './pet-rewards.js',
+    './pet-renderer.js',
+    './pet-ui.js',
     './icon-192.png',
     './icon-512.png'
 ];
