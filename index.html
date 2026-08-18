@@ -1319,7 +1319,7 @@
         }
 
         .hero-eyebrow {
-            font-size: 11.5px;
+            font-size: 12.5px;
             font-weight: 500;
             color: var(--label-tertiary);
             text-transform: uppercase;
@@ -1330,9 +1330,9 @@
 
         #totalHours {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            font-size: 46px;
+            font-size: 50px;
             font-weight: 600;
-            line-height: 1.05;
+            line-height: 1.02;
             letter-spacing: -0.04em;
             color: var(--label);
             font-variant-numeric: tabular-nums;
@@ -1344,42 +1344,80 @@
 
         .hero-unit {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 400;
             color: var(--label-tertiary);
             margin: 0 5px 0 2px;
             letter-spacing: 0;
         }
 
-        /* Live status pill */
+        /* Live status pill - Apple 4-State Lifecycle */
         .live-status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 3.5px 12px;
+            gap: 7px;
+            padding: 4px 14px;
             border-radius: 999px;
-            background: rgba(110, 125, 106, 0.12);
-            color: var(--blue);
-            font-size: 11.5px;
+            font-size: 13px;
             font-weight: 500;
-            letter-spacing: 0.04em;
-            opacity: 0;
-            transform: translateY(2px);
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            letter-spacing: 0.03em;
+            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .live-status-pill.active {
-            opacity: 1;
-            transform: translateY(0);
+        /* 1. Ongoing working state */
+        .live-status-pill.status-ongoing {
+            background: rgba(110, 125, 106, 0.14);
+            color: #436B48;
+        }
+
+        .live-status-pill.status-ongoing .live-pulse-dot {
+            background: #5B8A60;
+            box-shadow: 0 0 7px rgba(91, 138, 96, 0.6);
+            animation: liveDotPulse 2s ease-in-out infinite;
+        }
+
+        /* 2. Completed 8h & punched out state */
+        .live-status-pill.status-completed {
+            background: rgba(154, 120, 180, 0.14);
+            color: #7B578F;
+        }
+
+        .live-status-pill.status-completed .live-pulse-dot {
+            background: #9A77B0;
+            box-shadow: 0 0 6px rgba(154, 120, 180, 0.4);
+            animation: none;
+        }
+
+        /* 3. Rest / paused punch-out state */
+        .live-status-pill.status-resting {
+            background: rgba(140, 120, 100, 0.12);
+            color: #7A6652;
+        }
+
+        .live-status-pill.status-resting .live-pulse-dot {
+            background: #8C7864;
+            box-shadow: none;
+            animation: none;
+        }
+
+        /* 4. Idle / Not started state */
+        .live-status-pill.status-idle {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--label-tertiary);
+        }
+
+        .live-status-pill.status-idle .live-pulse-dot {
+            background: var(--label-quaternary);
+            box-shadow: none;
+            animation: none;
         }
 
         .live-pulse-dot {
-            width: 6.5px;
-            height: 6.5px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: #5B8A60;
-            box-shadow: 0 0 6px rgba(91, 138, 96, 0.6);
-            animation: liveDotPulse 2s ease-in-out infinite;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
         @keyframes liveDotPulse {
@@ -1389,7 +1427,7 @@
 
         .ring-pct-badge {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            font-size: 12.5px;
+            font-size: 13.5px;
             font-weight: 500;
             color: var(--label-tertiary);
             letter-spacing: 0.04em;
@@ -1397,7 +1435,7 @@
         }
 
         .ring-target-info {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--label-tertiary);
             font-weight: 400;
             letter-spacing: 0.02em;
@@ -2397,9 +2435,9 @@
                             <div id="totalHours">
                                 0<span class="hero-unit">h</span>0<span class="hero-unit">m</span>
                             </div>
-                            <div id="ongoingHint" class="live-status-pill">
-                                <span class="live-pulse-dot"></span>
-                                <span>心流專注中</span>
+                            <div id="ongoingHint" class="live-status-pill status-idle">
+                                <span class="live-pulse-dot" id="liveStatusDot"></span>
+                                <span id="liveStatusText">靜待啟程</span>
                             </div>
                             <span id="strokePct" class="ring-pct-badge">0%</span>
                         </div>
@@ -5223,11 +5261,23 @@
             }
 
             const liveHint = document.getElementById('ongoingHint');
-            if (liveHint) {
+            const statusText = document.getElementById('liveStatusText');
+            if (liveHint && statusText) {
+                liveHint.className = 'live-status-pill';
                 if (result.isOngoing) {
-                    liveHint.classList.add('active');
+                    liveHint.classList.add('status-ongoing');
+                    statusText.textContent = '心流專注中';
+                } else if (punchRecords.length > 0) {
+                    if (result.total >= targetMin) {
+                        liveHint.classList.add('status-completed');
+                        statusText.textContent = '暮光賦歸';
+                    } else {
+                        liveHint.classList.add('status-resting');
+                        statusText.textContent = '身心歇息中';
+                    }
                 } else {
-                    liveHint.classList.remove('active');
+                    liveHint.classList.add('status-idle');
+                    statusText.textContent = '靜待啟程';
                 }
             }
 
