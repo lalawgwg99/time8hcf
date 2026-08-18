@@ -791,36 +791,67 @@
             pointer-events: none;
         }
 
-        /* --- Alarm/Modal Overlay --- */
-        .alarm-overlay {
+        /* --- Apple Dynamic Capsule Notification Toast --- */
+        .zen-capsule-container {
             position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.5);
+            top: calc(env(safe-area-inset-top, 0px) + 14px);
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 1000;
+            padding: 0 16px;
+        }
+
+        .zen-dynamic-capsule {
+            pointer-events: auto;
+            background: rgba(253, 250, 245, 0.94);
             -webkit-backdrop-filter: blur(24px);
             backdrop-filter: blur(24px);
+            border: 0.5px solid rgba(40, 32, 20, 0.1);
+            border-radius: 999px;
+            box-shadow: 0 8px 32px rgba(40, 30, 10, 0.12), 0 2px 8px rgba(40, 30, 10, 0.06);
+            padding: 9px 18px 9px 14px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
+            max-width: 400px;
+            transform: translateY(-80px) scale(0.96);
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease;
+            cursor: pointer;
         }
 
-        .alarm-overlay.active {
+        .zen-dynamic-capsule.active {
+            transform: translateY(0) scale(1);
             opacity: 1;
-            visibility: visible;
         }
 
-        .alarm-card {
-            background: var(--card);
-            border-radius: 28px;
-            padding: 40px 28px 32px;
-            text-align: center;
-            max-width: 300px;
-            width: 88%;
-            box-shadow: var(--shadow-elevated);
-            animation: fadeInUp 0.35s var(--spring);
+        .zen-capsule-emoji {
+            font-size: 20px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .zen-capsule-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .zen-capsule-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--label);
+            letter-spacing: 0.01em;
+        }
+
+        .zen-capsule-msg {
+            font-size: 11px;
+            color: var(--label-secondary);
+            letter-spacing: 0.02em;
+            line-height: 1.35;
         }
 
         /* Sheet Handle (bottom modal handle indicator) */
@@ -1998,35 +2029,14 @@
         </div><!-- /outer modal -->
     </div>
 
-    <!-- Alarm Modal (全螢幕提醒) -->
-    <div id="alarmModal" class="alarm-overlay">
-        <div class="alarm-card">
-            <div style="font-size:52px; margin-bottom:16px;" id="alarmEmoji">⏰</div>
-            <div style="font-size:20px; font-weight:700; color:var(--label); margin-bottom:8px;" id="alarmTitle">休息時間到！
+    <!-- Apple Dynamic Capsule Notification Toast (非侵入式頂部禪意膠囊) -->
+    <div class="zen-capsule-container">
+        <div id="zenDynamicCapsule" class="zen-dynamic-capsule" onclick="dismissZenCapsule()" role="status" aria-live="polite">
+            <span class="zen-capsule-emoji" id="zenCapsuleEmoji">🌿</span>
+            <div class="zen-capsule-content">
+                <div class="zen-capsule-title" id="zenCapsuleTitle">心流提醒</div>
+                <div class="zen-capsule-msg" id="zenCapsuleMsg">已專注一段時間，建議放鬆片刻</div>
             </div>
-            <div style="font-size:15px; color:var(--label-tertiary); margin-bottom:24px; line-height:1.5;"
-                id="alarmBody">你已經連續工作超過設定時間，起來動一動吧</div>
-            <button onclick="dismissAlarm()" class="active-scale"
-                style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:400; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.08em;">我知道了</button>
-        </div>
-    </div>
-
-    <!-- Stretch Reminder Modal -->
-    <div id="stretchModal" class="alarm-overlay">
-        <div class="alarm-card">
-            <div style="font-size:52px; margin-bottom:16px;">🧘</div>
-            <div style="font-size:20px; font-weight:700; color:var(--label); margin-bottom:8px;">久坐提醒</div>
-            <div style="font-size:15px; color:var(--label-tertiary); margin-bottom:12px;">你已連續工作 90 分鐘</div>
-            <div style="text-align:left; background:var(--fill); border-radius:var(--radius-sm); padding:16px; margin-bottom:22px; display:flex; flex-direction:column; gap:10px;"
-                id="stretchTips">
-                <div style="font-size:14px; color:var(--label-secondary);">🙆 雙手高舉伸展 10 秒</div>
-                <div style="font-size:14px; color:var(--label-secondary);">🔄 轉動脖子左右各 5 圈</div>
-                <div style="font-size:14px; color:var(--label-secondary);">👀 閉眼休息 20 秒</div>
-                <div style="font-size:14px; color:var(--label-secondary);">🚶 起身走動 1 分鐘</div>
-            </div>
-            <button onclick="dismissStretch()" class="active-scale"
-                style="width:100%; padding:15px; border-radius:var(--radius); font-size:17px; font-weight:600; background:linear-gradient(135deg, #34C759 0%, #30D158 100%); color:white; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(52,199,89,0.25), inset 0 0.5px 0 rgba(255,255,255,0.15);">已完成伸展
-                ✓</button>
         </div>
     </div>
 
@@ -2355,68 +2365,65 @@
         }
 
         // === 通知人格化 ===
-        function getSeikiAlarmText() {
-            const p = getSeikiPersonality();
-            const mins = appSettings.workReminderMinutes;
-            const texts = {
-                GENKI:  { title: '該休息了！', body: `連續工作 ${mins} 分鐘！起來動一動！`, emoji: '⚡' },
-                CALM:   { title: '休息一下吧', body: `已工作 ${mins} 分鐘，適時休息很重要`, emoji: '🌿' },
-                SNARK:  { title: '休息時間到', body: `${mins} 分鐘了，你不是機器人，去休息`, emoji: '🙄' },
-                CLINGY: { title: '快去休息！', body: `你已經工作 ${mins} 分鐘了！我擔心你！`, emoji: '🥺' },
-            };
-            return texts[p] || texts.CALM;
-        }
+        // === Apple Dynamic Capsule Notification (頂部非侵入式禪意膠囊) ===
+        let _zenCapsuleTimer = null;
 
-        function getSeikiStretchText() {
-            const p = getSeikiPersonality();
-            const texts = {
-                GENKI:  '坐了90分鐘了！！快起來動一動！！',
-                CALM:   '已久坐90分鐘…起來伸展一下吧',
-                SNARK:  '90分鐘了，你的背不痛嗎',
-                CLINGY: '90分鐘了！！我擔心你！快起來動！',
-            };
-            return texts[p] || texts.CALM;
-        }
-
-        function triggerAlarm(title, body, emoji) {
-            const seikiText = getSeikiAlarmText();
-            document.getElementById('alarmTitle').textContent = seikiText.title;
-            document.getElementById('alarmBody').textContent = seikiText.body;
-            document.getElementById('alarmEmoji').textContent = seikiText.emoji;
-            document.getElementById('alarmModal').classList.add('active');
-
-            if ("vibrate" in navigator) navigator.vibrate([500, 300, 500, 300, 500]);
-
+        function playZenChimeSound() {
             try {
                 Tone.start();
                 const synth = new Tone.Synth({
                     oscillator: { type: 'sine' },
-                    envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 }
+                    envelope: { attack: 0.002, decay: 1.2, sustain: 0.0, release: 0.8 }
                 }).toDestination();
-                const now = Tone.now();
-                synth.triggerAttackRelease("C5", 0.15, now);
-                synth.triggerAttackRelease("E5", 0.15, now + 0.25);
-                synth.triggerAttackRelease("G5", 0.15, now + 0.5);
-                synth.triggerAttackRelease("C6", 0.3, now + 0.75);
-
-                // Loop alarm every 3 seconds
-                alarmLoopTimer = setInterval(() => {
-                    if ("vibrate" in navigator) navigator.vibrate([300, 200, 300]);
-                    try {
-                        const n = Tone.now();
-                        synth.triggerAttackRelease("C5", 0.1, n);
-                        synth.triggerAttackRelease("G5", 0.1, n + 0.2);
-                    } catch (e) { }
-                }, 3000);
-            } catch (e) { console.error(e); }
+                // Pure crystalline chime tone (A5)
+                synth.triggerAttackRelease('A5', 0.8, Tone.now());
+            } catch (e) { }
         }
 
-        function dismissAlarm() {
-            document.getElementById('alarmModal').classList.remove('active');
-            if (alarmLoopTimer) { clearInterval(alarmLoopTimer); alarmLoopTimer = null; }
+        function showZenCapsuleNotification({ title, message, emoji = '🌿', duration = 3600 }) {
+            const capsule = document.getElementById('zenDynamicCapsule');
+            if (!capsule) return;
+
+            const emojiEl = document.getElementById('zenCapsuleEmoji');
+            const titleEl = document.getElementById('zenCapsuleTitle');
+            const msgEl = document.getElementById('zenCapsuleMsg');
+
+            if (emojiEl) emojiEl.textContent = emoji;
+            if (titleEl) titleEl.textContent = title;
+            if (msgEl) msgEl.textContent = message;
+
+            capsule.classList.add('active');
+
+            // 1 次輕柔觸覺震動 + 清脆空靈水滴禪音
+            if ('vibrate' in navigator) navigator.vibrate(25);
+            playZenChimeSound();
+
+            if (_zenCapsuleTimer) clearTimeout(_zenCapsuleTimer);
+            _zenCapsuleTimer = setTimeout(() => {
+                dismissZenCapsule();
+            }, duration);
         }
 
-        // --- 久坐伸展提醒 ---
+        function dismissZenCapsule() {
+            const capsule = document.getElementById('zenDynamicCapsule');
+            if (capsule) capsule.classList.remove('active');
+            if (_zenCapsuleTimer) {
+                clearTimeout(_zenCapsuleTimer);
+                _zenCapsuleTimer = null;
+            }
+        }
+
+        function triggerAlarm(title, body, emoji = '🧘') {
+            const seikiText = getSeikiAlarmText();
+            showZenCapsuleNotification({
+                emoji: seikiText.emoji || emoji,
+                title: seikiText.title,
+                message: seikiText.body,
+                duration: 4000
+            });
+        }
+
+        // --- 久坐伸展提醒 (Non-intrusive) ---
         function checkStretchReminder() {
             if (punchRecords.length === 0 || punchRecords.length % 2 === 0) return;
             const lastIn = new Date(punchRecords[punchRecords.length - 1].time);
@@ -2424,14 +2431,15 @@
             const sinceLastDismiss = (Date.now() - lastStretchDismiss) / 60000;
 
             if (elapsed >= 90 && sinceLastDismiss >= 90) {
-                document.getElementById('stretchModal').classList.add('active');
-                if ("vibrate" in navigator) navigator.vibrate([200, 100, 200]);
+                lastStretchDismiss = Date.now();
+                const stretchMsg = getSeikiStretchText();
+                showZenCapsuleNotification({
+                    emoji: '🧘',
+                    title: '久坐舒緩提醒',
+                    message: typeof stretchMsg === 'string' ? stretchMsg : '已連續專注 90 分鐘 · 雙手伸展、放鬆肩頸',
+                    duration: 4500
+                });
             }
-        }
-
-        function dismissStretch() {
-            document.getElementById('stretchModal').classList.remove('active');
-            lastStretchDismiss = Date.now();
         }
         // --- 薪資計算已移除 ---
         // --- 成就系統 ---
@@ -3891,15 +3899,14 @@
 
             // 薪資跟蹤已移除
 
-            // --- Alarm 觸發檢查 ---
+            // --- Work Limit 觸發檢查 (Non-intrusive Capsule) ---
             if (result.isOngoing && lastRecord) {
                 const lastInTime = new Date(lastRecord.time).getTime();
                 const targetTime = lastInTime + appSettings.workReminderMinutes * 60000;
-                if (Date.now() > targetTime && !document.getElementById('alarmModal').classList.contains('active')) {
-                    // Only trigger once per work session
+                if (Date.now() > targetTime) {
                     if (!window._alarmTriggered) {
                         window._alarmTriggered = true;
-                        triggerAlarm('休息時間到！', `你已連續工作 ${appSettings.workReminderMinutes} 分鐘`, '⏰');
+                        triggerAlarm('心流專注達成', `已連續專注 ${appSettings.workReminderMinutes} 分鐘 · 建議起身喝杯水，放鬆片刻`, '🧘');
                     }
                 }
             } else {
