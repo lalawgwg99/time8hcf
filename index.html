@@ -1425,45 +1425,62 @@
             letter-spacing: 0.04em;
         }
 
-        /* --- Punch Button (Zen) --- */
+        /* --- Apple Native Capsule Punch Button (SwiftUI Action Button) --- */
         .punch-btn-zen {
             width: 100%;
-            padding: 18px;
-            border-radius: var(--radius);
+            height: 56px;
+            padding: 0 24px;
+            border-radius: 999px;
             font-size: 15px;
-            font-weight: 400;
-            color: var(--bg);
-            background: var(--label);
-            border: none;
+            font-weight: 500;
+            color: #FAF6F0;
+            background: linear-gradient(180deg, #2D2620 0%, #1A1612 100%);
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-top: 16px;
-            box-shadow: 0 4px 28px rgba(28, 23, 12, 0.16), 0 1px 6px rgba(28, 23, 12, 0.10);
-            letter-spacing: 0.12em;
-            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, background 0.5s;
-            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
+            margin-top: 14px;
+            box-shadow:
+                0 4px 16px rgba(28, 23, 18, 0.22),
+                0 1px 3px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0.5px rgba(255, 255, 255, 0.22);
+            letter-spacing: 0.08em;
+            transition: all 0.2s var(--spring);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
             position: relative;
             overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .punch-btn-zen:hover {
+            background: linear-gradient(180deg, #352E27 0%, #1F1A15 100%);
+            box-shadow:
+                0 6px 20px rgba(28, 23, 18, 0.26),
+                0 2px 4px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0.5px rgba(255, 255, 255, 0.28);
         }
 
         .punch-btn-zen:active {
-            transform: scale(0.98);
-            opacity: 0.9;
+            transform: scale(0.97);
+            background: linear-gradient(180deg, #241E19 0%, #15110E 100%);
+            box-shadow:
+                0 2px 6px rgba(28, 23, 18, 0.18),
+                inset 0 1px 2px rgba(0, 0, 0, 0.25);
         }
 
         .punch-glyph {
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Georgia, serif;
-            font-size: 22px;
+            font-size: 16px;
             font-weight: 300;
             line-height: 1;
+            opacity: 0.85;
+            transition: transform 0.3s ease;
         }
 
-        /* Working state: circle fills */
-        .punch-btn-zen.working .punch-glyph {
-            content: '●';
+        .punch-btn-zen:active .punch-glyph {
+            transform: scale(1.15);
         }
 
         /* --- Zen Card (generic) --- */
