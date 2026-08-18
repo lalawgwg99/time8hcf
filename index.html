@@ -192,6 +192,124 @@
             --ink-gold: #CDB3DF;
         }
 
+        /* === OBSIDIAN DARK MODE SPECIFIC VISIBILITY & CONTRAST ENHANCEMENTS === */
+        [data-zen-theme="obsidian"] .punch-btn-zen {
+            background: linear-gradient(180deg, #2A241E 0%, #171410 100%);
+            border: 0.5px solid rgba(226, 199, 153, 0.35);
+            color: #F5F2EB;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 16px rgba(226, 199, 153, 0.12);
+        }
+
+        [data-zen-theme="obsidian"] .punch-btn-zen:hover {
+            background: linear-gradient(180deg, #352E26 0%, #1F1B15 100%);
+            border-color: rgba(226, 199, 153, 0.5);
+        }
+
+        [data-zen-theme="obsidian"] .swipe-track {
+            background: rgba(220, 80, 80, 0.14);
+            border: 0.5px solid rgba(220, 80, 80, 0.4);
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-zen-theme="obsidian"] .swipe-label {
+            color: rgba(245, 160, 160, 0.95);
+        }
+
+        [data-zen-theme="obsidian"] .swipe-handle {
+            background: #262320;
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        [data-zen-theme="obsidian"] .swipe-handle i {
+            color: #E28C8C;
+        }
+
+        [data-zen-theme="obsidian"] .live-status-pill.status-ongoing {
+            background: rgba(139, 171, 134, 0.2);
+            color: #A5CFA2;
+        }
+
+        [data-zen-theme="obsidian"] .live-status-pill.status-ongoing .live-pulse-dot {
+            background: #A5CFA2;
+            box-shadow: 0 0 8px rgba(165, 207, 162, 0.8);
+        }
+
+        [data-zen-theme="obsidian"] .live-status-pill.status-completed {
+            background: rgba(196, 158, 226, 0.2);
+            color: #D4B6EF;
+        }
+
+        [data-zen-theme="obsidian"] .live-status-pill.status-completed .live-pulse-dot {
+            background: #D4B6EF;
+            box-shadow: 0 0 8px rgba(212, 182, 239, 0.8);
+        }
+
+        [data-zen-theme="obsidian"] .live-status-pill.status-resting {
+            background: rgba(226, 199, 153, 0.15);
+            color: #E2C799;
+        }
+
+        [data-zen-theme="obsidian"] .live-status-pill.status-resting .live-pulse-dot {
+            background: #E2C799;
+        }
+
+        [data-zen-theme="obsidian"] .live-status-pill.status-idle {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--label-tertiary);
+        }
+
+        [data-zen-theme="obsidian"] .partner-primary-btn {
+            background: linear-gradient(135deg, #382D3D 0%, #201723 100%);
+            border: 0.5px solid rgba(196, 158, 226, 0.35);
+            color: #FAF6FA;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 14px rgba(196, 158, 226, 0.15);
+        }
+
+        [data-zen-theme="obsidian"] .codex-item.unlocked .codex-badge-icon {
+            background: radial-gradient(circle at 35% 35%, #352B3A, #201824);
+            border: 1px solid rgba(196, 158, 226, 0.4);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-zen-theme="obsidian"] .egg-shell {
+            background: linear-gradient(135deg, #3A322C 0%, #25201B 45%, #181512 100%);
+            box-shadow:
+                inset 5px 6px 12px rgba(226, 199, 153, 0.3),
+                inset -5px -6px 14px rgba(0, 0, 0, 0.6),
+                0 8px 24px rgba(0, 0, 0, 0.6);
+        }
+
+        [data-zen-theme="obsidian"] .egg-core-glow {
+            background: radial-gradient(circle at 48% 46%, rgba(196, 158, 226, 0.5), rgba(226, 199, 153, 0.25) 55%, transparent 72%);
+            mix-blend-mode: screen;
+            opacity: 0.7;
+        }
+
+        [data-zen-theme="obsidian"] .egg-shadow {
+            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, transparent 72%);
+        }
+
+        [data-zen-theme="obsidian"] .egg-sheen {
+            opacity: 0.5;
+        }
+
+        [data-zen-theme="obsidian"] .zen-tool-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 0.5px solid rgba(255, 255, 255, 0.12);
+            color: #D4CDC3;
+        }
+
+        [data-zen-theme="obsidian"] .zen-tool-btn:active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        [data-zen-theme="obsidian"] .zen-tool-btn.active {
+            background: rgba(139, 171, 134, 0.2);
+            border-color: rgba(139, 171, 134, 0.4);
+            color: #8BAB86;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -3283,28 +3401,28 @@
 
                 <!-- 工時與提醒 -->
                 <div class="section-label">工時與提醒</div>
-                <div class="bg-white rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div class="p-4 flex items-center justify-between" style="border-bottom:0.5px solid var(--separator);">
-                        <label for="targetHoursInput" class="text-[14.5px] text-gray-900 font-medium">每日工時目標</label>
+                        <label for="targetHoursInput" style="font-size:14.5px; color:var(--label); font-weight:500;">每日工時目標</label>
                         <div style="display:flex; align-items:center; gap:6px;">
                             <input type="number" id="targetHoursInput" placeholder="8" min="1" max="24" step="0.5"
-                                class="w-16 text-right bg-gray-100 rounded-lg px-2 py-1 text-base font-semibold text-gray-900" value="8">
+                                style="width:68px; text-align:right; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:8px; padding:5px 8px; font-size:15px; font-weight:600; font-family:inherit; outline:none;" value="8">
                             <span style="font-size:13px; color:var(--label-tertiary);">小時</span>
                         </div>
                     </div>
                     <div class="p-4 flex items-center justify-between" style="border-bottom:0.5px solid var(--separator);">
-                        <label for="workReminderInput" class="text-[14.5px] text-gray-900 font-medium">連續專注提醒</label>
+                        <label for="workReminderInput" style="font-size:14.5px; color:var(--label); font-weight:500;">連續專注提醒</label>
                         <div style="display:flex; align-items:center; gap:6px;">
                             <input type="number" id="workReminderInput" placeholder="120"
-                                class="w-16 text-right bg-gray-100 rounded-lg px-2 py-1 text-base font-semibold text-gray-900" value="120">
+                                style="width:68px; text-align:right; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:8px; padding:5px 8px; font-size:15px; font-weight:600; font-family:inherit; outline:none;" value="120">
                             <span style="font-size:13px; color:var(--label-tertiary);">分鐘</span>
                         </div>
                     </div>
                     <div class="p-4 flex items-center justify-between">
-                        <label for="restReminderInput" class="text-[14.5px] text-gray-900 font-medium">休息結束提醒</label>
+                        <label for="restReminderInput" style="font-size:14.5px; color:var(--label); font-weight:500;">休息結束提醒</label>
                         <div style="display:flex; align-items:center; gap:6px;">
                             <input type="number" id="restReminderInput" placeholder="20"
-                                class="w-16 text-right bg-gray-100 rounded-lg px-2 py-1 text-base font-semibold text-gray-900" value="20">
+                                style="width:68px; text-align:right; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:8px; padding:5px 8px; font-size:15px; font-weight:600; font-family:inherit; outline:none;" value="20">
                             <span style="font-size:13px; color:var(--label-tertiary);">分鐘</span>
                         </div>
                     </div>
@@ -5554,18 +5672,14 @@
 
                 const btn = document.createElement('button');
 
-                let className = "w-8 h-8 rounded-full text-[14px] font-medium flex items-center justify-center transition-all ";
-
                 if (isOff) {
-                    className += "bg-gray-100 text-gray-400 line-through decoration-gray-400";
+                    btn.style.cssText = 'width:32px;height:32px;border-radius:50%;background:var(--fill);color:var(--label-quaternary);text-decoration:line-through;font-size:13px;font-weight:400;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;';
                 } else if (isToday) {
-                    btn.style.cssText = 'width:32px;height:32px;border-radius:50%;background:var(--blue);color:var(--card);font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;';
+                    btn.style.cssText = 'width:32px;height:32px;border-radius:50%;background:var(--blue);color:#FFFFFF;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;box-shadow:var(--shadow-blue);';
                 } else {
-                    className += "hover:bg-gray-100";
                     btn.style.cssText = 'width:32px;height:32px;border-radius:50%;font-size:13px;font-weight:400;color:var(--label);background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;';
                 }
 
-                btn.className = className;
                 btn.textContent = d;
                 btn.onclick = () => toggleOffDay(dateStr);
 
