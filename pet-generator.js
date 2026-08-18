@@ -59,7 +59,11 @@
 
     function selectSeries(targetRarity, random = Math.random) {
         const eligible = petParts.filter(part => isRarityAllowed(part.rarity, targetRarity));
-        const series = [...new Set(eligible.map(part => part.series))];
+        const series = [...new Set(eligible.map(part => part.series))].filter(seriesName => {
+            const hasBody = petParts.some(part => part.category === 'body' && part.series === seriesName && isRarityAllowed(part.rarity, targetRarity));
+            const hasEyes = petParts.some(part => part.category === 'eyes' && part.series === seriesName && isRarityAllowed(part.rarity, targetRarity));
+            return hasBody && hasEyes;
+        });
         if (!series.length) throw new Error(`No pet series available for rarity: ${targetRarity}`);
         return series[Math.floor(random() * series.length)];
     }
@@ -219,6 +223,10 @@
             if (!Array.isArray(part.conflicts)) errors.push(`${part.id || index} invalid conflicts`);
             if (typeof part.weight !== 'number' || part.weight < 0) errors.push(`${part.id || index} invalid weight`);
         });
+        for (const series of [...new Set(catalog.map(part => part.series))]) {
+            if (!catalog.some(part => part.series === series && part.category === 'body')) errors.push(`${series} missing body`);
+            if (!catalog.some(part => part.series === series && part.category === 'eyes')) errors.push(`${series} missing eyes`);
+        }
         return { valid: errors.length === 0, errors };
     }
 

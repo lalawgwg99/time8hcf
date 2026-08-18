@@ -4,6 +4,7 @@
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     Object.assign(root, api);
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+    const HATCH_COST = 7;
     const RARITY_LABELS = { common: '一般', rare: '稀有', epic: '珍稀', hidden: '隱藏' };
     let hatchLocked = false;
 
@@ -16,33 +17,67 @@
         el.classList.toggle('visible', Boolean(message));
     }
 
-    function renderEmptyPartner() {
-        const art = byId('partnerPetArt');
-        if (art) art.innerHTML = '<div class="partner-art" style="display:flex;align-items:center;justify-content:center"><div style="width:110px;height:130px;border:1px solid rgba(128,101,155,.3);border-radius:48% 48% 42% 42%;background:rgba(217,205,228,.28);transform:rotate(-3deg)"></div></div>';
+    function eggProgressStage(fragmentCount) {
+        const progress = Math.min(Math.max(Number(fragmentCount) || 0, 0), HATCH_COST);
+        return progress >= 7 ? 7 : progress >= 6 ? 6 : progress >= 5 ? 5 : progress >= 3 ? 3 : progress >= 1 ? 1 : 0;
+    }
+
+    function renderMysteryEgg(container, fragmentCount) {
+        if (!container) return;
+        const progress = Math.min(Math.max(Number(fragmentCount) || 0, 0), HATCH_COST);
+        const stage = eggProgressStage(progress);
+        container.className = `partner-egg-stage egg-progress-${stage}`;
+        container.setAttribute('aria-label', `神秘晶核蛋，蛋殼碎片 ${progress}/${HATCH_COST}`);
+        container.innerHTML = `
+            <div class="mystery-egg" aria-hidden="true">
+                <div class="egg-shadow"></div>
+                <div class="egg-shell">
+                    <div class="egg-facet facet-a"></div>
+                    <div class="egg-facet facet-b"></div>
+                    <div class="egg-facet facet-c"></div>
+                    <div class="egg-facet facet-d"></div>
+                    <div class="egg-glint"></div>
+                    <div class="egg-crack crack-a"></div>
+                    <div class="egg-crack crack-b"></div>
+                </div>
+            </div>`;
+    }
+
+    function renderEmptyPartner(fragmentCount = 0) {
+        renderMysteryEgg(byId('partnerEggVisual'), fragmentCount);
+        const currentArt = byId('partnerPetArt');
+        if (currentArt) currentArt.innerHTML = '';
         if (byId('partnerPetName')) byId('partnerPetName').textContent = '尚未取得夥伴';
-        if (byId('partnerPetSeries')) byId('partnerPetSeries').textContent = '完成正常工時，收集蛋殼碎片';
-        if (byId('partnerPetRarity')) byId('partnerPetRarity').textContent = '等待開蛋';
-        if (byId('partnerPetStatus')) byId('partnerPetStatus').textContent = '收集 7 個蛋殼碎片即可開啟節奏蛋';
+        if (byId('partnerPetSeries')) byId('partnerPetSeries').textContent = '第一顆節奏蛋保證稀有以上';
+        if (byId('partnerPetRarity')) byId('partnerPetRarity').textContent = '';
+        if (byId('partnerPetRarity')) byId('partnerPetRarity').classList.add('partner-badge-hidden');
+        if (byId('partnerPetStatus')) byId('partnerPetStatus').textContent = '尚未取得夥伴';
     }
 
     function renderPartnerRoom() {
         const state = readPetSystem();
         const pet = activePet(state);
         const count = Math.min(state.resources.eggFragments, HATCH_COST);
+        renderMysteryEgg(byId('partnerEggVisual'), count);
         if (pet) {
             renderPet(byId('partnerPetArt'), pet, resolveParts(pet.parts));
             byId('partnerPetName').textContent = pet.name || '未命名夥伴';
             byId('partnerPetSeries').textContent = `${pet.series} 系列 · ${pet.colorFamily || '協調色系'}`;
             byId('partnerPetRarity').textContent = RARITY_LABELS[pet.rarity] || pet.rarity;
+            byId('partnerPetRarity').classList.remove('partner-badge-hidden');
             byId('partnerPetStatus').textContent = pet.isFavorite ? '最愛夥伴' : '目前陪伴中';
         } else {
-            renderEmptyPartner();
+            renderEmptyPartner(count);
         }
         byId('partnerFragmentCount').textContent = `${count} / ${HATCH_COST}`;
         byId('partnerFragmentProgress').style.width = `${(count / HATCH_COST) * 100}%`;
-        byId('partnerHatchHint').textContent = count >= HATCH_COST ? '可以開啟一顆節奏蛋' : `再完成 ${HATCH_COST - count} 個正常工作日`;
+        byId('partnerHatchHint').textContent = count >= HATCH_COST ? '節奏蛋準備完成' : `再完成 ${HATCH_COST - count} 個正常工作日`;
+        byId('partnerHatchStatus').textContent = count >= HATCH_COST ? '裂紋已經亮起，可以開蛋' : '尚未達到開啟條件';
         const button = byId('hatchPetButton');
-        if (button) button.disabled = hatchLocked || !canHatch(state);
+        if (button) {
+            button.disabled = hatchLocked || !canHatch(state);
+            button.hidden = !canHatch(state) && !hatchLocked;
+        }
 
         const collection = byId('partnerCollection');
         if (collection) {
@@ -73,7 +108,7 @@
             showNotice('partnerHatchNotice', '生成失敗，碎片未扣除，請重新嘗試');
         } finally {
             hatchLocked = false;
-            if (button) { button.textContent = '開啟節奏蛋'; button.disabled = !canHatch(readPetSystem()); }
+            if (button) { button.textContent = '開啟節奏蛋'; button.disabled = !canHatch(readPetSystem()); button.hidden = !canHatch(readPetSystem()); }
         }
     }
 
@@ -89,5 +124,5 @@
         }
     }
 
-    return { renderPartnerRoom, hatchPartnerEgg, updateDailyPetReward };
+    return { eggProgressStage, renderPartnerRoom, hatchPartnerEgg, updateDailyPetReward };
 });

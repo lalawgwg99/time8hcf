@@ -1684,36 +1684,31 @@
 
             <section id="tabPartner" class="tab-panel">
                 <div class="partner-room">
-                    <div class="partner-card">
+                    <div class="partner-card partner-hatch-card">
                         <div class="partner-title">夥伴房間</div>
-                        <div id="partnerPetArt" class="partner-hero" aria-label="目前夥伴"></div>
-                        <div class="partner-meta" style="margin-top:14px;">
-                            <div>
-                                <div id="partnerPetName" class="partner-name">尚未取得夥伴</div>
-                                <div id="partnerPetSeries" class="partner-subtitle">完成正常工時，收集蛋殼碎片</div>
-                            </div>
-                            <div id="partnerPetRarity" class="partner-badge">等待開蛋</div>
+                        <div id="partnerEggVisual" class="partner-egg-stage" aria-label="神秘晶核蛋"></div>
+                        <div class="partner-egg-heading">節奏蛋</div>
+                        <div id="partnerHatchHint" class="partner-subtitle partner-hatch-hint">再完成 7 個正常工作日</div>
+                        <div class="partner-progress-row">
+                            <div class="partner-progress"><div id="partnerFragmentProgress" style="width:0%"></div></div>
+                            <div id="partnerFragmentCount" class="partner-progress-count">0 / 7</div>
                         </div>
-                        <div id="partnerPetStatus" class="partner-subtitle" style="margin-top:8px;">目前沒有寵物</div>
-                    </div>
-
-                    <div class="partner-card">
-                        <div class="partner-title">節奏蛋</div>
-                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
-                            <div id="partnerFragmentCount" class="partner-name">0 / 7</div>
-                            <div class="partner-subtitle">蛋殼碎片</div>
-                        </div>
-                        <div class="partner-progress" style="margin-top:10px;"><div id="partnerFragmentProgress" style="width:0%"></div></div>
-                        <div id="partnerHatchHint" class="partner-subtitle" style="margin-top:10px;">完成正常工時可取得碎片</div>
-                        <div class="partner-actions">
-                            <button id="hatchPetButton" class="partner-button primary" onclick="hatchPartnerEgg()">開啟節奏蛋</button>
-                            <button class="partner-button" onclick="renderPartnerRoom()">重新整理</button>
-                        </div>
+                        <div id="partnerHatchStatus" class="partner-hatch-status">尚未達到開啟條件</div>
+                        <button id="hatchPetButton" class="partner-button primary partner-hatch-button" onclick="hatchPartnerEgg()">開啟節奏蛋</button>
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
                     </div>
 
-                    <div class="partner-card">
+                    <div class="partner-card partner-current-card">
                         <div class="partner-title">我的夥伴</div>
+                        <div id="partnerPetArt" class="partner-current-art" aria-label="目前夥伴"></div>
+                        <div class="partner-meta">
+                            <div>
+                                <div id="partnerPetName" class="partner-name">尚未取得夥伴</div>
+                                <div id="partnerPetSeries" class="partner-subtitle">第一顆節奏蛋保證稀有以上</div>
+                            </div>
+                            <div id="partnerPetRarity" class="partner-badge partner-badge-hidden"></div>
+                        </div>
+                        <div id="partnerPetStatus" class="partner-subtitle partner-current-status">尚未取得夥伴</div>
                         <div id="partnerCollection" class="partner-collection"></div>
                     </div>
                 </div>
@@ -1773,25 +1768,6 @@
                         <div id="weekBestDay"
                             style="margin-top:14px; padding-top:12px; border-top:0.5px solid var(--separator); font-size:12px; color:var(--label-secondary); text-align:center; letter-spacing:0.02em;">
                         </div>
-                    </div>
-                </div>
-
-                <!-- Seiki Shop -->
-                <div id="seikiShopContainer">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <div class="editorial-label" style="margin:0;">晶靈商店</div>
-                        <div style="font-size:12px; color:var(--blue); font-weight:500; letter-spacing:0.04em;">
-                            ✦ <span id="seikiPointsDisplay">0</span> 積分
-                        </div>
-                    </div>
-                    <div class="zen-card" style="padding:16px 16px 12px;">
-                        <div style="font-size:10px; color:var(--label-tertiary); margin-bottom:14px; letter-spacing:0.04em; line-height:1.6;">
-                            下班每30分 +1 · 升等 +5 · 形態進化 +20 · 日登入 +1 · 互動最多+10/天
-                        </div>
-                        <div style="font-size:11px; font-weight:600; color:var(--label-secondary); margin-bottom:8px; letter-spacing:0.06em;">色系主題</div>
-                        <div id="shopThemeGrid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px;"></div>
-                        <div style="font-size:11px; font-weight:600; color:var(--label-secondary); margin-bottom:8px; letter-spacing:0.06em;">光暈效果</div>
-                        <div id="shopAuraGrid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px;"></div>
                     </div>
                 </div>
 
@@ -2090,7 +2066,7 @@
             lastWorkDate: null,
             currentStreak: 0,
             lastLevel: 1,
-            seikiPoints: 0,
+
         };
 
         // ===== 隨機微行為系統 =====
@@ -2299,7 +2275,7 @@
             if (moodEl) moodEl.textContent = moodText;
             if (container) spawnParticles(container, ['✦', '⭐', '🎉', '✨', '★']);
             if ('vibrate' in navigator) navigator.vibrate([30, 50, 30, 50, 60]);
-            if (pts) addSeikiPoints(pts);
+
         }
 
         function checkEasterEggs(trigger, ctx) {
@@ -2678,7 +2654,7 @@
             txt.textContent = isFormChange ? `✦ 進化！${name} ✦` : `✦ Lv.${level} ✦`;
             container.appendChild(txt);
             setTimeout(() => txt.remove(), 1800);
-            addSeikiPoints(isFormChange ? 20 : 5);
+
             const levelUpContainer = document.getElementById('seikiContainer');
             if (levelUpContainer) {
                 const levelSyms = ['✦', '⭐', '✨', '★', '✧', '💫', '⚡', '🌟'];
@@ -2826,10 +2802,7 @@
             const pColor = SEIKI_PERSONALITY_COLORS[personality];
             document.getElementById('spriteExp').textContent = `EXP ${expInCurrentLevel}/${requiredExpForLevelUp}`;
             document.getElementById('spriteExpFill').style.width = `${progressPct}%`;
-            const activeColor = (appSettings.activeTheme && typeof SEIKI_THEMES !== 'undefined' && SEIKI_THEMES[appSettings.activeTheme])
-                ? SEIKI_THEMES[appSettings.activeTheme].color
-                : pColor;
-            document.getElementById('spriteExpFill').style.background = activeColor;
+            document.getElementById('spriteExpFill').style.background = pColor;
             document.getElementById('spriteName').textContent = `${name} (Lv.${level})`;
 
             const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
@@ -2914,14 +2887,14 @@
                 const totalH = Math.floor(totalMinutes / 60);
                 moodEl.textContent = `${icons} ${name}${totalH > 0 ? ` · 累計${totalH}h` : ''}${streakTag}`;
             }
-            applySeikiCosmetics();
+
         }
 
         function interactWithSprite() {
             if (_seikiLongPressed) { _seikiLongPressed = false; return; }
             if ('vibrate' in navigator) navigator.vibrate([10, 30, 10]);
             playSingleClickSound('E5');
-            tryInteractBonus();
+
 
             const container = document.getElementById('seikiContainer');
             if (container) {
@@ -3456,192 +3429,6 @@
             renderCalendar();
         }
 
-        // === 晶靈商店 + 日登入系統 ===
-
-        const SEIKI_THEMES = {
-            'theme-rose':   { name: '緋玫', color: '#EC4899', cost: 15, icon: '🌸' },
-            'theme-orange': { name: '晨曦', color: '#F97316', cost: 15, icon: '🍊' },
-            'theme-green':  { name: '翡翠', color: '#10B981', cost: 15, icon: '🍃' },
-            'theme-sky':    { name: '晴空', color: '#0EA5E9', cost: 20, icon: '☁️' },
-        };
-
-        const SEIKI_AURAS = {
-            'aura-stardust': { name: '星塵', cost: 25, icon: '✨', desc: '銀白粒子漂浮' },
-            'aura-aurora':   { name: '極光', cost: 35, icon: '🌌', desc: '藍綠光暈流動' },
-        };
-
-        function addSeikiPoints(n) {
-            appSettings.seikiPoints = (appSettings.seikiPoints || 0) + n;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            const el = document.getElementById('seikiPointsDisplay');
-            if (el) el.textContent = appSettings.seikiPoints;
-        }
-
-        function checkDailyBonus() {
-            const today = new Date().toISOString().slice(0, 10);
-            if (appSettings.lastBonusDate === today) return;
-            appSettings.lastBonusDate = today;
-            appSettings.elfExp = (appSettings.elfExp || 0) + 5;
-            addSeikiPoints(1);
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            const p = getSeikiPersonality();
-            const msgs = {
-                GENKI:  '今天也來了！給你5點能量！',
-                CALM:   '你來了…今天也加一點能量給你',
-                SNARK:  '哦，終於想到要來，給你5點',
-                CLINGY: '你來了！每天都要來喔！+5能量！',
-            };
-            setTimeout(() => {
-                const msgEl = document.getElementById('spriteMessage');
-                const moodEl = document.getElementById('spriteMood');
-                if (msgEl) msgEl.textContent = msgs[p] || msgs.GENKI;
-                if (moodEl) moodEl.textContent = '🎁 日登入 · +5 EXP +1 積分';
-            }, 1200);
-        }
-
-        function tryInteractBonus() {
-            const today = new Date().toISOString().slice(0, 10);
-            if (appSettings.todayInteractDate !== today) {
-                appSettings.todayInteractDate = today;
-                appSettings.todayInteractCount = 0;
-            }
-            if ((appSettings.todayInteractCount || 0) < 10) {
-                appSettings.todayInteractCount++;
-                appSettings.elfExp = (appSettings.elfExp || 0) + 1;
-                localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                return true;
-            }
-            return false;
-        }
-
-        function handleShopPurchase(itemId, itemType) {
-            const def = itemType === 'theme' ? SEIKI_THEMES[itemId] : SEIKI_AURAS[itemId];
-            if (!def) return;
-            const unlocks = appSettings.seikiUnlocks || [];
-            const isOwned = unlocks.includes(itemId);
-            const isActive = itemType === 'theme'
-                ? appSettings.activeTheme === itemId
-                : appSettings.activeAura === itemId;
-
-            if (isActive) {
-                // 取消裝備
-                if (itemType === 'theme') appSettings.activeTheme = null;
-                else appSettings.activeAura = null;
-                localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                applySeikiCosmetics();
-                renderShop();
-                return;
-            }
-            if (isOwned) {
-                // 已擁有，裝備
-                if (itemType === 'theme') appSettings.activeTheme = itemId;
-                else appSettings.activeAura = itemId;
-                localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                applySeikiCosmetics();
-                renderShop();
-                showReminder(`✦ 已裝備 ${def.name}`, 'work');
-                return;
-            }
-            // 購買
-            const pts = appSettings.seikiPoints || 0;
-            if (pts < def.cost) {
-                showReminder(`積分不足（需要 ${def.cost} 積分）`, 'work');
-                return;
-            }
-            appSettings.seikiPoints = pts - def.cost;
-            appSettings.seikiUnlocks = [...unlocks, itemId];
-            if (itemType === 'theme') appSettings.activeTheme = itemId;
-            else appSettings.activeAura = itemId;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-            applySeikiCosmetics();
-            renderShop();
-            if ('vibrate' in navigator) navigator.vibrate([15, 30, 15]);
-            showReminder(`✦ 解鎖 ${def.icon} ${def.name}！`, 'work');
-        }
-
-        function applySeikiCosmetics() {
-            const terrarium = document.getElementById('spriteTerrarium');
-            const container = document.getElementById('seikiContainer');
-            if (!terrarium || !container) return;
-
-            const themeId = appSettings.activeTheme;
-            const expFill = document.getElementById('spriteExpFill');
-
-            // 重置邊框與光暈
-            terrarium.style.borderColor = '';
-            terrarium.style.boxShadow = '';
-
-            if (themeId && typeof SEIKI_THEMES !== 'undefined' && SEIKI_THEMES[themeId]) {
-                const t = SEIKI_THEMES[themeId];
-                const c = t.color;
-                const r = parseInt(c.slice(1, 3), 16);
-                const g = parseInt(c.slice(3, 5), 16);
-                const b = parseInt(c.slice(5, 7), 16);
-                // EXP 條顏色
-                if (expFill) expFill.style.background = c;
-                // 卡片邊框 + 光暈（明顯可見）
-                terrarium.style.borderColor = c;
-                terrarium.style.boxShadow = `0 0 0 2px ${c}, 0 0 20px rgba(${r},${g},${b},0.4)`;
-            } else {
-                const pColor = SEIKI_PERSONALITY_COLORS[getSeikiPersonality()];
-                if (expFill) expFill.style.background = pColor;
-            }
-
-            // Aura: class on container
-            container.classList.remove('aura-stardust', 'aura-aurora');
-            if (appSettings.activeAura) container.classList.add(appSettings.activeAura);
-        }
-
-        function renderShop() {
-            const themeGrid = document.getElementById('shopThemeGrid');
-            const auraGrid  = document.getElementById('shopAuraGrid');
-            if (!themeGrid || !auraGrid) return;
-            const pts     = appSettings.seikiPoints || 0;
-            const unlocks = appSettings.seikiUnlocks || [];
-            const cardStyle = `padding:10px 12px; border-radius:12px; border:1px solid var(--separator);
-                background:var(--fill); display:flex; flex-direction:column; gap:4px; cursor:pointer;
-                transition:all 0.2s ease; text-align:left;`;
-
-            // Themes
-            themeGrid.innerHTML = Object.entries(SEIKI_THEMES).map(([id, def]) => {
-                const owned  = unlocks.includes(id);
-                const active = appSettings.activeTheme === id;
-                const canAfford = pts >= def.cost;
-                const badge = active ? '裝備中' : owned ? '已擁有' : `${def.cost}✦`;
-                const badgeColor = active ? def.color : owned ? 'var(--green)' : canAfford ? 'var(--label-secondary)' : 'var(--label-quaternary)';
-                const opacity = (!owned && !canAfford) ? '0.5' : '1';
-                const border = active ? `border:1.5px solid ${def.color}` : '';
-                return `<button onclick="handleShopPurchase('${id}','theme')"
-                    style="${cardStyle} ${border} opacity:${opacity}">
-                    <span style="font-size:16px">${def.icon}</span>
-                    <span style="font-size:12px; font-weight:500; color:var(--label)">${def.name}</span>
-                    <span style="font-size:10px; color:${badgeColor}">${badge}</span>
-                </button>`;
-            }).join('');
-
-            // Auras
-            auraGrid.innerHTML = Object.entries(SEIKI_AURAS).map(([id, def]) => {
-                const owned  = unlocks.includes(id);
-                const active = appSettings.activeAura === id;
-                const canAfford = pts >= def.cost;
-                const badge = active ? '裝備中' : owned ? '已擁有' : `${def.cost}✦`;
-                const badgeColor = active ? 'var(--blue)' : owned ? 'var(--green)' : canAfford ? 'var(--label-secondary)' : 'var(--label-quaternary)';
-                const opacity = (!owned && !canAfford) ? '0.5' : '1';
-                const border = active ? `border:1.5px solid var(--blue)` : '';
-                return `<button onclick="handleShopPurchase('${id}','aura')"
-                    style="${cardStyle} ${border} opacity:${opacity}">
-                    <span style="font-size:16px">${def.icon}</span>
-                    <span style="font-size:12px; font-weight:500; color:var(--label)">${def.name}</span>
-                    <span style="font-size:10px; color:var(--label-tertiary); line-height:1.3">${def.desc}</span>
-                    <span style="font-size:10px; color:${badgeColor}">${badge}</span>
-                </button>`;
-            }).join('');
-
-            // Points display
-            const el = document.getElementById('seikiPointsDisplay');
-            if (el) el.textContent = pts;
-        }
-
         // --- WLB 健康度計算 ---
         // calculateWLB 已移除，改用本週工時圖表
 
@@ -3835,8 +3622,7 @@
                     const durationMinutes = (now - new Date(lastIn.time)) / 60000;
                     if (durationMinutes > 0) {
                         appSettings.elfExp = (appSettings.elfExp || 0) + durationMinutes;
-                        const earnedPts = Math.floor(durationMinutes / 30);
-                        if (earnedPts > 0) addSeikiPoints(earnedPts);
+
                         localStorage.setItem('appSettings', JSON.stringify(appSettings));
                         checkEasterEggs('punch_out', { durationMinutes });
                     }
@@ -3876,12 +3662,7 @@
                     if (lastIn && lastIn.type === 'in') {
                         const durationMinutes = (new Date(last.time) - new Date(lastIn.time)) / 60000;
                         appSettings.elfExp = Math.max(0, (appSettings.elfExp || 0) - durationMinutes);
-                        const ptsToRevert = Math.floor(durationMinutes / 30);
-                        if (ptsToRevert > 0) {
-                            appSettings.seikiPoints = Math.max(0, (appSettings.seikiPoints || 0) - ptsToRevert);
-                            const ptsEl = document.getElementById('seikiPointsDisplay');
-                            if (ptsEl) ptsEl.textContent = appSettings.seikiPoints;
-                        }
+
                         localStorage.setItem('appSettings', JSON.stringify(appSettings));
                     }
                 }
@@ -4395,11 +4176,7 @@
         renderPartnerRoom();
         initSwipePunch();
         initBrushstroke();
-        initSeikiInteraction();
-        checkDailyBonus();
-        renderShop();
-        applySeikiCosmetics();
-        startIdleBehavior();
+
         // --- 本週總覽 ---
         function renderWeeklySummary() {
             const dayNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
