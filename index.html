@@ -1443,6 +1443,113 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
         }
 
+        /* --- Zen Rest Toolbar (In-place Rest & Soundscape) --- */
+        .zen-rest-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .zen-tool-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: var(--fill);
+            border: 0.5px solid var(--separator);
+            color: var(--label-secondary);
+            font-size: 12.5px;
+            font-weight: 500;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .zen-tool-btn:active {
+            transform: scale(0.96);
+            background: var(--fill-secondary);
+        }
+
+        .zen-tool-btn.active {
+            background: rgba(110, 125, 106, 0.15);
+            border-color: rgba(91, 138, 96, 0.35);
+            color: #436B48;
+        }
+
+        .zen-tool-icon {
+            font-size: 12px;
+            color: var(--blue);
+            transition: color 0.2s ease;
+        }
+
+        .zen-tool-btn.active .zen-tool-icon {
+            color: #5B8A60;
+        }
+
+        .zen-tool-badge {
+            font-size: 10px;
+            color: var(--label-quaternary);
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.04);
+            letter-spacing: 0.04em;
+        }
+
+        /* Breathe Mode inside Hero Ring */
+        .ring-container.breathe-mode .ring-ambient-core {
+            opacity: 1;
+            background: radial-gradient(circle, rgba(91, 138, 96, 0.20) 0%, transparent 70%);
+            transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+        }
+
+        .ring-container.breathe-mode.inhale .ring-ambient-core {
+            transform: scale(1.35);
+        }
+
+        .ring-container.breathe-mode.hold .ring-ambient-core {
+            transform: scale(1.35);
+        }
+
+        .ring-container.breathe-mode.exhale .ring-ambient-core {
+            transform: scale(0.85);
+        }
+
+        .breathe-action-text {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            font-size: 38px;
+            font-weight: 600;
+            color: var(--label);
+            letter-spacing: 0.08em;
+            line-height: 1;
+            animation: breatheTextFade 0.35s ease;
+        }
+
+        @keyframes breatheTextFade {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .breathe-exit-btn {
+            font-size: 11px;
+            color: var(--label-tertiary);
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: var(--fill);
+            border: 0.5px solid var(--separator);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            margin-left: 6px;
+        }
+
         /* --- Action Card --- */
         .action-card {
             background: var(--card);
@@ -2503,6 +2610,19 @@
                             <i class="fas fa-chevron-right"></i>
                         </div>
                     </div>
+
+                    <!-- Zen Rest Toolbar: In-place Mindfulness & Soundscape -->
+                    <div id="zenRestBar" class="zen-rest-bar">
+                        <button class="zen-tool-btn" id="breatheToolBtn" onclick="toggleZenBreathe()" title="開啟 1 分鐘正念深呼吸">
+                            <i class="fas fa-wind zen-tool-icon"></i>
+                            <span>正念深呼吸</span>
+                            <span class="zen-tool-badge">1 min</span>
+                        </button>
+                        <button class="zen-tool-btn" id="soundscapeToolBtn" onclick="toggleZenSoundscape()" title="播放 432Hz 舒壓頌缽音景">
+                            <i class="fas fa-bell zen-tool-icon" id="soundscapeToolIcon"></i>
+                            <span id="soundscapeToolText">432Hz 頌缽</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div id="dailyPetRewardNotice" class="partner-notice" aria-live="polite"></div>
@@ -2916,6 +3036,16 @@
                             <div style="flex:1;">
                                 <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">心靈哲思輪換</div>
                                 <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">點擊光環下方的哲思名言卡片，隨機輪換 30+ 句精選心流名言。</div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:12px; align-items:flex-start;">
+                            <div style="width:28px; height:28px; border-radius:8px; background:rgba(91,138,96,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; color:#436B48;">
+                                <i class="fas fa-wind"></i>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="font-size:13px; font-weight:600; color:var(--label); margin-bottom:2px;">正念呼吸與 432Hz 頌缽</div>
+                                <div style="font-size:12px; color:var(--label-tertiary); line-height:1.5;">休息時輕按「正念深呼吸」，首頁 264px 光環即刻展開 1 分鐘箱式呼吸指引，伴隨空靈頌缽與物理脈衝。</div>
                             </div>
                         </div>
 
@@ -4458,6 +4588,252 @@
             }, 140);
         }
 
+        // ===== ZEN WEB AUDIO SYNTHESIZER (100% Offline & Pure Synthesis) =====
+        const ZenAudio = {
+            ctx: null,
+            droneOscs: null,
+            soundscapeGain: null,
+            isPlayingSoundscape: false,
+
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) this.ctx = new AudioCtx();
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            },
+
+            // 432Hz Tibetan Singing Bowl Harmonics (空靈西藏頌缽)
+            playSingingBowl(freq = 432, duration = 3.2) {
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const ratios = [1, 2.76, 5.4];
+                    const gains = [0.28, 0.10, 0.04];
+
+                    ratios.forEach((ratio, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq * ratio, now);
+                        osc.detune.setValueAtTime((Math.random() - 0.5) * 4, now);
+
+                        gain.gain.setValueAtTime(0.0001, now);
+                        gain.gain.exponentialRampToValueAtTime(gains[idx], now + 0.05);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(now);
+                        osc.stop(now + duration);
+                    });
+                } catch (e) {
+                    console.log('ZenAudio play failed', e);
+                }
+            },
+
+            // Ambient 432Hz Meditation Drone
+            toggleSoundscape() {
+                this.init();
+                if (!this.ctx) return false;
+                if (this.isPlayingSoundscape) {
+                    this.stopSoundscape();
+                    return false;
+                } else {
+                    this.startSoundscape();
+                    return true;
+                }
+            },
+
+            startSoundscape() {
+                if (this.isPlayingSoundscape || !this.ctx) return;
+                const now = this.ctx.currentTime;
+                this.soundscapeGain = this.ctx.createGain();
+                this.soundscapeGain.gain.setValueAtTime(0.0001, now);
+                this.soundscapeGain.gain.exponentialRampToValueAtTime(0.12, now + 1.2);
+                this.soundscapeGain.connect(this.ctx.destination);
+
+                this.droneOscs = [108, 216, 432].map(f => {
+                    const osc = this.ctx.createOscillator();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(f, now);
+                    osc.connect(this.soundscapeGain);
+                    osc.start(now);
+                    return osc;
+                });
+                this.isPlayingSoundscape = true;
+            },
+
+            stopSoundscape() {
+                if (!this.isPlayingSoundscape || !this.ctx) return;
+                const now = this.ctx.currentTime;
+                if (this.soundscapeGain) {
+                    this.soundscapeGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+                    setTimeout(() => {
+                        if (this.droneOscs) {
+                            this.droneOscs.forEach(o => { try { o.stop(); } catch(e){} });
+                            this.droneOscs = null;
+                        }
+                        this.soundscapeGain = null;
+                    }, 850);
+                }
+                this.isPlayingSoundscape = false;
+            }
+        };
+
+        function toggleZenSoundscape() {
+            const btn = document.getElementById('soundscapeToolBtn');
+            const icon = document.getElementById('soundscapeToolIcon');
+            const isPlaying = ZenAudio.toggleSoundscape();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+
+            if (isPlaying) {
+                if (btn) btn.classList.add('active');
+                if (icon) icon.className = 'fas fa-volume-high zen-tool-icon';
+            } else {
+                if (btn) btn.classList.remove('active');
+                if (icon) icon.className = 'fas fa-bell zen-tool-icon';
+            }
+        }
+
+        // ===== IN-PLACE MINDFUL BREATHE CONTROLLER (Apple Watch Grade 1-Min Session) =====
+        let _breatheTimer = null;
+        let _breatheSecRemaining = 60;
+        let _isBreatheActive = false;
+
+        function toggleZenBreathe() {
+            if (_isBreatheActive) {
+                stopZenBreathe();
+            } else {
+                startZenBreathe();
+            }
+        }
+
+        function startZenBreathe() {
+            if (_isBreatheActive) return;
+            _isBreatheActive = true;
+            _breatheSecRemaining = 60;
+
+            const btn = document.getElementById('breatheToolBtn');
+            if (btn) btn.classList.add('active');
+
+            const ringContainer = document.getElementById('ringContainer');
+            if (ringContainer) ringContainer.classList.add('breathe-mode');
+
+            const eyebrowEl = document.getElementById('heroEyebrow');
+            if (eyebrowEl) {
+                eyebrowEl.innerHTML = `正念呼吸 · 1分鐘 <button class="breathe-exit-btn" onclick="stopZenBreathe()">✕ 結束</button>`;
+            }
+
+            const totalHoursEl = document.getElementById('totalHours');
+            if (totalHoursEl) {
+                totalHoursEl.innerHTML = `<span id="breatheActionText" class="breathe-action-text">深吸氣</span>`;
+            }
+
+            runBreatheCycle();
+            _breatheTimer = setInterval(runBreatheCycle, 1000);
+        }
+
+        function runBreatheCycle() {
+            if (!_isBreatheActive) return;
+
+            const elapsedSec = 60 - _breatheSecRemaining;
+            const cycleSec = elapsedSec % 16; // 16s: 0-3 Inhale, 4-7 Hold, 8-11 Exhale, 12-15 Hold
+            const ringContainer = document.getElementById('ringContainer');
+            const actionText = document.getElementById('breatheActionText');
+            const liveText = document.getElementById('liveStatusText');
+            const liveHint = document.getElementById('ongoingHint');
+
+            if (liveHint) {
+                liveHint.className = 'live-status-pill status-ongoing';
+            }
+
+            const cycleNum = Math.floor(elapsedSec / 16) + 1;
+            if (liveText) {
+                liveText.textContent = `剩餘 ${_breatheSecRemaining}s · 第 ${Math.min(cycleNum, 4)}/4 輪`;
+            }
+
+            // 4-Phase States
+            if (cycleSec === 0) {
+                if (ringContainer) {
+                    ringContainer.classList.remove('hold', 'exhale');
+                    ringContainer.classList.add('inhale');
+                }
+                if (actionText) actionText.textContent = '深吸氣';
+                updateBrushstroke(100, false);
+                ZenAudio.playSingingBowl(432, 3.5);
+                if ('vibrate' in navigator) navigator.vibrate([18]);
+
+            } else if (cycleSec === 4) {
+                if (ringContainer) {
+                    ringContainer.classList.remove('inhale', 'exhale');
+                    ringContainer.classList.add('hold');
+                }
+                if (actionText) actionText.textContent = '屏息靜心';
+                if ('vibrate' in navigator) navigator.vibrate([10]);
+
+            } else if (cycleSec === 8) {
+                if (ringContainer) {
+                    ringContainer.classList.remove('inhale', 'hold');
+                    ringContainer.classList.add('exhale');
+                }
+                if (actionText) actionText.textContent = '緩呼氣';
+                updateBrushstroke(0, false);
+                ZenAudio.playSingingBowl(324, 3.5);
+                if ('vibrate' in navigator) navigator.vibrate([18]);
+
+            } else if (cycleSec === 12) {
+                if (ringContainer) {
+                    ringContainer.classList.remove('inhale', 'exhale');
+                    ringContainer.classList.add('hold');
+                }
+                if (actionText) actionText.textContent = '身心放空';
+                if ('vibrate' in navigator) navigator.vibrate([10]);
+            }
+
+            _breatheSecRemaining--;
+
+            if (_breatheSecRemaining < 0) {
+                finishZenBreathe();
+            }
+        }
+
+        function finishZenBreathe() {
+            clearInterval(_breatheTimer);
+            _breatheTimer = null;
+
+            const actionText = document.getElementById('breatheActionText');
+            if (actionText) actionText.textContent = '身心澄澈 ✦';
+
+            ZenAudio.playSingingBowl(540, 4.0);
+            if ('vibrate' in navigator) navigator.vibrate([25, 60, 25]);
+
+            setTimeout(() => {
+                stopZenBreathe();
+            }, 2200);
+        }
+
+        function stopZenBreathe() {
+            _isBreatheActive = false;
+            if (_breatheTimer) {
+                clearInterval(_breatheTimer);
+                _breatheTimer = null;
+            }
+
+            const btn = document.getElementById('breatheToolBtn');
+            if (btn) btn.classList.remove('active');
+
+            const ringContainer = document.getElementById('ringContainer');
+            if (ringContainer) {
+                ringContainer.classList.remove('breathe-mode', 'inhale', 'hold', 'exhale');
+            }
+
+            updateDisplay();
+        }
+
         // 月曆與休假相關變數
         let currentCalendarDate = new Date();
         let offDays = new Set(); // Stores "YYYY-MM-DD"
@@ -5219,20 +5595,22 @@
             const eyebrowEl = document.getElementById('heroEyebrow');
             const totalHoursEl = document.getElementById('totalHours');
 
-            if (_ringMode === 'remaining') {
-                if (eyebrowEl) eyebrowEl.textContent = "尚餘工時";
-                if (totalHoursEl) {
-                    totalHoursEl.innerHTML = `${remObj.h}<span class="hero-unit">h</span>${Math.round(remObj.m)}<span class="hero-unit">m</span>`;
+            if (!_isBreatheActive) {
+                if (_ringMode === 'remaining') {
+                    if (eyebrowEl) eyebrowEl.textContent = "尚餘工時";
+                    if (totalHoursEl) {
+                        totalHoursEl.innerHTML = `${remObj.h}<span class="hero-unit">h</span>${Math.round(remObj.m)}<span class="hero-unit">m</span>`;
+                    }
+                } else {
+                    if (eyebrowEl) eyebrowEl.textContent = "今日工時";
+                    if (totalHoursEl) {
+                        totalHoursEl.innerHTML = `${timeObj.h}<span class="hero-unit">h</span>${Math.round(timeObj.m)}<span class="hero-unit">m</span>`;
+                    }
                 }
-            } else {
-                if (eyebrowEl) eyebrowEl.textContent = "今日工時";
-                if (totalHoursEl) {
-                    totalHoursEl.innerHTML = `${timeObj.h}<span class="hero-unit">h</span>${Math.round(timeObj.m)}<span class="hero-unit">m</span>`;
-                }
-            }
 
-            // Update ring progress & leading bead
-            updateBrushstroke(pct, result.total >= targetMin);
+                // Update ring progress & leading bead
+                updateBrushstroke(pct, result.total >= targetMin);
+            }
 
             // 預計下班時間與 8小時提醒邏輯
             let progressInfo = `目標 ${appSettings.targetHours || 8} 小時`;
@@ -5260,24 +5638,26 @@
                 textEl.textContent = zenQuotes[_currentQuoteIndex];
             }
 
-            const liveHint = document.getElementById('ongoingHint');
-            const statusText = document.getElementById('liveStatusText');
-            if (liveHint && statusText) {
-                liveHint.className = 'live-status-pill';
-                if (result.isOngoing) {
-                    liveHint.classList.add('status-ongoing');
-                    statusText.textContent = '心流專注中';
-                } else if (punchRecords.length > 0) {
-                    if (result.total >= targetMin) {
-                        liveHint.classList.add('status-completed');
-                        statusText.textContent = '暮光賦歸';
+            if (!_isBreatheActive) {
+                const liveHint = document.getElementById('ongoingHint');
+                const statusText = document.getElementById('liveStatusText');
+                if (liveHint && statusText) {
+                    liveHint.className = 'live-status-pill';
+                    if (result.isOngoing) {
+                        liveHint.classList.add('status-ongoing');
+                        statusText.textContent = '心流專注中';
+                    } else if (punchRecords.length > 0) {
+                        if (result.total >= targetMin) {
+                            liveHint.classList.add('status-completed');
+                            statusText.textContent = '暮光賦歸';
+                        } else {
+                            liveHint.classList.add('status-resting');
+                            statusText.textContent = '身心歇息中';
+                        }
                     } else {
-                        liveHint.classList.add('status-resting');
-                        statusText.textContent = '身心歇息中';
+                        liveHint.classList.add('status-idle');
+                        statusText.textContent = '靜待啟程';
                     }
-                } else {
-                    liveHint.classList.add('status-idle');
-                    statusText.textContent = '靜待啟程';
                 }
             }
 
