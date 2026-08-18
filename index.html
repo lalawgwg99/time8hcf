@@ -17,6 +17,7 @@
         rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="pet.css">
     <link rel="manifest" href="manifest.json">
     <!-- 移除 Chart.js，加入 Tone.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
@@ -1640,40 +1641,7 @@
                     </div>
                 </div>
 
-                <!-- Sprite (companion) -->
-                <div id="spriteTerrarium" class="sprite-terrarium">
-                    <div class="seiki-container" id="seikiContainer">
-                        <div class="sprite-ring ring-2"></div>
-                        <div class="sprite-ring ring-1"></div>
-                        <div class="seiki-body" id="seikiBody">
-                            <div class="seiki-face">
-                                <div class="seiki-eye left"><div class="seiki-pupil"></div></div>
-                                <div class="seiki-eye right"><div class="seiki-pupil"></div></div>
-                                <div class="seiki-mouth"></div>
-                            </div>
-                            <div class="seiki-glow"></div>
-                        </div>
-                    </div>
-                    <div style="flex:1; min-width:0;">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
-                            <div style="font-size:13px; font-weight:500; color:var(--label); letter-spacing:0.02em;"
-                                id="spriteName">能量晶種 (Lv.1)</div>
-                            <div style="font-size:10px; font-weight:400; color:var(--blue); letter-spacing:0.04em;"
-                                id="spriteExp">EXP 0/10</div>
-                        </div>
-                        <div
-                            style="width:100%; height:3px; background:var(--fill-secondary); border-radius:2px; overflow:hidden; margin-bottom:5px;">
-                            <div id="spriteExpFill"
-                                style="height:100%; background:var(--blue); border-radius:2px; transition:width 0.8s ease-in-out; width:0%">
-                            </div>
-                        </div>
-                        <div style="font-size:12px; color:var(--label-secondary); line-height:1.4; letter-spacing:0.02em; margin-bottom:2px;"
-                            id="spriteMessage">靜靜等待著你開始工作</div>
-                        <div style="font-size:10px; color:var(--label-tertiary); letter-spacing:0.04em;"
-                            id="spriteMood">💤 休眠中 · 點擊互動</div>
-                    </div>
-                </div>
+                <div id="dailyPetRewardNotice" class="partner-notice" aria-live="polite"></div>
 
                 <!-- Punch Records -->
                 <div>
@@ -1712,6 +1680,43 @@
                     </button>
                 </div>
 
+            </section>
+
+            <section id="tabPartner" class="tab-panel">
+                <div class="partner-room">
+                    <div class="partner-card">
+                        <div class="partner-title">夥伴房間</div>
+                        <div id="partnerPetArt" class="partner-hero" aria-label="目前夥伴"></div>
+                        <div class="partner-meta" style="margin-top:14px;">
+                            <div>
+                                <div id="partnerPetName" class="partner-name">尚未取得夥伴</div>
+                                <div id="partnerPetSeries" class="partner-subtitle">完成正常工時，收集蛋殼碎片</div>
+                            </div>
+                            <div id="partnerPetRarity" class="partner-badge">等待開蛋</div>
+                        </div>
+                        <div id="partnerPetStatus" class="partner-subtitle" style="margin-top:8px;">目前沒有寵物</div>
+                    </div>
+
+                    <div class="partner-card">
+                        <div class="partner-title">節奏蛋</div>
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <div id="partnerFragmentCount" class="partner-name">0 / 7</div>
+                            <div class="partner-subtitle">蛋殼碎片</div>
+                        </div>
+                        <div class="partner-progress" style="margin-top:10px;"><div id="partnerFragmentProgress" style="width:0%"></div></div>
+                        <div id="partnerHatchHint" class="partner-subtitle" style="margin-top:10px;">完成正常工時可取得碎片</div>
+                        <div class="partner-actions">
+                            <button id="hatchPetButton" class="partner-button primary" onclick="hatchPartnerEgg()">開啟節奏蛋</button>
+                            <button class="partner-button" onclick="renderPartnerRoom()">重新整理</button>
+                        </div>
+                        <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
+                    </div>
+
+                    <div class="partner-card">
+                        <div class="partner-title">我的夥伴</div>
+                        <div id="partnerCollection" class="partner-collection"></div>
+                    </div>
+                </div>
             </section>
 
             <!-- ===== TAB: 洞察 ===== -->
@@ -1860,6 +1865,12 @@
                     <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
                 </svg>
                 <span>今日</span>
+            </button>
+            <button class="nav-tab" id="navTabPartner" onclick="switchTab('Partner')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z" />
+                </svg>
+                <span>夥伴</span>
             </button>
             <button class="nav-tab" id="navTabInsights" onclick="switchTab('Insights')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"
@@ -2054,6 +2065,12 @@
         </div>
     </div>
 
+    <script src="./pet-parts.js"></script>
+    <script src="./pet-generator.js"></script>
+    <script src="./pet-storage.js"></script>
+    <script src="./pet-rewards.js"></script>
+    <script src="./pet-renderer.js"></script>
+    <script src="./pet-ui.js"></script>
     <script>
         // --- 邏輯部分 ---
         let punchRecords = [];
@@ -2179,6 +2196,7 @@
             const navBtn = document.getElementById('navTab' + tabName);
             if (panel) panel.classList.add('active');
             if (navBtn) navBtn.classList.add('active');
+            if (tabName === 'Partner' && typeof renderPartnerRoom === 'function') renderPartnerRoom();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if ('vibrate' in navigator) navigator.vibrate(8);
         }
@@ -2766,6 +2784,8 @@
         function updateWorkSprite() {
             const terrarium = document.getElementById('spriteTerrarium');
             if (!terrarium) return;
+            const activePet = getActivePet();
+            const resolvedPetParts = resolveParts(activePet.parts);
 
             let totalMinutes = appSettings.elfExp || 0;
             let currentSessionMinutes = 0;
@@ -4085,9 +4105,9 @@
                 document.getElementById('ongoingHint').classList.add('opacity-0');
             }
 
-            // --- 即時新聞 + 成就 + 工作精靈 + 情境橫幅 ---
+            // --- 即時新聞 + 成就 + 寵物獎勵 ---
             checkAchievement();
-            updateWorkSprite();
+            updateDailyPetReward(result.total >= getTargetMinutes());
             renderWeeklyChart();
             if (typeof renderWeeklySummary === 'function') renderWeeklySummary();
 
@@ -4372,7 +4392,7 @@
         renderCalendar();
         updateDisplay();
         updateCurrentTime();
-        updateWorkSprite();
+        renderPartnerRoom();
         initSwipePunch();
         initBrushstroke();
         initSeikiInteraction();
