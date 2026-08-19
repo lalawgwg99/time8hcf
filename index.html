@@ -5971,16 +5971,8 @@
 
         function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
 
-        // 回溯尋找前一次最近的下班 (out) 紀錄，供 11 小時間隔檢測
-        function getLastPunchOutRecord() {
-            // 1. 檢查今日稍早的打卡紀錄
-            for (let i = punchRecords.length - 1; i >= 0; i--) {
-                if (punchRecords[i].type === 'out' && punchRecords[i].time) {
-                    return punchRecords[i];
-                }
-            }
-
-            // 2. 若今日無，由近至遠回溯歷史紀錄 (timecardHistory)
+        // 回溯尋找「前一個工作日 (跨日)」的最後一次下班 (out) 紀錄，供 11 小時跨日班次間隔檢測
+        function getLastPreviousDayPunchOut() {
             try {
                 const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
                 const todayKey = getTodayKey();
@@ -6019,25 +6011,27 @@
                 updateStreak();
                 window._seikiLastEvent = 'punch_in';
 
-                // --- 勞基法 §34: 檢測與前次下班是否滿 11 小時休息間隔 ---
-                const lastOut = getLastPunchOutRecord();
-                if (lastOut && lastOut.time) {
-                    const diffMs = now.getTime() - new Date(lastOut.time).getTime();
-                    if (diffMs > 0) {
-                        restIntervalMins = Math.round(diffMs / 60000);
-                        const restHours = diffMs / (1000 * 60 * 60);
-                        if (restHours < 11) {
-                            const h = Math.floor(restHours);
-                            const m = Math.round((restHours % 1) * 60);
-                            const restStr = h > 0 ? `${h} 小時 ${m} 分` : `${m} 分鐘`;
-                            setTimeout(() => {
-                                showZenCapsuleNotification({
-                                    emoji: '🌙',
-                                    title: '休息間隔不足 11 小時',
-                                    message: `距離上次下班僅間隔 ${restStr}（勞基法第34條建議滿 11h）· 請多留意身心調適 ⚠️`,
-                                    duration: 6000
-                                });
-                            }, 500);
+                // --- 勞基法 §34: 僅在今日「首度打卡上班」(跨日出勤) 檢測與昨日下班是否滿 11 小時 ---
+                if (punchRecords.length === 0) {
+                    const lastDayOut = getLastPreviousDayPunchOut();
+                    if (lastDayOut && lastDayOut.time) {
+                        const diffMs = now.getTime() - new Date(lastDayOut.time).getTime();
+                        if (diffMs > 0) {
+                            restIntervalMins = Math.round(diffMs / 60000);
+                            const restHours = diffMs / (1000 * 60 * 60);
+                            if (restHours < 11) {
+                                const h = Math.floor(restHours);
+                                const m = Math.round((restHours % 1) * 60);
+                                const restStr = h > 0 ? `${h} 小時 ${m} 分` : `${m} 分鐘`;
+                                setTimeout(() => {
+                                    showZenCapsuleNotification({
+                                        emoji: '🌙',
+                                        title: '跨日休息不足 11 小時',
+                                        message: `距離昨日下班僅間隔 ${restStr}（勞基法第34條建議滿 11h）· 請多留意身心調適 ⚠️`,
+                                        duration: 6000
+                                    });
+                                }, 600);
+                            }
                         }
                     }
                 }
@@ -6078,18 +6072,6 @@
                 }
                 window._seikiLastEvent = 'punch_out';
 
-                // --- 勞基法 §34: 下班即時預報明日最早建議上班時間 ---
-                const nextEarliestIn = new Date(now.getTime() + 11 * 3600000);
-                const nextStr = nextEarliestIn.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-                setTimeout(() => {
-                    showZenCapsuleNotification({
-                        emoji: '🌙',
-                        title: '暮光賦歸 · 充足休息',
-                        message: `依 11h 守則，建議明日 ${nextStr} 後再上班 🛌`,
-                        duration: 5500
-                    });
-                }, 500);
-
                 // 打卡下班：疲倦感
                 (function punchOutTired() {
                     const t = document.querySelector('.seiki-container');
@@ -6111,6 +6093,23 @@
             punchRecords.push({ time: now.toISOString(), type: type, task: taskName, restIntervalMins: restIntervalMins });
             saveData();
             updateDisplay();
+
+            // 若今日累計工時已達標，在打卡下班當下預告明日建議上班時間
+            if (type === 'out') {
+                const res = calculateHours();
+                if (res.total >= getTargetMinutes()) {
+                    const nextEarliestIn = new Date(now.getTime() + 11 * 3600000);
+                    const nextStr = nextEarliestIn.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    setTimeout(() => {
+                        showZenCapsuleNotification({
+                            emoji: '🌙',
+                            title: '暮光賦歸 · 充足休息',
+                            message: `依 11h 守則，建議明日 ${nextStr} 後再上班 🛌`,
+                            duration: 5500
+                        });
+                    }, 500);
+                }
+            }
         }
 
         function undoLastPunch() {
@@ -6352,8 +6351,8 @@
                             statusText.textContent = '身心歇息中';
                         }
                     } else {
-                        // 今日尚未打卡：檢查距前次下班是否已滿 11 小時
-                        const lastOut = getLastPunchOutRecord();
+                        // 今日尚未打卡：檢查距昨日最後下班是否已滿 11 小時
+                        const lastOut = getLastPreviousDayPunchOut();
                         let unRestRemMins = 0;
                         let earliestStr = '';
                         if (lastOut && lastOut.time) {
