@@ -534,47 +534,6 @@
             color: #ffffff;
         }
 
-        /* --- Soundscape Selector Styles --- */
-        .soundscape-option-row {
-            padding: 14px 16px;
-            border-bottom: 0.5px solid var(--separator);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: background 0.18s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .soundscape-option-row:last-child {
-            border-bottom: none;
-        }
-        .soundscape-option-row:active {
-            background: var(--fill-secondary);
-        }
-        .soundscape-option-row.active {
-            background: rgba(90, 138, 122, 0.08);
-        }
-        .soundscape-icon-badge {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            flex-shrink: 0;
-        }
-        .soundscape-check-icon {
-            color: var(--blue);
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.18s ease, transform 0.2s ease;
-        }
-        .soundscape-option-row.active .soundscape-check-icon {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
         /* --- Sprite (compact) --- */
         .sprite-terrarium {
             background: var(--card);
@@ -1563,169 +1522,62 @@
             }
         }
 
-        /* =============================================
-           APPLE DYNAMIC ISLAND CAPSULE (靈動島導航浮島系統)
-           ============================================= */
-        .island-backdrop {
+        /* --- Bottom Nav --- */
+        #bottomNav {
             position: fixed;
-            inset: 0;
-            z-index: 45;
-            background: transparent;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .island-capsule {
-            position: fixed;
-            bottom: max(16px, env(safe-area-inset-bottom, 16px));
-            left: 50%;
-            transform: translateX(-50%) translateZ(0);
-            -webkit-transform: translateX(-50%) translateZ(0);
-            z-index: 50;
-            background: var(--nav-bg);
-            border: 0.5px solid var(--separator);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
-            -webkit-backdrop-filter: blur(28px) saturate(190%);
-            backdrop-filter: blur(28px) saturate(190%);
-            border-radius: 999px;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        padding 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        border-radius 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        background 0.3s ease;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: auto;
-            min-width: 140px;
-            height: 38px;
-            padding: 0 14px;
-        }
-
-        .island-capsule:active {
-            transform: translateX(-50%) scale(0.97) translateZ(0);
-        }
-
-        /* Compact View */
-        .island-compact-view {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            transition: opacity 0.2s ease, transform 0.25s ease;
-        }
-
-        .island-status-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--label-quaternary);
-            transition: background 0.3s ease, box-shadow 0.3s ease;
-            flex-shrink: 0;
-        }
-        .island-status-dot.working {
-            background: var(--green);
-            box-shadow: 0 0 6px var(--green);
-            animation: islandPulse 2s infinite ease-in-out;
-        }
-        .island-status-dot.resting {
-            background: var(--orange);
-            box-shadow: 0 0 6px var(--orange);
-        }
-        @keyframes islandPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.25); opacity: 0.75; }
-        }
-
-        .island-title {
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--label);
-            letter-spacing: -0.01em;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .island-expand-icon {
-            font-size: 9.5px;
-            color: var(--label-tertiary);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            margin-left: 2px;
-        }
-
-        /* Expanded View */
-        .island-expanded-view {
-            display: none;
-            align-items: center;
-            gap: 6px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
             width: 100%;
-            justify-content: space-between;
-        }
-
-        .island-capsule.expanded {
-            height: 48px;
-            padding: 4px 6px;
-            width: 290px;
-            background: var(--card);
-        }
-
-        .island-capsule.expanded .island-compact-view {
-            display: none;
-        }
-
-        .island-capsule.expanded .island-expanded-view {
+            max-width: 430px;
+            z-index: 40;
+            background: var(--nav-bg);
+            border-top: 0.5px solid var(--separator);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            backdrop-filter: blur(24px) saturate(180%);
+            padding: 8px 0 max(8px, env(safe-area-inset-bottom, 0px));
             display: flex;
-            animation: islandFadeIn 0.25s ease-out forwards;
+            align-items: flex-start;
+            transition: background 0.4s ease-in-out;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
         }
 
-        @keyframes islandFadeIn {
-            from { opacity: 0; transform: scale(0.92); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .island-nav-btn {
+        .nav-tab {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 2px;
-            background: transparent;
+            gap: 4px;
+            background: none;
             border: none;
-            border-radius: 999px;
-            padding: 5px 0;
-            color: var(--label-tertiary);
             cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 6px 0 4px;
+            color: var(--label-quaternary);
+            transition: color 0.5s ease-in-out;
             -webkit-tap-highlight-color: transparent;
         }
 
-        .island-nav-btn i {
-            font-size: 13px;
-            transition: transform 0.2s ease;
+        .nav-tab.active {
+            color: var(--label);
         }
 
-        .island-nav-btn span {
-            font-size: 10.5px;
-            font-weight: 500;
-            letter-spacing: 0.02em;
+        .nav-tab svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.4s ease-in-out;
         }
 
-        .island-nav-btn:active {
-            transform: scale(0.92);
+        .nav-tab.active svg {
+            transform: scale(1.08);
         }
 
-        .island-nav-btn.active {
-            color: var(--blue);
-            background: var(--fill-secondary);
-        }
-
-        .island-nav-btn.active span {
-            font-weight: 700;
+        .nav-tab span {
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         /* --- Apple Native Hero Circular Progress Ring --- */
@@ -3051,7 +2903,7 @@
 
         <!-- Main Content: Three Tabs -->
         <main
-            style="flex:1; padding:0 24px; display:flex; flex-direction:column; gap:0; margin-top:0; padding-bottom:calc(72px + env(safe-area-inset-bottom, 16px));">
+            style="flex:1; padding:0 24px; display:flex; flex-direction:column; gap:0; margin-top:0; padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + 12px);">
 
             <!-- ===== TAB: 今日 ===== -->
             <section id="tabToday" class="tab-panel active">
@@ -3167,19 +3019,12 @@
                         </div>
                     </div>
 
-                    <!-- Zen Rest Toolbar: In-place Mindfulness & Soundscape -->
+                    <!-- Zen Rest Toolbar: In-place Mindfulness Breathe -->
                     <div id="zenRestBar" class="zen-rest-bar">
                         <button class="zen-tool-btn" id="breatheToolBtn" onclick="toggleZenBreathe()" title="開啟 1 分鐘正念深呼吸">
                             <i class="fas fa-wind zen-tool-icon"></i>
                             <span>正念呼吸</span>
                             <span class="zen-tool-badge">1 min</span>
-                        </button>
-                        <button class="zen-tool-btn" id="soundscapeToolBtn" onclick="toggleZenSoundscape()" title="播放/暫停專注自然聲景">
-                            <i class="fas fa-bell zen-tool-icon" id="soundscapeToolIcon"></i>
-                            <span id="soundscapeToolText">432Hz 頌缽</span>
-                        </button>
-                        <button class="zen-tool-btn" onclick="openSoundscapeModal()" title="選擇 4 款禪意聲景與調節音量" style="flex:0; padding:0 12px;" aria-label="聲景選單">
-                            <i class="fas fa-sliders" style="font-size:12px; color:var(--label-secondary);"></i>
                         </button>
                     </div>
                 </div>
@@ -3431,36 +3276,38 @@
         </main>
     </div>
 
-    <!-- Dynamic Island Floating Capsule (Apple 靈動島導航浮島) -->
-    <div id="islandBackdrop" class="island-backdrop hidden" onclick="collapseIsland()"></div>
-    <div id="islandCapsule" class="island-capsule" onclick="toggleIsland(event)" role="navigation" aria-label="靈動島導航">
-        <!-- Compact State Content -->
-        <div id="islandCompact" class="island-compact-view">
-            <span class="island-status-dot" id="islandDot"></span>
-            <span class="island-title" id="islandTitle">今日 · 0h 0m</span>
-            <i class="fas fa-chevron-up island-expand-icon"></i>
-        </div>
-
-        <!-- Expanded State Navigation -->
-        <div id="islandExpanded" class="island-expanded-view">
-            <button type="button" class="island-nav-btn active" id="islandNavToday" onclick="switchIslandTab('Today', event)">
-                <i class="fas fa-circle-notch"></i>
-                <span>今日</span>
-            </button>
-            <button type="button" class="island-nav-btn" id="islandNavPartner" onclick="switchIslandTab('Partner', event)">
-                <i class="fas fa-seedling"></i>
-                <span>夥伴</span>
-            </button>
-            <button type="button" class="island-nav-btn" id="islandNavInsights" onclick="switchIslandTab('Insights', event)">
-                <i class="fas fa-chart-simple"></i>
-                <span>洞察</span>
-            </button>
-            <button type="button" class="island-nav-btn" id="islandNavSettings" onclick="openIslandSettings(event)">
-                <i class="fas fa-gear"></i>
-                <span>設定</span>
-            </button>
-        </div>
-    </div>
+    <!-- Bottom Navigation -->
+    <nav id="bottomNav">
+        <button class="nav-tab active" id="navTabToday" onclick="switchTab('Today')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                <circle cx="12" cy="12" r="8.5" />
+                <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
+            </svg>
+            <span>今日</span>
+        </button>
+        <button class="nav-tab" id="navTabPartner" onclick="switchTab('Partner')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z" />
+            </svg>
+            <span>夥伴</span>
+        </button>
+        <button class="nav-tab" id="navTabInsights" onclick="switchTab('Insights')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 3.5 L19.5 12 L12 20.5 L4.5 12 Z" />
+            </svg>
+            <span>洞察</span>
+        </button>
+        <button class="nav-tab" id="navTabSettings" onclick="openSettings()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+                <circle cx="9" cy="6" r="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.3" />
+                <circle cx="15" cy="18" r="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.3" />
+            </svg>
+            <span>設定</span>
+        </button>
+    </nav>
 
     <!-- Ambient Glow (breathing while working) -->
     <div id="ambientGlow"></div>
@@ -3690,112 +3537,6 @@
         </div>
     </div>
 
-    <!-- Soundscape Selector Modal (4 款禪意白噪音聲景選擇器) -->
-    <div id="soundscapeModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
-            onclick="closeSoundscapeModal()"></div>
-        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
-            style="background:var(--bg);max-height:88vh;overflow-y:auto;">
-            <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:1;">
-                <div class="sheet-handle"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <i class="fas fa-headphones" style="color:var(--blue); font-size:16px;"></i>
-                        <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">禪意聲景空間</h3>
-                    </div>
-                    <button onclick="closeSoundscapeModal()" aria-label="關閉"
-                        style="padding:5px 12px; border-radius:999px; background:var(--fill-secondary); border:none; color:var(--blue); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;">
-                        完成
-                    </button>
-                </div>
-            </div>
-            <div style="padding:16px 24px 36px;">
-                <div class="section-label">選擇專注聲景</div>
-                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    
-                    <!-- 1. 432Hz 頌缽 -->
-                    <div onclick="selectSoundscape('bowl')" class="soundscape-option-row active" id="soundscapeOption_bowl">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div class="soundscape-icon-badge" style="background:rgba(196,168,122,0.15); color:#D4B688;">
-                                <i class="fas fa-bell"></i>
-                            </div>
-                            <div>
-                                <div style="font-size:14.5px; font-weight:600; color:var(--label);">432Hz 西藏空靈頌缽</div>
-                                <div style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">多重和諧泛音與雙耳拍頻，撫平焦慮</div>
-                            </div>
-                        </div>
-                        <i class="fas fa-check soundscape-check-icon" id="soundscapeCheck_bowl"></i>
-                    </div>
-
-                    <!-- 2. 京都竹林細雨 -->
-                    <div onclick="selectSoundscape('rain')" class="soundscape-option-row" id="soundscapeOption_rain">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div class="soundscape-icon-badge" style="background:rgba(90,138,122,0.15); color:var(--blue);">
-                                <i class="fas fa-cloud-rain"></i>
-                            </div>
-                            <div>
-                                <div style="font-size:14.5px; font-weight:600; color:var(--label);">京都竹林細雨 (Kyoto Rain)</div>
-                                <div style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">竹葉水滴與綿綿細雨，營造心流結界</div>
-                            </div>
-                        </div>
-                        <i class="fas fa-check soundscape-check-icon" id="soundscapeCheck_rain"></i>
-                    </div>
-
-                    <!-- 3. 夜幕柴火微光 -->
-                    <div onclick="selectSoundscape('fire')" class="soundscape-option-row" id="soundscapeOption_fire">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div class="soundscape-icon-badge" style="background:rgba(235,120,60,0.15); color:var(--orange);">
-                                <i class="fas fa-fire-flame-curved"></i>
-                            </div>
-                            <div>
-                                <div style="font-size:14.5px; font-weight:600; color:var(--label);">夜幕柴火微光 (Campfire Ember)</div>
-                                <div style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">炭木低頻共鳴與火花噼啪，溫暖專注</div>
-                            </div>
-                        </div>
-                        <i class="fas fa-check soundscape-check-icon" id="soundscapeCheck_fire"></i>
-                    </div>
-
-                    <!-- 4. 晨曦潮汐微浪 -->
-                    <div onclick="selectSoundscape('waves')" class="soundscape-option-row" id="soundscapeOption_waves">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div class="soundscape-icon-badge" style="background:rgba(120,130,220,0.15); color:#7B88D8;">
-                                <i class="fas fa-water"></i>
-                            </div>
-                            <div>
-                                <div style="font-size:14.5px; font-weight:600; color:var(--label);">晨曦潮汐微浪 (Dawn Waves)</div>
-                                <div style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">深層海浪起伏湧動與退潮白噪音</div>
-                            </div>
-                        </div>
-                        <i class="fas fa-check soundscape-check-icon" id="soundscapeCheck_waves"></i>
-                    </div>
-                </div>
-
-                <!-- 播放與音量控制 -->
-                <div class="section-label">音量調節</div>
-                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:16px;">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <i class="fas fa-volume-low" style="color:var(--label-tertiary); font-size:13px;"></i>
-                        <input type="range" id="soundscapeVolumeSlider" min="0" max="100" value="70"
-                            oninput="setSoundscapeVolume(this.value)"
-                            style="flex:1; accent-color:var(--blue); cursor:pointer;">
-                        <i class="fas fa-volume-high" style="color:var(--label-secondary); font-size:14px;"></i>
-                        <span id="soundscapeVolumeLabel" style="font-size:12.5px; font-weight:600; color:var(--label-secondary); width:36px; text-align:right; font-variant-numeric:tabular-nums;">70%</span>
-                    </div>
-                </div>
-
-                <div style="display:flex; gap:10px;">
-                    <button onclick="toggleModalSoundscapePlay()" id="modalSoundscapePlayBtn" class="active-scale"
-                        style="flex:1; padding:14px; border-radius:var(--radius); font-size:14.5px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif; display:flex; align-items:center; justify-content:center; gap:8px;">
-                        <i class="fas fa-play" id="modalPlayBtnIcon"></i>
-                        <span id="modalPlayBtnText">開始播放</span>
-                    </button>
-                    <button onclick="closeSoundscapeModal()" class="active-scale"
-                        style="padding:14px 20px; border-radius:var(--radius); font-size:14.5px; font-weight:500; background:var(--fill-secondary); color:var(--label); border:none; cursor:pointer;">關閉</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- User Manual Modal (功能與操作指南 - Apple Inset Grouped 手冊) -->
     <div id="userManualModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
@@ -3871,25 +3612,16 @@
                     </div>
                 </div>
 
-                <!-- 3. 禪意調息與聲學空間 -->
-                <div class="section-label">3. 禪意調息與聲學空間</div>
+                <!-- 3. 禪意調息導引 -->
+                <div class="section-label">3. 禪意調息導引</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-lungs" style="color:var(--green); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">1 分鐘正念深呼吸</span>
-                        </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            點擊頂部「正念呼吸」，進入 4-7-8 韻律調息導引，伴隨光環擴張與收縮，快速重拾平靜心流。
-                        </p>
-                    </div>
                     <div style="padding:14px 16px;">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-headphones" style="color:var(--purple); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">4 款 Apple 原生物理合成聲景空間</span>
+                            <i class="fas fa-lungs" style="color:var(--green); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">1 分鐘正念深呼吸 (4-7-8 韻律調息)</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            點擊聲景按鈕或滑桿選單，可自由切換：<strong>432Hz 頌缽</strong>、<strong>京都竹林細雨</strong>、<strong>夜幕柴火微光</strong>與<strong>晨曦潮汐微浪</strong>，純 Web Audio 實時物理合成，零流量消耗且 100% 離線可用。
+                            點擊打卡下方「正念呼吸」，進入 4-7-8 韻律調息導引，伴隨光環擴張與收縮及空靈缽音，快速重拾平靜專注。
                         </p>
                     </div>
                 </div>
@@ -4605,91 +4337,14 @@
             }, 6000);
         }
 
-        // =============================================
-        // APPLE DYNAMIC ISLAND CONTROLLER (靈動島浮島核心)
-        // =============================================
-        let _isIslandExpanded = false;
-        let _currentActiveTab = 'Today';
-
-        function toggleIsland(e) {
-            if (_isIslandExpanded) return;
-            expandIsland();
-        }
-
-        function expandIsland() {
-            _isIslandExpanded = true;
-            const capsule = document.getElementById('islandCapsule');
-            const backdrop = document.getElementById('islandBackdrop');
-            if (capsule) capsule.classList.add('expanded');
-            if (backdrop) backdrop.classList.remove('hidden');
-            if ('vibrate' in navigator) navigator.vibrate(10);
-            playSingleClickSound('C5');
-        }
-
-        function collapseIsland() {
-            _isIslandExpanded = false;
-            const capsule = document.getElementById('islandCapsule');
-            const backdrop = document.getElementById('islandBackdrop');
-            if (capsule) capsule.classList.remove('expanded');
-            if (backdrop) backdrop.classList.add('hidden');
-        }
-
-        function switchIslandTab(tabName, e) {
-            if (e) {
-                e.stopPropagation();
-                e.preventDefault();
-            }
-            _currentActiveTab = tabName;
-            switchTab(tabName);
-            if ('vibrate' in navigator) navigator.vibrate(12);
-            setTimeout(collapseIsland, 260);
-        }
-
-        function openIslandSettings(e) {
-            if (e) {
-                e.stopPropagation();
-                e.preventDefault();
-            }
-            openSettings();
-            collapseIsland();
-        }
-
-        function updateIslandDisplay() {
-            const titleEl = document.getElementById('islandTitle');
-            const dotEl = document.getElementById('islandDot');
-            if (!titleEl || !dotEl) return;
-
-            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
-            const todayResult = calculateTodayWorkHours();
-            const totalMins = Math.round(todayResult.total);
-            const h = Math.floor(totalMins / 60);
-            const m = totalMins % 60;
-            const timeStr = `${h}h ${m}m`;
-
-            if (isWorking) {
-                dotEl.className = 'island-status-dot working';
-                const taskName = (appSettings.currentTask || '').trim();
-                titleEl.textContent = taskName ? `${taskName} · ${timeStr}` : `心流專注 · ${timeStr}`;
-            } else if (punchRecords.length > 0) {
-                dotEl.className = 'island-status-dot resting';
-                titleEl.textContent = `今日累計 ${timeStr}`;
-            } else {
-                dotEl.className = 'island-status-dot';
-                titleEl.textContent = `靜待啟程 · 0h 0m`;
-            }
-        }
-
         // === IPPITSU: Tab Switching ===
         function switchTab(tabName) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             const panel = document.getElementById('tab' + tabName);
+            const navBtn = document.getElementById('navTab' + tabName);
             if (panel) panel.classList.add('active');
-
-            // Update Island buttons
-            document.querySelectorAll('.island-nav-btn').forEach(b => b.classList.remove('active'));
-            const islandBtn = document.getElementById('islandNav' + tabName);
-            if (islandBtn) islandBtn.classList.add('active');
-
+            if (navBtn) navBtn.classList.add('active');
             if (tabName === 'Partner' && typeof renderPartnerRoom === 'function') renderPartnerRoom();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if ('vibrate' in navigator) navigator.vibrate(8);
@@ -5727,61 +5382,37 @@
             }, 140);
         }
 
-        // ===== ZEN 4-SOUNDSCAPE WEB AUDIO PHYSICAL SYNTHESIZER =====
+        // ===== ZEN WEB AUDIO SYNTHESIZER (Acoustic Multi-Harmonic Tibetan Bowl Engine) =====
         const ZenAudio = {
             ctx: null,
-            activeNodes: [],
+            droneNodes: [],
             soundscapeGain: null,
             lfoOsc: null,
             lfoGain: null,
             filterNode: null,
-            timerIds: [],
             isPlayingSoundscape: false,
-            currentType: 'bowl',
-            volume: 0.7,
-
-            SOUNDSCAPES: {
-                bowl: { id: 'bowl', name: '432Hz 頌缽', fullName: '432Hz 西藏空靈頌缽', icon: 'fa-bell' },
-                rain: { id: 'rain', name: '京都細雨', fullName: '京都竹林細雨', icon: 'fa-cloud-rain' },
-                fire: { id: 'fire', name: '夜幕柴火', fullName: '夜幕柴火微光', icon: 'fa-fire-flame-curved' },
-                waves: { id: 'waves', name: '晨曦潮汐', fullName: '晨曦潮汐微浪', icon: 'fa-water' }
-            },
 
             init() {
                 this.ctx = getSharedAudioCtx();
             },
 
-            createNoiseBuffer(seconds = 3) {
-                if (!this.ctx) return null;
-                const bufferSize = this.ctx.sampleRate * seconds;
-                const buffer = this.ctx.createBuffer(2, bufferSize, this.ctx.sampleRate);
-                for (let channel = 0; channel < 2; channel++) {
-                    const data = buffer.getChannelData(channel);
-                    let lastOut = 0.0;
-                    for (let i = 0; i < bufferSize; i++) {
-                        const white = Math.random() * 2 - 1;
-                        data[i] = (lastOut + (0.02 * white)) / 1.02;
-                        lastOut = data[i];
-                        data[i] *= 3.5;
-                    }
-                }
-                return buffer;
-            },
-
+            // 432Hz Tibetan Singing Bowl Strike (西藏頌缽敲擊與自然泛音餘震)
             playSingingBowl(baseFreq = 432, duration = 3.8) {
                 try {
                     this.init();
                     if (!this.ctx) return;
                     const now = this.ctx.currentTime;
 
+                    // Authentic Tibetan Bowl Physical Partial Series
                     const partials = [
                         { freq: baseFreq * 1.0,  gain: 0.32, decay: duration * 1.0,  detune: 0 },
-                        { freq: baseFreq * 1.0,  gain: 0.28, decay: duration * 0.95, detune: 1.2 },
-                        { freq: baseFreq * 2.76, gain: 0.14, decay: duration * 0.75, detune: -2.0 },
-                        { freq: baseFreq * 5.40, gain: 0.05, decay: duration * 0.50, detune: 3.5 },
-                        { freq: baseFreq * 0.5,  gain: 0.20, decay: duration * 1.1,  detune: 0 }
+                        { freq: baseFreq * 1.0,  gain: 0.28, decay: duration * 0.95, detune: 1.2 },  // Natural acoustic beating
+                        { freq: baseFreq * 2.76, gain: 0.14, decay: duration * 0.75, detune: -2.0 }, // Metallic chime overtone
+                        { freq: baseFreq * 5.40, gain: 0.05, decay: duration * 0.50, detune: 3.5 },  // Rim resonance
+                        { freq: baseFreq * 0.5,  gain: 0.20, decay: duration * 1.1,  detune: 0 }    // Warm foundation drone
                     ];
 
+                    // Master Biquad Resonance Filter for bronze warmth
                     const bowlFilter = this.ctx.createBiquadFilter();
                     bowlFilter.type = 'lowpass';
                     bowlFilter.frequency.setValueAtTime(2400, now);
@@ -5792,376 +5423,26 @@
                     partials.forEach(p => {
                         const osc = this.ctx.createOscillator();
                         const g = this.ctx.createGain();
+
                         osc.type = 'sine';
                         osc.frequency.setValueAtTime(p.freq, now);
                         osc.detune.setValueAtTime(p.detune, now);
+
                         g.gain.setValueAtTime(0.0001, now);
                         g.gain.linearRampToValueAtTime(p.gain, now + 0.04);
                         g.gain.exponentialRampToValueAtTime(0.0001, now + p.decay);
+
                         osc.connect(g);
                         g.connect(bowlFilter);
+
                         osc.start(now);
                         osc.stop(now + p.decay + 0.1);
                     });
                 } catch (e) {
                     console.log('ZenAudio play failed', e);
                 }
-            },
-
-            toggleSoundscape(type) {
-                this.init();
-                if (!this.ctx) return false;
-
-                if (type && type !== this.currentType) {
-                    this.currentType = type;
-                    if (this.isPlayingSoundscape) {
-                        this.stopSoundscape();
-                        setTimeout(() => this.startSoundscape(type), 300);
-                        return true;
-                    }
-                }
-
-                if (this.isPlayingSoundscape) {
-                    this.stopSoundscape();
-                    return false;
-                } else {
-                    this.startSoundscape(type || this.currentType);
-                    return true;
-                }
-            },
-
-            startSoundscape(type) {
-                this.init();
-                if (!this.ctx) return;
-                this.stopSoundscape();
-
-                this.currentType = type || this.currentType || 'bowl';
-                const now = this.ctx.currentTime;
-                this.activeNodes = [];
-                this.timerIds = [];
-
-                this.soundscapeGain = this.ctx.createGain();
-                const targetGain = 0.22 * this.volume;
-                this.soundscapeGain.gain.setValueAtTime(0.0001, now);
-                this.soundscapeGain.gain.linearRampToValueAtTime(targetGain, now + 1.2);
-                this.soundscapeGain.connect(this.ctx.destination);
-
-                if (this.currentType === 'bowl') {
-                    this._startBowlSynth(now);
-                } else if (this.currentType === 'rain') {
-                    this._startRainSynth(now);
-                } else if (this.currentType === 'fire') {
-                    this._startFireSynth(now);
-                } else if (this.currentType === 'waves') {
-                    this._startWavesSynth(now);
-                }
-
-                this.isPlayingSoundscape = true;
-                updateSoundscapeUI();
-            },
-
-            _startBowlSynth(now) {
-                this.playSingingBowl(432, 4.0);
-
-                const filter = this.ctx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(1400, now);
-                filter.Q.setValueAtTime(3.2, now);
-                filter.connect(this.soundscapeGain);
-
-                const lfo = this.ctx.createOscillator();
-                const lfoG = this.ctx.createGain();
-                lfo.type = 'sine';
-                lfo.frequency.setValueAtTime(0.10, now);
-                lfoG.gain.setValueAtTime(0.08, now);
-                lfo.connect(lfoG);
-                lfoG.connect(this.soundscapeGain.gain);
-                lfo.start(now);
-                this.activeNodes.push(lfo);
-
-                const droneTones = [
-                    { f: 108, g: 0.20, detune: 0 },
-                    { f: 216, g: 0.22, detune: -0.8 },
-                    { f: 432, g: 0.28, detune: 0 },
-                    { f: 432, g: 0.22, detune: 1.4 },
-                    { f: 864, g: 0.08, detune: 2.1 },
-                    { f: 1296, g: 0.03, detune: -1.5 }
-                ];
-                droneTones.forEach(t => {
-                    const osc = this.ctx.createOscillator();
-                    const toneGain = this.ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(t.f, now);
-                    osc.detune.setValueAtTime(t.detune, now);
-                    toneGain.gain.setValueAtTime(t.g, now);
-                    osc.connect(toneGain);
-                    toneGain.connect(filter);
-                    osc.start(now);
-                    this.activeNodes.push(osc);
-                });
-            },
-
-            _startRainSynth(now) {
-                const noiseBuf = this.createNoiseBuffer(4);
-                if (!noiseBuf) return;
-
-                const noiseSrc = this.ctx.createBufferSource();
-                noiseSrc.buffer = noiseBuf;
-                noiseSrc.loop = true;
-
-                const bpFilter = this.ctx.createBiquadFilter();
-                bpFilter.type = 'bandpass';
-                bpFilter.frequency.setValueAtTime(900, now);
-                bpFilter.Q.setValueAtTime(0.8, now);
-
-                const hsFilter = this.ctx.createBiquadFilter();
-                hsFilter.type = 'highshelf';
-                hsFilter.frequency.setValueAtTime(3500, now);
-                hsFilter.gain.setValueAtTime(-6, now);
-
-                noiseSrc.connect(bpFilter);
-                bpFilter.connect(hsFilter);
-                hsFilter.connect(this.soundscapeGain);
-                noiseSrc.start(now);
-                this.activeNodes.push(noiseSrc);
-
-                const scheduleDroplets = () => {
-                    if (!this.isPlayingSoundscape || this.currentType !== 'rain') return;
-                    try {
-                        const t = this.ctx.currentTime;
-                        const dropOsc = this.ctx.createOscillator();
-                        const dropGain = this.ctx.createGain();
-                        const freq = 1400 + Math.random() * 1200;
-                        dropOsc.type = 'sine';
-                        dropOsc.frequency.setValueAtTime(freq, t);
-                        dropOsc.frequency.exponentialRampToValueAtTime(freq * 0.4, t + 0.035);
-
-                        dropGain.gain.setValueAtTime(0.0001, t);
-                        dropGain.gain.linearRampToValueAtTime(0.05 + Math.random() * 0.04, t + 0.004);
-                        dropGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
-
-                        dropOsc.connect(dropGain);
-                        dropGain.connect(this.soundscapeGain);
-                        dropOsc.start(t);
-                        dropOsc.stop(t + 0.04);
-                    } catch (e) {}
-
-                    const nextDelay = 140 + Math.random() * 320;
-                    const tid = setTimeout(scheduleDroplets, nextDelay);
-                    this.timerIds.push(tid);
-                };
-                scheduleDroplets();
-            },
-
-            _startFireSynth(now) {
-                const noiseBuf = this.createNoiseBuffer(3);
-                if (!noiseBuf) return;
-
-                const noiseSrc = this.ctx.createBufferSource();
-                noiseSrc.buffer = noiseBuf;
-                noiseSrc.loop = true;
-
-                const lpFilter = this.ctx.createBiquadFilter();
-                lpFilter.type = 'lowpass';
-                lpFilter.frequency.setValueAtTime(320, now);
-                lpFilter.Q.setValueAtTime(1.5, now);
-
-                noiseSrc.connect(lpFilter);
-                lpFilter.connect(this.soundscapeGain);
-                noiseSrc.start(now);
-                this.activeNodes.push(noiseSrc);
-
-                const scheduleCrackles = () => {
-                    if (!this.isPlayingSoundscape || this.currentType !== 'fire') return;
-                    try {
-                        const t = this.ctx.currentTime;
-                        const isSnap = Math.random() < 0.25;
-                        const popOsc = this.ctx.createOscillator();
-                        const popGain = this.ctx.createGain();
-
-                        if (isSnap) {
-                            popOsc.type = 'triangle';
-                            popOsc.frequency.setValueAtTime(450 + Math.random() * 200, t);
-                            popGain.gain.setValueAtTime(0.0001, t);
-                            popGain.gain.linearRampToValueAtTime(0.12, t + 0.005);
-                            popGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
-                        } else {
-                            popOsc.type = 'square';
-                            popOsc.frequency.setValueAtTime(1800 + Math.random() * 1600, t);
-                            popGain.gain.setValueAtTime(0.0001, t);
-                            popGain.gain.linearRampToValueAtTime(0.08 + Math.random() * 0.08, t + 0.002);
-                            popGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.015);
-                        }
-
-                        popOsc.connect(popGain);
-                        popGain.connect(this.soundscapeGain);
-                        popOsc.start(t);
-                        popOsc.stop(t + (isSnap ? 0.07 : 0.02));
-                    } catch (e) {}
-
-                    const nextDelay = 80 + Math.random() * 380;
-                    const tid = setTimeout(scheduleCrackles, nextDelay);
-                    this.timerIds.push(tid);
-                };
-                scheduleCrackles();
-            },
-
-            _startWavesSynth(now) {
-                const noiseBuf = this.createNoiseBuffer(5);
-                if (!noiseBuf) return;
-
-                const noiseSrc = this.ctx.createBufferSource();
-                noiseSrc.buffer = noiseBuf;
-                noiseSrc.loop = true;
-
-                const deepFilter = this.ctx.createBiquadFilter();
-                deepFilter.type = 'lowpass';
-                deepFilter.frequency.setValueAtTime(160, now);
-
-                const waveFilter = this.ctx.createBiquadFilter();
-                waveFilter.type = 'bandpass';
-                waveFilter.frequency.setValueAtTime(380, now);
-                waveFilter.Q.setValueAtTime(1.2, now);
-
-                const waveLfo = this.ctx.createOscillator();
-                const lfoMod = this.ctx.createGain();
-                waveLfo.type = 'sine';
-                waveLfo.frequency.setValueAtTime(0.08, now);
-                lfoMod.gain.setValueAtTime(450, now);
-                waveLfo.connect(lfoMod);
-                lfoMod.connect(waveFilter.frequency);
-                waveLfo.start(now);
-                this.activeNodes.push(waveLfo);
-
-                noiseSrc.connect(deepFilter);
-                deepFilter.connect(this.soundscapeGain);
-
-                noiseSrc.connect(waveFilter);
-                waveFilter.connect(this.soundscapeGain);
-
-                noiseSrc.start(now);
-                this.activeNodes.push(noiseSrc);
-            },
-
-            stopSoundscape() {
-                if (this.timerIds) {
-                    this.timerIds.forEach(id => clearTimeout(id));
-                    this.timerIds = [];
-                }
-                if (this.soundscapeGain && this.ctx) {
-                    const now = this.ctx.currentTime;
-                    try {
-                        this.soundscapeGain.gain.linearRampToValueAtTime(0.0001, now + 0.8);
-                    } catch (e) {}
-                    setTimeout(() => {
-                        if (this.activeNodes) {
-                            this.activeNodes.forEach(o => { try { o.stop(); o.disconnect(); } catch (e) {} });
-                            this.activeNodes = [];
-                        }
-                    }, 850);
-                }
-                this.isPlayingSoundscape = false;
-                updateSoundscapeUI();
-            },
-
-            setVolume(val) {
-                this.volume = Math.max(0, Math.min(1, val / 100));
-                if (this.soundscapeGain && this.ctx && this.isPlayingSoundscape) {
-                    try {
-                        this.soundscapeGain.gain.setValueAtTime(0.22 * this.volume, this.ctx.currentTime);
-                    } catch (e) {}
-                }
             }
         };
-
-        function updateSoundscapeUI() {
-            const btn = document.getElementById('soundscapeToolBtn');
-            const icon = document.getElementById('soundscapeToolIcon');
-            const text = document.getElementById('soundscapeToolText');
-            const modalPlayBtn = document.getElementById('modalSoundscapePlayBtn');
-            const modalPlayIcon = document.getElementById('modalPlayBtnIcon');
-            const modalPlayText = document.getElementById('modalPlayBtnText');
-
-            const info = ZenAudio.SOUNDSCAPES[ZenAudio.currentType] || ZenAudio.SOUNDSCAPES.bowl;
-
-            if (text) text.textContent = info.name;
-
-            if (ZenAudio.isPlayingSoundscape) {
-                if (btn) btn.classList.add('active');
-                if (icon) icon.className = `fas ${info.icon} zen-tool-icon`;
-                if (modalPlayIcon) modalPlayIcon.className = 'fas fa-pause';
-                if (modalPlayText) modalPlayText.textContent = '暫停播放';
-                if (modalPlayBtn) modalPlayBtn.style.background = 'var(--blue)';
-            } else {
-                if (btn) btn.classList.remove('active');
-                if (icon) icon.className = `fas ${info.icon} zen-tool-icon`;
-                if (modalPlayIcon) modalPlayIcon.className = 'fas fa-play';
-                if (modalPlayText) modalPlayText.textContent = '開始播放';
-                if (modalPlayBtn) modalPlayBtn.style.background = 'var(--label)';
-            }
-
-            ['bowl', 'rain', 'fire', 'waves'].forEach(k => {
-                const opt = document.getElementById('soundscapeOption_' + k);
-                if (opt) {
-                    if (k === ZenAudio.currentType) {
-                        opt.classList.add('active');
-                    } else {
-                        opt.classList.remove('active');
-                    }
-                }
-            });
-        }
-
-        function toggleZenSoundscape() {
-            ZenAudio.toggleSoundscape();
-            if ('vibrate' in navigator) navigator.vibrate(10);
-            updateSoundscapeUI();
-        }
-
-        function toggleModalSoundscapePlay() {
-            ZenAudio.toggleSoundscape();
-            if ('vibrate' in navigator) navigator.vibrate(10);
-            updateSoundscapeUI();
-        }
-
-        function selectSoundscape(type) {
-            ZenAudio.currentType = type;
-            appSettings.selectedSoundscape = type;
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-
-            ZenAudio.startSoundscape(type);
-            if ('vibrate' in navigator) navigator.vibrate(12);
-            updateSoundscapeUI();
-        }
-
-        function setSoundscapeVolume(val) {
-            ZenAudio.setVolume(val);
-            const label = document.getElementById('soundscapeVolumeLabel');
-            if (label) label.textContent = `${val}%`;
-            appSettings.soundscapeVolume = parseInt(val);
-            localStorage.setItem('appSettings', JSON.stringify(appSettings));
-        }
-
-        function openSoundscapeModal() {
-            const modal = document.getElementById('soundscapeModal');
-            if (!modal) return;
-            modal.classList.remove('hidden');
-            const slider = document.getElementById('soundscapeVolumeSlider');
-            const label = document.getElementById('soundscapeVolumeLabel');
-            const vol = appSettings.soundscapeVolume !== undefined ? appSettings.soundscapeVolume : 70;
-            if (slider) slider.value = vol;
-            if (label) label.textContent = `${vol}%`;
-            updateSoundscapeUI();
-            if ('vibrate' in navigator) navigator.vibrate(10);
-            playSingleClickSound('C5');
-        }
-
-        function closeSoundscapeModal() {
-            const modal = document.getElementById('soundscapeModal');
-            if (modal) modal.classList.add('hidden');
-            if ('vibrate' in navigator) navigator.vibrate(10);
-            playSingleClickSound('G4');
-        }
 
         // ===== IN-PLACE MINDFUL BREATHE CONTROLLER (Apple Watch Grade 1-Min Session) =====
         let _breatheTimer = null;
@@ -7066,14 +6347,6 @@
             if (!appSettings.targetHours) appSettings.targetHours = 8;
             applyZenTheme(appSettings.zenTheme || 'alabaster');
 
-            if (appSettings.selectedSoundscape) {
-                ZenAudio.currentType = appSettings.selectedSoundscape;
-            }
-            if (appSettings.soundscapeVolume !== undefined) {
-                ZenAudio.setVolume(appSettings.soundscapeVolume);
-            }
-            if (typeof updateSoundscapeUI === 'function') updateSoundscapeUI();
-
             // Migrate old flat data to per-day if needed
             const oldData = localStorage.getItem('timecardData');
             if (oldData) {
@@ -7620,13 +6893,12 @@
 
             document.getElementById('progressText').innerHTML = progressInfo;
 
-            // --- 即時新聞 + 成就 + 寵物獎勵 + 待辦標記 + 靈動島更新 ---
+            // --- 即時新聞 + 成就 + 寵物獎勵 + 待辦標記 ---
             checkAchievement();
             updateDailyPetReward(result.total >= getTargetMinutes());
             renderWeeklyChart();
             if (typeof renderWeeklySummary === 'function') renderWeeklySummary();
             if (typeof updateNotesBadge === 'function') updateNotesBadge();
-            if (typeof updateIslandDisplay === 'function') updateIslandDisplay();
 
             // --- 勞基法 §35: 連續工作滿 230 分鐘（提前 10 分鐘）未打卡休息預警 ---
             if (result.isOngoing && lastRecord) {
