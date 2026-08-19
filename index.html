@@ -4408,44 +4408,73 @@
 
         // ===== ROCK-SOLID RESILIENT AUDIO ENGINE =====
         let _sharedAudioCtx = null;
+        let _needsAudioRefresh = false;
+
         function getSharedAudioCtx() {
             try {
-                if (!_sharedAudioCtx || _sharedAudioCtx.state === 'closed') {
-                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                    if (AudioCtx) _sharedAudioCtx = new AudioCtx();
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return null;
+
+                if (!_sharedAudioCtx || _sharedAudioCtx.state === 'closed' || _sharedAudioCtx.state === 'interrupted' || _needsAudioRefresh) {
+                    _needsAudioRefresh = false;
+                    try { if (_sharedAudioCtx) _sharedAudioCtx.close(); } catch (e) { }
+                    _sharedAudioCtx = new AudioCtx();
                 }
-                if (_sharedAudioCtx && (_sharedAudioCtx.state === 'suspended' || _sharedAudioCtx.state === 'interrupted')) {
+
+                if (_sharedAudioCtx.state === 'suspended') {
                     _sharedAudioCtx.resume();
                 }
-            } catch (e) {}
-            return _sharedAudioCtx;
+
+                // Keep ZenAudio connected to active context
+                if (window.ZenAudio && ZenAudio.ctx !== _sharedAudioCtx) {
+                    ZenAudio.ctx = _sharedAudioCtx;
+                }
+
+                return _sharedAudioCtx;
+            } catch (e) {
+                return null;
+            }
         }
 
         function wakeUpAllAudioContexts() {
             try {
                 const ctx = getSharedAudioCtx();
-                if (ctx && (ctx.state === 'suspended' || ctx.state === 'interrupted')) {
-                    ctx.resume();
+                if (ctx) {
+                    if (ctx.state === 'suspended') ctx.resume();
+                    // iOS WebKit silent pulse to forcefully reconnect hardware audio routing
+                    try {
+                        const buf = ctx.createBuffer(1, 1, 22050);
+                        const src = ctx.createBufferSource();
+                        src.buffer = buf;
+                        src.connect(ctx.destination);
+                        src.start(0);
+                    } catch (e) { }
                 }
                 if (window.Tone && Tone.context && (Tone.context.state === 'suspended' || Tone.context.state === 'interrupted')) {
-                    Tone.context.resume();
+                    try { Tone.context.resume(); } catch (e) { }
                 }
-                if (window.ZenAudio && ZenAudio.ctx && (ZenAudio.ctx.state === 'suspended' || ZenAudio.ctx.state === 'interrupted')) {
-                    ZenAudio.ctx.resume();
-                }
-            } catch (e) {}
+            } catch (e) { }
         }
 
-        // 當使用者切換分頁/開啟外部連結 (如 HRIS) 後返回，或任何點擊時立即喚醒 AudioContext
+        // 當使用者切換分頁/開啟外部連結 (如 HRIS) 後返回，標記需要重整 AudioContext
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
+                _needsAudioRefresh = true;
                 wakeUpAllAudioContexts();
+            } else {
+                _needsAudioRefresh = true;
             }
         });
-        window.addEventListener('focus', wakeUpAllAudioContexts);
-        window.addEventListener('pageshow', wakeUpAllAudioContexts);
-        ['touchstart', 'touchend', 'mousedown', 'pointerdown'].forEach(evt => {
-            document.addEventListener(evt, wakeUpAllAudioContexts, { passive: true });
+        window.addEventListener('focus', () => {
+            _needsAudioRefresh = true;
+            wakeUpAllAudioContexts();
+        });
+        window.addEventListener('pageshow', () => {
+            _needsAudioRefresh = true;
+            wakeUpAllAudioContexts();
+        });
+        ['touchstart', 'touchend', 'mousedown', 'pointerdown', 'click'].forEach(evt => {
+            window.addEventListener(evt, wakeUpAllAudioContexts, { passive: true, capture: true });
         });
 
         function playZenChimeSound() {
@@ -6654,11 +6683,6 @@
                             message: '即將迎來 4 小時法定工時上限，請適時收尾手邊工作，享受片刻留白與休息 🌿',
                             duration: 6500
                         });
-                        try {
-                            Tone.start();
-                            const synth = new Tone.Synth().toDestination();
-                            synth.triggerAttackRelease("E5", "4n");
-                        } catch (e) {}
                     }
                 } else {
                     window._fourHourAlarmTriggered = false;
