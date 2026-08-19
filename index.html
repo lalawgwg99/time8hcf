@@ -2910,8 +2910,8 @@
                     <div class="ring-container" id="ringContainer" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
                         <!-- Ring Accessory Button: 待辦筆記 (右上角小圓圈) -->
                         <button type="button" id="ringNotesBtn" onclick="openNotesModal(event)" class="ring-accessory-btn active-scale" title="今日待辦與專注筆記" aria-label="待辦筆記">
-                            <i class="fas fa-list-check" style="font-size:13px; color:var(--label-secondary);"></i>
-                            <span id="notesBadgeDot" class="notes-badge-dot hidden"></span>
+                            <i class="fas fa-list-check" style="font-size:13px; color:var(--label-secondary); pointer-events:none;"></i>
+                            <span id="notesBadgeDot" class="notes-badge-dot hidden" style="pointer-events:none;"></span>
                         </button>
                         <div class="ring-ambient-core" id="ringAmbientCore"></div>
                         <svg viewBox="0 0 264 264">
@@ -6089,6 +6089,10 @@
         }
 
         // ===== TODAY NOTES & TODO CONTROLLER (今日待辦與專注筆記) =====
+        function getTodayDateKey() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
         function getTodayNotes() {
             const todayKey = getTodayDateKey();
             const raw = localStorage.getItem('timecardNotes_' + todayKey);
@@ -6106,8 +6110,8 @@
 
         function openNotesModal(e) {
             if (e) {
-                e.stopPropagation();
-                e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                if (typeof e.preventDefault === 'function') e.preventDefault();
             }
             const modal = document.getElementById('notesModal');
             if (!modal) return;
