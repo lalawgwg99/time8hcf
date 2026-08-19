@@ -3374,6 +3374,124 @@
         </div>
     </div>
 
+    <!-- User Manual Modal (功能與操作指南 - Apple Inset Grouped 手冊) -->
+    <div id="userManualModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeUserManual()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg);max-height:88vh;overflow-y:auto;">
+            <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:1;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
+                    <button onclick="closeUserManual()" aria-label="返回設定"
+                        style="display:flex; align-items:center; gap:5px; border:none; background:transparent; color:var(--blue); font-size:14.5px; font-weight:500; cursor:pointer; padding:4px 0; font-family:inherit;">
+                        <i class="fas fa-chevron-left" style="font-size:12px;"></i>
+                        <span>設定</span>
+                    </button>
+                    <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">功能與操作指南</h3>
+                    <div style="width:40px;"></div>
+                </div>
+            </div>
+            <div style="padding:16px 24px 36px;">
+
+                <!-- 1. 打卡與工時光環 -->
+                <div class="section-label">1. 打卡與工時光環</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-circle-notch" style="color:var(--blue); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">264px 筆觸工時光環</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            中央大光環即時呈現今日工時進度。<strong>輕觸光環數字</strong>即可在「今日累計工時」與「尚餘倒數工時」之間自由切換。
+                        </p>
+                    </div>
+                    <div style="padding:14px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-sliders" style="color:var(--blue); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">原位滑動打卡 (Slide to Punch)</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            打卡下班時採用 Apple 物理滑桿防誤觸機制；上班則支援極簡點擊，打卡時伴隨清脆水滴音與細膩震動回饋。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 2. 勞基法健康守護體系 -->
+                <div class="section-label">2. 勞基法健康守護防線</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-hourglass-half" style="color:var(--orange); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">230 分鐘連續工作預警 (勞基法 §35)</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            單次連續工作滿 230 分鐘（3 小時 50 分）時主動提醒，讓您提前 10 分鐘妥善收尾手邊工作，避免超逾 4 小時法定上限。
+                        </p>
+                    </div>
+                    <div style="padding:14px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-bed" style="color:var(--blue); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">11 小時跨日休息守護 (勞基法 §34)</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            今日首度打卡上班時，自動檢測距昨日下班是否休滿 11 小時；當日達標下班時，即時為您預報明日建議的最早啟程時間。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3. 禪意調息與聲學空間 -->
+                <div class="section-label">3. 禪意調息與聲學空間</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-lungs" style="color:var(--green); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">1 分鐘正念深呼吸</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            點擊頂部「正念呼吸」，進入 4-7-8 韻律調息導引，伴隨光環擴張與收縮，快速重拾平靜心流。
+                        </p>
+                    </div>
+                    <div style="padding:14px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-bell" style="color:var(--purple); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">432Hz 西藏空靈頌缽</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            點擊音效按鈕即可開啟西藏正念頌缽音律，以自然和諧音頻阻隔外界喧囂，營造專注結界。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 4. 主題色彩與全螢幕體驗 -->
+                <div class="section-label">4. 主題色彩與 PWA 體驗</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-palette" style="color:var(--blue); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">4 款 Apple 禪意主題色彩</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            輕觸今日右上角 <strong>TIME 8 ✦</strong>，即可自由切換：和風暖白、黑曜夜色 (OLED 省電護眼)、竹影森綠、暮光煙紫。
+                        </p>
+                    </div>
+                    <div style="padding:14px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-mobile-screen" style="color:var(--blue); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">加入手機主畫面 (PWA)</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            在 Safari 點選分享 ➔「加入主畫面」，即可享有全螢幕沉浸體驗與 iOS 16.4+ 鎖定畫面推播通知。
+                        </p>
+                    </div>
+                </div>
+
+                <button onclick="closeUserManual()" class="active-scale"
+                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:500; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">返回設定</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
@@ -3403,6 +3521,18 @@
                         <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.55; margin:0;">
                             專為追求心流的專業工作者設計。結合 Apple 原生極簡美學、1 分鐘正念深呼吸與 432Hz 空靈頌缽，讓專注與生活從容平衡。
                         </p>
+                    </div>
+
+                    <!-- 功能與操作指南 Entry Row -->
+                    <div onclick="openUserManual()" style="padding:13px 16px; border-top:0.5px solid var(--separator); display:flex; align-items:center; justify-content:space-between; cursor:pointer;" class="active:opacity-70">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-book-open" style="color:var(--blue); font-size:15px; width:18px; text-align:center;"></i>
+                            <div>
+                                <div style="font-size:13.5px; color:var(--label); font-weight:500;">功能與操作指南</div>
+                                <div style="font-size:11px; color:var(--label-tertiary);">完整功能介紹與手勢說明</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="font-size:11px; color:var(--label-quaternary);"></i>
                     </div>
 
                     <!-- 加入主畫面 Quick Action Row -->
@@ -5639,6 +5769,25 @@
         function closeInstallGuide() {
             const modal = document.getElementById('installGuideModal');
             if (modal) modal.classList.add('hidden');
+        }
+
+        function openUserManual() {
+            const settingsModal = document.getElementById('settingsModal');
+            const manualModal = document.getElementById('userManualModal');
+            if (settingsModal) settingsModal.classList.add('hidden');
+            if (manualModal) {
+                manualModal.style.zIndex = '100';
+                manualModal.classList.remove('hidden');
+            }
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        }
+
+        function closeUserManual() {
+            const settingsModal = document.getElementById('settingsModal');
+            const manualModal = document.getElementById('userManualModal');
+            if (manualModal) manualModal.classList.add('hidden');
+            if (settingsModal) settingsModal.classList.remove('hidden');
+            if ('vibrate' in navigator) navigator.vibrate(10);
         }
 
         // ===== ZEN THEME CONTROLLER (Apple 禪意主題色彩切換) =====
