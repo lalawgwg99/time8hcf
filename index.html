@@ -3475,8 +3475,8 @@
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div class="p-4 flex items-center justify-between" style="border-bottom:0.5px solid var(--separator);">
                         <div style="display:flex; flex-direction:column; gap:2px;">
-                            <span style="font-size:14.5px; color:var(--label); font-weight:500;">4 小時連續工作防護</span>
-                            <span style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">滿 4h 自動提醒至少休息 30 分鐘 (勞基法§35)</span>
+                            <span style="font-size:14.5px; color:var(--label); font-weight:500;">230 分鐘連續工作預警</span>
+                            <span style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">滿 230m 提前 10 分鐘警示，避免超逾 4h 上限 (勞基法§35)</span>
                         </div>
                         <span style="font-size:11px; font-weight:600; color:var(--green); background:rgba(77,122,82,0.12); padding:3px 9px; border-radius:999px; white-space:nowrap; margin-left:8px;">自動守護</span>
                     </div>
@@ -6338,6 +6338,9 @@
                         if (sessionMins >= 240) {
                             liveHint.classList.add('status-overtime');
                             statusText.textContent = '連續滿 4h · 建議休息 30m';
+                        } else if (sessionMins >= 230) {
+                            liveHint.classList.add('status-overtime');
+                            statusText.textContent = '連續 230m · 準備休息';
                         } else {
                             liveHint.classList.add('status-ongoing');
                             statusText.textContent = '心流專注中';
@@ -6388,17 +6391,17 @@
             renderWeeklyChart();
             if (typeof renderWeeklySummary === 'function') renderWeeklySummary();
 
-            // --- 勞基法 §35: 連續工作 4 小時未休息提醒 ---
+            // --- 勞基法 §35: 連續工作滿 230 分鐘（提前 10 分鐘）未打卡休息預警 ---
             if (result.isOngoing && lastRecord) {
                 const lastInTime = new Date(lastRecord.time).getTime();
                 const sessionMins = (Date.now() - lastInTime) / 60000;
-                if (sessionMins >= 240) {
+                if (sessionMins >= 230) {
                     if (!window._fourHourAlarmTriggered) {
                         window._fourHourAlarmTriggered = true;
                         showZenCapsuleNotification({
                             emoji: '☕',
-                            title: '已連續工作滿 4 小時',
-                            message: '依勞基法第35條規範，請務必暫停工作至少休息 30 分鐘 🌿',
+                            title: '已連續工作滿 230 分鐘',
+                            message: '距離 4h 法定上限尚餘 10 分鐘，請準備打卡休息 🌿',
                             duration: 6500
                         });
                         try {
