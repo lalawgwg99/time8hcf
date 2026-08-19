@@ -4365,9 +4365,9 @@
                 lastStretchDismiss = Date.now();
                 showZenCapsuleNotification({
                     emoji: '🧘',
-                    title: '久坐舒緩提醒',
-                    message: '已連續專注 90 分鐘 · 雙手伸展、放鬆肩頸 ☕',
-                    duration: 4500
+                    title: '久坐舒緩 · 身心伸展',
+                    message: '已持續專注 90 分鐘 · 請輕轉肩頸、深吸一口氣，喝口溫水放鬆肌肉 💧',
+                    duration: 4800
                 });
             }
         }
@@ -6026,8 +6026,8 @@
                                 setTimeout(() => {
                                     showZenCapsuleNotification({
                                         emoji: '🌙',
-                                        title: '跨日休息不足 11 小時',
-                                        message: `距離昨日下班僅間隔 ${restStr}（勞基法第34條建議滿 11h）· 請多留意身心調適 ⚠️`,
+                                        title: '身心調息 · 跨日間隔守護',
+                                        message: `距昨日下班僅 ${restStr}（建議充能滿 11 小時）· 今日請放緩節奏，溫和關照身心 🍵`,
                                         duration: 6000
                                     });
                                 }, 600);
@@ -6102,9 +6102,9 @@
                     const nextStr = nextEarliestIn.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
                     setTimeout(() => {
                         showZenCapsuleNotification({
-                            emoji: '🌙',
-                            title: '暮光賦歸 · 充足休息',
-                            message: `依 11h 守則，建議明日 ${nextStr} 後再上班 🛌`,
+                            emoji: '✨',
+                            title: '暮光賦歸 · 今日圓滿',
+                            message: `已圓滿達成今日專注 · 依 11 小時充能守則，建議明日 ${nextStr} 後再啟程 🌙`,
                             duration: 5500
                         });
                     }, 500);
@@ -6400,8 +6400,8 @@
                         window._fourHourAlarmTriggered = true;
                         showZenCapsuleNotification({
                             emoji: '☕',
-                            title: '已連續工作滿 230 分鐘',
-                            message: '距離 4h 法定上限尚餘 10 分鐘，請準備打卡休息 🌿',
+                            title: '心流節奏 · 專注已滿 230 分鐘',
+                            message: '即將迎來 4 小時法定工時上限，請適時收尾手邊工作，享受片刻留白與休息 🌿',
                             duration: 6500
                         });
                         try {
@@ -6424,7 +6424,7 @@
                 if (Date.now() > targetTime) {
                     if (!window._alarmTriggered) {
                         window._alarmTriggered = true;
-                        triggerAlarm('心流專注達成', `已連續專注 ${appSettings.workReminderMinutes || 120} 分鐘 · 建議起身喝杯水，放鬆片刻`, '🧘');
+                        triggerAlarm('靜心留白 · 專注達成', `已連續心流沉浸 ${appSettings.workReminderMinutes || 120} 分鐘 · 建議起身伸展肩頸、遠眺片刻 🍃`, '🍃');
                     }
                 }
             } else {
@@ -6440,7 +6440,7 @@
                     if (restMins >= (appSettings.restReminderMinutes || 20)) {
                         if (!window._restAlarmTriggered) {
                             window._restAlarmTriggered = true;
-                            triggerAlarm('休息結束提醒', `已歇息滿 ${appSettings.restReminderMinutes || 20} 分鐘 · 準備好繼續心流專注了嗎？`, '🌱');
+                            triggerAlarm('調息完成 · 靜待啟程', `身心已舒緩歇息 ${appSettings.restReminderMinutes || 20} 分鐘 · 若已充飽能量，準備好開啟下一個專注篇章了嗎？`, '🌱');
                         }
                     }
                 }
@@ -6452,7 +6452,7 @@
             if (result.total >= targetMin && punchRecords.length > 0) {
                 if (!window._targetGoalAlarmTriggered) {
                     window._targetGoalAlarmTriggered = true;
-                    triggerAlarm('今日工時達成', `已滿 ${appSettings.targetHours || 8} 小時目標 · 辛苦了，可以下班賦歸生活 🥂`, '🎉');
+                    triggerAlarm('專注圓滿 · 目標達成', `已達成今日 ${appSettings.targetHours || 8} 小時工時目標 · 感謝今日的專注付出，隨時可以優雅賦歸生活 🥂`, '🎉');
                 }
             } else if (result.total < targetMin) {
                 window._targetGoalAlarmTriggered = false;
@@ -6508,7 +6508,7 @@
                         restWarningHtml = `
                             <div style="margin-top:6px; display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--orange); background:rgba(154,112,64,0.09); padding:2px 8px; border-radius:6px; font-weight:500;">
                                 <i class="fas fa-bed" style="font-size:9.5px;"></i>
-                                <span>距前次下班僅 ${restStr}（未滿 11 小時 · 勞基法§34）</span>
+                                <span>距昨日下班僅 ${restStr}（建議充能滿 11h · 勞基法§34）</span>
                             </div>
                         `;
                     }
