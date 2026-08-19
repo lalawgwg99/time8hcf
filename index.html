@@ -450,6 +450,90 @@
             font-weight: 600;
         }
 
+        /* --- Ring Accessory Button (待辦筆記) --- */
+        .ring-accessory-btn {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 15;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+        .ring-accessory-btn:hover {
+            transform: scale(1.08);
+            background: var(--fill-secondary);
+        }
+        .notes-badge-dot {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--orange);
+            box-shadow: 0 0 5px var(--orange);
+        }
+        .task-chip {
+            font-size: 11.5px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--fill);
+            color: var(--label-secondary);
+            border: 0.5px solid var(--separator);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            font-weight: 500;
+        }
+        .task-chip:hover, .task-chip:active {
+            background: var(--fill-secondary);
+            color: var(--label);
+            border-color: var(--label-tertiary);
+        }
+        .todo-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: var(--fill);
+            border-radius: 9px;
+            border: 0.5px solid var(--separator);
+            transition: all 0.18s ease;
+        }
+        .todo-item-row.done {
+            opacity: 0.55;
+            background: var(--fill-tertiary);
+        }
+        .todo-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1.5px solid var(--label-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+            background: transparent;
+        }
+        .todo-checkbox.checked {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #ffffff;
+        }
+
         /* --- Sprite (compact) --- */
         .sprite-terrarium {
             background: var(--card);
@@ -2824,6 +2908,11 @@
                 <!-- Hero: Circular Ring with Time Inside (Apple Native Masterpiece - 264px) -->
                 <div class="hero-section">
                     <div class="ring-container" id="ringContainer" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
+                        <!-- Ring Accessory Button: 待辦筆記 (右上角小圓圈) -->
+                        <button type="button" id="ringNotesBtn" onclick="openNotesModal(event)" class="ring-accessory-btn active-scale" title="今日待辦與專注筆記" aria-label="待辦筆記">
+                            <i class="fas fa-list-check" style="font-size:13px; color:var(--label-secondary);"></i>
+                            <span id="notesBadgeDot" class="notes-badge-dot hidden"></span>
+                        </button>
                         <div class="ring-ambient-core" id="ringAmbientCore"></div>
                         <svg viewBox="0 0 264 264">
                             <defs>
@@ -3374,6 +3463,81 @@
         </div>
     </div>
 
+    <!-- Today Notes & Todo Modal (今日待辦與專注筆記) -->
+    <div id="notesModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeNotesModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg);max-height:88vh;overflow-y:auto;">
+            <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:1;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-list-check" style="color:var(--blue); font-size:16px;"></i>
+                        <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">今日待辦與筆記</h3>
+                    </div>
+                    <button onclick="closeNotesModal()" aria-label="完成"
+                        style="padding:5px 12px; border-radius:999px; background:var(--fill-secondary); border:none; color:var(--blue); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;">
+                        完成
+                    </button>
+                </div>
+            </div>
+            <div style="padding:16px 24px 36px;">
+
+                <!-- 1. 當前專注主題 (打卡時自動關聯) -->
+                <div class="section-label" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>當前專注任務</span>
+                    <span style="font-size:11px; font-weight:400; color:var(--label-tertiary);">打卡時自動記錄</span>
+                </div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                    <input type="text" id="notesTaskInput" placeholder="今天正在進行什麼？（例：核心功能開發）"
+                        oninput="saveCurrentTaskFromNotes()"
+                        style="width:100%; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:10px 12px; font-size:14px; font-family:inherit; outline:none; margin-bottom:10px; transition:border 0.2s;">
+                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                        <button type="button" onclick="setQuickTaskTag('🏢 常規辦公')" class="task-chip">🏢 常規辦公</button>
+                        <button type="button" onclick="setQuickTaskTag('💻 核心開發')" class="task-chip">💻 核心開發</button>
+                        <button type="button" onclick="setQuickTaskTag('📊 專案會議')" class="task-chip">📊 專案會議</button>
+                        <button type="button" onclick="setQuickTaskTag('☕ 外出拜訪')" class="task-chip">☕ 外出拜訪</button>
+                        <button type="button" onclick="setQuickTaskTag('🧘 深度研讀')" class="task-chip">🧘 深度研讀</button>
+                    </div>
+                </div>
+
+                <!-- 2. 今日待辦清單 (To-do Checklist) -->
+                <div class="section-label" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>今日核心待辦</span>
+                    <span id="todoProgressCount" style="font-size:11px; font-weight:500; color:var(--label-tertiary);">0/0 完成</span>
+                </div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                    <!-- New Todo Input -->
+                    <div style="display:flex; gap:8px; margin-bottom:12px;">
+                        <input type="text" id="newTodoInput" placeholder="新增待辦事項..."
+                            onkeydown="if(event.key==='Enter') addNewTodoItem()"
+                            style="flex:1; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:8px 12px; font-size:13.5px; font-family:inherit; outline:none;">
+                        <button type="button" onclick="addNewTodoItem()"
+                            style="padding:0 14px; background:var(--blue); color:#fff; border:none; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- Todo Items List -->
+                    <div id="todoItemsList" style="display:flex; flex-direction:column; gap:8px;">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- 3. 隨手靈感便籤 (Quick Memo) -->
+                <div class="section-label">隨手靈感便籤</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                    <textarea id="notesMemoTextarea" rows="4" placeholder="記下今日進度、明早待辦、或臨時冒出的靈感想法..."
+                        oninput="saveNotesMemo()"
+                        style="width:100%; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:10px 12px; font-size:13.5px; font-family:inherit; outline:none; resize:none; line-height:1.5;"></textarea>
+                </div>
+
+                <button onclick="closeNotesModal()" class="active-scale"
+                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:14.5px; font-weight:500; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">完成並保存</button>
+            </div>
+        </div>
+    </div>
+
     <!-- User Manual Modal (功能與操作指南 - Apple Inset Grouped 手冊) -->
     <div id="userManualModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
@@ -3406,13 +3570,22 @@
                             中央大光環即時呈現今日工時進度。<strong>輕觸光環數字</strong>即可在「今日累計工時」與「尚餘倒數工時」之間自由切換。
                         </p>
                     </div>
-                    <div style="padding:14px 16px;">
+                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
                             <i class="fas fa-sliders" style="color:var(--blue); font-size:13px;"></i>
                             <span style="font-size:14px; font-weight:600; color:var(--label);">原位滑動打卡 (Slide to Punch)</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
                             打卡下班時採用 Apple 物理滑桿防誤觸機制；上班則支援極簡點擊，打卡時伴隨清脆水滴音與細膩震動回饋。
+                        </p>
+                    </div>
+                    <div style="padding:14px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                            <i class="fas fa-list-check" style="color:var(--blue); font-size:13px;"></i>
+                            <span style="font-size:14px; font-weight:600; color:var(--label);">右上角待辦筆記 (Notes & Todo)</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
+                            輕觸光環右上角小圓圈，可設定當前專注任務、今日打勾待辦清單與隨手便籤，若有待辦未完成會以澄澈小圓點低調提示。
                         </p>
                     </div>
                 </div>
@@ -5915,6 +6088,187 @@
             if ('vibrate' in navigator) navigator.vibrate(10);
         }
 
+        // ===== TODAY NOTES & TODO CONTROLLER (今日待辦與專注筆記) =====
+        function getTodayNotes() {
+            const todayKey = getTodayDateKey();
+            const raw = localStorage.getItem('timecardNotes_' + todayKey);
+            if (raw) {
+                try { return JSON.parse(raw); } catch (e) {}
+            }
+            return { todos: [], memo: '' };
+        }
+
+        function saveTodayNotes(notes) {
+            const todayKey = getTodayDateKey();
+            localStorage.setItem('timecardNotes_' + todayKey, JSON.stringify(notes));
+            updateNotesBadge();
+        }
+
+        function openNotesModal(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            const modal = document.getElementById('notesModal');
+            if (!modal) return;
+
+            // Populate current task
+            const taskInput = document.getElementById('notesTaskInput');
+            if (taskInput) {
+                taskInput.value = appSettings.currentTask || '';
+            }
+
+            // Populate memo
+            const notes = getTodayNotes();
+            const memoEl = document.getElementById('notesMemoTextarea');
+            if (memoEl) {
+                memoEl.value = notes.memo || '';
+            }
+
+            renderTodoList();
+            modal.classList.remove('hidden');
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            playSingleClickSound('C5');
+        }
+
+        function closeNotesModal() {
+            const modal = document.getElementById('notesModal');
+            if (modal) modal.classList.add('hidden');
+            updateNotesBadge();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            playSingleClickSound('G4');
+        }
+
+        function saveCurrentTaskFromNotes() {
+            const val = (document.getElementById('notesTaskInput').value || '').trim();
+            appSettings.currentTask = val;
+            localStorage.setItem('appSettings', JSON.stringify(appSettings));
+            const mainTaskInput = document.getElementById('taskInput');
+            if (mainTaskInput) mainTaskInput.value = val;
+        }
+
+        function setQuickTaskTag(tag) {
+            const taskInput = document.getElementById('notesTaskInput');
+            if (taskInput) {
+                taskInput.value = tag;
+                saveCurrentTaskFromNotes();
+            }
+            if ('vibrate' in navigator) navigator.vibrate(12);
+            playSingleClickSound('A4');
+        }
+
+        function renderTodoList() {
+            const listEl = document.getElementById('todoItemsList');
+            const progressEl = document.getElementById('todoProgressCount');
+            if (!listEl) return;
+
+            const notes = getTodayNotes();
+            const todos = notes.todos || [];
+
+            const doneCount = todos.filter(t => t.done).length;
+            if (progressEl) {
+                progressEl.textContent = `${doneCount}/${todos.length} 完成`;
+                progressEl.style.color = (todos.length > 0 && doneCount === todos.length) ? 'var(--green)' : 'var(--label-tertiary)';
+            }
+
+            if (todos.length === 0) {
+                listEl.innerHTML = `
+                    <div style="text-align:center; padding:16px 0; color:var(--label-tertiary); font-size:12.5px;">
+                        尚無待辦事項 · 享受從容心流 🌿
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = '';
+            todos.forEach((item) => {
+                const row = document.createElement('div');
+                row.className = `todo-item-row ${item.done ? 'done' : ''}`;
+                row.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        <button type="button" onclick="toggleTodoItem(${item.id})" class="todo-checkbox ${item.done ? 'checked' : ''}" aria-label="切換完成">
+                            ${item.done ? '<i class="fas fa-check" style="font-size:10px;"></i>' : ''}
+                        </button>
+                        <span style="font-size:13.5px; color:var(--label); font-weight:400; text-decoration:${item.done ? 'line-through' : 'none'}; word-break:break-word;">
+                            ${escapeHtml(item.text)}
+                        </span>
+                    </div>
+                    <button type="button" onclick="deleteTodoItem(${item.id})" style="border:none; background:transparent; color:var(--label-quaternary); font-size:11px; padding:4px 6px; cursor:pointer;" class="active:opacity-70">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
+                `;
+                listEl.appendChild(row);
+            });
+        }
+
+        function addNewTodoItem() {
+            const input = document.getElementById('newTodoInput');
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            const notes = getTodayNotes();
+            if (!notes.todos) notes.todos = [];
+            notes.todos.push({
+                id: Date.now(),
+                text: text,
+                done: false
+            });
+
+            saveTodayNotes(notes);
+            input.value = '';
+            renderTodoList();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            playSingleClickSound('E5');
+        }
+
+        function toggleTodoItem(id) {
+            const notes = getTodayNotes();
+            const item = (notes.todos || []).find(t => t.id === id);
+            if (item) {
+                item.done = !item.done;
+                saveTodayNotes(notes);
+                renderTodoList();
+                if ('vibrate' in navigator) navigator.vibrate(item.done ? [15, 30] : [10]);
+                playSingleClickSound(item.done ? 'C5' : 'G4');
+            }
+        }
+
+        function deleteTodoItem(id) {
+            const notes = getTodayNotes();
+            notes.todos = (notes.todos || []).filter(t => t.id !== id);
+            saveTodayNotes(notes);
+            renderTodoList();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        }
+
+        function saveNotesMemo() {
+            const textarea = document.getElementById('notesMemoTextarea');
+            if (!textarea) return;
+            const notes = getTodayNotes();
+            notes.memo = textarea.value;
+            saveTodayNotes(notes);
+        }
+
+        function updateNotesBadge() {
+            const badge = document.getElementById('notesBadgeDot');
+            if (!badge) return;
+            const notes = getTodayNotes();
+            const hasPendingTodos = (notes.todos || []).some(t => !t.done);
+            const hasMemo = (notes.memo || '').trim().length > 0;
+            if (hasPendingTodos || hasMemo) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         // ===== ZEN THEME CONTROLLER (Apple 禪意主題色彩切換) =====
         const ZEN_THEMES = {
             alabaster: {
@@ -6664,11 +7018,12 @@
 
             document.getElementById('progressText').innerHTML = progressInfo;
 
-            // --- 即時新聞 + 成就 + 寵物獎勵 ---
+            // --- 即時新聞 + 成就 + 寵物獎勵 + 待辦標記 ---
             checkAchievement();
             updateDailyPetReward(result.total >= getTargetMinutes());
             renderWeeklyChart();
             if (typeof renderWeeklySummary === 'function') renderWeeklySummary();
+            if (typeof updateNotesBadge === 'function') updateNotesBadge();
 
             // --- 勞基法 §35: 連續工作滿 230 分鐘（提前 10 分鐘）未打卡休息預警 ---
             if (result.isOngoing && lastRecord) {
