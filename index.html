@@ -3450,13 +3450,23 @@
                             <span style="font-size:13px; color:var(--label-tertiary);">分鐘</span>
                         </div>
                     </div>
-                    <div class="p-4 flex items-center justify-between">
+                    <div class="p-4 flex items-center justify-between" style="border-bottom:0.5px solid var(--separator);">
                         <label for="restReminderInput" style="font-size:14.5px; color:var(--label); font-weight:500;">休息結束提醒</label>
                         <div style="display:flex; align-items:center; gap:6px;">
                             <input type="number" id="restReminderInput" placeholder="20"
                                 style="width:68px; text-align:right; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:8px; padding:5px 8px; font-size:15px; font-weight:600; font-family:inherit; outline:none;" value="20">
                             <span style="font-size:13px; color:var(--label-tertiary);">分鐘</span>
                         </div>
+                    </div>
+                    <div class="p-4 flex items-center justify-between">
+                        <div style="display:flex; flex-direction:column; gap:2px;">
+                            <label style="font-size:14.5px; color:var(--label); font-weight:500;">系統推播通知</label>
+                            <span style="font-size:11.5px; color:var(--label-tertiary);">支援鎖定畫面與跨頁推播</span>
+                        </div>
+                        <button type="button" onclick="handleNotificationToggle()" id="notificationStatusBtn"
+                            style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px; border:none; cursor:pointer; font-family:inherit; transition:all 0.2s;">
+                            檢查權限
+                        </button>
                     </div>
                 </div>
 
@@ -4278,28 +4288,52 @@
             } catch (e) { }
         }
 
-        function showZenCapsuleNotification({ title, message, emoji = '🌿', duration = 3600 }) {
+        function showZenCapsuleNotification({ title, message, emoji = '🌿', duration = 4000 }) {
             const capsule = document.getElementById('zenDynamicCapsule');
-            if (!capsule) return;
+            if (capsule) {
+                const emojiEl = document.getElementById('zenCapsuleEmoji');
+                const titleEl = document.getElementById('zenCapsuleTitle');
+                const msgEl = document.getElementById('zenCapsuleMsg');
 
-            const emojiEl = document.getElementById('zenCapsuleEmoji');
-            const titleEl = document.getElementById('zenCapsuleTitle');
-            const msgEl = document.getElementById('zenCapsuleMsg');
+                if (emojiEl) emojiEl.textContent = emoji;
+                if (titleEl) titleEl.textContent = title;
+                if (msgEl) msgEl.textContent = message;
 
-            if (emojiEl) emojiEl.textContent = emoji;
-            if (titleEl) titleEl.textContent = title;
-            if (msgEl) msgEl.textContent = message;
+                capsule.classList.add('active');
 
-            capsule.classList.add('active');
+                // 1 次輕柔觸覺震動 + 清脆空靈水滴禪音
+                if ('vibrate' in navigator) navigator.vibrate([15, 30, 15]);
+                playZenChimeSound();
 
-            // 1 次輕柔觸覺震動 + 清脆空靈水滴禪音
-            if ('vibrate' in navigator) navigator.vibrate(25);
-            playZenChimeSound();
+                if (_zenCapsuleTimer) clearTimeout(_zenCapsuleTimer);
+                _zenCapsuleTimer = setTimeout(() => {
+                    dismissZenCapsule();
+                }, duration);
+            }
 
-            if (_zenCapsuleTimer) clearTimeout(_zenCapsuleTimer);
-            _zenCapsuleTimer = setTimeout(() => {
-                dismissZenCapsule();
-            }, duration);
+            // 系統級推播通知 (支援 iOS 16.4+ PWA / 鎖定畫面 / 桌面推播)
+            try {
+                if (window.Notification && Notification.permission === 'granted') {
+                    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.ready.then(reg => {
+                            reg.showNotification(`${emoji} ${title}`, {
+                                body: message,
+                                icon: './favicon.ico',
+                                badge: './favicon.ico',
+                                vibrate: [100, 50, 100],
+                                tag: 'time8-reminder',
+                                renotify: true
+                            });
+                        }).catch(() => {
+                            new Notification(`${emoji} ${title}`, { body: message, icon: './favicon.ico' });
+                        });
+                    } else {
+                        new Notification(`${emoji} ${title}`, { body: message, icon: './favicon.ico' });
+                    }
+                }
+            } catch (e) {
+                console.log('System notification note:', e);
+            }
         }
 
         function dismissZenCapsule() {
@@ -4312,12 +4346,11 @@
         }
 
         function triggerAlarm(title, body, emoji = '🧘') {
-            const seikiText = getSeikiAlarmText();
             showZenCapsuleNotification({
-                emoji: seikiText.emoji || emoji,
-                title: seikiText.title,
-                message: seikiText.body,
-                duration: 4000
+                emoji: emoji,
+                title: title,
+                message: body,
+                duration: 5000
             });
         }
 
@@ -4330,11 +4363,10 @@
 
             if (elapsed >= 90 && sinceLastDismiss >= 90) {
                 lastStretchDismiss = Date.now();
-                const stretchMsg = getSeikiStretchText();
                 showZenCapsuleNotification({
                     emoji: '🧘',
                     title: '久坐舒緩提醒',
-                    message: typeof stretchMsg === 'string' ? stretchMsg : '已連續專注 90 分鐘 · 雙手伸展、放鬆肩頸',
+                    message: '已連續專注 90 分鐘 · 雙手伸展、放鬆肩頸 ☕',
                     duration: 4500
                 });
             }
@@ -5542,10 +5574,45 @@
             syncRemoteCalendar(urlToSync);
         }
 
+        function updateNotificationStatusBtn() {
+            const btn = document.getElementById('notificationStatusBtn');
+            if (!btn) return;
+            if (!('Notification' in window)) {
+                btn.textContent = '不支援';
+                btn.style.cssText = 'font-size:11.5px; font-weight:600; color:var(--label-tertiary); background:var(--fill); border:none; padding:4px 10px; border-radius:999px; cursor:default;';
+                btn.disabled = true;
+            } else if (Notification.permission === 'granted') {
+                btn.textContent = '已開啟 ✓';
+                btn.style.cssText = 'font-size:11.5px; font-weight:600; color:var(--green); background:rgba(77,122,82,0.12); border:none; padding:4px 10px; border-radius:999px; cursor:default;';
+            } else if (Notification.permission === 'denied') {
+                btn.textContent = '已停用 ⚠️';
+                btn.style.cssText = 'font-size:11.5px; font-weight:600; color:var(--red); background:rgba(217,83,79,0.12); border:none; padding:4px 10px; border-radius:999px; cursor:default;';
+            } else {
+                btn.textContent = '點擊開啟 🔔';
+                btn.style.cssText = 'font-size:11.5px; font-weight:600; color:var(--blue); background:rgba(90,138,122,0.14); border:none; padding:4px 10px; border-radius:999px; cursor:pointer;';
+            }
+        }
+
+        async function handleNotificationToggle() {
+            if (!('Notification' in window)) {
+                showReminder("此瀏覽器不支援通知功能", 'rest');
+                return;
+            }
+            if (Notification.permission === 'default') {
+                try {
+                    await Notification.requestPermission();
+                } catch (e) {}
+            } else if (Notification.permission === 'denied') {
+                showReminder("請至手機「設定」中允許 Safari / PWA 通知", 'rest');
+            }
+            updateNotificationStatusBtn();
+        }
+
         function openSettings() {
-            document.getElementById('workReminderInput').value = appSettings.workReminderMinutes;
-            document.getElementById('restReminderInput').value = appSettings.restReminderMinutes;
+            document.getElementById('workReminderInput').value = appSettings.workReminderMinutes || 120;
+            document.getElementById('restReminderInput').value = appSettings.restReminderMinutes || 20;
             document.getElementById('targetHoursInput').value = appSettings.targetHours || 8;
+            updateNotificationStatusBtn();
 
             document.getElementById('settingsModal').classList.remove('hidden');
         }
@@ -5559,6 +5626,7 @@
             closeSettings();
             updateDisplay();
             playSingleClickSound("C5");
+            showReminder("設定已儲存", 'work');
         }
         function showInstallGuide() {
             const modal = document.getElementById('installGuideModal');
@@ -6350,15 +6418,42 @@
             // --- Work Limit 觸發檢查 (Non-intrusive Capsule) ---
             if (result.isOngoing && lastRecord) {
                 const lastInTime = new Date(lastRecord.time).getTime();
-                const targetTime = lastInTime + appSettings.workReminderMinutes * 60000;
+                const targetTime = lastInTime + (appSettings.workReminderMinutes || 120) * 60000;
                 if (Date.now() > targetTime) {
                     if (!window._alarmTriggered) {
                         window._alarmTriggered = true;
-                        triggerAlarm('心流專注達成', `已連續專注 ${appSettings.workReminderMinutes} 分鐘 · 建議起身喝杯水，放鬆片刻`, '🧘');
+                        triggerAlarm('心流專注達成', `已連續專注 ${appSettings.workReminderMinutes || 120} 分鐘 · 建議起身喝杯水，放鬆片刻`, '🧘');
                     }
                 }
             } else {
                 window._alarmTriggered = false;
+            }
+
+            // --- 休息結束提醒 (Rest Reminder from Settings) ---
+            if (!result.isOngoing && punchRecords.length > 0 && result.total < targetMin) {
+                const lastOut = punchRecords[punchRecords.length - 1];
+                if (lastOut && lastOut.type === 'out') {
+                    const outTime = new Date(lastOut.time).getTime();
+                    const restMins = (Date.now() - outTime) / 60000;
+                    if (restMins >= (appSettings.restReminderMinutes || 20)) {
+                        if (!window._restAlarmTriggered) {
+                            window._restAlarmTriggered = true;
+                            triggerAlarm('休息結束提醒', `已歇息滿 ${appSettings.restReminderMinutes || 20} 分鐘 · 準備好繼續心流專注了嗎？`, '🌱');
+                        }
+                    }
+                }
+            } else {
+                window._restAlarmTriggered = false;
+            }
+
+            // --- 今日工時達成提醒 (Daily Target Hours Goal) ---
+            if (result.total >= targetMin && punchRecords.length > 0) {
+                if (!window._targetGoalAlarmTriggered) {
+                    window._targetGoalAlarmTriggered = true;
+                    triggerAlarm('今日工時達成', `已滿 ${appSettings.targetHours || 8} 小時目標 · 辛苦了，可以下班賦歸生活 🥂`, '🎉');
+                }
+            } else if (result.total < targetMin) {
+                window._targetGoalAlarmTriggered = false;
             }
 
             // --- 久坐檢查 ---
