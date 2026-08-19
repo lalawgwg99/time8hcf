@@ -6009,6 +6009,19 @@
                     }
                 }
                 window._seikiLastEvent = 'punch_out';
+
+                // --- 勞基法 §34: 下班即時預報明日最早建議上班時間 ---
+                const nextEarliestIn = new Date(now.getTime() + 11 * 3600000);
+                const nextStr = nextEarliestIn.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+                setTimeout(() => {
+                    showZenCapsuleNotification({
+                        emoji: '🌙',
+                        title: '暮光賦歸 · 充足休息',
+                        message: `依 11h 守則，建議明日 ${nextStr} 後再上班 🛌`,
+                        duration: 5500
+                    });
+                }, 500);
+
                 // 打卡下班：疲倦感
                 (function punchOutTired() {
                     const t = document.querySelector('.seiki-container');
@@ -6235,13 +6248,11 @@
                     const offTime = new Date(Date.now() + remainingMin * 60000);
                     const offStr = offTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
                     progressInfo += ` (預計 ${offStr} 下班)`;
-                } else {
+                } else if (punchRecords.length > 0) {
                     const r = formatDurationFancy(remainingMin);
                     progressInfo += ` (尚餘 ${r.h}h ${Math.round(r.m)}m)`;
                 }
             }
-
-            document.getElementById('progressText').innerHTML = progressInfo;
 
             // Ensure life suggestion text is initialized
             const textEl = document.getElementById('lifeSuggestionText');
@@ -6273,11 +6284,36 @@
                             statusText.textContent = '身心歇息中';
                         }
                     } else {
-                        liveHint.classList.add('status-idle');
-                        statusText.textContent = '靜待啟程';
+                        // 今日尚未打卡：檢查距前次下班是否已滿 11 小時
+                        const lastOut = getLastPunchOutRecord();
+                        let unRestRemMins = 0;
+                        let earliestStr = '';
+                        if (lastOut && lastOut.time) {
+                            const elapsedMs = Date.now() - new Date(lastOut.time).getTime();
+                            const requiredMs = 11 * 3600000;
+                            if (elapsedMs > 0 && elapsedMs < requiredMs) {
+                                unRestRemMins = Math.round((requiredMs - elapsedMs) / 60000);
+                                const earliestTime = new Date(new Date(lastOut.time).getTime() + requiredMs);
+                                earliestStr = earliestTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+                            }
+                        }
+
+                        if (unRestRemMins > 0) {
+                            const rH = Math.floor(unRestRemMins / 60);
+                            const rM = unRestRemMins % 60;
+                            const remStr = rH > 0 ? `${rH}h ${rM}m` : `${rM}m`;
+                            liveHint.classList.add('status-resting');
+                            statusText.textContent = `身心充能中 · 尚餘 ${remStr}`;
+                            progressInfo = `<span style="color:var(--orange);font-weight:500;"><i class="fas fa-bed"></i> 建議 ${earliestStr} 後上班 (尚餘 ${remStr} 滿 11h)</span>`;
+                        } else {
+                            liveHint.classList.add('status-idle');
+                            statusText.textContent = '靜待啟程';
+                        }
                     }
                 }
             }
+
+            document.getElementById('progressText').innerHTML = progressInfo;
 
             // --- 即時新聞 + 成就 + 寵物獎勵 ---
             checkAchievement();
