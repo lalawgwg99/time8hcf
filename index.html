@@ -259,6 +259,16 @@
             color: var(--label-tertiary);
         }
 
+        [data-zen-theme="obsidian"] .live-status-pill.status-overtime {
+            background: rgba(226, 140, 140, 0.2);
+            color: #F5A6A6;
+        }
+
+        [data-zen-theme="obsidian"] .live-status-pill.status-overtime .live-pulse-dot {
+            background: #F5A6A6;
+            box-shadow: 0 0 8px rgba(245, 166, 166, 0.8);
+        }
+
         [data-zen-theme="obsidian"] .partner-primary-btn {
             background: linear-gradient(135deg, #382D3D 0%, #201723 100%);
             border: 0.5px solid rgba(196, 158, 226, 0.35);
@@ -1641,10 +1651,16 @@
             color: var(--label-tertiary);
         }
 
-        .live-status-pill.status-idle .live-pulse-dot {
-            background: var(--label-quaternary);
-            box-shadow: none;
-            animation: none;
+        /* 5. Continuous 4h Overtime warning state (Labor Law §35) */
+        .live-status-pill.status-overtime {
+            background: rgba(196, 91, 91, 0.14);
+            color: #A64545;
+        }
+
+        .live-status-pill.status-overtime .live-pulse-dot {
+            background: #C45B5B;
+            box-shadow: 0 0 7px rgba(196, 91, 91, 0.6);
+            animation: liveDotPulse 1.2s ease-in-out infinite;
         }
 
         .live-pulse-dot {
@@ -3441,6 +3457,25 @@
                                 style="width:68px; text-align:right; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:8px; padding:5px 8px; font-size:15px; font-weight:600; font-family:inherit; outline:none;" value="20">
                             <span style="font-size:13px; color:var(--label-tertiary);">分鐘</span>
                         </div>
+                    </div>
+                </div>
+
+                <!-- 勞動健康與法規守護 (勞基法 §34 & §35) -->
+                <div class="section-label">健康與法規守護</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div class="p-4 flex items-center justify-between" style="border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; flex-direction:column; gap:2px;">
+                            <span style="font-size:14.5px; color:var(--label); font-weight:500;">4 小時連續工作防護</span>
+                            <span style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">滿 4h 自動提醒至少休息 30 分鐘 (勞基法§35)</span>
+                        </div>
+                        <span style="font-size:11px; font-weight:600; color:var(--green); background:rgba(77,122,82,0.12); padding:3px 9px; border-radius:999px; white-space:nowrap; margin-left:8px;">自動守護</span>
+                    </div>
+                    <div class="p-4 flex items-center justify-between">
+                        <div style="display:flex; flex-direction:column; gap:2px;">
+                            <span style="font-size:14.5px; color:var(--label); font-weight:500;">11 小時班次間隔守護</span>
+                            <span style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">上班打卡若距前次下班未滿 11h 即時警示 (勞基法§34)</span>
+                        </div>
+                        <span style="font-size:11px; font-weight:600; color:var(--green); background:rgba(77,122,82,0.12); padding:3px 9px; border-radius:999px; white-space:nowrap; margin-left:8px;">自動守護</span>
                     </div>
                 </div>
 
@@ -5868,6 +5903,34 @@
 
         function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
 
+        // 回溯尋找前一次最近的下班 (out) 紀錄，供 11 小時間隔檢測
+        function getLastPunchOutRecord() {
+            // 1. 檢查今日稍早的打卡紀錄
+            for (let i = punchRecords.length - 1; i >= 0; i--) {
+                if (punchRecords[i].type === 'out' && punchRecords[i].time) {
+                    return punchRecords[i];
+                }
+            }
+
+            // 2. 若今日無，由近至遠回溯歷史紀錄 (timecardHistory)
+            try {
+                const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+                const todayKey = getTodayKey();
+                const pastDates = Object.keys(history).filter(d => d < todayKey).sort().reverse();
+                for (const dateKey of pastDates) {
+                    const recs = history[dateKey] || [];
+                    for (let i = recs.length - 1; i >= 0; i--) {
+                        if (recs[i].type === 'out' && recs[i].time) {
+                            return recs[i];
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to lookup past out records:", e);
+            }
+            return null;
+        }
+
         function punch() {
             if (punchRecords.length >= 20) { showReminder("已達今日紀錄上限", 'work'); return; }
             haptic(getNextPunchType() === 'in' ? 'light' : 'medium');
@@ -5878,12 +5941,39 @@
             const type = getNextPunchType();
             const taskInput = document.getElementById('taskInput');
             let taskName = "";
+            let restIntervalMins = null;
 
-            if (type === 'in' && taskInput) {
-                taskName = taskInput.value.trim();
-                taskInput.value = "";
+            if (type === 'in') {
+                if (taskInput) {
+                    taskName = taskInput.value.trim();
+                    taskInput.value = "";
+                }
                 updateStreak();
                 window._seikiLastEvent = 'punch_in';
+
+                // --- 勞基法 §34: 檢測與前次下班是否滿 11 小時休息間隔 ---
+                const lastOut = getLastPunchOutRecord();
+                if (lastOut && lastOut.time) {
+                    const diffMs = now.getTime() - new Date(lastOut.time).getTime();
+                    if (diffMs > 0) {
+                        restIntervalMins = Math.round(diffMs / 60000);
+                        const restHours = diffMs / (1000 * 60 * 60);
+                        if (restHours < 11) {
+                            const h = Math.floor(restHours);
+                            const m = Math.round((restHours % 1) * 60);
+                            const restStr = h > 0 ? `${h} 小時 ${m} 分` : `${m} 分鐘`;
+                            setTimeout(() => {
+                                showZenCapsuleNotification({
+                                    emoji: '🌙',
+                                    title: '休息間隔不足 11 小時',
+                                    message: `距離上次下班僅間隔 ${restStr}（勞基法第34條建議滿 11h）· 請多留意身心調適 ⚠️`,
+                                    duration: 6000
+                                });
+                            }, 500);
+                        }
+                    }
+                }
+
                 // 打卡粒子特效
                 const container = document.getElementById('seikiContainer');
                 if (container) spawnParticles(container, ['✦', '⭐', '✨', '★', '✧']);
@@ -5937,7 +6027,7 @@
                 })();
             }
 
-            punchRecords.push({ time: now.toISOString(), type: type, task: taskName });
+            punchRecords.push({ time: now.toISOString(), type: type, task: taskName, restIntervalMins: restIntervalMins });
             saveData();
             updateDisplay();
         }
@@ -6165,8 +6255,15 @@
                 if (liveHint && statusText) {
                     liveHint.className = 'live-status-pill';
                     if (result.isOngoing) {
-                        liveHint.classList.add('status-ongoing');
-                        statusText.textContent = '心流專注中';
+                        const lastInTime = lastRecord ? new Date(lastRecord.time).getTime() : Date.now();
+                        const sessionMins = (Date.now() - lastInTime) / 60000;
+                        if (sessionMins >= 240) {
+                            liveHint.classList.add('status-overtime');
+                            statusText.textContent = '連續滿 4h · 建議休息 30m';
+                        } else {
+                            liveHint.classList.add('status-ongoing');
+                            statusText.textContent = '心流專注中';
+                        }
                     } else if (punchRecords.length > 0) {
                         if (result.total >= targetMin) {
                             liveHint.classList.add('status-completed');
@@ -6188,7 +6285,31 @@
             renderWeeklyChart();
             if (typeof renderWeeklySummary === 'function') renderWeeklySummary();
 
-            // 薪資跟蹤已移除
+            // --- 勞基法 §35: 連續工作 4 小時未休息提醒 ---
+            if (result.isOngoing && lastRecord) {
+                const lastInTime = new Date(lastRecord.time).getTime();
+                const sessionMins = (Date.now() - lastInTime) / 60000;
+                if (sessionMins >= 240) {
+                    if (!window._fourHourAlarmTriggered) {
+                        window._fourHourAlarmTriggered = true;
+                        showZenCapsuleNotification({
+                            emoji: '☕',
+                            title: '已連續工作滿 4 小時',
+                            message: '依勞基法第35條規範，請務必暫停工作至少休息 30 分鐘 🌿',
+                            duration: 6500
+                        });
+                        try {
+                            Tone.start();
+                            const synth = new Tone.Synth().toDestination();
+                            synth.triggerAttackRelease("E5", "4n");
+                        } catch (e) {}
+                    }
+                } else {
+                    window._fourHourAlarmTriggered = false;
+                }
+            } else {
+                window._fourHourAlarmTriggered = false;
+            }
 
             // --- Work Limit 觸發檢查 (Non-intrusive Capsule) ---
             if (result.isOngoing && lastRecord) {
@@ -6245,11 +6366,25 @@
                         durLabel = `${dur.h}h ${Math.round(dur.m)}m`;
                     }
 
+                    // 11 小時休息間隔不足提示
+                    let restWarningHtml = '';
+                    if (s.in.restIntervalMins !== undefined && s.in.restIntervalMins !== null && s.in.restIntervalMins < 660) {
+                        const restH = Math.floor(s.in.restIntervalMins / 60);
+                        const restM = s.in.restIntervalMins % 60;
+                        const restStr = restH > 0 ? `${restH}h ${restM}m` : `${restM}m`;
+                        restWarningHtml = `
+                            <div style="margin-top:6px; display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--orange); background:rgba(154,112,64,0.09); padding:2px 8px; border-radius:6px; font-weight:500;">
+                                <i class="fas fa-bed" style="font-size:9.5px;"></i>
+                                <span>距前次下班僅 ${restStr}（未滿 11 小時 · 勞基法§34）</span>
+                            </div>
+                        `;
+                    }
+
                     const card = document.createElement('div');
                     card.style.cssText = 'background:var(--fill-tertiary);border-radius:13px;padding:14px 16px;margin-bottom:8px;border:0.5px solid var(--separator);';
 
                     card.innerHTML = `
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${s.in.task ? '6' : '0'}px">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${(s.in.task || restWarningHtml) ? '6' : '0'}px">
                             <div style="display:flex;align-items:center;gap:8px">
                                 <div style="width:8px;height:8px;border-radius:50%;background:${isOngoing ? 'var(--green)' : 'var(--blue)'};flex-shrink:0;${isOngoing ? 'animation:pulse-glow 1.5s infinite;' : ''}"></div>
                                 <span style="font-size:15px;font-weight:600;color:var(--label);font-variant-numeric:tabular-nums">
@@ -6259,6 +6394,7 @@
                             <span style="font-size:13px;font-weight:600;color:${isOngoing ? 'var(--green)' : 'var(--label-secondary)'};background:${isOngoing ? 'rgba(52,199,89,0.1)' : 'var(--card)'};padding:3px 10px;border-radius:20px;font-variant-numeric:tabular-nums">${durLabel}</span>
                         </div>
                         ${s.in.task ? `<div style="font-size:12px;color:var(--label-tertiary);margin-left:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><i class="fas fa-tag" style="margin-right:4px;font-size:10px"></i>${s.in.task}</div>` : ''}
+                        ${restWarningHtml ? `<div style="margin-left:16px;">${restWarningHtml}</div>` : ''}
                     `;
                     recordsDiv.appendChild(card);
                 });
