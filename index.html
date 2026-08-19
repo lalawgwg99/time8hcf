@@ -4406,14 +4406,79 @@
         // === Apple Dynamic Capsule Notification (頂部非侵入式禪意膠囊) ===
         let _zenCapsuleTimer = null;
 
+        // ===== ROCK-SOLID RESILIENT AUDIO ENGINE =====
+        let _sharedAudioCtx = null;
+        function getSharedAudioCtx() {
+            try {
+                if (!_sharedAudioCtx || _sharedAudioCtx.state === 'closed') {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) _sharedAudioCtx = new AudioCtx();
+                }
+                if (_sharedAudioCtx && (_sharedAudioCtx.state === 'suspended' || _sharedAudioCtx.state === 'interrupted')) {
+                    _sharedAudioCtx.resume();
+                }
+            } catch (e) {}
+            return _sharedAudioCtx;
+        }
+
+        function wakeUpAllAudioContexts() {
+            try {
+                const ctx = getSharedAudioCtx();
+                if (ctx && (ctx.state === 'suspended' || ctx.state === 'interrupted')) {
+                    ctx.resume();
+                }
+                if (window.Tone && Tone.context && (Tone.context.state === 'suspended' || Tone.context.state === 'interrupted')) {
+                    Tone.context.resume();
+                }
+                if (window.ZenAudio && ZenAudio.ctx && (ZenAudio.ctx.state === 'suspended' || ZenAudio.ctx.state === 'interrupted')) {
+                    ZenAudio.ctx.resume();
+                }
+            } catch (e) {}
+        }
+
+        // 當使用者切換分頁/開啟外部連結 (如 HRIS) 後返回，或任何點擊時立即喚醒 AudioContext
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                wakeUpAllAudioContexts();
+            }
+        });
+        window.addEventListener('focus', wakeUpAllAudioContexts);
+        window.addEventListener('pageshow', wakeUpAllAudioContexts);
+        ['touchstart', 'touchend', 'mousedown', 'pointerdown'].forEach(evt => {
+            document.addEventListener(evt, wakeUpAllAudioContexts, { passive: true });
+        });
+
         function playZenChimeSound() {
             try {
+                wakeUpAllAudioContexts();
+                const ctx = getSharedAudioCtx();
+                if (ctx) {
+                    const now = ctx.currentTime;
+                    // Dual-frequency crystalline chime (880Hz A5 + 1760Hz harmonic overtone)
+                    [ { f: 880, g: 0.20, d: 0.9 }, { f: 1760, g: 0.07, d: 0.4 } ].forEach(p => {
+                        const osc = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(p.f, now);
+                        g.gain.setValueAtTime(0.0001, now);
+                        g.gain.linearRampToValueAtTime(p.g, now + 0.01);
+                        g.gain.exponentialRampToValueAtTime(0.0001, now + p.d);
+                        osc.connect(g);
+                        g.connect(ctx.destination);
+                        osc.start(now);
+                        osc.stop(now + p.d + 0.05);
+                    });
+                    return;
+                }
+            } catch (e) { }
+
+            try {
+                if (Tone.context.state === 'suspended') Tone.context.resume();
                 Tone.start();
                 const synth = new Tone.Synth({
                     oscillator: { type: 'sine' },
                     envelope: { attack: 0.002, decay: 1.2, sustain: 0.0, release: 0.8 }
                 }).toDestination();
-                // Pure crystalline chime tone (A5)
                 synth.triggerAttackRelease('A5', 0.8, Tone.now());
             } catch (e) { }
         }
@@ -5136,13 +5201,7 @@
             isPlayingSoundscape: false,
 
             init() {
-                if (!this.ctx) {
-                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                    if (AudioCtx) this.ctx = new AudioCtx();
-                }
-                if (this.ctx && this.ctx.state === 'suspended') {
-                    this.ctx.resume();
-                }
+                this.ctx = getSharedAudioCtx();
             },
 
             // 432Hz Tibetan Singing Bowl Strike (西藏頌缽敲擊與自然泛音餘震)
@@ -5456,6 +5515,32 @@
 
         function playSingleClickSound(frequency = "G4") {
             try {
+                wakeUpAllAudioContexts();
+                const ctx = getSharedAudioCtx();
+                if (ctx) {
+                    const now = ctx.currentTime;
+                    const noteFreqMap = {
+                        'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
+                        'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'G5': 783.99, 'A5': 880.00
+                    };
+                    const f = typeof frequency === 'number' ? frequency : (noteFreqMap[frequency] || 440);
+                    const osc = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(f, now);
+                    g.gain.setValueAtTime(0.0001, now);
+                    g.gain.linearRampToValueAtTime(0.20, now + 0.003);
+                    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+                    osc.connect(g);
+                    g.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.06);
+                    return;
+                }
+            } catch (e) {}
+
+            try {
+                if (Tone.context.state === 'suspended') Tone.context.resume();
                 Tone.start();
                 const synth = new Tone.Synth({
                     oscillator: { type: 'sine' },
@@ -5468,6 +5553,29 @@
         function playSoundReminder() {
             try {
                 if ("vibrate" in navigator) navigator.vibrate([500, 200, 500]);
+                wakeUpAllAudioContexts();
+                const ctx = getSharedAudioCtx();
+                if (ctx) {
+                    const now = ctx.currentTime;
+                    [ { f: 523.25, t: 0 }, { f: 659.25, t: 0.15 }, { f: 783.99, t: 0.30 } ].forEach(p => {
+                        const osc = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(p.f, now + p.t);
+                        g.gain.setValueAtTime(0.0001, now + p.t);
+                        g.gain.linearRampToValueAtTime(0.20, now + p.t + 0.01);
+                        g.gain.exponentialRampToValueAtTime(0.0001, now + p.t + 0.18);
+                        osc.connect(g);
+                        g.connect(ctx.destination);
+                        osc.start(now + p.t);
+                        osc.stop(now + p.t + 0.20);
+                    });
+                    return;
+                }
+            } catch (e) {}
+
+            try {
+                if (Tone.context.state === 'suspended') Tone.context.resume();
                 Tone.start();
                 const synth = new Tone.Synth({
                     oscillator: { type: 'sine' },
