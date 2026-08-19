@@ -5600,26 +5600,14 @@
             }
         }
 
-        function showReminder(message, type) {
-            // "Type" controls severity: 'work' (soft hint) or 'alarm' (full modal)
-
-
-
-            const hint = document.getElementById('ongoingHint');
-            if (hint) {
-                // Soft hint sound if alarm not triggered
-                try {
-                    Tone.start();
-                    const synth = new Tone.Synth().toDestination();
-                    synth.triggerAttackRelease("G4", "8n");
-                } catch (e) { }
-
-                hint.classList.remove('opacity-0');
-                hint.innerHTML = `<i class="fas fa-bell animate-swing mr-1"></i> ${message}`;
-                setTimeout(() => {
-                    hint.classList.add('opacity-0');
-                }, 5000);
-            }
+        function showReminder(message, type = 'work') {
+            const emoji = type === 'work' ? '✨' : '🌿';
+            showZenCapsuleNotification({
+                title: type === 'work' ? '系統提示' : '溫馨提醒',
+                message: message,
+                emoji: emoji,
+                duration: 3800
+            });
         }
 
         function formatDT(date) {
@@ -6586,8 +6574,13 @@
 
             if (!_isBreatheActive) {
                 const liveHint = document.getElementById('ongoingHint');
-                const statusText = document.getElementById('liveStatusText');
-                if (liveHint && statusText) {
+                let statusText = document.getElementById('liveStatusText');
+                if (liveHint) {
+                    liveHint.classList.remove('opacity-0', 'hidden');
+                    if (!statusText || !document.getElementById('liveStatusDot')) {
+                        liveHint.innerHTML = '<span class="live-pulse-dot" id="liveStatusDot"></span><span id="liveStatusText">靜待啟程</span>';
+                        statusText = document.getElementById('liveStatusText');
+                    }
                     liveHint.className = 'live-status-pill';
                     if (result.isOngoing) {
                         const lastInTime = lastRecord ? new Date(lastRecord.time).getTime() : Date.now();
