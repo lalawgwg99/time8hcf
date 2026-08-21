@@ -785,14 +785,14 @@
             }
         }
 
-        /* --- 6. 靈動玄貓 (Zen Black Cat - 光環左側優雅漫步彩蛋) --- */
+        /* --- 6. 靈動黑貓 (Zen Black Cat - 極簡霧黑漫步剪影 · 絕無光暈無腳印) --- */
         .zen-black-cat-sprite {
             position: absolute;
-            top: 50%;
-            left: -28px;
+            top: 48%;
+            left: -24px;
             transform: translateY(-50%);
-            width: 38px;
-            height: 46px;
+            width: 44px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -800,102 +800,83 @@
             z-index: 25;
             user-select: none;
             -webkit-user-select: none;
-            animation: catGentleProwl 4.6s ease-in-out infinite;
-            transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            animation: catStrollPath 8.5s ease-in-out infinite;
+            transition: opacity 0.5s ease;
         }
         .zen-black-cat-sprite.hidden {
             opacity: 0;
             pointer-events: none;
-            transform: translateY(-50%) scale(0.6);
+            transform: translateY(-50%) scale(0.5);
         }
         .zen-black-cat-sprite:hover {
-            transform: translateY(-50%) scale(1.15);
+            filter: brightness(1.2);
         }
         .zen-black-cat-sprite:active {
             transform: translateY(-50%) scale(0.92);
         }
-        .cat-glow-aura {
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(229, 169, 60, 0.25) 0%, rgba(212, 182, 136, 0.05) 55%, transparent 75%);
-            filter: blur(4px);
-            animation: catPulseGlow 3.6s ease-in-out infinite alternate;
-            pointer-events: none;
-        }
+
         .cat-svg {
             position: relative;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .zen-black-cat-sprite:active .cat-svg {
-            transform: scale(1.18) rotate(5deg);
-        }
-        .cat-tail {
-            transform-origin: 10px 26px;
-            animation: catTailSwish 3.2s ease-in-out infinite alternate;
-        }
-        .cat-paw-dot {
-            position: absolute;
-            top: 2px;
-            left: 0px;
-            font-size: 8px;
-            color: #D4B688;
-            animation: catSparkle 2.2s ease-in-out infinite;
-            text-shadow: 0 0 6px rgba(212, 182, 136, 0.7);
-            pointer-events: none;
-        }
-        @keyframes catGentleProwl {
-            0%, 100% {
-                transform: translateY(-50%) translateY(0px) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-50%) translateY(-4px) rotate(-1.5deg);
-            }
-        }
-        @keyframes catTailSwish {
-            0% {
-                transform: rotate(-10deg);
-            }
-            100% {
-                transform: rotate(14deg);
-            }
-        }
-        @keyframes catPulseGlow {
-            0% {
-                opacity: 0.45;
-                transform: scale(0.92);
-            }
-            100% {
-                opacity: 0.9;
-                transform: scale(1.15);
-            }
-        }
-        @keyframes catSparkle {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(0.85);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.25);
-            }
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
+            animation: catBodyBob 0.42s ease-in-out infinite alternate;
         }
 
-        /* 貓咪喵叫浮空微文字 (Apple 物理微光上浮) */
-        .cat-float-text {
-            position: absolute;
-            left: -12px;
-            bottom: 44px;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            font-size: 12.5px;
-            font-weight: 600;
-            color: #E5A93C;
-            text-shadow: 0 0 10px rgba(229, 169, 60, 0.55);
-            pointer-events: none;
-            white-space: nowrap;
-            animation: muyuFloatUp 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            z-index: 60;
+        /* 四肢交替邁步 (Quadruped Walk Cycle) */
+        .cat-leg-bl {
+            transform-origin: 12px 18px;
+            animation: catLegStepA 0.84s ease-in-out infinite alternate;
+        }
+        .cat-leg-br {
+            transform-origin: 16px 18px;
+            animation: catLegStepB 0.84s ease-in-out infinite alternate;
+        }
+        .cat-leg-fl {
+            transform-origin: 29px 18px;
+            animation: catLegStepB 0.84s ease-in-out infinite alternate;
+        }
+        .cat-leg-fr {
+            transform-origin: 32px 18px;
+            animation: catLegStepA 0.84s ease-in-out infinite alternate;
+        }
+
+        @keyframes catLegStepA {
+            0% { transform: rotate(-22deg); }
+            100% { transform: rotate(22deg); }
+        }
+        @keyframes catLegStepB {
+            0% { transform: rotate(22deg); }
+            100% { transform: rotate(-22deg); }
+        }
+        @keyframes catBodyBob {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-1.2px); }
+        }
+        .cat-tail-anim {
+            transform-origin: 8px 15px;
+            animation: catTailWalk 1.8s ease-in-out infinite alternate;
+        }
+        @keyframes catTailWalk {
+            0% { transform: rotate(-8deg); }
+            100% { transform: rotate(14deg); }
+        }
+
+        /* 漫步巡邏路徑 (優雅來回漫步) */
+        @keyframes catStrollPath {
+            0%, 12% {
+                transform: translateY(-50%) translateX(0px) scaleX(1);
+            }
+            44% {
+                transform: translateY(-50%) translateX(16px) scaleX(1);
+            }
+            50%, 62% {
+                transform: translateY(-50%) translateX(16px) scaleX(-1);
+            }
+            94% {
+                transform: translateY(-50%) translateX(0px) scaleX(-1);
+            }
+            100% {
+                transform: translateY(-50%) translateX(0px) scaleX(1);
+            }
         }
         .task-chip {
             font-size: 11.5px;
@@ -3386,43 +3367,29 @@
                             <div class="sage-blessing-dot">✦</div>
                         </div>
 
-                        <!-- 6. 靈動玄貓 (光環左側優雅漫步彩蛋) -->
-                        <div id="zenBlackCatSprite" class="zen-black-cat-sprite hidden" onclick="tapZenBlackCat(event)" title="靈動玄貓 · 點擊摸摸喵喵叫" aria-label="靈動玄貓">
-                            <div class="cat-glow-aura"></div>
-                            <svg class="cat-svg" viewBox="0 0 38 42" width="38" height="42" fill="none">
-                                <defs>
-                                    <linearGradient id="catBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#42403E" />
-                                        <stop offset="60%" stop-color="#242220" />
-                                        <stop offset="100%" stop-color="#141210" />
-                                    </linearGradient>
-                                    <linearGradient id="catGoldEye" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#FFF5B8" />
-                                        <stop offset="100%" stop-color="#E5A93C" />
-                                    </linearGradient>
-                                </defs>
-                                <!-- 輕巧祥雲 (Cloud step) -->
-                                <path d="M10 39c-1.8 0-3-.8-3-1.8s1.2-1.8 3-1.8c.3 0 .7.1 1 .2C11.5 34.2 13 33.5 15 33.5c1.8 0 3.2.8 3.8 2 .4-.2.8-.2 1.2-.2 1.8 0 3 1.2 3 2.5 0 .2 0 .5-.1.6H10z" fill="#D4B688" opacity="0.35"/>
-                                <!-- 俏皮擺動長尾 (Curling Tail) -->
-                                <path class="cat-tail" d="M10 26c-5 1-8 6-7 10 1 3 4 4 6 2 2-2 1-5 0-7" stroke="url(#catBodyGrad)" stroke-width="3" stroke-linecap="round" fill="none"/>
-                                <!-- 貓咪優雅身軀 (Body) -->
-                                <path d="M14 16c-3 2-6 7-5 17 2-1 9-1 14 0 1-7-1-14-5-17-1-1-3-1-4 0z" fill="url(#catBodyGrad)"/>
-                                <!-- 貓咪後腿 (Back paw) -->
-                                <ellipse cx="12" cy="33" rx="3.5" ry="2.2" fill="url(#catBodyGrad)"/>
-                                <!-- 貓咪前爪 (Front paw) -->
-                                <ellipse cx="21" cy="33" rx="3.2" ry="2.2" fill="url(#catBodyGrad)"/>
-                                <!-- 貓頭與雙耳 (Head & Ears) -->
-                                <path d="M13 14c-1-3-2-6-3-7 3 1 5 3 6 4 1-.2 3-.2 4 0 1-1 3-3 6-4-1 1-2 4-3 7 1 2 1 4 0 6-2 3-8 3-10 0-1-2-1-4 0-6z" fill="url(#catBodyGrad)"/>
-                                <!-- 琥珀金靈動雙眼 (Amber glowing eyes) -->
-                                <ellipse class="cat-eye" cx="15.5" cy="15.5" rx="1.3" ry="1.6" fill="url(#catGoldEye)"/>
-                                <ellipse class="cat-eye" cx="20.5" cy="15.5" rx="1.3" ry="1.6" fill="url(#catGoldEye)"/>
-                                <!-- 瞳孔細線 (Pupils) -->
-                                <line x1="15.5" y1="14.5" x2="15.5" y2="16.5" stroke="#12100E" stroke-width="0.7" stroke-linecap="round"/>
-                                <line x1="20.5" y1="14.5" x2="20.5" y2="16.5" stroke="#12100E" stroke-width="0.7" stroke-linecap="round"/>
-                                <!-- 俏皮粉鼻 (Nose) -->
-                                <polygon points="18,17.8 17.2,18.8 18.8,18.8" fill="#E8B4B8" opacity="0.9"/>
+                        <!-- 6. 靈動黑貓 (光環左側優雅漫步彩蛋 · 側身朝右邁步) -->
+                        <div id="zenBlackCatSprite" class="zen-black-cat-sprite hidden" onclick="tapZenBlackCat(event)" title="靈動黑貓 · 點擊摸摸喵喵叫" aria-label="靈動黑貓">
+                            <svg class="cat-svg" viewBox="0 0 48 32" width="44" height="29" fill="none">
+                                <!-- Tail (swishing animation) -->
+                                <path class="cat-tail-anim" d="M8 15 C4 10, 2 5, 5 3 C7 1, 9 3, 8 7 C7 10, 9 13, 11 15" stroke="#1D1B1A" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                                <!-- Back Left Leg (Layer 1 - behind) -->
+                                <line class="cat-leg-bl" x1="12" y1="18" x2="9" y2="28" stroke="#1D1B1A" stroke-width="2.8" stroke-linecap="round"/>
+                                <!-- Front Left Leg (Layer 1 - behind) -->
+                                <line class="cat-leg-fl" x1="29" y1="18" x2="26" y2="28" stroke="#1D1B1A" stroke-width="2.8" stroke-linecap="round"/>
+                                <!-- Torso Body (Matte Black Silhouette) -->
+                                <path d="M10 16 C10 11, 15 9, 23 10 C29 11, 33 13, 34 16 C34 19, 29 20, 22 20 C14 20, 10 19, 10 16 Z" fill="#1D1B1A"/>
+                                <!-- Back Right Leg (Layer 2 - front) -->
+                                <line class="cat-leg-br" x1="16" y1="18" x2="19" y2="28" stroke="#1D1B1A" stroke-width="3" stroke-linecap="round"/>
+                                <!-- Front Right Leg (Layer 2 - front) -->
+                                <line class="cat-leg-fr" x1="32" y1="18" x2="35" y2="28" stroke="#1D1B1A" stroke-width="3" stroke-linecap="round"/>
+                                <!-- Head & Ears (Facing Right) -->
+                                <polygon points="34,10 37,2 40,8" fill="#1D1B1A"/>
+                                <polygon points="38,10 42,3 44,9" fill="#1D1B1A"/>
+                                <ellipse cx="38" cy="11" rx="5.5" ry="4.8" fill="#1D1B1A"/>
+                                <circle cx="42" cy="12.5" r="2.2" fill="#1D1B1A"/>
+                                <!-- Amber Eye -->
+                                <circle cx="40.5" cy="10.5" r="0.9" fill="#E5A93C"/>
                             </svg>
-                            <div class="cat-paw-dot">🐾</div>
                         </div>
                         <div class="ring-ambient-core" id="ringAmbientCore"></div>
                         <svg viewBox="0 0 264 264">
@@ -7616,36 +7583,27 @@
                 const formantFilter = ctx.createBiquadFilter();
 
                 formantFilter.type = 'bandpass';
-                formantFilter.frequency.setValueAtTime(1450, now);
-                formantFilter.Q.setValueAtTime(2.4, now);
+                formantFilter.frequency.setValueAtTime(1320, now);
+                formantFilter.Q.setValueAtTime(2.0, now);
 
-                // Pitch envelope: Starts at 540Hz, rises to 860Hz (Mee~), then drops gently to 560Hz (oww~)
+                // Pitch envelope: Starts at 520Hz, sweeps to 820Hz (Mee~), then drops gently to 510Hz (oww~)
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(540, now);
-                osc.frequency.exponentialRampToValueAtTime(860, now + 0.11);
-                osc.frequency.exponentialRampToValueAtTime(560, now + 0.36);
+                osc.frequency.setValueAtTime(520, now);
+                osc.frequency.exponentialRampToValueAtTime(830, now + 0.10);
+                osc.frequency.exponentialRampToValueAtTime(510, now + 0.35);
 
-                // Gain envelope
+                // Gain envelope: Soft, natural swell and release
                 gain.gain.setValueAtTime(0.001, now);
-                gain.gain.linearRampToValueAtTime(0.48, now + 0.07);
-                gain.gain.setValueAtTime(0.48, now + 0.22);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.40);
-
-                // Subtle purr vibrato (~6.5Hz)
-                const vibrato = ctx.createOscillator();
-                const vibratoGain = ctx.createGain();
-                vibrato.frequency.setValueAtTime(6.5, now);
-                vibratoGain.gain.setValueAtTime(9, now);
-                vibrato.connect(osc.frequency);
-                vibrato.start(now);
-                vibrato.stop(now + 0.42);
+                gain.gain.linearRampToValueAtTime(0.42, now + 0.05);
+                gain.gain.setValueAtTime(0.42, now + 0.18);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
 
                 osc.connect(formantFilter);
                 formantFilter.connect(gain);
                 gain.connect(ctx.destination);
 
                 osc.start(now);
-                osc.stop(now + 0.42);
+                osc.stop(now + 0.38);
             } catch (e) {}
         }
 
@@ -7676,9 +7634,9 @@
                 return;
             }
 
-            // 新的一小時：50% 機率漫步現身
+            // 新的一小時：35% 機率漫步現身
             const chance = Math.random();
-            const willAppear = chance < 0.50;
+            const willAppear = chance < 0.35;
 
             localStorage.setItem('lastCatHourKey', hourKey);
             localStorage.setItem('lastCatState', willAppear ? 'visible' : 'hidden');
@@ -7699,30 +7657,19 @@
             }
 
             // Tactile feedback
-            if ('vibrate' in navigator) navigator.vibrate([10, 25, 12]);
+            if ('vibrate' in navigator) navigator.vibrate([10, 20]);
 
             // Play authentic cute meow sound
             playCatMeowSound();
-
-            // Spawn floating text micro-interaction
-            const ring = document.getElementById('ringContainer');
-            if (ring) {
-                const floater = document.createElement('div');
-                floater.className = 'cat-float-text';
-                const word = CAT_MEOW_WORDS[Math.floor(Math.random() * CAT_MEOW_WORDS.length)];
-                floater.textContent = word;
-                ring.appendChild(floater);
-                setTimeout(() => floater.remove(), 920);
-            }
 
             // Random blessing quote
             const blessing = ZEN_CAT_BLESSINGS[Math.floor(Math.random() * ZEN_CAT_BLESSINGS.length)];
 
             showZenCapsuleNotification({
-                emoji: '🐾',
-                title: '靈動玄貓 · 治癒陪伴',
+                emoji: '🐈',
+                title: '黑貓 · 喵～',
                 message: blessing,
-                duration: 4000
+                duration: 3800
             });
         }
 
