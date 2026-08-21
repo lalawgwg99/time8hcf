@@ -518,6 +518,56 @@
             transform: scale(1.08);
             background: var(--fill-secondary);
         }
+
+        /* --- Ring Yesterday Punch-Out Badge (右下角前日下班圓圈小光環) --- */
+        .ring-yesterday-badge {
+            position: absolute;
+            bottom: 4px;
+            right: -8px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5px;
+            cursor: pointer;
+            z-index: 15;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .ring-yesterday-badge:hover {
+            transform: scale(1.08);
+            background: var(--fill-secondary);
+        }
+        .ring-yesterday-badge:active {
+            transform: scale(0.94);
+        }
+        .yesterday-label-date {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            font-size: 8.5px;
+            font-weight: 500;
+            color: var(--label-tertiary);
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
+        .yesterday-label-time {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--label);
+            line-height: 1.1;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+
         .notes-badge-dot {
             position: absolute;
             top: 5px;
@@ -2967,6 +3017,12 @@
                             <i class="fas fa-list-check" style="font-size:13px; color:var(--label-secondary); pointer-events:none;"></i>
                             <span id="notesBadgeDot" class="notes-badge-dot hidden" style="pointer-events:none;"></span>
                         </button>
+
+                        <!-- Ring Accessory Bottom-Right: 前一天下班時間 (右下角圓圈小光環) -->
+                        <div id="ringYesterdayBadge" class="ring-yesterday-badge active-scale" onclick="showYesterdayPunchOutDetail(event)" title="前一天下班時間" aria-label="前一天下班時間">
+                            <span id="yesterdayBadgeDate" class="yesterday-label-date" style="pointer-events:none;">--/--</span>
+                            <span id="yesterdayBadgeTime" class="yesterday-label-time" style="pointer-events:none;">--:--</span>
+                        </div>
                         <div class="ring-ambient-core" id="ringAmbientCore"></div>
                         <svg viewBox="0 0 264 264">
                             <defs>
@@ -6725,6 +6781,69 @@
             return null;
         }
 
+        function updateYesterdayPunchOutDisplay() {
+            const dateEl = document.getElementById('yesterdayBadgeDate');
+            const timeEl = document.getElementById('yesterdayBadgeTime');
+            const badgeEl = document.getElementById('ringYesterdayBadge');
+            if (!dateEl || !timeEl) return;
+
+            const lastOut = getLastPreviousDayPunchOut();
+            if (lastOut && lastOut.time) {
+                const d = new Date(lastOut.time);
+                const month = d.getMonth() + 1;
+                const day = d.getDate();
+                const hh = String(d.getHours()).padStart(2, '0');
+                const mm = String(d.getMinutes()).padStart(2, '0');
+
+                dateEl.textContent = `${month}/${day}`;
+                timeEl.textContent = `${hh}:${mm}`;
+                if (badgeEl) {
+                    badgeEl.title = `前次下班：${month}月${day}日 ${hh}:${mm} (點擊查看)`;
+                }
+            } else {
+                dateEl.textContent = '前次';
+                timeEl.textContent = '--:--';
+                if (badgeEl) {
+                    badgeEl.title = '尚無前次下班紀錄';
+                }
+            }
+        }
+
+        function showYesterdayPunchOutDetail(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            playSingleClickSound('C5');
+
+            const lastOut = getLastPreviousDayPunchOut();
+            if (lastOut && lastOut.time) {
+                const d = new Date(lastOut.time);
+                const month = d.getMonth() + 1;
+                const day = d.getDate();
+                const hh = String(d.getHours()).padStart(2, '0');
+                const mm = String(d.getMinutes()).padStart(2, '0');
+                const diffMs = Date.now() - d.getTime();
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffMins = Math.floor((diffMs % 3600000) / 60000);
+
+                showZenCapsuleNotification({
+                    emoji: '🌙',
+                    title: `前次下班 · ${month}/${day} ${hh}:${mm}`,
+                    message: `已間隔 ${diffHours}h ${diffMins}m 🍵`,
+                    duration: 3500
+                });
+            } else {
+                showZenCapsuleNotification({
+                    emoji: '🌙',
+                    title: '前次下班紀錄',
+                    message: '尚無昨日或過往下班紀錄 🌿',
+                    duration: 3000
+                });
+            }
+        }
+
         function punch() {
             if (punchRecords.length >= 20) { showReminder("已達今日紀錄上限", 'work'); return; }
             haptic(getNextPunchType() === 'in' ? 'light' : 'medium');
@@ -7194,6 +7313,9 @@
 
             // --- 久坐檢查 ---
             checkStretchReminder();
+
+            // --- 前日下班光環徽章更新 ---
+            updateYesterdayPunchOutDisplay();
 
             // --- 列表渲染 (iOS Inset Grouped Style) ---
             const listContainer = document.getElementById('punchRecords');
