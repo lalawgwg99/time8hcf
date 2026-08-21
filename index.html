@@ -3798,94 +3798,130 @@
             </div>
             <div style="padding:16px 24px 36px;">
 
-                <!-- 1. 打卡與工時光環 -->
-                <div class="section-label">1. 打卡與工時光環</div>
+                <!-- 1. 光環與四角小功能 -->
+                <div class="section-label">1. 光環與四角功能</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-circle-notch" style="color:var(--blue); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">264px 筆觸工時光環</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">⭕</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">中央工時光環</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            中央大光環即時呈現今日工時進度。<strong>輕觸光環數字</strong>即可在「今日累計工時」與「尚餘倒數工時」之間自由切換。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            即時呈現今日工時進度。<strong>輕點中央數字</strong>即可切換「今日已做」或「倒數剩餘」工時。
                         </p>
                     </div>
-                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-sliders" style="color:var(--blue); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">原位滑動打卡 (Slide to Punch)</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">☀️</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">左上 · 即時天氣</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            打卡下班時採用 Apple 物理滑桿防誤觸機制；上班則支援極簡點擊，打卡時伴隨清脆水滴音與細膩震動回饋。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            免權限自動顯示當前氣溫與天候，點擊可手動刷新。
                         </p>
                     </div>
-                    <div style="padding:14px 16px;">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-list-check" style="color:var(--blue); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">右上角待辦筆記 (Notes & Todo)</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">📝</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">右上 · 待辦筆記</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            輕觸光環右上角小圓圈，可設定當前專注任務、今日打勾待辦清單與隨手便籤，若有待辦未完成會以澄澈小圓點低調提示。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            隨手記錄今日專注目標與待辦清單，有未完成項目時會亮起小圓點。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">🪵</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">左下 · 電子木魚</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            上班心累或暴躁時輕點，伴隨真實空靈木魚聲敲擊積功德、消除負能量！
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">🌙</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">右下 · 下班紀錄</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            顯示今日或前次下班時間。點擊可查看已間隔時長或已休假天數。
                         </p>
                     </div>
                 </div>
 
-                <!-- 2. 勞基法健康守護體系 -->
-                <div class="section-label">2. 勞基法健康守護防線</div>
+                <!-- 2. 打卡與防誤觸 -->
+                <div class="section-label">2. 俐落打卡操作</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-hourglass-half" style="color:var(--orange); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">230 分鐘連續工作預警 (勞基法 §35)</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">☕</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">上班打卡</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            單次連續工作滿 230 分鐘（3 小時 50 分）時主動提醒，讓您提前 10 分鐘妥善收尾手邊工作，避免超逾 4 小時法定上限。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            輕點「上班」按鈕立即啟動計時，伴隨清脆水滴音與細膩觸覺回饋。
                         </p>
                     </div>
-                    <div style="padding:14px 16px;">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-bed" style="color:var(--blue); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">11 小時跨日休息守護 (勞基法 §34)</span>
+                    <div style="padding:13px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">👉</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">下班防誤觸滑動</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            今日首度打卡上班時，自動檢測距昨日下班是否休滿 11 小時；當日達標下班時，即時為您預報明日建議的最早啟程時間。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            下班採用<strong>「向右滑動打卡」</strong>機制，防止口袋誤觸，安全收工。
                         </p>
                     </div>
                 </div>
 
-                <!-- 3. 禪意調息導引 -->
-                <div class="section-label">3. 禪意調息導引</div>
+                <!-- 3. 勞基法守護防線 -->
+                <div class="section-label">3. 勞基法健康守護</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:14px 16px;">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-lungs" style="color:var(--green); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">1 分鐘正念深呼吸 (4-7-8 韻律調息)</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">⏳</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">連續 230 分鐘工作提醒 (§35)</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            點擊打卡下方「正念呼吸」，進入 4-7-8 韻律調息導引，伴隨光環擴張與收縮及空靈缽音，快速重拾平靜專注。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            單次工作滿 3 小時 50 分時主動提醒，讓您提前收尾休息，不超時工作。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">🛌</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">11 小時跨日休息守護 (§34)</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            上班時自動檢測距離上次下班是否休滿 11 小時，守護夜間睡眠充足。
                         </p>
                     </div>
                 </div>
 
-                <!-- 4. 主題色彩與全螢幕體驗 -->
-                <div class="section-label">4. 主題色彩與 PWA 體驗</div>
+                <!-- 4. 正念調息與主題 -->
+                <div class="section-label">4. 禪意放鬆與個人化</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-palette" style="color:var(--blue); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">4 款 Apple 禪意主題色彩</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">🧘</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">1 分鐘正念深呼吸</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            輕觸今日右上角 <strong>TIME 8 ✦</strong>，即可自由切換：和風暖白、黑曜夜色 (OLED 省電護眼)、竹影森綠、暮光煙紫。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            點擊打卡下方的「正念呼吸」，跟隨 4-7-8 呼吸光環放鬆 1 分鐘、重拾心流。
                         </p>
                     </div>
-                    <div style="padding:14px 16px;">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                            <i class="fas fa-mobile-screen" style="color:var(--blue); font-size:13px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--label);">加入手機主畫面 (PWA)</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">🎨</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">4 款 Apple 禪意主題</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.6; margin:0;">
-                            在 Safari 點選分享 ➔「加入主畫面」，即可享有全螢幕沉浸體驗與 iOS 16.4+ 鎖定畫面推播通知。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            輕觸首頁右上角 <strong>TIME 8 ✦</strong>，可隨時切換：暖白、黑曜 (OLED 省電)、森綠、煙紫。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">📲</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">加入手機主畫面 (PWA)</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            在 Safari 點選分享按鈕 ➔「加入主畫面」，即可享有全螢幕 App 體驗。
                         </p>
                     </div>
                 </div>
