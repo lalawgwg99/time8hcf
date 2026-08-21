@@ -6864,12 +6864,21 @@
                 const isYesterday = d.toDateString() === yesterday.toDateString();
                 const prefix = isToday ? '今日下班' : (isYesterday ? '昨日下班' : `前次下班 (${month}/${day})`);
 
-                const restStr = diffHours > 0 ? `${diffHours}h ${diffMins}m` : `${diffMins} 分鐘`;
+                let restStr = '';
+                const diffDays = Math.floor(diffHours / 24);
+                const remainHours = diffHours % 24;
+                if (diffDays >= 2) {
+                    restStr = `已休假 ${diffDays} 天 ${remainHours > 0 ? remainHours + 'h' : ''}`;
+                } else if (diffHours > 0) {
+                    restStr = `已間隔 ${diffHours}h ${diffMins}m`;
+                } else {
+                    restStr = `已休息 ${diffMins} 分鐘`;
+                }
 
                 showZenCapsuleNotification({
                     emoji: '🌙',
                     title: `${prefix} · ${hh}:${mm}`,
-                    message: `已間隔 ${restStr} 🍵`,
+                    message: `${restStr} 🍵`,
                     duration: 3500
                 });
             } else {
