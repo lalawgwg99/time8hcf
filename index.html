@@ -450,6 +450,50 @@
             font-weight: 600;
         }
 
+        /* --- Ring Weather Badge (左上角即時天氣) --- */
+        .ring-weather-badge {
+            position: absolute;
+            top: 10px;
+            left: 14px;
+            height: 36px;
+            padding: 0 10px 0 8px;
+            border-radius: 999px;
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 15;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .ring-weather-badge:hover {
+            transform: scale(1.06);
+            background: var(--fill-secondary);
+        }
+        .weather-icon {
+            font-size: 13.5px;
+            line-height: 1;
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+        .ring-weather-badge:active .weather-icon {
+            transform: scale(1.2);
+        }
+        .weather-temp {
+            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--label);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+
         /* --- Ring Accessory Button (待辦筆記) --- */
         .ring-accessory-btn {
             position: absolute;
@@ -2912,6 +2956,12 @@
                 <!-- Hero: Circular Ring with Time Inside (Apple Native Masterpiece - 264px) -->
                 <div class="hero-section">
                     <div class="ring-container" id="ringContainer" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
+                        <!-- Ring Accessory Left: 即時天氣氣溫 (左上角小膠囊) -->
+                        <div id="ringWeatherBadge" class="ring-weather-badge active-scale" onclick="refreshLiveWeather(event)" title="即時天氣 · 點擊手動更新" aria-label="即時天氣">
+                            <span id="weatherIcon" class="weather-icon" style="pointer-events:none;">☀️</span>
+                            <span id="weatherTemp" class="weather-temp" style="pointer-events:none;">--°</span>
+                        </div>
+
                         <!-- Ring Accessory Button: 待辦筆記 (右上角小圓圈) -->
                         <button type="button" id="ringNotesBtn" onclick="openNotesModal(event)" class="ring-accessory-btn active-scale" title="今日待辦與專注筆記" aria-label="待辦筆記">
                             <i class="fas fa-list-check" style="font-size:13px; color:var(--label-secondary); pointer-events:none;"></i>
@@ -6201,6 +6251,127 @@
             return div.innerHTML;
         }
 
+        // =============================================
+        // APPLE LIVE WEATHER MODULE (即時微氣候引擎)
+        // =============================================
+        const WMO_WEATHER_MAP = {
+            0:  { icon: '☀️', text: '晴朗' },
+            1:  { icon: '🌤️', text: '晴時多雲' },
+            2:  { icon: '⛅', text: '多雲' },
+            3:  { icon: '☁️', text: '陰天' },
+            45: { icon: '🌫️', text: '薄霧' },
+            48: { icon: '🌫️', text: '霧氣' },
+            51: { icon: '🌧️', text: '微雨' },
+            53: { icon: '🌧️', text: '小雨' },
+            55: { icon: '🌧️', text: '細雨' },
+            61: { icon: '🌧️', text: '陣雨' },
+            63: { icon: '🌧️', text: '中雨' },
+            65: { icon: '🌧️', text: '大雨' },
+            71: { icon: '❄️', text: '微雪' },
+            73: { icon: '❄️', text: '降雪' },
+            75: { icon: '❄️', text: '大雪' },
+            80: { icon: '🌧️', text: '短暫陣雨' },
+            81: { icon: '🌧️', text: '強陣雨' },
+            82: { icon: '🌧️', text: '驟雨' },
+            95: { icon: '⛈️', text: '雷陣雨' },
+            96: { icon: '⛈️', text: '雷雨挾冰雹' },
+            99: { icon: '⛈️', text: '強烈雷暴' }
+        };
+
+        let _weatherData = null;
+        let _weatherTimer = null;
+
+        function initWeatherEngine() {
+            try {
+                const cached = JSON.parse(localStorage.getItem('cachedWeather') || 'null');
+                if (cached && cached.temp !== undefined) {
+                    _weatherData = cached;
+                    renderWeatherBadge();
+                }
+            } catch (e) {}
+
+            fetchLiveWeatherData();
+            if (_weatherTimer) clearInterval(_weatherTimer);
+            _weatherTimer = setInterval(fetchLiveWeatherData, 30 * 60 * 1000);
+        }
+
+        async function fetchLiveWeatherData(isManual = false) {
+            try {
+                let lat = 25.033, lon = 121.5654, cityName = '台北';
+                
+                try {
+                    const geoRes = await fetch('https://get.geojs.io/v1/ip/geo.json', { signal: AbortSignal.timeout(3500) });
+                    if (geoRes.ok) {
+                        const geoData = await geoRes.json();
+                        if (geoData.latitude && geoData.longitude) {
+                            lat = parseFloat(geoData.latitude);
+                            lon = parseFloat(geoData.longitude);
+                            cityName = geoData.city || cityName;
+                        }
+                    }
+                } catch (err) {}
+
+                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,apparent_temperature&timezone=auto`;
+                const res = await fetch(weatherUrl, { signal: AbortSignal.timeout(4500) });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.current) {
+                        const temp = Math.round(data.current.temperature_2m);
+                        const code = data.current.weather_code;
+                        const apparent = Math.round(data.current.apparent_temperature);
+                        const wInfo = WMO_WEATHER_MAP[code] || { icon: '🌤️', text: '多雲' };
+
+                        _weatherData = {
+                            city: cityName,
+                            temp: temp,
+                            apparent: apparent,
+                            icon: wInfo.icon,
+                            text: wInfo.text,
+                            time: Date.now()
+                        };
+
+                        localStorage.setItem('cachedWeather', JSON.stringify(_weatherData));
+                        renderWeatherBadge();
+
+                        if (isManual) {
+                            showZenCapsuleNotification({
+                                emoji: _weatherData.icon,
+                                title: `${_weatherData.city} · ${_weatherData.temp}°C ${_weatherData.text}`,
+                                message: `體感 ${_weatherData.apparent}°C · 天候舒心 🍃`,
+                                duration: 3200
+                            });
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log('Weather notice:', e);
+                if (!_weatherData) {
+                    _weatherData = { city: '台北', temp: 28, apparent: 29, icon: '☀️', text: '晴朗', time: Date.now() };
+                    renderWeatherBadge();
+                }
+            }
+        }
+
+        function renderWeatherBadge() {
+            if (!_weatherData) return;
+            const iconEl = document.getElementById('weatherIcon');
+            const tempEl = document.getElementById('weatherTemp');
+            const badgeEl = document.getElementById('ringWeatherBadge');
+            if (iconEl) iconEl.textContent = _weatherData.icon || '☀️';
+            if (tempEl) tempEl.textContent = `${_weatherData.temp || 28}°`;
+            if (badgeEl) badgeEl.title = `${_weatherData.city || ''} ${_weatherData.temp}°C ${_weatherData.text || ''} (點擊更新)`;
+        }
+
+        function refreshLiveWeather(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            playSingleClickSound('A4');
+            fetchLiveWeatherData(true);
+        }
+
         // ===== ZEN THEME CONTROLLER (Apple 禪意主題色彩切換) =====
         const ZEN_THEMES = {
             alabaster: {
@@ -7301,6 +7472,7 @@
         renderPartnerRoom();
         initSwipePunch();
         initBrushstroke();
+        initWeatherEngine();
 
         // --- 本週總覽 ---
         function renderWeeklySummary() {
