@@ -598,14 +598,16 @@
             line-height: 1;
             letter-spacing: 0.02em;
         }
-        .muyu-label-val {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            font-size: 9.5px;
-            font-weight: 600;
-            color: var(--label);
-            line-height: 1.1;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: -0.02em;
+        .muyu-icon-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            margin-top: 0.5px;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .ring-muyu-badge:active .muyu-icon-bottom {
+            transform: scale(1.25) rotate(-8deg);
         }
 
         /* 木魚漂浮字體動畫 (Apple 物理微光上浮) */
@@ -3138,9 +3140,16 @@
                         </button>
 
                         <!-- 3. Bottom-Left: 辦公室電子木魚 (38px 圓圈) -->
-                        <div id="ringMuyuBadge" class="ring-muyu-badge active-scale" onclick="tapOfficeMuyu(event)" title="辦公室電子木魚 · 點擊積功德解壓" aria-label="電子木魚">
+                        <div id="ringMuyuBadge" class="ring-muyu-badge active-scale" onclick="tapOfficeMuyu(event)" title="辦公室電子木魚 · 點擊敲木魚解壓" aria-label="電子木魚">
                             <span class="muyu-label-top" style="pointer-events:none;">功德</span>
-                            <span id="muyuCount" class="muyu-label-val" style="pointer-events:none;">✨ +0</span>
+                            <span class="muyu-icon-bottom" style="pointer-events:none;">
+                                <svg viewBox="0 0 24 24" width="13.5" height="13.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--label); opacity:0.85;">
+                                    <ellipse cx="12" cy="13" rx="7.5" ry="6" />
+                                    <circle cx="9.5" cy="11.5" r="1.1" fill="currentColor" />
+                                    <path d="M12.5 13c1.8 0 3.5.5 4.5 1.8" />
+                                    <path d="M5.5 10.5C5 7.5 8 5.5 12 5.5s7 2 6.5 5" />
+                                </svg>
+                            </span>
                         </div>
 
                         <!-- 4. Bottom-Right: 最近下班時間 (38px 圓圈) -->
@@ -7060,31 +7069,67 @@
                 if (ctx.state === 'suspended') ctx.resume();
 
                 const now = ctx.currentTime;
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                const filter = ctx.createBiquadFilter();
 
-                // Hollow wooden block resonance bandpass filter
-                filter.type = 'bandpass';
-                filter.frequency.setValueAtTime(480, now);
-                filter.Q.setValueAtTime(3.8, now);
+                // 1. Mallet impact transient (木槌敲擊硬木脆感瞬態)
+                const clickOsc = ctx.createOscillator();
+                const clickGain = ctx.createGain();
+                clickOsc.type = 'triangle';
+                clickOsc.frequency.setValueAtTime(1600, now);
+                clickOsc.frequency.exponentialRampToValueAtTime(320, now + 0.012);
+                clickGain.gain.setValueAtTime(0.45, now);
+                clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.016);
+                clickOsc.connect(clickGain);
+                clickGain.connect(ctx.destination);
+                clickOsc.start(now);
+                clickOsc.stop(now + 0.018);
 
-                // Initial percussive strike transient 620Hz down to 260Hz
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(620, now);
-                osc.frequency.exponentialRampToValueAtTime(260, now + 0.075);
+                // 2. Main Hollow Wood Chamber Body (真實中空木魚主共振腔 ~435Hz)
+                const bodyOsc = ctx.createOscillator();
+                const bodyGain = ctx.createGain();
+                const bodyFilter = ctx.createBiquadFilter();
 
-                // Fast percussive envelope
-                gain.gain.setValueAtTime(0.001, now);
-                gain.gain.linearRampToValueAtTime(0.75, now + 0.002);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+                bodyFilter.type = 'bandpass';
+                bodyFilter.frequency.setValueAtTime(435, now);
+                bodyFilter.Q.setValueAtTime(6.0, now);
 
-                osc.connect(filter);
-                filter.connect(gain);
-                gain.connect(ctx.destination);
+                bodyOsc.type = 'sine';
+                bodyOsc.frequency.setValueAtTime(540, now);
+                bodyOsc.frequency.exponentialRampToValueAtTime(430, now + 0.035);
 
-                osc.start(now);
-                osc.stop(now + 0.15);
+                bodyGain.gain.setValueAtTime(0.001, now);
+                bodyGain.gain.linearRampToValueAtTime(0.9, now + 0.002);
+                bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+
+                bodyOsc.connect(bodyFilter);
+                bodyFilter.connect(bodyGain);
+                bodyGain.connect(ctx.destination);
+
+                bodyOsc.start(now);
+                bodyOsc.stop(now + 0.18);
+
+                // 3. Wood Shell Overtone (次泛音木質厚實感 ~870Hz)
+                const shellOsc = ctx.createOscillator();
+                const shellGain = ctx.createGain();
+                const shellFilter = ctx.createBiquadFilter();
+
+                shellFilter.type = 'bandpass';
+                shellFilter.frequency.setValueAtTime(870, now);
+                shellFilter.Q.setValueAtTime(6.5, now);
+
+                shellOsc.type = 'sine';
+                shellOsc.frequency.setValueAtTime(910, now);
+                shellOsc.frequency.exponentialRampToValueAtTime(860, now + 0.025);
+
+                shellGain.gain.setValueAtTime(0.001, now);
+                shellGain.gain.linearRampToValueAtTime(0.32, now + 0.002);
+                shellGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+                shellOsc.connect(shellFilter);
+                shellFilter.connect(shellGain);
+                shellGain.connect(ctx.destination);
+
+                shellOsc.start(now);
+                shellOsc.stop(now + 0.09);
             } catch (e) {}
         }
 
@@ -7094,11 +7139,7 @@
                 e.preventDefault();
             }
 
-            _muyuMeritCount++;
-            localStorage.setItem('woodenFishMerit', String(_muyuMeritCount));
-            updateMuyuDisplay();
-
-            // Tactile vibration + Authentic Wooden Fish Audio
+            // Tactile vibration + Authentic Real Wooden Fish Audio
             if ('vibrate' in navigator) navigator.vibrate(12);
             playWoodenFishSound();
 
