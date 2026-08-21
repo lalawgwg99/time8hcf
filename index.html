@@ -4753,8 +4753,8 @@
                 showZenCapsuleNotification({
                     emoji: '🧘',
                     title: '久坐 90 分鐘',
-                    message: '起身活動肩頸、伸展一下 💧',
-                    duration: 3800
+                    message: '走動休息一下 💧',
+                    duration: 3500
                 });
             }
         }
@@ -6529,9 +6529,9 @@
                                 setTimeout(() => {
                                     showZenCapsuleNotification({
                                         emoji: '🌙',
-                                        title: '休息不足 11 小時',
-                                        message: `距昨日下班僅 ${restStr}，請適度調節步調 🍵`,
-                                        duration: 4000
+                                        title: `跨日間隔 ${restStr}`,
+                                        message: '未滿 11 小時 🍵',
+                                        duration: 3500
                                     });
                                 }, 600);
                             }
@@ -6607,8 +6607,8 @@
                         showZenCapsuleNotification({
                             emoji: '✨',
                             title: '今日工時達標',
-                            message: `建議明日 ${nextStr} 後再上班 🌙`,
-                            duration: 4000
+                            message: `建議明日 ${nextStr} 上班 🌙`,
+                            duration: 3500
                         });
                     }, 500);
                 }
@@ -6910,8 +6910,8 @@
                         showZenCapsuleNotification({
                             emoji: '☕',
                             title: '連續工作 230 分鐘',
-                            message: '即將滿 4 小時上限，請適時休息 🌿',
-                            duration: 4500
+                            message: '即將滿 4 小時上限 🌿',
+                            duration: 4000
                         });
                     }
                 } else {
@@ -6928,7 +6928,7 @@
                 if (Date.now() > targetTime) {
                     if (!window._alarmTriggered) {
                         window._alarmTriggered = true;
-                        triggerAlarm(`工作滿 ${appSettings.workReminderMinutes || 120} 分鐘`, '建議起身活動、喝口水 🍃', '🍃');
+                        triggerAlarm(`專注滿 ${appSettings.workReminderMinutes || 120} 分鐘`, '適度休息一下 🍃', '🍃');
                     }
                 }
             } else {
@@ -6944,7 +6944,7 @@
                     if (restMins >= (appSettings.restReminderMinutes || 20)) {
                         if (!window._restAlarmTriggered) {
                             window._restAlarmTriggered = true;
-                            triggerAlarm('休息結束', `已休息 ${appSettings.restReminderMinutes || 20} 分鐘，準備好繼續了嗎？🌱`, '🌱');
+                            triggerAlarm(`休息滿 ${appSettings.restReminderMinutes || 20} 分鐘`, '準備繼續專注 🌱', '🌱');
                         }
                     }
                 }
@@ -6956,7 +6956,7 @@
             if (result.total >= targetMin && punchRecords.length > 0) {
                 if (!window._targetGoalAlarmTriggered) {
                     window._targetGoalAlarmTriggered = true;
-                    triggerAlarm('今日目標達成 🎉', `已滿 ${appSettings.targetHours || 8} 小時工時`, '🎉');
+                    triggerAlarm('目標達成 🎉', `今日工時滿 ${appSettings.targetHours || 8} 小時`, '🎉');
                 }
             } else if (result.total < targetMin) {
                 window._targetGoalAlarmTriggered = false;
