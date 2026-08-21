@@ -2159,6 +2159,7 @@
             font-size: 12.5px;
             color: var(--label-secondary);
             line-height: 1.5;
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .life-pill-refresh {
@@ -2961,7 +2962,7 @@
                 </div>
 
                 <!-- Interactive Life Quotes & Mindset Pill -->
-                <div id="lifeSuggestion" class="life-pill" onclick="rotateLifeQuote()" title="點擊換一句心靈哲思">
+                <div id="lifeSuggestion" class="life-pill" onclick="rotateLifeQuote(true)" title="點擊換一句心靈哲思">
                     <div class="life-pill-content">
                         <i class="fas fa-quote-left life-pill-icon"></i>
                         <span id="lifeSuggestionText" class="life-pill-text">心若澄澈，萬物皆明；步履從容，行則必至。</span>
@@ -5331,20 +5332,20 @@
             });
         }
 
-        // ===== ZEN & MINDFUL FOCUS APHORISMS (心流與心靈勵志哲思名言庫) =====
+        // ===== ZEN & MINDFUL FOCUS APHORISMS (心流與心靈勵志哲思名言庫 · 65+ 款精選) =====
         const zenQuotes = [
             "「專注不是做更多事，而是對上千個好點子說不。」— Steve Jobs",
-            "「心流的本質，是將全副身心沉浸於當下熱愛的事物。」— Csikszentmihalyi",
+            "「心流的本質，是將全副身心沉浸於當下熱愛的事物。」— Mihaly Csikszentmihalyi",
             "「心若澄澈，萬物皆明；步履從容，行則必至。」",
             "「不馳於空想，不騖於虛聲，專注當下的一磚一瓦。」",
             "「流水不爭先，爭的是滔滔不絕。」",
             "「寧靜不是逃離喧囂，而是在風暴核心保有清明。」— Marcus Aurelius",
             "「將每件平凡的小事做到極致，便是不凡。」",
-            "「時間只是一條河流，重要的不是流速，而是你在其中的深度。」— Thoreau",
+            "「時間只是一條河流，重要的不是流速，而是你在其中的深度。」— Henry David Thoreau",
             "「簡單往往比複雜更難，你必須竭盡心力讓思緒純淨。」— Steve Jobs",
             "「知足常樂，能忍自安；行到水窮處，坐看雲起時。」— 王維",
             "「心之所向，素履以往；生如逆旅，一葦以航。」",
-            "「自律不是自我限制，而是靈魂獲得真正自由的唯一途徑。」",
+            "「自律不是自我限制，而是靈魂獲得真正自由的唯一途徑。」— Immanuel Kant",
             "「每一步專注的耕耘，都在為未來的豁然開朗蓄力。」",
             "「大道至簡，繁華落盡見真純。」",
             "「慢即是快，深思熟慮的篤定勝過盲目的奔波。」",
@@ -5361,26 +5362,82 @@
             "「星光不問趕路人，時光不負有心人。」",
             "「沉靜如水，專注如磐，在紛擾中守護內心的秩序。」",
             "「我們所擁有的一切，都只在當下的這個呼吸裡。」",
-            "「不為模糊不清的未來擔憂，只為清清楚楚的現在努力。」",
-            "「每一次全神貫注，都是與更優秀的自己相遇。」"
+            "「不為模糊不清的未來擔憂，只為清清楚楚的現在努力。」— Thomas Carlyle",
+            "「每一次全神貫注，都是與更優秀的自己相遇。」",
+            "「極致的簡約，是成熟的最高境界。」— Leonardo da Vinci",
+            "「重要的不是你投入多少時間，而是你投入了多少專注。」— Cal Newport",
+            "「少，但更好 (Less, but better)。」— Dieter Rams",
+            "「專注是一門拒絕的藝術。」— Tim Cook",
+            "「唯有在平靜的心智中，才能誕生深刻的洞見。」— Seneca",
+            "「如果你熱愛自己的工作，每一天都是一場深刻的探索。」— 小野二郎 (Jiro Ono)",
+            "「千里之行，始於足下；九層之台，起於累土。」— 老子",
+            "「莫聽穿林打葉聲，何妨吟嘯且徐行。」— 蘇軾",
+            "「在紛亂的世界裡，專注是你最強大的超能力。」",
+            "「把每一天當作獨立的生命來度過。」— Seneca",
+            "「做你熱愛的事，並把它做到極致，其餘的自會隨之而來。」",
+            "「當你全神貫注於眼前的一件事，焦慮便無處遁形。」",
+            "「雕刻不是創造形象，而是剔除所有不屬於它的多餘石塊。」— Michelangelo",
+            "「保持飢渴，保持愚蠢；忠於初心，專注本質。」— Steve Jobs",
+            "「不急不躁，歲月自會成全篤定前行的人。」",
+            "「只要方向對，慢一點也無妨。」",
+            "「專注力是心靈的聚光燈，它照亮哪裡，哪裡就綻放奇蹟。」",
+            "「萬物皆有裂痕，那是光照進來的地方。」— Leonard Cohen",
+            "「與其對抗波浪，不如學會駕馭潮汐。」",
+            "「心若無罣礙，便無所畏懼；行若有定見，則步步生蓮。」",
+            "「專注於你能控制的事，放下你無法掌控的喧囂。」— Epictetus",
+            "「專注不是緊繃，而是一種鬆弛而敏銳的高維清明。」",
+            "「心安之處即是故鄉，專注之時即是當下。」",
+            "「將複雜的世界過濾為一條清晰的軌跡。」",
+            "「時間是最公平的雕刻刀，它會獎賞每一份純粹的堅持。」",
+            "「在無聲的專注裡，靈魂正在積蓄破土而出的力量。」",
+            "「專注於當下的每一次呼吸，身心便重新找回重心。」",
+            "「做減法的人生，往往走得最穩、最遠。」",
+            "「真正的強大，是在混亂中依然保有內心的靜謐。」",
+            "「今日事，今日畢；今日休，今日安。」",
+            "「從容不是放慢腳步，而是在節奏中找到屬於自己的呼吸。」",
+            "「每一次打卡，都是對自己一天時光的真誠交代。」",
+            "「專注於手頭的事情，靈感自會在指尖悄然綻放。」",
+            "「給自己留出一片空白，生活才會有呼吸的空間。」",
+            "「心平能愈三千疾，心靜可通萬事理。」"
         ];
 
+        let _quoteAutoTimer = null;
         let _currentQuoteIndex = Math.floor(Math.random() * zenQuotes.length);
 
-        function rotateLifeQuote() {
-            if ('vibrate' in navigator) navigator.vibrate(12);
+        function rotateLifeQuote(isManual = false) {
             const el = document.getElementById('lifeSuggestion');
             const textEl = document.getElementById('lifeSuggestionText');
             if (!el || !textEl) return;
-            el.style.opacity = '0.35';
-            el.style.transform = 'scale(0.98)';
+
+            if (isManual && 'vibrate' in navigator) navigator.vibrate(10);
+
+            // Apple Fluid Cross-fade Animation
+            textEl.style.opacity = '0';
+            textEl.style.transform = 'translateY(3px)';
+
             setTimeout(() => {
                 _currentQuoteIndex = (_currentQuoteIndex + 1) % zenQuotes.length;
                 textEl.textContent = zenQuotes[_currentQuoteIndex];
-                el.style.opacity = '1';
-                el.style.transform = 'scale(1)';
-            }, 140);
+                textEl.style.opacity = '1';
+                textEl.style.transform = 'translateY(0)';
+            }, 220);
+
+            if (isManual) {
+                resetQuoteAutoTimer();
+            }
         }
+
+        function resetQuoteAutoTimer() {
+            if (_quoteAutoTimer) clearInterval(_quoteAutoTimer);
+            _quoteAutoTimer = setInterval(() => {
+                if (!document.hidden) {
+                    rotateLifeQuote(false);
+                }
+            }, 12000); // 每 12 秒自動平滑輪播換句
+        }
+
+        // 自動輪動初始化
+        resetQuoteAutoTimer();
 
         // ===== ZEN WEB AUDIO SYNTHESIZER (Acoustic Multi-Harmonic Tibetan Bowl Engine) =====
         const ZenAudio = {
