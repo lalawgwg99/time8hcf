@@ -6781,30 +6781,59 @@
             return null;
         }
 
+        // 尋找最適宜顯示的最近下班紀錄 (今日已下班 ➔ 顯示今日下班；上班中/尚未上班 ➔ 顯示前一日最後下班)
+        function getLatestRelevantPunchOut() {
+            // 1. 如果今日已有打卡且目前處於「下班/休息狀態」
+            if (punchRecords.length > 0 && punchRecords.length % 2 === 0) {
+                for (let i = punchRecords.length - 1; i >= 0; i--) {
+                    if (punchRecords[i].type === 'out' && punchRecords[i].time) {
+                        return { record: punchRecords[i], isToday: true };
+                    }
+                }
+            }
+            // 2. 如果今日正在上班中，或今日尚未打卡 ➔ 抓取前一工作日最後下班
+            const lastPastOut = getLastPreviousDayPunchOut();
+            if (lastPastOut) {
+                return { record: lastPastOut, isToday: false };
+            }
+            return null;
+        }
+
         function updateYesterdayPunchOutDisplay() {
             const dateEl = document.getElementById('yesterdayBadgeDate');
             const timeEl = document.getElementById('yesterdayBadgeTime');
             const badgeEl = document.getElementById('ringYesterdayBadge');
             if (!dateEl || !timeEl) return;
 
-            const lastOut = getLastPreviousDayPunchOut();
-            if (lastOut && lastOut.time) {
-                const d = new Date(lastOut.time);
+            const res = getLatestRelevantPunchOut();
+            if (res && res.record && res.record.time) {
+                const d = new Date(res.record.time);
+                const now = new Date();
                 const month = d.getMonth() + 1;
                 const day = d.getDate();
                 const hh = String(d.getHours()).padStart(2, '0');
                 const mm = String(d.getMinutes()).padStart(2, '0');
 
-                dateEl.textContent = `${month}/${day}`;
+                // 智慧判定相對日期標籤
+                const isToday = d.toDateString() === now.toDateString();
+                const yesterday = new Date(now);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const isYesterday = d.toDateString() === yesterday.toDateString();
+
+                let dateTag = `${month}/${day}`;
+                if (isToday) dateTag = '今日';
+                else if (isYesterday) dateTag = '昨日';
+
+                dateEl.textContent = dateTag;
                 timeEl.textContent = `${hh}:${mm}`;
                 if (badgeEl) {
-                    badgeEl.title = `前次下班：${month}月${day}日 ${hh}:${mm} (點擊查看)`;
+                    badgeEl.title = `${isToday ? '今日' : (isYesterday ? '昨日' : `${month}/${day}`)}下班：${hh}:${mm} (點擊查看)`;
                 }
             } else {
                 dateEl.textContent = '前次';
                 timeEl.textContent = '--:--';
                 if (badgeEl) {
-                    badgeEl.title = '尚無前次下班紀錄';
+                    badgeEl.title = '尚無下班紀錄';
                 }
             }
         }
@@ -6817,28 +6846,37 @@
             if ('vibrate' in navigator) navigator.vibrate(10);
             playSingleClickSound('C5');
 
-            const lastOut = getLastPreviousDayPunchOut();
-            if (lastOut && lastOut.time) {
-                const d = new Date(lastOut.time);
+            const res = getLatestRelevantPunchOut();
+            if (res && res.record && res.record.time) {
+                const d = new Date(res.record.time);
+                const now = new Date();
                 const month = d.getMonth() + 1;
                 const day = d.getDate();
                 const hh = String(d.getHours()).padStart(2, '0');
                 const mm = String(d.getMinutes()).padStart(2, '0');
-                const diffMs = Date.now() - d.getTime();
+                const diffMs = Math.max(0, now.getTime() - d.getTime());
                 const diffHours = Math.floor(diffMs / 3600000);
                 const diffMins = Math.floor((diffMs % 3600000) / 60000);
 
+                const isToday = d.toDateString() === now.toDateString();
+                const yesterday = new Date(now);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const isYesterday = d.toDateString() === yesterday.toDateString();
+                const prefix = isToday ? '今日下班' : (isYesterday ? '昨日下班' : `前次下班 (${month}/${day})`);
+
+                const restStr = diffHours > 0 ? `${diffHours}h ${diffMins}m` : `${diffMins} 分鐘`;
+
                 showZenCapsuleNotification({
                     emoji: '🌙',
-                    title: `前次下班 · ${month}/${day} ${hh}:${mm}`,
-                    message: `已間隔 ${diffHours}h ${diffMins}m 🍵`,
+                    title: `${prefix} · ${hh}:${mm}`,
+                    message: `已間隔 ${restStr} 🍵`,
                     duration: 3500
                 });
             } else {
                 showZenCapsuleNotification({
                     emoji: '🌙',
-                    title: '前次下班紀錄',
-                    message: '尚無昨日或過往下班紀錄 🌿',
+                    title: '下班紀錄',
+                    message: '尚無下班打卡紀錄 🌿',
                     duration: 3000
                 });
             }
