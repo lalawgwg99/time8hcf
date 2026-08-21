@@ -4726,7 +4726,7 @@
             } catch (e) { }
         }
 
-        function showZenCapsuleNotification({ title, message, emoji = '🌿', duration = 4000 }) {
+        function showZenCapsuleNotification({ title, message, emoji = '🌿', duration = 3500, pushToSystem = false }) {
             const capsule = document.getElementById('zenDynamicCapsule');
             if (capsule) {
                 const emojiEl = document.getElementById('zenCapsuleEmoji');
@@ -4739,8 +4739,8 @@
 
                 capsule.classList.add('active');
 
-                // 1 次輕柔觸覺震動 + 清脆空靈水滴禪音
-                if ('vibrate' in navigator) navigator.vibrate([15, 30, 15]);
+                // 1 次輕柔觸覺微震動
+                if ('vibrate' in navigator) navigator.vibrate([10]);
                 playZenChimeSound();
 
                 if (_zenCapsuleTimer) clearTimeout(_zenCapsuleTimer);
@@ -4749,28 +4749,30 @@
                 }, duration);
             }
 
-            // 系統級推播通知 (支援 iOS 16.4+ PWA / 鎖定畫面 / 桌面推播)
-            try {
-                if (window.Notification && Notification.permission === 'granted') {
-                    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.ready.then(reg => {
-                            reg.showNotification(`${emoji} ${title}`, {
-                                body: message,
-                                icon: './favicon.ico',
-                                badge: './favicon.ico',
-                                vibrate: [100, 50, 100],
-                                tag: 'time8-reminder',
-                                renotify: true
+            // 僅在明確需要系統推播（如背景超時鬧鐘/達標）且非純站內操作時，才發送至手機通知中心
+            if (pushToSystem) {
+                try {
+                    if (window.Notification && Notification.permission === 'granted') {
+                        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                            navigator.serviceWorker.ready.then(reg => {
+                                reg.showNotification(`${emoji} ${title}`, {
+                                    body: message,
+                                    icon: './favicon.ico',
+                                    badge: './favicon.ico',
+                                    vibrate: [100, 50, 100],
+                                    tag: 'time8-alarm',
+                                    renotify: true
+                                });
+                            }).catch(() => {
+                                new Notification(`${emoji} ${title}`, { body: message, icon: './favicon.ico' });
                             });
-                        }).catch(() => {
+                        } else {
                             new Notification(`${emoji} ${title}`, { body: message, icon: './favicon.ico' });
-                        });
-                    } else {
-                        new Notification(`${emoji} ${title}`, { body: message, icon: './favicon.ico' });
+                        }
                     }
+                } catch (e) {
+                    console.log('System notification note:', e);
                 }
-            } catch (e) {
-                console.log('System notification note:', e);
             }
         }
 
@@ -4788,7 +4790,8 @@
                 emoji: emoji,
                 title: title,
                 message: body,
-                duration: 5000
+                duration: 4500,
+                pushToSystem: true
             });
         }
 
@@ -6726,7 +6729,6 @@
             if (punchRecords.length >= 20) { showReminder("已達今日紀錄上限", 'work'); return; }
             haptic(getNextPunchType() === 'in' ? 'light' : 'medium');
             playSingleClickSound("A4");
-            requestNotificationPermission();
 
             const now = new Date();
             const type = getNextPunchType();
