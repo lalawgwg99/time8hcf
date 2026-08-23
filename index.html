@@ -700,135 +700,6 @@
             box-shadow: 0 0 5px var(--orange);
         }
 
-        /* --- 5. 雲遊仙人 (Zen Sage - 光環右側微光守護彩蛋) --- */
-        .zen-sage-sprite {
-            position: absolute;
-            top: 50%;
-            right: -28px;
-            transform: translateY(-50%);
-            width: 38px;
-            height: 46px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 25;
-            user-select: none;
-            -webkit-user-select: none;
-            animation: sageGentleFloat 4.2s ease-in-out infinite;
-            transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .zen-sage-sprite.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-50%) scale(0.6);
-        }
-        .zen-sage-sprite:hover {
-            transform: translateY(-50%) scale(1.12);
-        }
-        .zen-sage-sprite:active {
-            transform: translateY(-50%) scale(0.92);
-        }
-        .sage-glow-aura {
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 182, 136, 0.38) 0%, rgba(212, 182, 136, 0.08) 55%, transparent 75%);
-            filter: blur(4px);
-            animation: sagePulseGlow 3.2s ease-in-out infinite alternate;
-            pointer-events: none;
-        }
-        .sage-svg {
-            position: relative;
-            filter: drop-shadow(0 2px 8px rgba(212, 182, 136, 0.5));
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .zen-sage-sprite:active .sage-svg {
-            transform: scale(1.15) rotate(-4deg);
-        }
-        .sage-blessing-dot {
-            position: absolute;
-            top: 2px;
-            right: 0px;
-            font-size: 8.5px;
-            color: #D4B688;
-            animation: sageSparkle 2s ease-in-out infinite;
-            text-shadow: 0 0 6px rgba(212, 182, 136, 0.85);
-            pointer-events: none;
-        }
-        @keyframes sageGentleFloat {
-            0%, 100% {
-                transform: translateY(-50%) translateY(0px) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-50%) translateY(-5px) rotate(1.5deg);
-            }
-        }
-        @keyframes sagePulseGlow {
-            0% {
-                opacity: 0.55;
-                transform: scale(0.92);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.15);
-            }
-        }
-        @keyframes sageSparkle {
-            0%, 100% {
-                opacity: 0.35;
-                transform: scale(0.85);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.25);
-            }
-        }
-
-        /* --- 6. 寺廟靈籤筒 (Temple Fortune Tube - 光環左側古風靈籤彩蛋) --- */
-        .zen-fortune-tube-sprite {
-            position: absolute;
-            top: 48%;
-            left: -26px;
-            transform: translateY(-50%);
-            width: 38px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 25;
-            user-select: none;
-            -webkit-user-select: none;
-            animation: tubeGentleFloat 4.5s ease-in-out infinite;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        .zen-fortune-tube-sprite.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-50%) scale(0.5);
-        }
-        .zen-fortune-tube-sprite:hover {
-            transform: translateY(-50%) scale(1.12);
-        }
-        .zen-fortune-tube-sprite:active {
-            transform: translateY(-50%) scale(0.92);
-        }
-        .tube-rattle {
-            animation: tubeRattleAnim 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
-        }
-        @keyframes tubeRattleAnim {
-            0%, 100% { transform: translateY(-50%) rotate(0deg); }
-            20% { transform: translateY(-50%) rotate(-7deg); }
-            40% { transform: translateY(-50%) rotate(6deg); }
-            60% { transform: translateY(-50%) rotate(-4deg); }
-            80% { transform: translateY(-50%) rotate(3deg); }
-        }
-        @keyframes tubeGentleFloat {
-            0%, 100% { transform: translateY(-50%) translateY(0px); }
-            50% { transform: translateY(-50%) translateY(-4px); }
-        }
-
         /* 傳統寺廟靈籤詩卡片 (Temple Fortune Slip Sheet) */
         .fortune-paper-card {
             background: var(--card);
@@ -3340,70 +3211,6 @@
                             <span id="yesterdayBadgeTime" class="yesterday-label-time" style="pointer-events:none;">--:--</span>
                         </div>
 
-                        <!-- 5. 雲遊仙人 (光環右側微光守護彩蛋) -->
-                        <div id="zenSageSprite" class="zen-sage-sprite hidden" onclick="tapZenSage(event)" title="雲遊仙人 · 點擊領受仙諭賜福" aria-label="雲遊仙人">
-                            <div class="sage-glow-aura"></div>
-                            <svg class="sage-svg" viewBox="0 0 34 42" width="34" height="42" fill="none">
-                                <defs>
-                                    <linearGradient id="sageGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#FFF3D6" />
-                                        <stop offset="50%" stop-color="#D4B688" />
-                                        <stop offset="100%" stop-color="#9C7747" />
-                                    </linearGradient>
-                                </defs>
-                                <!-- 祥雲微氣 (Cloud puff) -->
-                                <path d="M6 38c-1.5 0-3-.8-3-2s1.5-2 3-2c.3 0 .7.1 1 .2C7.5 32.5 9 31.5 11 31.5c2 0 3.6 1 4.2 2.5.5-.2 1-.2 1.5-.2 2 0 3.8 1.5 3.8 3.5 0 .3 0 .5-.1.7H6z" fill="url(#sageGoldGrad)" opacity="0.38"/>
-                                <!-- 仙翁竹杖 (Staff) -->
-                                <line x1="26" y1="12" x2="26" y2="40" stroke="url(#sageGoldGrad)" stroke-width="1.3" stroke-linecap="round"/>
-                                <!-- 葫蘆法器 (Gourd) -->
-                                <circle cx="27.5" cy="15" r="1.6" fill="url(#sageGoldGrad)"/>
-                                <circle cx="27.5" cy="18" r="2.2" fill="url(#sageGoldGrad)"/>
-                                <!-- 飄逸道袍 (Robe) -->
-                                <path d="M13 18c-3.5 3.5-5.5 9-5.5 18 3.5-1 8-1 11.5 0 0-8-2.5-13.5-6-18z" fill="url(#sageGoldGrad)" opacity="0.88"/>
-                                <!-- 仙風長鬚 (White Beard) -->
-                                <path d="M12 14c1 3.5 1 8 3.5 10 1-2.5 2-6.5 2-10-1.8 1-3.8 1-5.5 0z" fill="#FFFFFF" opacity="0.95"/>
-                                <!-- 仙容面龐 (Head) -->
-                                <circle cx="14.5" cy="10" r="3.4" fill="url(#sageGoldGrad)"/>
-                                <!-- 仙人道髻 (Topknot) -->
-                                <ellipse cx="14.5" cy="6" rx="2" ry="1.4" fill="url(#sageGoldGrad)"/>
-                            </svg>
-                            <div class="sage-blessing-dot">✦</div>
-                        </div>
-
-                        <!-- 6. 寺廟靈籤筒 (光環左側古風靈籤彩蛋) -->
-                        <div id="zenFortuneTubeSprite" class="zen-fortune-tube-sprite hidden" onclick="drawFortuneSlip(event)" title="寺廟靈籤筒 · 點擊搖筒求籤" aria-label="寺廟靈籤筒">
-                            <svg class="tube-svg" viewBox="0 0 34 44" width="34" height="44" fill="none">
-                                <defs>
-                                    <linearGradient id="bambooGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stop-color="#C29662" />
-                                        <stop offset="40%" stop-color="#DEB887" />
-                                        <stop offset="100%" stop-color="#A47948" />
-                                    </linearGradient>
-                                    <linearGradient id="slipRedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#D9534F" />
-                                        <stop offset="100%" stop-color="#A93226" />
-                                    </linearGradient>
-                                </defs>
-                                <!-- 竹籤幾支 (Bamboo sticks) -->
-                                <line x1="12" y1="6" x2="12" y2="24" stroke="#D2B48C" stroke-width="2.2" stroke-linecap="round"/>
-                                <line x1="22" y1="7" x2="22" y2="24" stroke="#C8A165" stroke-width="2.2" stroke-linecap="round"/>
-                                <line x1="15" y1="4" x2="15" y2="24" stroke="#DEB887" stroke-width="2.2" stroke-linecap="round"/>
-                                <line x1="19" y1="5" x2="19" y2="24" stroke="#B8860B" stroke-width="2.2" stroke-linecap="round"/>
-                                <!-- 靈籤冒頭 (The drawn stick with red top) -->
-                                <line x1="17" y1="1" x2="17" y2="22" stroke="url(#slipRedGrad)" stroke-width="2.5" stroke-linecap="round"/>
-                                <circle cx="17" cy="1.5" r="1.2" fill="#FFEAA7"/>
-
-                                <!-- 竹籤筒筒身 (Cylinder body) -->
-                                <path d="M8 16 L26 16 L25 41 C25 42.5 23.5 43 17 43 C10.5 43 9 42.5 9 41 Z" fill="url(#bambooGrad)"/>
-                                <!-- 筒口與雕花環節 (Bands) -->
-                                <ellipse cx="17" cy="16" rx="9" ry="2.5" fill="#8B5A2B"/>
-                                <ellipse cx="17" cy="16" rx="7.8" ry="1.8" fill="#4A3525"/>
-                                <line x1="8.5" y1="24" x2="25.5" y2="24" stroke="#8B5A2B" stroke-width="1.2"/>
-                                <line x1="9" y1="34" x2="25" y2="34" stroke="#8B5A2B" stroke-width="1.2"/>
-                                <!-- 雕刻「吉」字 -->
-                                <text x="17" y="31" font-size="8" font-family="'Songti SC', serif" font-weight="bold" fill="#5C3A21" text-anchor="middle">吉</text>
-                            </svg>
-                        </div>
                         <div class="ring-ambient-core" id="ringAmbientCore"></div>
                         <svg viewBox="0 0 264 264">
                             <defs>
@@ -4107,13 +3914,22 @@
                             輕點「上班」按鈕立即啟動計時，伴隨清脆水滴音與細膩觸覺回饋。
                         </p>
                     </div>
-                    <div style="padding:13px 16px;">
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
                             <span style="font-size:14px;">👉</span>
                             <span style="font-size:13.5px; font-weight:600; color:var(--label);">下班防誤觸滑動</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
                             下班採用<strong>「向右滑動打卡」</strong>機制，防止口袋誤觸，安全收工。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                            <span style="font-size:14px;">⛩️</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">晨曦啟程 · 每日靈籤</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                            每日<strong>第一次打卡上班</strong>時，系統將自動為您搖筒抽取今日古剎靈籤與事業、求財、健康神諭指引。
                         </p>
                     </div>
                 </div>
@@ -4189,7 +4005,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
                     <div style="font-size:13.5px; font-weight:600; color:#C64C3A; letter-spacing:0.08em; display:flex; align-items:center; gap:6px;">
                         <span>⛩️</span>
-                        <span>古剎靈籤 · 鐫刻神諭</span>
+                        <span>晨曦啟程 · 每日靈籤</span>
                     </div>
                     <button onclick="closeFortuneModal()" aria-label="關閉靈籤"
                         style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
@@ -4230,14 +4046,14 @@
                             <span id="fortuneHealth">心寬病退，作息有常，莫為虛名煩擾。</span>
                         </div>
                         <div class="fortune-meta-row" style="margin-bottom:0;">
-                            <span class="fortune-meta-label">💡 仙翁點化：</span>
+                            <span class="fortune-meta-label">💡 智慧神諭：</span>
                             <span id="fortuneAdvice" style="color:#C64C3A; font-weight:600;">流水不爭先，爭的是滔滔不絕。</span>
                         </div>
                     </div>
                 </div>
 
                 <button onclick="closeFortuneModal()" class="active-scale"
-                    style="margin-top:20px; width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:600; background:#C64C3A; color:#FFF; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(198,76,58,0.3); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">收下靈籤 (鐫刻心間)</button>
+                    style="margin-top:20px; width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:600; background:#C64C3A; color:#FFF; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(198,76,58,0.3); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">收下今日靈籤 (鐫刻心間)</button>
             </div>
         </div>
     </div>
@@ -7096,8 +6912,15 @@
         // --- WLB 健康度計算 ---
         // calculateWLB 已移除，改用本週工時圖表
 
+        function getLocalDateStr(date = new Date()) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
         function getTodayKey() {
-            return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+            return getLocalDateStr(new Date());
         }
 
         function loadData() {
@@ -7201,7 +7024,7 @@
             for (let i = 6; i >= 0; i--) {
                 const d = new Date(today);
                 d.setDate(d.getDate() - i);
-                const key = d.toISOString().slice(0, 10);
+                const key = getLocalDateStr(d);
                 const mins = getDayTotalMinutes(key);
                 const hours = mins / 60;
                 const pct = Math.min((mins / targetMin) * 100, 100);
@@ -7237,8 +7060,6 @@
             if (dateEl) {
                 dateEl.textContent = `${days[now.getDay()]} · ${now.getMonth() + 1}月${now.getDate()}日`;
             }
-            checkHourlyZenSage();
-            checkHourlyZenFortuneTube();
         }
 
         function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
@@ -7263,20 +7084,32 @@
             return null;
         }
 
-        // 尋找最適宜顯示的最近下班紀錄 (今日已下班 ➔ 顯示今日下班；上班中/尚未上班 ➔ 顯示前一日最後下班)
+        // 尋找最近一次下班紀錄：
+        // 1. 若今日已有任何下班紀錄，優先返回今日最新的下班點。
+        // 2. 若今日尚未有任何下班紀錄（剛上班或今日尚未打卡），則回溯查找最近過去工作日的最後下班點。
         function getLatestRelevantPunchOut() {
-            // 1. 如果今日已有打卡且目前處於「下班/休息狀態」
-            if (punchRecords.length > 0 && punchRecords.length % 2 === 0) {
-                for (let i = punchRecords.length - 1; i >= 0; i--) {
-                    if (punchRecords[i].type === 'out' && punchRecords[i].time) {
-                        return { record: punchRecords[i], isToday: true };
-                    }
+            // 1. 查找今日 records 中最新的 'out' 紀錄
+            for (let i = punchRecords.length - 1; i >= 0; i--) {
+                if (punchRecords[i].type === 'out' && punchRecords[i].time) {
+                    return { record: punchRecords[i], isToday: true, dateKey: getTodayKey() };
                 }
             }
-            // 2. 如果今日正在上班中，或今日尚未打卡 ➔ 抓取前一工作日最後下班
-            const lastPastOut = getLastPreviousDayPunchOut();
-            if (lastPastOut) {
-                return { record: lastPastOut, isToday: false };
+
+            // 2. 若今日無下班點，向歷史回溯查找
+            try {
+                const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+                const todayKey = getTodayKey();
+                const pastDates = Object.keys(history).filter(d => d < todayKey).sort().reverse();
+                for (const dateKey of pastDates) {
+                    const recs = history[dateKey] || [];
+                    for (let i = recs.length - 1; i >= 0; i--) {
+                        if (recs[i].type === 'out' && recs[i].time) {
+                            return { record: recs[i], isToday: false, dateKey: dateKey };
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to lookup past out records:", e);
             }
             return null;
         }
@@ -7291,25 +7124,27 @@
             if (res && res.record && res.record.time) {
                 const d = new Date(res.record.time);
                 const now = new Date();
-                const month = d.getMonth() + 1;
-                const day = d.getDate();
                 const hh = String(d.getHours()).padStart(2, '0');
                 const mm = String(d.getMinutes()).padStart(2, '0');
 
-                // 智慧判定相對日期標籤
-                const isToday = d.toDateString() === now.toDateString();
-                const yesterday = new Date(now);
-                yesterday.setDate(yesterday.getDate() - 1);
-                const isYesterday = d.toDateString() === yesterday.toDateString();
+                // 智慧判定相對日期標籤 (採用本地年月日比對，精準無時區時差 Bug)
+                const recordDateStr = getLocalDateStr(d);
+                const todayDateStr = getLocalDateStr(now);
+                const yesterdayDate = new Date(now);
+                yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+                const yesterdayDateStr = getLocalDateStr(yesterdayDate);
 
-                let dateTag = `${month}/${day}`;
-                if (isToday) dateTag = '今日';
-                else if (isYesterday) dateTag = '昨日';
+                let dateTag = `${d.getMonth() + 1}/${d.getDate()}`;
+                if (recordDateStr === todayDateStr) {
+                    dateTag = '今日';
+                } else if (recordDateStr === yesterdayDateStr) {
+                    dateTag = '昨日';
+                }
 
                 dateEl.textContent = dateTag;
                 timeEl.textContent = `${hh}:${mm}`;
                 if (badgeEl) {
-                    badgeEl.title = `${isToday ? '今日' : (isYesterday ? '昨日' : `${month}/${day}`)}下班：${hh}:${mm} (點擊查看)`;
+                    badgeEl.title = `${dateTag}下班：${hh}:${mm} (點擊查看)`;
                 }
             } else {
                 dateEl.textContent = '前次';
@@ -7332,27 +7167,33 @@
             if (res && res.record && res.record.time) {
                 const d = new Date(res.record.time);
                 const now = new Date();
-                const month = d.getMonth() + 1;
-                const day = d.getDate();
                 const hh = String(d.getHours()).padStart(2, '0');
                 const mm = String(d.getMinutes()).padStart(2, '0');
                 const diffMs = Math.max(0, now.getTime() - d.getTime());
-                const diffHours = Math.floor(diffMs / 3600000);
-                const diffMins = Math.floor((diffMs % 3600000) / 60000);
+                const diffMinsTotal = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMinsTotal / 60);
+                const diffMins = diffMinsTotal % 60;
+                const diffDays = Math.floor(diffHours / 24);
 
-                const isToday = d.toDateString() === now.toDateString();
-                const yesterday = new Date(now);
-                yesterday.setDate(yesterday.getDate() - 1);
-                const isYesterday = d.toDateString() === yesterday.toDateString();
-                const prefix = isToday ? '今日下班' : (isYesterday ? '昨日下班' : `前次下班 (${month}/${day})`);
+                const recordDateStr = getLocalDateStr(d);
+                const todayDateStr = getLocalDateStr(now);
+                const yesterdayDate = new Date(now);
+                yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+                const yesterdayDateStr = getLocalDateStr(yesterdayDate);
+
+                let prefix = `前次下班 (${d.getMonth() + 1}/${d.getDate()})`;
+                if (recordDateStr === todayDateStr) {
+                    prefix = '今日下班';
+                } else if (recordDateStr === yesterdayDateStr) {
+                    prefix = '昨日下班';
+                }
 
                 let restStr = '';
-                const diffDays = Math.floor(diffHours / 24);
-                const remainHours = diffHours % 24;
                 if (diffDays >= 2) {
-                    restStr = `已休假 ${diffDays} 天 ${remainHours > 0 ? remainHours + 'h' : ''}`;
+                    const remainHours = diffHours % 24;
+                    restStr = `已休息 ${diffDays} 天 ${remainHours > 0 ? remainHours + 'h' : ''}`;
                 } else if (diffHours > 0) {
-                    restStr = `已間隔 ${diffHours}h ${diffMins}m`;
+                    restStr = `已休息 ${diffHours}h ${diffMins}m`;
                 } else {
                     restStr = `已休息 ${diffMins} 分鐘`;
                 }
@@ -7559,74 +7400,8 @@
             } catch (e) {}
         }
 
-        function checkHourlyZenSage(forceAppear = false) {
-            const sageEl = document.getElementById('zenSageSprite');
-            if (!sageEl) return;
-
-            const now = new Date();
-            const hourKey = `${getTodayKey()}-${now.getHours()}`;
-            const lastHour = localStorage.getItem('lastSageHourKey');
-
-            if (forceAppear) {
-                _zenSageVisible = true;
-                sageEl.classList.remove('hidden');
-                return;
-            }
-
-            // 若這個小時已經判定過
-            if (lastHour === hourKey) {
-                const storedState = localStorage.getItem('lastSageState');
-                if (storedState === 'visible') {
-                    _zenSageVisible = true;
-                    sageEl.classList.remove('hidden');
-                } else {
-                    _zenSageVisible = false;
-                    sageEl.classList.add('hidden');
-                }
-                return;
-            }
-
-            // 新的一小時：45% 機率降臨
-            const chance = Math.random();
-            const willAppear = chance < 0.45;
-
-            localStorage.setItem('lastSageHourKey', hourKey);
-            localStorage.setItem('lastSageState', willAppear ? 'visible' : 'hidden');
-
-            if (willAppear) {
-                _zenSageVisible = true;
-                sageEl.classList.remove('hidden');
-            } else {
-                _zenSageVisible = false;
-                sageEl.classList.add('hidden');
-            }
-        }
-
-        function tapZenSage(e) {
-            if (e) {
-                e.stopPropagation();
-                e.preventDefault();
-            }
-
-            // Tactile feedback
-            if ('vibrate' in navigator) navigator.vibrate([15, 35, 15]);
-
-            // Play peaceful singing bowl chime
-            playZenSingingBowl();
-
-            // Random blessing quote
-            const blessing = ZEN_SAGE_BLESSINGS[Math.floor(Math.random() * ZEN_SAGE_BLESSINGS.length)];
-
-            showZenCapsuleNotification({
-                emoji: '🧘',
-                title: '雲遊仙人 · 仙諭賜福',
-                message: blessing,
-                duration: 4500
-            });
-        }
-
         // =============================================
-        // TEMPLE FORTUNE SLIP (古剎靈籤筒 · 隨機求籤解惑)
+        // TEMPLE FORTUNE SLIP (每日首度打卡 · 晨曦靈籤神諭)
         // =============================================
         const TEMPLE_FORTUNE_SLIPS = [
             {
@@ -7703,8 +7478,6 @@
             }
         ];
 
-        let _fortuneTubeVisible = false;
-
         function playBambooRattleSound() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -7742,86 +7515,28 @@
             } catch (e) {}
         }
 
-        function checkHourlyZenFortuneTube(forceAppear = false) {
-            const tubeEl = document.getElementById('zenFortuneTubeSprite');
-            if (!tubeEl) return;
+        function autoDrawDailyFortuneSlip() {
+            const todayKey = getTodayKey();
+            const storedSlip = localStorage.getItem('dailyFortuneSlip_' + todayKey);
+            let slip = null;
 
-            const now = new Date();
-            const hourKey = `${getTodayKey()}-${now.getHours()}`;
-            const drawnKey = localStorage.getItem('fortuneDrawnHourKey');
-
-            // 若本小時已經抽過籤，籤筒絕不再出現（抽完一次就消失）
-            if (drawnKey === hourKey) {
-                _fortuneTubeVisible = false;
-                tubeEl.classList.add('hidden');
-                return;
+            if (storedSlip) {
+                try {
+                    slip = JSON.parse(storedSlip);
+                } catch (e) {}
             }
 
-            if (forceAppear) {
-                _fortuneTubeVisible = true;
-                tubeEl.classList.remove('hidden');
-                return;
+            if (!slip) {
+                // 每日首度打卡上班：隨機抽取今日靈籤並持久化保存
+                slip = TEMPLE_FORTUNE_SLIPS[Math.floor(Math.random() * TEMPLE_FORTUNE_SLIPS.length)];
+                localStorage.setItem('dailyFortuneSlip_' + todayKey, JSON.stringify(slip));
             }
 
-            const lastHour = localStorage.getItem('lastTubeHourKey');
-            if (lastHour === hourKey) {
-                const storedState = localStorage.getItem('lastTubeState');
-                if (storedState === 'visible') {
-                    _fortuneTubeVisible = true;
-                    tubeEl.classList.remove('hidden');
-                } else {
-                    _fortuneTubeVisible = false;
-                    tubeEl.classList.add('hidden');
-                }
-                return;
-            }
-
-            // 新的一小時：40% 機率籤筒現身
-            const chance = Math.random();
-            const willAppear = chance < 0.40;
-
-            localStorage.setItem('lastTubeHourKey', hourKey);
-            localStorage.setItem('lastTubeState', willAppear ? 'visible' : 'hidden');
-
-            if (willAppear) {
-                _fortuneTubeVisible = true;
-                tubeEl.classList.remove('hidden');
-            } else {
-                _fortuneTubeVisible = false;
-                tubeEl.classList.add('hidden');
-            }
-        }
-
-        function drawFortuneSlip(e) {
-            if (e) {
-                e.stopPropagation();
-                e.preventDefault();
-            }
-
-            const tubeEl = document.getElementById('zenFortuneTubeSprite');
-            if (tubeEl) {
-                tubeEl.classList.add('tube-rattle');
-            }
-
-            // 觸覺與竹籤碰撞聲
+            // 觸覺微震 + 竹籤碰撞聲
             if ('vibrate' in navigator) navigator.vibrate([20, 40, 20, 50, 30]);
             playBambooRattleSound();
 
             setTimeout(() => {
-                if (tubeEl) {
-                    tubeEl.classList.remove('tube-rattle');
-                    // 抽完一次立即消失！
-                    tubeEl.classList.add('hidden');
-                    _fortuneTubeVisible = false;
-                    const now = new Date();
-                    const hourKey = `${getTodayKey()}-${now.getHours()}`;
-                    localStorage.setItem('fortuneDrawnHourKey', hourKey);
-                    localStorage.setItem('lastTubeState', 'hidden');
-                }
-
-                // 隨機抽選靈籤
-                const slip = TEMPLE_FORTUNE_SLIPS[Math.floor(Math.random() * TEMPLE_FORTUNE_SLIPS.length)];
-                
                 document.getElementById('fortuneTitle').textContent = slip.title;
                 document.getElementById('fortuneStory').textContent = `典故：${slip.story}`;
                 document.getElementById('fortunePoem').innerHTML = slip.poem;
@@ -7831,7 +7546,7 @@
                 document.getElementById('fortuneAdvice').textContent = slip.advice;
 
                 openFortuneModal();
-            }, 600);
+            }, 550);
         }
 
         function openFortuneModal() {
@@ -7949,9 +7664,18 @@
                 })();
             }
 
+            const isFirstPunchInToday = (type === 'in' && punchRecords.length === 0);
+
             punchRecords.push({ time: now.toISOString(), type: type, task: taskName, restIntervalMins: restIntervalMins });
             saveData();
             updateDisplay();
+
+            // --- 每日首度打卡上班 · 靈籤神諭自動降臨 ---
+            if (isFirstPunchInToday) {
+                setTimeout(() => {
+                    autoDrawDailyFortuneSlip();
+                }, 550);
+            }
 
             // 若今日累計工時已達標，在打卡下班當下預告明日建議上班時間
             if (type === 'out') {
@@ -8605,8 +8329,6 @@
         initBrushstroke();
         initWeatherEngine();
         initOfficeMuyu();
-        checkHourlyZenSage();
-        checkHourlyZenFortuneTube();
 
         // --- 本週總覽 ---
         function renderWeeklySummary() {
@@ -8619,7 +8341,7 @@
             for (let i = 6; i >= 0; i--) {
                 const d = new Date(today);
                 d.setDate(d.getDate() - i);
-                const key = d.toISOString().slice(0, 10);
+                const key = getLocalDateStr(d);
                 const mins = getDayTotalMinutes(key);
                 if (mins > 0) {
                     totalMins += mins;
