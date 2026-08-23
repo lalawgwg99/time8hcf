@@ -13,7 +13,9 @@
         container.setAttribute('role', 'img');
         container.setAttribute('aria-label', `${pet.name || '夥伴'}，${pet.rarity || 'common'} 稀有度`);
         const art = document.createElement('div');
-        art.className = 'partner-art';
+        const seriesClass = pet.series ? `series-${pet.series}` : 'series-crystal';
+        const rarityClass = pet.rarity ? `rarity-${pet.rarity}` : 'rarity-common';
+        art.className = `partner-art ${seriesClass} ${rarityClass}`;
         for (const category of LAYER_ORDER) {
             if (!resolvedParts?.[category]) continue;
             const layer = document.createElement('div');
@@ -21,6 +23,9 @@
             layer.dataset.partId = resolvedParts[category].id;
             layer.dataset.assetPath = resolvedParts[category].assetPath || '';
             layer.title = resolvedParts[category].style || category;
+            if (category === 'head' && (pet.rarity === 'hidden' || pet.rarity === 'epic')) {
+                layer.innerHTML = '👑';
+            }
             art.appendChild(layer);
         }
         container.appendChild(art);

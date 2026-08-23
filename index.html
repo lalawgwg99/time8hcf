@@ -2649,110 +2649,152 @@
 
         .egg-shell {
             position: relative;
-            width: 98px;
-            height: 132px;
+            width: 104px;
+            height: 140px;
             border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FAF6F0 25%, #EBE0D0 68%, #D4C3AF 100%);
+            background: linear-gradient(145deg, #FFFFFF 0%, #FAF7F2 30%, #EDE4D6 70%, #DACBBA 100%);
             box-shadow:
-                inset 7px 8px 14px rgba(255, 255, 255, 0.95),
-                inset -7px -8px 16px rgba(100, 80, 60, 0.15),
-                inset 0 2px 3px rgba(255, 255, 255, 0.8),
-                0 8px 20px rgba(50, 35, 20, 0.08);
+                inset 8px 10px 18px rgba(255, 255, 255, 0.98),
+                inset -8px -10px 20px rgba(90, 70, 50, 0.14),
+                inset 0 3px 6px rgba(255, 255, 255, 0.9),
+                0 12px 28px rgba(45, 30, 20, 0.09);
             overflow: hidden;
-            transition: box-shadow 0.5s ease;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .egg-sheen {
             position: absolute;
             top: 10px;
-            left: 12px;
-            width: 32px;
-            height: 54px;
+            left: 14px;
+            width: 36px;
+            height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 78%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.2) 60%, transparent 100%);
             transform: rotate(-24deg);
             pointer-events: none;
+            filter: blur(0.5px);
         }
 
         .egg-core-glow {
             position: absolute;
-            inset: 16px;
+            inset: 14px;
             border-radius: 50%;
-            background: radial-gradient(circle at 48% 46%, rgba(122, 90, 138, 0.38), rgba(139, 104, 64, 0.16) 55%, transparent 72%);
+            background: radial-gradient(circle at 50% 50%, rgba(167, 139, 184, 0.45), rgba(212, 182, 136, 0.25) 55%, transparent 75%);
             mix-blend-mode: multiply;
-            opacity: 0.5;
+            opacity: 0.6;
             transition: opacity 0.6s ease;
         }
 
         .egg-facet {
             position: absolute;
-            opacity: 0.28;
+            opacity: 0.22;
             mix-blend-mode: soft-light;
             pointer-events: none;
         }
         .facet-a {
-            width: 52px; height: 86px; left: -8px; top: 22px;
-            background: linear-gradient(145deg, #fff, rgba(200, 180, 216, 0.2));
+            width: 56px; height: 92px; left: -8px; top: 22px;
+            background: linear-gradient(145deg, #fff, rgba(200, 180, 216, 0.25));
             clip-path: polygon(28% 0, 100% 18%, 76% 100%, 0 74%);
         }
         .facet-b {
-            width: 54px; height: 78px; right: -8px; top: 16px;
-            background: linear-gradient(215deg, rgba(255, 255, 255, 0.9), rgba(122, 90, 138, 0.2));
+            width: 58px; height: 84px; right: -8px; top: 16px;
+            background: linear-gradient(215deg, rgba(255, 255, 255, 0.9), rgba(122, 90, 138, 0.25));
             clip-path: polygon(0 12%, 72% 0, 100% 74%, 26% 100%);
         }
 
         .egg-glint {
             position: absolute;
-            width: 28px;
-            height: 52px;
-            left: 18px;
+            width: 30px;
+            height: 56px;
+            left: 20px;
             top: 20px;
             border-radius: 50%;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), transparent);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.65), transparent);
             transform: rotate(20deg);
-            filter: blur(1.8px);
-            opacity: 0.4;
+            filter: blur(1.5px);
+            opacity: 0.45;
         }
 
-        .egg-crack {
+        /* Organic SVG Kintsugi Starlight Fractures */
+        .egg-fracture-svg {
             position: absolute;
-            width: 2.2px;
-            height: 0;
-            background: linear-gradient(180deg, #FFFFFF, rgba(220, 195, 238, 0.95));
-            box-shadow: 0 0 6px rgba(122, 90, 138, 0.7);
-            border-radius: 2px;
-            opacity: 0;
-            transition: height 0.6s ease, opacity 0.4s ease;
-            transform-origin: top center;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
         }
-        .crack-a { top: 46px; left: 44px; transform: rotate(10deg); }
-        .crack-b { top: 72px; left: 48px; transform: rotate(-24deg); }
-        .crack-c { top: 88px; left: 40px; transform: rotate(14deg); }
+
+        .vein-crack {
+            opacity: 0;
+            transition: opacity 0.6s ease, stroke-dashoffset 0.8s ease;
+        }
+        .vein-star {
+            opacity: 0;
+            transform-origin: center;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
 
         /* Progress Crack Stages */
-        .egg-progress-1 .egg-glint { opacity: 0.55; }
-        .egg-progress-3 .egg-crack.crack-a { height: 34px; opacity: 0.8; }
-        .egg-progress-5 .egg-crack.crack-a { height: 58px; opacity: 0.9; }
-        .egg-progress-5 .egg-crack.crack-b { height: 30px; opacity: 0.8; }
-        .egg-progress-7 .egg-crack.crack-a { height: 68px; opacity: 1; }
-        .egg-progress-7 .egg-crack.crack-b { height: 42px; opacity: 0.95; }
-        .egg-progress-7 .egg-crack.crack-c { height: 26px; opacity: 0.9; }
+        .egg-progress-1 .vein-1,
+        .egg-progress-2 .vein-1 { opacity: 0.75; }
+        .egg-progress-1 .star-1,
+        .egg-progress-2 .star-1 { opacity: 0.85; }
+
+        .egg-progress-3 .vein-1,
+        .egg-progress-3 .vein-2,
+        .egg-progress-4 .vein-1,
+        .egg-progress-4 .vein-2 { opacity: 0.85; }
+        .egg-progress-3 .star-1,
+        .egg-progress-3 .star-2,
+        .egg-progress-4 .star-1,
+        .egg-progress-4 .star-2 { opacity: 0.95; }
+
+        .egg-progress-5 .vein-1,
+        .egg-progress-5 .vein-2,
+        .egg-progress-5 .vein-3,
+        .egg-progress-6 .vein-1,
+        .egg-progress-6 .vein-2,
+        .egg-progress-6 .vein-3,
+        .egg-progress-6 .vein-4 { opacity: 0.95; }
+        .egg-progress-5 .star-1,
+        .egg-progress-5 .star-2,
+        .egg-progress-5 .star-3,
+        .egg-progress-6 .star-1,
+        .egg-progress-6 .star-2,
+        .egg-progress-6 .star-3,
+        .egg-progress-6 .star-4 { opacity: 1; transform: scale(1.1); }
+
+        .egg-progress-5 .egg-core-glow,
+        .egg-progress-6 .egg-core-glow {
+            opacity: 0.85;
+            background: radial-gradient(circle at 50% 50%, rgba(186, 145, 214, 0.65), rgba(220, 185, 120, 0.45) 60%, transparent 80%);
+        }
+
+        .egg-progress-7 .vein-crack { opacity: 1; }
+        .egg-progress-7 .vein-star { opacity: 1; animation: starGlintPulse 1.8s ease-in-out infinite alternate; }
         .egg-progress-7 .egg-shell {
             box-shadow:
-                inset 7px 8px 14px rgba(255, 255, 255, 0.98),
-                inset -7px -8px 16px rgba(100, 80, 60, 0.15),
-                0 0 24px rgba(122, 90, 138, 0.4),
-                0 10px 24px rgba(50, 35, 20, 0.1);
+                inset 8px 10px 18px rgba(255, 255, 255, 0.98),
+                inset -8px -10px 20px rgba(90, 70, 50, 0.14),
+                0 0 28px rgba(186, 145, 214, 0.55),
+                0 12px 32px rgba(45, 30, 20, 0.12);
         }
         .egg-progress-7 .orbital-center-egg {
             animation: eggReadyGlow 2.2s ease-in-out infinite;
         }
-        @keyframes eggReadyGlow {
-            0%, 100% { transform: translateY(0) scale(1.02); filter: drop-shadow(0 0 8px rgba(122, 90, 138, 0.35)); }
-            50% { transform: translateY(-5px) scale(1.045); filter: drop-shadow(0 0 16px rgba(122, 90, 138, 0.55)); }
+
+        @keyframes starGlintPulse {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            100% { transform: scale(1.35); opacity: 1; }
         }
 
-        /* Center Living Pet Stage (When pet is hatched) */
+        @keyframes eggReadyGlow {
+            0%, 100% { transform: translateY(0) scale(1.02); filter: drop-shadow(0 0 10px rgba(167, 139, 184, 0.45)); }
+            50% { transform: translateY(-6px) scale(1.05); filter: drop-shadow(0 0 20px rgba(167, 139, 184, 0.7)); }
+        }
+
+        /* Center Living Pet Stage (When pet is hatched or in preview) */
         .orbital-center-pet {
             position: relative;
             width: 140px;
@@ -2767,6 +2809,12 @@
             width: 130px;
             height: 130px;
             flex: 0 0 auto;
+            animation: petFloatBreathe 3.6s ease-in-out infinite;
+        }
+
+        @keyframes petFloatBreathe {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-4.5px) scale(1.02); }
         }
 
         .pet-layer {
@@ -2779,83 +2827,95 @@
             pointer-events: none;
         }
 
+        /* Base Body */
         .pet-layer.body {
-            width: 82px;
-            height: 74px;
-            top: 55%;
-            background: radial-gradient(circle at 35% 25%, #FFFFFF, #C9B6D7 35%, #8F76A5 100%);
+            width: 84px;
+            height: 76px;
+            top: 54%;
             border-radius: 48% 48% 44% 44%;
-            box-shadow: 0 8px 18px rgba(80, 54, 95, 0.16);
+            box-shadow: 0 10px 22px rgba(40, 30, 50, 0.15);
+            transition: all 0.3s ease;
         }
-
         .pet-layer.body::after {
             content: "";
             position: absolute;
-            inset: 5px 8px auto 8px;
-            height: 14px;
+            inset: 5px 10px auto 10px;
+            height: 15px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
         }
 
+        /* Expressive Kawaii Sparkling Eyes with Blinking */
         .pet-layer.eyes::before,
         .pet-layer.eyes::after {
             content: "";
             position: absolute;
             width: 9px;
-            height: 12px;
-            top: 48%;
+            height: 13px;
+            top: 47%;
             border-radius: 50%;
-            background: #2D2230;
-            box-shadow: inset 2px 1.5px rgba(255, 255, 255, 0.7);
+            background: #241A29;
+            box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.85);
+            animation: petEyeBlink 4.5s ease-in-out infinite;
         }
-        .pet-layer.eyes::before { left: 40%; transform: rotate(-6deg); }
-        .pet-layer.eyes::after { right: 40%; transform: rotate(6deg); }
+        .pet-layer.eyes::before { left: 39%; transform: rotate(-5deg); }
+        .pet-layer.eyes::after { right: 39%; transform: rotate(5deg); }
 
+        @keyframes petEyeBlink {
+            0%, 94%, 98%, 100% { transform: scaleY(1); }
+            96% { transform: scaleY(0.1); }
+        }
+
+        /* Subtle Cute Smile */
         .pet-layer.mouth {
-            top: 66%;
-            width: 14px;
+            top: 64%;
+            width: 13px;
             height: 5px;
-            border-bottom: 2px solid #4B3B4E;
+            border-bottom: 2.2px solid #3F2C46;
             border-radius: 0 0 14px 14px;
         }
 
+        /* Ears / Horns */
         .pet-layer.ears::before,
         .pet-layer.ears::after {
             content: "";
             position: absolute;
-            top: 25%;
-            width: 22px;
-            height: 36px;
-            background: #A78BB8;
+            top: 23%;
+            width: 24px;
+            height: 38px;
             border-radius: 70% 25% 65% 25%;
+            transition: all 0.3s ease;
         }
-        .pet-layer.ears::before { left: 26%; transform: rotate(-22deg); }
-        .pet-layer.ears::after { right: 26%; transform: scaleX(-1) rotate(-22deg); }
+        .pet-layer.ears::before { left: 24%; transform: rotate(-22deg); }
+        .pet-layer.ears::after { right: 24%; transform: scaleX(-1) rotate(-22deg); }
 
+        /* Tail */
         .pet-layer.tail {
-            width: 36px;
-            height: 52px;
-            left: 78%;
-            top: 62%;
-            background: #9B80AD;
+            width: 38px;
+            height: 54px;
+            left: 79%;
+            top: 60%;
             border-radius: 70% 30% 70% 30%;
             transform: translate(-50%, -50%) rotate(24deg);
             z-index: 0;
+            transition: all 0.3s ease;
         }
 
+        /* Paws / Arms */
         .pet-layer.arms::before,
         .pet-layer.arms::after {
             content: "";
             position: absolute;
-            top: 56%;
-            width: 26px;
-            height: 12px;
-            background: #AA92BB;
+            top: 55%;
+            width: 25px;
+            height: 13px;
             border-radius: 50%;
+            transition: all 0.3s ease;
         }
-        .pet-layer.arms::before { left: 20%; transform: rotate(16deg); }
-        .pet-layer.arms::after { right: 20%; transform: rotate(-16deg); }
+        .pet-layer.arms::before { left: 19%; transform: rotate(18deg); }
+        .pet-layer.arms::after { right: 19%; transform: rotate(-18deg); }
 
+        /* Feet */
         .pet-layer.feet::before,
         .pet-layer.feet::after {
             content: "";
@@ -2863,39 +2923,141 @@
             top: 76%;
             width: 24px;
             height: 13px;
-            background: #80698E;
             border-radius: 50%;
+            transition: all 0.3s ease;
         }
         .pet-layer.feet::before { left: 35%; }
         .pet-layer.feet::after { right: 35%; }
 
-        .pet-layer.bodyAccessory {
-            top: 60%;
-            width: 38px;
-            height: 16px;
-            border: 2.5px solid #77707C;
-            border-radius: 6px;
+        /* Crown / Head Accessory (Epic / Hidden) */
+        .pet-layer.head {
+            top: 14%;
+            width: 36px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            filter: drop-shadow(0 2px 6px rgba(230, 180, 60, 0.6));
+            animation: crownHover 3s ease-in-out infinite alternate;
+        }
+        @keyframes crownHover {
+            0% { transform: translate(-50%, -50%) translateY(0); }
+            100% { transform: translate(-50%, -50%) translateY(-3px); }
         }
 
-        .pet-layer.headAccessory {
-            top: 22%;
-            width: 44px;
-            height: 14px;
-            border-top: 3.5px solid #80659B;
-            border-radius: 50%;
+        /* --- Species Specific Colors & Aesthetics --- */
+        /* 1. Crystal (紫晶幼靈 · 紫曜晶石系列) */
+        .partner-art.series-crystal .pet-layer.body,
+        .partner-art:not([class*="series-"]) .pet-layer.body {
+            background: radial-gradient(circle at 35% 25%, #FFFFFF 0%, #E8DBF5 32%, #BA9CD5 68%, #7C5B9E 100%);
+            box-shadow: 0 10px 24px rgba(124, 91, 158, 0.28);
+        }
+        .partner-art.series-crystal .pet-layer.ears::before,
+        .partner-art.series-crystal .pet-layer.ears::after,
+        .partner-art:not([class*="series-"]) .pet-layer.ears::before,
+        .partner-art:not([class*="series-"]) .pet-layer.ears::after {
+            background: linear-gradient(135deg, #E6D8F6, #9874BC);
+        }
+        .partner-art.series-crystal .pet-layer.tail,
+        .partner-art:not([class*="series-"]) .pet-layer.tail {
+            background: linear-gradient(180deg, #BA9CD5, #755299);
+        }
+        .partner-art.series-crystal .pet-layer.arms::before,
+        .partner-art.series-crystal .pet-layer.arms::after,
+        .partner-art:not([class*="series-"]) .pet-layer.arms::before,
+        .partner-art:not([class*="series-"]) .pet-layer.arms::after {
+            background: #B698D2;
+        }
+        .partner-art.series-crystal .pet-layer.feet::before,
+        .partner-art.series-crystal .pet-layer.feet::after,
+        .partner-art:not([class*="series-"]) .pet-layer.feet::before,
+        .partner-art:not([class*="series-"]) .pet-layer.feet::after {
+            background: #805E9F;
         }
 
+        /* 2. Moss (碧苔石精 · 森綠自然系列) */
+        .partner-art.series-moss .pet-layer.body {
+            background: radial-gradient(circle at 35% 25%, #FFFFFF 0%, #D8F2DF 32%, #85CB97 68%, #3F8354 100%);
+            box-shadow: 0 10px 24px rgba(63, 131, 84, 0.26);
+        }
+        .partner-art.series-moss .pet-layer.ears::before,
+        .partner-art.series-moss .pet-layer.ears::after {
+            background: linear-gradient(135deg, #C2EBCF, #549F6A);
+            border-radius: 80% 20% 75% 20%;
+        }
+        .partner-art.series-moss .pet-layer.tail {
+            background: linear-gradient(180deg, #85CB97, #367247);
+        }
+        .partner-art.series-moss .pet-layer.arms::before,
+        .partner-art.series-moss .pet-layer.arms::after {
+            background: #81C793;
+        }
+        .partner-art.series-moss .pet-layer.feet::before,
+        .partner-art.series-moss .pet-layer.feet::after {
+            background: #47845A;
+        }
+
+        /* 3. Ember (熾焰火精 · 暖陽烈焰系列) */
+        .partner-art.series-ember .pet-layer.body {
+            background: radial-gradient(circle at 35% 25%, #FFFFFF 0%, #FFE0D1 32%, #F59779 68%, #CC4C26 100%);
+            box-shadow: 0 10px 24px rgba(204, 76, 38, 0.28);
+        }
+        .partner-art.series-ember .pet-layer.ears::before,
+        .partner-art.series-ember .pet-layer.ears::after {
+            background: linear-gradient(135deg, #FFC4AE, #E45B31);
+            border-radius: 75% 25% 70% 30%;
+        }
+        .partner-art.series-ember .pet-layer.tail {
+            background: linear-gradient(180deg, #F59779, #B83A16);
+        }
+        .partner-art.series-ember .pet-layer.arms::before,
+        .partner-art.series-ember .pet-layer.arms::after {
+            background: #EF9072;
+        }
+        .partner-art.series-ember .pet-layer.feet::before,
+        .partner-art.series-ember .pet-layer.feet::after {
+            background: #C44520;
+        }
+
+        /* 4. Lunar (幻月晶靈 · 夜間月影系列) */
+        .partner-art.series-lunar .pet-layer.body {
+            background: radial-gradient(circle at 35% 25%, #FFFFFF 0%, #DCE5F8 32%, #8BA4D9 68%, #3B558E 100%);
+            box-shadow: 0 10px 24px rgba(59, 85, 142, 0.28);
+        }
+        .partner-art.series-lunar .pet-layer.ears::before,
+        .partner-art.series-lunar .pet-layer.ears::after {
+            background: linear-gradient(135deg, #CAD7F5, #5572B2);
+        }
+        .partner-art.series-lunar .pet-layer.tail {
+            background: linear-gradient(180deg, #8BA4D9, #334A7E);
+        }
+        .partner-art.series-lunar .pet-layer.arms::before,
+        .partner-art.series-lunar .pet-layer.arms::after {
+            background: #849ED3;
+        }
+        .partner-art.series-lunar .pet-layer.feet::before,
+        .partner-art.series-lunar .pet-layer.feet::after {
+            background: #3B5388;
+        }
+
+        /* Auras / Sparkles */
         .pet-layer.effectBack {
-            width: 120px;
-            height: 120px;
-            border: 1px solid rgba(128, 101, 155, 0.25);
+            width: 124px;
+            height: 124px;
+            border: 1px solid rgba(167, 139, 184, 0.3);
             border-radius: 50%;
+            animation: auraSpin 12s linear infinite;
+        }
+        @keyframes auraSpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .pet-layer.effectFront {
-            width: 95px;
-            height: 95px;
-            border: 1px dashed rgba(122, 90, 138, 0.2);
+            width: 100px;
+            height: 100px;
+            border: 1.5px dashed rgba(167, 139, 184, 0.35);
             border-radius: 50%;
         }
 
@@ -4058,6 +4220,82 @@
         </div>
     </div>
 
+    <!-- Companion Showcase / Preview Modal (夥伴外觀鑑賞與預覽彈窗) -->
+    <div id="petPreviewModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/45" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)" onclick="closePetPreviewModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg);max-height:88vh;overflow-y:auto;">
+            <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:2;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
+                    <div style="font-size:14.5px; font-weight:600; color:var(--label); display:flex; align-items:center; gap:6px;">
+                        <span>✦</span>
+                        <span>夥伴圖鑑 · 外觀鑑賞</span>
+                    </div>
+                    <button onclick="closePetPreviewModal()" aria-label="關閉預覽"
+                        style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                        <i class="fas fa-times" style="font-size:12px;"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div style="padding:18px 24px 36px;">
+                <!-- 8 隻夥伴水平滑動選擇列 -->
+                <div id="petPreviewTabs" style="display:flex; gap:8px; overflow-x:auto; padding-bottom:14px; scrollbar-width:none; -webkit-overflow-scrolling:touch;">
+                </div>
+
+                <!-- 夥伴 3D 萌態展台 -->
+                <div style="position:relative; width:100%; border-radius:24px; background:var(--card); border:0.5px solid var(--separator); padding:24px 16px 20px; display:flex; flex-direction:column; align-items:center; box-shadow:var(--shadow-card); margin-bottom:18px;">
+                    <!-- 柔光背暈 -->
+                    <div id="previewAuraGlow" style="position:absolute; width:150px; height:150px; border-radius:50%; background:radial-gradient(circle, rgba(154,119,186,0.3) 0%, transparent 70%); top:15px; pointer-events:none; filter:blur(16px);"></div>
+
+                    <!-- 3D 夥伴即時動畫畫布 -->
+                    <div style="position:relative; width:140px; height:140px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
+                        <div id="previewPetStage" class="orbital-center-pet">
+                        </div>
+                    </div>
+
+                    <div id="previewPetName" style="font-size:18px; font-weight:700; color:var(--label); letter-spacing:-0.01em; margin-bottom:4px;">紫晶幼靈</div>
+                    <div id="previewPetRarityBadge" style="display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:600; padding:3px 10px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator); color:var(--label-secondary);">
+                        <span>💎</span> <span>紫晶系列 · 一般</span>
+                    </div>
+                </div>
+
+                <!-- 夥伴檔案與特徵卡 (Apple Inset Grouped) -->
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; text-transform:uppercase; margin-bottom:4px;">✦ 夥伴典故</div>
+                        <p id="previewPetDesc" style="font-size:13px; color:var(--label); line-height:1.55; margin:0;">
+                            初生紫晶靈體，能感應工作專注的節奏。外觀透亮晶瑩，如剔透的薰衣草紫水晶。
+                        </p>
+                    </div>
+                    <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; text-transform:uppercase; margin-bottom:4px;">✦ 陪伴特徵</div>
+                        <div id="previewPetTrait" style="font-size:12.5px; color:var(--label-secondary); line-height:1.5;">
+                            ✦ 晨曦專注守護 · 溫潤紫晶微光
+                        </div>
+                    </div>
+                    <div style="padding:14px 16px;">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; text-transform:uppercase; margin-bottom:4px;">✦ 解鎖方式</div>
+                        <div id="previewPetUnlock" style="font-size:12.5px; color:var(--label-secondary); line-height:1.5;">
+                            🔒 累積 7 顆蛋殼碎片破殼喚醒（工時滿 8 小時每日獲 1 顆）
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:var(--fill-secondary); border-radius:14px; padding:12px 14px; margin-bottom:20px; display:flex; align-items:flex-start; gap:9px;">
+                    <span style="font-size:14px; line-height:1.4;">✨</span>
+                    <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
+                        每隻靈獸皆採用 Apple 原生極簡美學打造，體態圓潤、柔光律動且富有生命感，陪伴您度過專注的每一天。
+                    </p>
+                </div>
+
+                <button onclick="closePetPreviewModal()" class="active-scale"
+                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">返回展台</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
@@ -4355,11 +4593,16 @@
             if (!container) return;
             container.innerHTML = '';
             const art = document.createElement('div');
-            art.className = 'partner-art';
+            const seriesClass = pet.series ? `series-${pet.series}` : 'series-crystal';
+            const rarityClass = pet.rarity ? `rarity-${pet.rarity}` : 'rarity-common';
+            art.className = `partner-art ${seriesClass} ${rarityClass}`;
             for (const category of LAYER_ORDER) {
                 if (!resolvedParts?.[category]) continue;
                 const layer = document.createElement('div');
                 layer.className = CLASS_BY_CATEGORY[category];
+                if (category === 'head' && (pet.rarity === 'hidden' || pet.rarity === 'epic')) {
+                    layer.innerHTML = '👑';
+                }
                 art.appendChild(layer);
             }
             container.appendChild(art);
@@ -4439,14 +4682,14 @@
         const HATCH_COST = 7;
         const RARITY_LABELS = { common: '一般', rare: '稀有', epic: '珍稀', hidden: '隱藏' };
         const CODEX_SPECIES = [
-            { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '💎', desc: '初生紫晶靈體，能感應工作專注的節奏。' },
-            { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common', icon: '🌿', desc: '生長於靜心土壤，散發自然安寧氣息。' },
-            { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common', icon: '🔥', desc: '工時熱忱凝聚而成，充滿朝氣與動力。' },
-            { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare', icon: '🌙', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。' },
-            { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare', icon: '🍃', desc: '藤蔓綿延不息，代表持之以恆的工作節奏。' },
-            { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare', icon: '⚡', desc: '敏捷靈動，激發源源不絕的靈感與熱情。' },
-            { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✨', desc: '珍稀晶靈，體內流動著純粹的星辰結晶。' },
-            { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden', icon: '👑', desc: '傳說級隱藏靈獸，唯有極致專注方能召喚。' },
+            { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '💎', color: '#9A77BA', desc: '初生紫晶靈體，能感應工作專注的節奏。外觀透亮晶瑩，如剔透的薰衣草紫水晶。', trait: '✦ 晨曦專注守護 · 溫潤紫晶微光' },
+            { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common', icon: '🌿', color: '#5DA672', desc: '生長於靜心土壤，散發自然安寧氣息。頭頂長出嫩綠雙葉，帶來舒緩的綠意。', trait: '✦ 森林清新氣息 · 緩解緊繃疲憊' },
+            { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common', icon: '🔥', color: '#E25D34', desc: '工時熱忱凝聚而成，充滿朝氣與動力。如暖陽晚霞般溫暖，隨工時躍動。', trait: '✦ 熱情活力激勵 · 提升衝刺動能' },
+            { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare', icon: '🌙', color: '#5572B2', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。體態呈現銀月靛藍，安靜柔和。', trait: '✦ 夜幕月光陪伴 · 靜心無擾守候' },
+            { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare', icon: '🍃', color: '#438155', desc: '藤蔓綿延不息，代表持之以恆的工作節奏。青翠石體纏繞著生命之藤。', trait: '✦ 持之以恆律動 · 穩健工作節奏' },
+            { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare', icon: '⚡', color: '#D45B36', desc: '敏捷靈動，激發源源不絕的靈感與熱情。雙耳如靈動火苗，富有靈性。', trait: '✦ 靈感火花迸發 · 敏捷思考同行' },
+            { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✨', color: '#80659B', desc: '珍稀晶靈，體內流動著純粹的星辰結晶。散發著深邃高貴的星軌光輝。', trait: '✦ 星軌極致晶芒 · 卓越成就象徵' },
+            { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden', icon: '👑', color: '#E6A820', desc: '傳說級隱藏靈獸，唯有極致專注方能召喚。頭戴純金星辰皇冠，尊榮非凡。', trait: '✦ 傳說金冠加冕 · 極致專注榮光' },
         ];
         let hatchLocked = false;
         let toastTimer = null;
@@ -4507,9 +4750,36 @@
                         <div class="egg-facet facet-a"></div>
                         <div class="egg-facet facet-b"></div>
                         <div class="egg-glint"></div>
-                        <div class="egg-crack crack-a"></div>
-                        <div class="egg-crack crack-b"></div>
-                        <div class="egg-crack crack-c"></div>
+                        <svg class="egg-fracture-svg" viewBox="0 0 104 140" fill="none">
+                            <defs>
+                                <linearGradient id="eggVeinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFFFFF" />
+                                    <stop offset="35%" stop-color="#F2D8A7" />
+                                    <stop offset="70%" stop-color="#C5A6DC" />
+                                    <stop offset="100%" stop-color="#9A78B4" />
+                                </linearGradient>
+                                <filter id="veinGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="1.4" result="blur" />
+                                    <feMerge>
+                                        <feMergeNode in="blur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <!-- Stage 1-2 -->
+                            <path class="vein-crack vein-1" d="M 52 28 L 56 46 L 49 60" stroke="url(#eggVeinGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                            <!-- Stage 3-4 -->
+                            <path class="vein-crack vein-2" d="M 49 60 L 60 78 L 51 96 L 57 112" stroke="url(#eggVeinGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                            <path class="vein-crack vein-3" d="M 56 46 L 68 54 L 76 50" stroke="url(#eggVeinGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                            <!-- Stage 5-6 -->
+                            <path class="vein-crack vein-4" d="M 49 60 L 36 68 L 27 63" stroke="url(#eggVeinGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                            <path class="vein-crack vein-5" d="M 60 78 L 72 85 L 78 98" stroke="url(#eggVeinGrad)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                            <!-- Starlight Nodes -->
+                            <circle class="vein-star star-1" cx="52" cy="28" r="2" fill="#FFF" />
+                            <circle class="vein-star star-2" cx="56" cy="46" r="2.2" fill="#FFEBB3" />
+                            <circle class="vein-star star-3" cx="49" cy="60" r="2.6" fill="#FFF" />
+                            <circle class="vein-star star-4" cx="60" cy="78" r="2.2" fill="#FFEAA7" />
+                        </svg>
                     </div>
                 </div>`;
             return `
@@ -4538,7 +4808,7 @@
                 const isUnlocked = petList.some(p => p.series === spec.series && (p.rarity === spec.rarity || spec.rarity === 'common'));
                 if (isUnlocked) unlockedCount++;
                 return `
-                    <div class="codex-item ${isUnlocked ? 'unlocked' : 'locked'}" onclick="window.onCodexClick(${index})" title="${spec.name}">
+                    <div class="codex-item ${isUnlocked ? 'unlocked' : 'locked'}" onclick="window.openPetPreviewModal(${index})" title="${spec.name}（點擊預覽外觀）">
                         <div class="codex-badge-icon">${isUnlocked ? spec.icon : '🔒'}</div>
                         <div class="codex-item-name">${spec.name}</div>
                         <div class="codex-item-rarity">${RARITY_LABELS[spec.rarity]}</div>
@@ -4549,13 +4819,93 @@
             if (countEl) countEl.textContent = `已解鎖 ${unlockedCount} / ${CODEX_SPECIES.length}`;
         }
         function onCodexClick(index) {
-            const spec = CODEX_SPECIES[index];
-            if (!spec) return;
-            const state = typeof readPetSystem === 'function' ? readPetSystem() : { pets: [] };
-            const isUnlocked = state.pets && state.pets.some(p => p.series === spec.series && (p.rarity === spec.rarity || spec.rarity === 'common'));
-            showToast(isUnlocked ? `✨ ${spec.name}（${RARITY_LABELS[spec.rarity]}）\n${spec.desc}` : `🔒 未解鎖 · ${spec.name}（${RARITY_LABELS[spec.rarity]}）\n累積每日碎片開啟節奏蛋即可解鎖`);
+            openPetPreviewModal(index);
         }
         root.onCodexClick = onCodexClick;
+
+        let _currentPreviewIndex = 0;
+        function openPetPreviewModal(index = 0) {
+            _currentPreviewIndex = index;
+            const modal = byId('petPreviewModal');
+            if (!modal) return;
+            renderPreviewTabs();
+            switchPetPreview(index);
+            modal.classList.remove('hidden');
+        }
+        function closePetPreviewModal() {
+            const modal = byId('petPreviewModal');
+            if (modal) modal.classList.add('hidden');
+        }
+        function renderPreviewTabs() {
+            const tabsContainer = byId('petPreviewTabs');
+            if (!tabsContainer) return;
+            tabsContainer.innerHTML = CODEX_SPECIES.map((spec, i) => {
+                const isActive = (i === _currentPreviewIndex);
+                return `
+                    <button type="button" onclick="window.switchPetPreview(${i})" style="flex:0 0 auto; display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:999px; border:0.5px solid var(--separator); background:${isActive ? 'var(--label)' : 'var(--fill)'}; color:${isActive ? 'var(--bg)' : 'var(--label)'}; font-size:12px; font-weight:500; cursor:pointer; transition:all 0.2s ease;">
+                        <span>${spec.icon}</span>
+                        <span>${spec.name}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+        function switchPetPreview(index) {
+            _currentPreviewIndex = index;
+            const spec = CODEX_SPECIES[index];
+            if (!spec) return;
+            renderPreviewTabs();
+
+            const stageEl = byId('previewPetStage');
+            if (stageEl && typeof renderPet === 'function' && typeof resolveParts === 'function') {
+                const samplePet = {
+                    name: spec.name,
+                    series: spec.series,
+                    rarity: spec.rarity,
+                    parts: {
+                        body: `body_${spec.series}_round_${spec.series === 'moss' ? 'green' : spec.series === 'ember' ? 'red' : 'purple'}_01`,
+                        eyes: `eye_${spec.series === 'ember' ? 'ember_spark_red_epic_01' : spec.series === 'moss' ? 'moss_leaf_green_01' : 'crystal_moon_purple_01'}`,
+                        ears: `ears_${spec.series === 'ember' ? 'ember_flame_red_01' : spec.series === 'moss' ? 'moss_leaf_green_01' : 'crystal_horn_purple_01'}`,
+                        tail: `tail_${spec.series === 'ember' ? 'ember_flame_red_rare_01' : spec.series === 'moss' ? 'moss_vine_green_01' : 'crystal_drop_purple_01'}`,
+                        feet: `feet_${spec.series === 'moss' ? 'moss_root_green_01' : 'crystal_short_purple_01'}`,
+                        arms: `arms_${spec.series === 'ember' ? 'ember_paw_red_epic_01' : spec.series === 'moss' ? 'moss_vine_green_01' : 'crystal_float_purple_01'}`,
+                        head: (spec.rarity === 'hidden' || spec.rarity === 'epic') ? 'head_crystal_crown_purple_01' : null
+                    }
+                };
+                renderPet(stageEl, samplePet, resolveParts(samplePet.parts));
+            }
+
+            const auraEl = byId('previewAuraGlow');
+            if (auraEl) {
+                auraEl.style.background = `radial-gradient(circle, ${spec.color}44 0%, transparent 70%)`;
+            }
+
+            const nameEl = byId('previewPetName');
+            if (nameEl) nameEl.textContent = spec.name;
+
+            const badgeEl = byId('previewPetRarityBadge');
+            if (badgeEl) {
+                const seriesLabel = spec.series === 'crystal' ? '紫晶系列' : spec.series === 'moss' ? '碧苔系列' : '熾焰系列';
+                badgeEl.innerHTML = `<span>${spec.icon}</span> <span>${seriesLabel} · ${RARITY_LABELS[spec.rarity]}</span>`;
+            }
+
+            const descEl = byId('previewPetDesc');
+            if (descEl) descEl.textContent = spec.desc;
+
+            const traitEl = byId('previewPetTrait');
+            if (traitEl) traitEl.textContent = spec.trait || '✦ 陪伴日常專注工作';
+
+            const state = typeof readPetSystem === 'function' ? readPetSystem() : { pets: [] };
+            const isUnlocked = state.pets && state.pets.some(p => p.series === spec.series && (p.rarity === spec.rarity || spec.rarity === 'common'));
+            const unlockEl = byId('previewPetUnlock');
+            if (unlockEl) {
+                unlockEl.innerHTML = isUnlocked
+                    ? '<span style="color:var(--green); font-weight:600;">✨ 已解鎖於展台，隨時為您陪伴</span>'
+                    : '<span>🔒 累積 7 顆蛋殼碎片破殼喚醒（每日達成 8 小時標準工時獲 1 顆）</span>';
+            }
+        }
+        root.openPetPreviewModal = openPetPreviewModal;
+        root.closePetPreviewModal = closePetPreviewModal;
+        root.switchPetPreview = switchPetPreview;
         function renderPartnerRoom() {
             const state = typeof readPetSystem === 'function' ? readPetSystem() : { resources: { eggFragments: 0 }, pets: [] };
             const pet = typeof activePet === 'function' ? activePet(state) : null;

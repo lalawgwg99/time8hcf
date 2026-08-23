@@ -105,9 +105,32 @@
                     <div class="egg-facet facet-a"></div>
                     <div class="egg-facet facet-b"></div>
                     <div class="egg-glint"></div>
-                    <div class="egg-crack crack-a"></div>
-                    <div class="egg-crack crack-b"></div>
-                    <div class="egg-crack crack-c"></div>
+                    <svg class="egg-fracture-svg" viewBox="0 0 104 140" fill="none">
+                        <defs>
+                            <linearGradient id="eggVeinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFFFFF" />
+                                <stop offset="35%" stop-color="#F2D8A7" />
+                                <stop offset="70%" stop-color="#C5A6DC" />
+                                <stop offset="100%" stop-color="#9A78B4" />
+                            </linearGradient>
+                            <filter id="veinGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="1.4" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <path class="vein-crack vein-1" d="M 52 28 L 56 46 L 49 60" stroke="url(#eggVeinGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                        <path class="vein-crack vein-2" d="M 49 60 L 60 78 L 51 96 L 57 112" stroke="url(#eggVeinGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                        <path class="vein-crack vein-3" d="M 56 46 L 68 54 L 76 50" stroke="url(#eggVeinGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                        <path class="vein-crack vein-4" d="M 49 60 L 36 68 L 27 63" stroke="url(#eggVeinGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                        <path class="vein-crack vein-5" d="M 60 78 L 72 85 L 78 98" stroke="url(#eggVeinGrad)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
+                        <circle class="vein-star star-1" cx="52" cy="28" r="2" fill="#FFF" />
+                        <circle class="vein-star star-2" cx="56" cy="46" r="2.2" fill="#FFEBB3" />
+                        <circle class="vein-star star-3" cx="49" cy="60" r="2.6" fill="#FFF" />
+                        <circle class="vein-star star-4" cx="60" cy="78" r="2.2" fill="#FFEAA7" />
+                    </svg>
                 </div>
             </div>`;
 
