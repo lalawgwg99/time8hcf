@@ -640,6 +640,171 @@
             }
         }
 
+        /* 功德堂 Modal 與沉浸式木魚舞台 */
+        .muyu-stage-card {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            transition: border-color 0.2s ease;
+        }
+        .muyu-stage-card:active {
+            border-color: var(--label-tertiary);
+        }
+        .muyu-stage-ambient {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(212, 182, 136, 0.16) 0%, transparent 70%);
+            transition: background 0.4s ease;
+        }
+        .muyu-woodfish-container {
+            position: relative;
+            width: 160px;
+            height: 125px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .muyu-fish-interactive-bounce {
+            animation: muyuFishHit 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+        @keyframes muyuFishHit {
+            0% { transform: scale(1); }
+            35% { transform: scale(0.91, 0.88) translateY(4px); }
+            70% { transform: scale(1.06, 1.04) translateY(-3px); }
+            100% { transform: scale(1); }
+        }
+        .muyu-fish-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        .muyu-ripple-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        .muyu-ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(212, 182, 136, 0.6);
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.9;
+            pointer-events: none;
+            animation: muyuRippleExpand 0.75s ease-out forwards;
+        }
+        @keyframes muyuRippleExpand {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+            100% { transform: translate(-50%, -50%) scale(9.5); opacity: 0; }
+        }
+        .muyu-hall-float-zone {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .muyu-hall-float-item {
+            position: absolute;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--label);
+            text-shadow: 0 0 10px rgba(212, 182, 136, 0.5);
+            white-space: nowrap;
+            animation: muyuHallFloat 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        @keyframes muyuHallFloat {
+            0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
+            20% { opacity: 1; transform: translate(-50%, -16px) scale(1.1); }
+            80% { opacity: 1; transform: translate(-50%, -46px) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -70px) scale(0.9); }
+        }
+        .muyu-combo-banner {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 12px;
+            font-weight: 700;
+            color: #E65100;
+            animation: comboPulse 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes comboPulse {
+            0% { transform: scale(0.85); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .muyu-mode-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 0.5px solid var(--separator);
+            background: var(--fill);
+            color: var(--label-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .muyu-mode-pill.active {
+            background: var(--label);
+            color: var(--bg);
+            border-color: var(--label);
+        }
+        .muyu-skin-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 4px;
+            border-radius: 12px;
+            border: 1px solid var(--separator);
+            background: var(--fill-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .muyu-skin-card.active {
+            border-color: var(--label);
+            background: var(--fill);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .muyu-skin-card.locked {
+            opacity: 0.55;
+        }
+        .muyu-bpm-btn {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 0.5px solid var(--separator);
+            background: var(--fill);
+            color: var(--label-secondary);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .muyu-bpm-btn.active {
+            background: var(--label);
+            color: var(--bg);
+            border-color: var(--label);
+        }
+
         /* 4. 右下角：最近下班時間 */
         .ring-yesterday-badge {
             position: absolute;
@@ -3378,7 +3543,7 @@
                         </button>
 
                         <!-- 3. Bottom-Left: 辦公室電子木魚 (44px 圓圈) -->
-                        <div id="ringMuyuBadge" class="ring-muyu-badge active-scale" onclick="tapOfficeMuyu(event)" title="辦公室電子木魚 · 點擊敲木魚解壓" aria-label="電子木魚">
+                        <div id="ringMuyuBadge" class="ring-muyu-badge active-scale" onclick="tapOfficeMuyu(event)" ondblclick="openMuyuModal()" oncontextmenu="openMuyuModal(); return false;" title="辦公室電子木魚 · 點擊積功德，雙擊或長按進入功德堂" aria-label="電子木魚">
                             <span class="muyu-label-top" style="pointer-events:none;">功德</span>
                             <span class="muyu-icon-bottom" style="pointer-events:none;">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--label); opacity:0.85;">
@@ -4067,13 +4232,16 @@
                             隨手記錄今日專注目標與待辦清單，有未完成項目時會亮起小圓點。
                         </p>
                     </div>
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">🪵</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">左下 · 電子木魚</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeSettings(); openMuyuModal();">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:14px;">🪵</span>
+                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">左下 · 電子木魚功德堂</span>
+                            </div>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">進入功德堂 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            上班心累或暴躁時輕點，伴隨真實空靈木魚聲敲擊積功德、消除負能量！
+                            輕點即敲積功德。長按或點此進入功德堂，解鎖 5 款木魚音色、自訂祈福詞與定速禪修。
                         </p>
                     </div>
                     <div style="padding:13px 16px;">
@@ -4319,6 +4487,111 @@
 
                 <button onclick="closePetPreviewModal()" class="active-scale"
                     style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">返回展台</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 沉浸式木魚功德堂 Modal (Apple Inset Grouped Sheet) -->
+    <div id="muyuModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)" onclick="closeMuyuModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto" style="background:var(--bg);max-height:92vh;overflow-y:auto;">
+            <div style="padding:14px 20px 0; position:sticky; top:0; background:var(--bg); z-index:10;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:17px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">✦ 功德堂</span>
+                        <span id="muyuRankBadge" style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:999px; background:var(--fill-secondary); color:var(--label-secondary);">初入佛門 · Lv.1</span>
+                    </div>
+                    <button onclick="closeMuyuModal()" aria-label="關閉功德堂"
+                        style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                        <i class="fas fa-times" style="font-size:12px;"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div style="padding:16px 20px 32px;">
+                <!-- 總功德值與 Combo 連擊卡 -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:14px; padding:0 4px;">
+                    <div>
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:2px;">累計功德值</div>
+                        <div style="display:flex; align-items:baseline; gap:6px;">
+                            <span id="muyuTotalMeritDisplay" style="font-size:28px; font-weight:800; color:var(--label); font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; letter-spacing:-0.03em;">0</span>
+                            <span style="font-size:13px; font-weight:600; color:#D4B688;">功德</span>
+                        </div>
+                    </div>
+                    <div id="muyuComboBanner" class="muyu-combo-banner hidden">
+                        <span id="muyuComboCount">🔥 0 連擊</span>
+                        <span id="muyuComboTitle" style="font-size:10.5px; opacity:0.85;">心如止水</span>
+                    </div>
+                </div>
+
+                <!-- 大尺寸 3D 質感向量木魚敲擊舞台 -->
+                <div class="muyu-stage-card" id="muyuStageCard" onclick="tapHallMuyu(event)">
+                    <div class="muyu-stage-ambient" id="muyuStageAmbient"></div>
+                    <div class="muyu-ripple-container" id="muyuRippleContainer"></div>
+                    
+                    <!-- 浮動文字生成區 -->
+                    <div class="muyu-hall-float-zone" id="muyuHallFloatZone"></div>
+
+                    <!-- 3D 質感向量木魚 -->
+                    <div class="muyu-woodfish-container" id="muyuWoodfishContainer">
+                        <div id="muyuVectorFish" style="width:160px; height:125px;">
+                        </div>
+                    </div>
+
+                    <!-- 敲擊引導文字 -->
+                    <div style="margin-top:12px; font-size:12px; font-weight:500; color:var(--label-tertiary); text-align:center; pointer-events:none;">
+                        輕觸木魚積功德 · 消除今日煩惱
+                    </div>
+                </div>
+
+                <!-- 祈福願望庫切換 (職場消災 / 身心療癒 / 自訂) -->
+                <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:12px 14px; border-bottom:0.5px solid var(--separator); display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; font-weight:600; color:var(--label-secondary);">✦ 祈福願望詞庫</span>
+                        <div style="display:flex; gap:4px;" id="muyuModeTabs">
+                            <button type="button" onclick="setMuyuMode('work')" class="muyu-mode-pill active" id="muyuModeWork">💼 職場</button>
+                            <button type="button" onclick="setMuyuMode('heal')" class="muyu-mode-pill" id="muyuModeHeal">🍵 身心</button>
+                            <button type="button" onclick="setMuyuMode('custom')" class="muyu-mode-pill" id="muyuModeCustom">✍️ 自訂</button>
+                        </div>
+                    </div>
+                    <div id="muyuCustomInputRow" class="hidden" style="padding:10px 14px; border-bottom:0.5px solid var(--separator); background:var(--fill-secondary);">
+                        <input type="text" id="muyuCustomTextInput" maxlength="12" placeholder="輸入自訂祈福詞（如：今晚吃大餐 +1）"
+                            style="width:100%; border:none; background:transparent; font-size:13px; color:var(--label); outline:none;" oninput="onMuyuCustomTextInput(event)" />
+                    </div>
+                    <div style="padding:10px 14px; font-size:11.5px; color:var(--label-tertiary); display:flex; justify-content:space-between;">
+                        <span>當前敲擊將浮現：</span>
+                        <span id="muyuCurrentSampleWord" style="color:var(--label); font-weight:600;">準時下班 +1 🌿</span>
+                    </div>
+                </div>
+
+                <!-- 5 大木魚材質圖鑑與切換 -->
+                <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:12px 14px; border-bottom:0.5px solid var(--separator); font-size:12px; font-weight:600; color:var(--label-secondary);">
+                        ✦ 木魚材質與音色鑑賞
+                    </div>
+                    <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; padding:12px 10px;" id="muyuSkinGrid">
+                    </div>
+                </div>
+
+                <!-- 自動定速 Auto-Zen 禪修控制 -->
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-size:13px; font-weight:600; color:var(--label);">自動定速木魚（Auto-Zen）</div>
+                            <div style="font-size:11.5px; color:var(--label-tertiary); margin-top:2px;">桌面靜心、放鬆與呼吸節奏引導</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <button type="button" onclick="setMuyuAutoSpeed(0)" id="autoBpmOff" class="muyu-bpm-btn active">關閉</button>
+                            <button type="button" onclick="setMuyuAutoSpeed(30)" id="autoBpm30" class="muyu-bpm-btn">30</button>
+                            <button type="button" onclick="setMuyuAutoSpeed(60)" id="autoBpm60" class="muyu-bpm-btn">60</button>
+                            <button type="button" onclick="setMuyuAutoSpeed(90)" id="autoBpm90" class="muyu-bpm-btn">90</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="closeMuyuModal()" class="active-scale"
+                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em;">返回</button>
             </div>
         </div>
     </div>
@@ -7643,41 +7916,124 @@
         }
 
         // =============================================
-        // OFFICE ZEN MOKUGYO (辦公室電子木魚 · 職場解壓神物)
+        // ZEN MUYU SANCTUARY (沉浸式功德堂 · 電子木魚與音色圖鑑)
         // =============================================
-        const MUYU_BLESSINGS = [
-            '功德 +1 ✨',
-            '暴躁 -10 🍃',
-            '血壓 -5 🍵',
-            '佛系 +1 🧘',
-            '心態和平 +1 🕊️',
-            '薪水小偷 +1 💸',
-            '專注 +1 🌿',
-            '煩惱 -10 🌸',
-            '大智慧 +1 💡',
-            '摸魚無罪 +1 🐟'
+        const MUYU_STORAGE_KEY = 'time8hcf_muyu_system';
+        const MUYU_RANKS = [
+            { threshold: 0, title: '初入佛門 · Lv.1', color: 'var(--label-secondary)' },
+            { threshold: 100, title: '心平氣和 · Lv.2', color: '#5DA672' },
+            { threshold: 300, title: '六根清淨 · Lv.3', color: '#5572B2' },
+            { threshold: 600, title: '心無罣礙 · Lv.4', color: '#9A77BA' },
+            { threshold: 1000, title: '功德無量 · Lv.5', color: '#E6A820' },
         ];
 
-        let _muyuMeritCount = 0;
+        const MUYU_SKINS = [
+            { id: 'wood', name: '沉香烏木', icon: '🪵', desc: '435Hz 中空木魚，溫潤沉穩', threshold: 0, glow: 'rgba(212, 182, 136, 0.2)' },
+            { id: 'jade', name: '青玉磬石', icon: '🪨', desc: '680Hz 冰裂青玉脆響，高山流水', threshold: 100, glow: 'rgba(64, 145, 108, 0.25)' },
+            { id: 'bronze', name: '紫銅梵鐘', icon: '🔔', desc: '528Hz 療癒頻率寺廟鐘磬，悠長尾音', threshold: 300, glow: 'rgba(176, 125, 79, 0.25)' },
+            { id: 'crystal', name: '星辰晶魚', icon: '💎', desc: '852Hz 空靈水晶音，清澈冥想', threshold: 600, glow: 'rgba(154, 119, 186, 0.3)' },
+            { id: 'gold', name: '黃金功德魚', icon: '👑', desc: '963Hz 尊榮帝皇梵音，神聖金光', threshold: 1000, glow: 'rgba(255, 179, 0, 0.35)' },
+        ];
+
+        const MUYU_WORD_POOLS = {
+            work: [
+                '準時下班 +1 🌿', 'Bug 退散 +1 ⚡', '需求不改 +1 🍵', '加薪升職 +1 💰',
+                '老闆失憶 +1 🤫', '薪水小偷 +1 💸', '摸魚無罪 +1 🐟', '溝通順暢 +1 🕊️',
+                '準時收工 +1 ⏰', '思路清晰 +1 💡'
+            ],
+            heal: [
+                '血壓 -10 🍵', '暴躁 -10 🌸', '髮量 +1 🌿', '內耗消除 +1 🕊️',
+                '心態和平 +1 🧘', '焦慮退散 +1 🍃', '睡眠品質 +1 🌙', '大智慧 +1 💡',
+                '心如止水 +1 💧', '煩惱消散 +1 🌸'
+            ],
+            custom: []
+        };
+
+        let _muyuState = {
+            totalMerit: 0,
+            todayMerit: 0,
+            todayDate: '',
+            activeSkin: 'wood',
+            activeMode: 'work',
+            customText: '功德 +1 ✨',
+            autoBpm: 0
+        };
+
+        let _muyuCombo = 0;
+        let _muyuComboTimer = null;
+        let _muyuAutoTimer = null;
+
+        function readMuyuState() {
+            try {
+                const raw = localStorage.getItem(MUYU_STORAGE_KEY);
+                const today = typeof getTodayKey === 'function' ? getTodayKey() : new Date().toISOString().slice(0, 10);
+                if (!raw) {
+                    const legacy = parseInt(localStorage.getItem('woodenFishMerit') || '0', 10) || 0;
+                    return {
+                        totalMerit: legacy,
+                        todayMerit: 0,
+                        todayDate: today,
+                        activeSkin: 'wood',
+                        activeMode: 'work',
+                        customText: '功德 +1 ✨',
+                        autoBpm: 0
+                    };
+                }
+                const parsed = JSON.parse(raw);
+                if (parsed.todayDate !== today) {
+                    parsed.todayMerit = 0;
+                    parsed.todayDate = today;
+                }
+                return {
+                    totalMerit: parsed.totalMerit || 0,
+                    todayMerit: parsed.todayMerit || 0,
+                    todayDate: parsed.todayDate || today,
+                    activeSkin: parsed.activeSkin || 'wood',
+                    activeMode: parsed.activeMode || 'work',
+                    customText: parsed.customText || '功德 +1 ✨',
+                    autoBpm: 0
+                };
+            } catch (e) {
+                return {
+                    totalMerit: 0,
+                    todayMerit: 0,
+                    todayDate: '',
+                    activeSkin: 'wood',
+                    activeMode: 'work',
+                    customText: '功德 +1 ✨',
+                    autoBpm: 0
+                };
+            }
+        }
+
+        function writeMuyuState(state) {
+            try {
+                localStorage.setItem(MUYU_STORAGE_KEY, JSON.stringify(state));
+                localStorage.setItem('woodenFishMerit', String(state.totalMerit));
+            } catch (e) {}
+        }
 
         function initOfficeMuyu() {
-            try {
-                _muyuMeritCount = parseInt(localStorage.getItem('woodenFishMerit') || '0', 10);
-                if (isNaN(_muyuMeritCount)) _muyuMeritCount = 0;
-            } catch (e) {
-                _muyuMeritCount = 0;
-            }
-            updateMuyuDisplay();
+            _muyuState = readMuyuState();
         }
 
-        function updateMuyuDisplay() {
-            const countEl = document.getElementById('muyuCount');
-            if (countEl) {
-                countEl.textContent = `✨ +${_muyuMeritCount}`;
+        function getMuyuRank(totalMerit) {
+            let currentRank = MUYU_RANKS[0];
+            for (const rank of MUYU_RANKS) {
+                if (totalMerit >= rank.threshold) currentRank = rank;
             }
+            return currentRank;
         }
 
-        function playWoodenFishSound() {
+        function getCurrentBlessingWord() {
+            if (_muyuState.activeMode === 'custom' && _muyuState.customText) {
+                return _muyuState.customText;
+            }
+            const pool = MUYU_WORD_POOLS[_muyuState.activeMode] || MUYU_WORD_POOLS.work;
+            return pool[Math.floor(Math.random() * pool.length)];
+        }
+
+        function playWoodenFishSound(skin = 'wood', pitchMultiplier = 1.0) {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;
@@ -7686,68 +8042,354 @@
                 if (ctx.state === 'suspended') ctx.resume();
 
                 const now = ctx.currentTime;
+                const p = Math.max(0.75, Math.min(pitchMultiplier, 1.35));
 
-                // 1. Mallet impact transient (木槌敲擊硬木脆感瞬態)
-                const clickOsc = ctx.createOscillator();
-                const clickGain = ctx.createGain();
-                clickOsc.type = 'triangle';
-                clickOsc.frequency.setValueAtTime(1600, now);
-                clickOsc.frequency.exponentialRampToValueAtTime(320, now + 0.012);
-                clickGain.gain.setValueAtTime(0.45, now);
-                clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.016);
-                clickOsc.connect(clickGain);
-                clickGain.connect(ctx.destination);
-                clickOsc.start(now);
-                clickOsc.stop(now + 0.018);
+                if (skin === 'jade') {
+                    // 680Hz Crisp High-Frequency Ice Jade Tone
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(680 * p, now);
+                    osc.frequency.exponentialRampToValueAtTime(640 * p, now + 0.04);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.65, now + 0.002);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.36);
 
-                // 2. Main Hollow Wood Chamber Body (真實中空木魚主共振腔 ~435Hz)
-                const bodyOsc = ctx.createOscillator();
-                const bodyGain = ctx.createGain();
-                const bodyFilter = ctx.createBiquadFilter();
+                    const o2 = ctx.createOscillator();
+                    const g2 = ctx.createGain();
+                    o2.type = 'sine';
+                    o2.frequency.setValueAtTime(1360 * p, now);
+                    g2.gain.setValueAtTime(0.28, now);
+                    g2.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                    o2.connect(g2);
+                    g2.connect(ctx.destination);
+                    o2.start(now);
+                    o2.stop(now + 0.13);
+                } else if (skin === 'bronze') {
+                    // 528Hz Solfeggio Deep Ancient Bronze Temple Bell with lush decay
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(528 * p, now);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.7, now + 0.008);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 1.22);
 
-                bodyFilter.type = 'bandpass';
-                bodyFilter.frequency.setValueAtTime(435, now);
-                bodyFilter.Q.setValueAtTime(6.0, now);
+                    const o2 = ctx.createOscillator();
+                    const g2 = ctx.createGain();
+                    o2.type = 'sine';
+                    o2.frequency.setValueAtTime(1056 * p, now);
+                    g2.gain.setValueAtTime(0.35, now);
+                    g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+                    o2.connect(g2);
+                    g2.connect(ctx.destination);
+                    o2.start(now);
+                    o2.stop(now + 0.82);
+                } else if (skin === 'crystal') {
+                    // 852Hz Pure Harmonic Starlight Crystal Fork
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(852 * p, now);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.5, now + 0.004);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.92);
 
-                bodyOsc.type = 'sine';
-                bodyOsc.frequency.setValueAtTime(540, now);
-                bodyOsc.frequency.exponentialRampToValueAtTime(430, now + 0.035);
+                    const o2 = ctx.createOscillator();
+                    const g2 = ctx.createGain();
+                    o2.type = 'sine';
+                    o2.frequency.setValueAtTime(1704 * p, now);
+                    g2.gain.setValueAtTime(0.25, now);
+                    g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+                    o2.connect(g2);
+                    g2.connect(ctx.destination);
+                    o2.start(now);
+                    o2.stop(now + 0.62);
+                } else if (skin === 'gold') {
+                    // 963Hz Majestic Sacred Solar Golden Chime
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(963 * p, now);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.75, now + 0.006);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 1.42);
 
-                bodyGain.gain.setValueAtTime(0.001, now);
-                bodyGain.gain.linearRampToValueAtTime(0.9, now + 0.002);
-                bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+                    const o2 = ctx.createOscillator();
+                    const g2 = ctx.createGain();
+                    o2.type = 'triangle';
+                    o2.frequency.setValueAtTime(481.5 * p, now);
+                    g2.gain.setValueAtTime(0.4, now);
+                    g2.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
+                    o2.connect(g2);
+                    g2.connect(ctx.destination);
+                    o2.start(now);
+                    o2.stop(now + 1.12);
+                } else {
+                    // Default: 435Hz Authentic Woody Chamber
+                    const clickOsc = ctx.createOscillator();
+                    const clickGain = ctx.createGain();
+                    clickOsc.type = 'triangle';
+                    clickOsc.frequency.setValueAtTime(1600 * p, now);
+                    clickOsc.frequency.exponentialRampToValueAtTime(320 * p, now + 0.012);
+                    clickGain.gain.setValueAtTime(0.45, now);
+                    clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.016);
+                    clickOsc.connect(clickGain);
+                    clickGain.connect(ctx.destination);
+                    clickOsc.start(now);
+                    clickOsc.stop(now + 0.018);
 
-                bodyOsc.connect(bodyFilter);
-                bodyFilter.connect(bodyGain);
-                bodyGain.connect(ctx.destination);
-
-                bodyOsc.start(now);
-                bodyOsc.stop(now + 0.18);
-
-                // 3. Wood Shell Overtone (次泛音木質厚實感 ~870Hz)
-                const shellOsc = ctx.createOscillator();
-                const shellGain = ctx.createGain();
-                const shellFilter = ctx.createBiquadFilter();
-
-                shellFilter.type = 'bandpass';
-                shellFilter.frequency.setValueAtTime(870, now);
-                shellFilter.Q.setValueAtTime(6.5, now);
-
-                shellOsc.type = 'sine';
-                shellOsc.frequency.setValueAtTime(910, now);
-                shellOsc.frequency.exponentialRampToValueAtTime(860, now + 0.025);
-
-                shellGain.gain.setValueAtTime(0.001, now);
-                shellGain.gain.linearRampToValueAtTime(0.32, now + 0.002);
-                shellGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-
-                shellOsc.connect(shellFilter);
-                shellFilter.connect(shellGain);
-                shellGain.connect(ctx.destination);
-
-                shellOsc.start(now);
-                shellOsc.stop(now + 0.09);
+                    const bodyOsc = ctx.createOscillator();
+                    const bodyGain = ctx.createGain();
+                    const bodyFilter = ctx.createBiquadFilter();
+                    bodyFilter.type = 'bandpass';
+                    bodyFilter.frequency.setValueAtTime(435 * p, now);
+                    bodyFilter.Q.setValueAtTime(6.0, now);
+                    bodyOsc.type = 'sine';
+                    bodyOsc.frequency.setValueAtTime(540 * p, now);
+                    bodyOsc.frequency.exponentialRampToValueAtTime(430 * p, now + 0.035);
+                    bodyGain.gain.setValueAtTime(0.001, now);
+                    bodyGain.gain.linearRampToValueAtTime(0.9, now + 0.002);
+                    bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+                    bodyOsc.connect(bodyFilter);
+                    bodyFilter.connect(bodyGain);
+                    bodyGain.connect(ctx.destination);
+                    bodyOsc.start(now);
+                    bodyOsc.stop(now + 0.18);
+                }
             } catch (e) {}
+        }
+
+        function renderWoodenFishSVG(skin = 'wood') {
+            switch (skin) {
+                case 'jade':
+                    return `
+                    <svg class="muyu-fish-svg" viewBox="0 0 160 130" fill="none">
+                        <defs>
+                            <linearGradient id="jade_body" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#E8F8F0"/>
+                                <stop offset="25%" stop-color="#95D5B2"/>
+                                <stop offset="70%" stop-color="#40916C"/>
+                                <stop offset="100%" stop-color="#1B4332"/>
+                            </linearGradient>
+                            <linearGradient id="jade_slit" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#081C15"/>
+                                <stop offset="100%" stop-color="#1B4332"/>
+                            </linearGradient>
+                        </defs>
+                        <ellipse cx="80" cy="74" rx="68" ry="48" fill="url(#jade_body)" filter="drop-shadow(0 10px 22px rgba(27,67,50,0.35))"/>
+                        <path d="M 28 66 C 26 44 48 30 80 30 C 112 30 134 44 132 66" stroke="#B7E4C7" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+                        <circle cx="48" cy="62" r="7.5" fill="#D8F3DC"/>
+                        <circle cx="48" cy="62" r="4" fill="#081C15"/>
+                        <circle cx="46.5" cy="60.5" r="1.5" fill="#FFF"/>
+                        <path d="M 64 78 Q 96 86 128 72 Q 104 94 64 78 Z" fill="url(#jade_slit)" stroke="#D8F3DC" stroke-width="1.2"/>
+                        <path d="M 124 58 C 142 54 148 76 132 88" stroke="url(#jade_body)" stroke-width="10" stroke-linecap="round" fill="none"/>
+                    </svg>`;
+                case 'bronze':
+                    return `
+                    <svg class="muyu-fish-svg" viewBox="0 0 160 130" fill="none">
+                        <defs>
+                            <linearGradient id="brz_body" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFE8D6"/>
+                                <stop offset="30%" stop-color="#DDB892"/>
+                                <stop offset="70%" stop-color="#B07D4F"/>
+                                <stop offset="100%" stop-color="#6F4E37"/>
+                            </linearGradient>
+                            <linearGradient id="brz_slit" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#2B1810"/>
+                                <stop offset="100%" stop-color="#4A2E1B"/>
+                            </linearGradient>
+                        </defs>
+                        <ellipse cx="80" cy="74" rx="68" ry="48" fill="url(#brz_body)" filter="drop-shadow(0 10px 22px rgba(111,78,55,0.35))"/>
+                        <path d="M 32 64 C 30 46 50 32 80 32 C 110 32 128 46 128 64" stroke="#FFE8D6" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+                        <circle cx="48" cy="62" r="7.5" fill="#DDB892"/>
+                        <circle cx="48" cy="62" r="4" fill="#2B1810"/>
+                        <circle cx="46.5" cy="60.5" r="1.5" fill="#FFF"/>
+                        <path d="M 64 78 Q 96 86 128 72 Q 104 94 64 78 Z" fill="url(#brz_slit)" stroke="#DDB892" stroke-width="1.2"/>
+                        <path d="M 124 58 C 142 54 148 76 132 88" stroke="url(#brz_body)" stroke-width="10" stroke-linecap="round" fill="none"/>
+                    </svg>`;
+                case 'crystal':
+                    return `
+                    <svg class="muyu-fish-svg" viewBox="0 0 160 130" fill="none">
+                        <defs>
+                            <linearGradient id="crys_body" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFFFFF"/>
+                                <stop offset="30%" stop-color="#E8DCF5"/>
+                                <stop offset="70%" stop-color="#B388EB"/>
+                                <stop offset="100%" stop-color="#5E2A8C"/>
+                            </linearGradient>
+                            <linearGradient id="crys_slit" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#240046"/>
+                                <stop offset="100%" stop-color="#3C096C"/>
+                            </linearGradient>
+                        </defs>
+                        <ellipse cx="80" cy="74" rx="68" ry="48" fill="url(#crys_body)" filter="drop-shadow(0 10px 24px rgba(94,42,140,0.4))"/>
+                        <path d="M 32 64 C 30 46 50 32 80 32 C 110 32 128 46 128 64" stroke="#FFF" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.8"/>
+                        <polygon points="48,54 55,62 48,70 41,62" fill="#FFF"/>
+                        <circle cx="48" cy="62" r="2.5" fill="#3C096C"/>
+                        <path d="M 64 78 Q 96 86 128 72 Q 104 94 64 78 Z" fill="url(#crys_slit)" stroke="#E8DCF5" stroke-width="1.4"/>
+                        <path d="M 124 58 C 142 54 148 76 132 88" stroke="url(#crys_body)" stroke-width="10" stroke-linecap="round" fill="none"/>
+                    </svg>`;
+                case 'gold':
+                    return `
+                    <svg class="muyu-fish-svg" viewBox="0 0 160 130" fill="none">
+                        <defs>
+                            <linearGradient id="gold_body" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFF9C4"/>
+                                <stop offset="35%" stop-color="#FFD54F"/>
+                                <stop offset="70%" stop-color="#FFB300"/>
+                                <stop offset="100%" stop-color="#E65100"/>
+                            </linearGradient>
+                            <linearGradient id="gold_slit" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#3E2723"/>
+                                <stop offset="100%" stop-color="#5D4037"/>
+                            </linearGradient>
+                        </defs>
+                        <ellipse cx="80" cy="74" rx="68" ry="48" fill="url(#gold_body)" filter="drop-shadow(0 0 24px rgba(255,179,0,0.5))"/>
+                        <path d="M 32 64 C 30 46 50 32 80 32 C 110 32 128 46 128 64" stroke="#FFF" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.85"/>
+                        <circle cx="48" cy="62" r="7.5" fill="#FFF"/>
+                        <circle cx="48" cy="62" r="4" fill="#D50000"/>
+                        <path d="M 64 78 Q 96 86 128 72 Q 104 94 64 78 Z" fill="url(#gold_slit)" stroke="#FFF9C4" stroke-width="1.5"/>
+                        <path d="M 124 58 C 142 54 148 76 132 88" stroke="url(#gold_body)" stroke-width="10" stroke-linecap="round" fill="none"/>
+                    </svg>`;
+                case 'wood':
+                default:
+                    return `
+                    <svg class="muyu-fish-svg" viewBox="0 0 160 130" fill="none">
+                        <defs>
+                            <linearGradient id="wood_body" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#DDB892"/>
+                                <stop offset="30%" stop-color="#B08968"/>
+                                <stop offset="70%" stop-color="#7F5539"/>
+                                <stop offset="100%" stop-color="#4A2E1B"/>
+                            </linearGradient>
+                            <linearGradient id="wood_slit" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#1A0F09"/>
+                                <stop offset="100%" stop-color="#2B1810"/>
+                            </linearGradient>
+                        </defs>
+                        <ellipse cx="80" cy="74" rx="68" ry="48" fill="url(#wood_body)" filter="drop-shadow(0 10px 20px rgba(74,46,27,0.35))"/>
+                        <path d="M 32 64 C 30 46 50 32 80 32 C 110 32 128 46 128 64" stroke="#DDB892" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+                        <circle cx="48" cy="62" r="7.5" fill="#DDB892"/>
+                        <circle cx="48" cy="62" r="4" fill="#2B1810"/>
+                        <circle cx="46.5" cy="60.5" r="1.5" fill="#FFF"/>
+                        <path d="M 64 78 Q 96 86 128 72 Q 104 94 64 78 Z" fill="url(#wood_slit)" stroke="#DDB892" stroke-width="1.2"/>
+                        <path d="M 124 58 C 142 54 148 76 132 88" stroke="url(#wood_body)" stroke-width="10" stroke-linecap="round" fill="none"/>
+                    </svg>`;
+            }
+        }
+
+        function spawnRingFloatingText(text) {
+            const ring = document.getElementById('ringContainer');
+            if (!ring) return;
+            const floater = document.createElement('div');
+            floater.className = 'muyu-float-text';
+            floater.textContent = text;
+            ring.appendChild(floater);
+            setTimeout(() => floater.remove(), 920);
+        }
+
+        function spawnHallFloatingText(text) {
+            const zone = document.getElementById('muyuHallFloatZone');
+            if (!zone) return;
+            const item = document.createElement('div');
+            item.className = 'muyu-hall-float-item';
+            item.textContent = text;
+            const randomX = 50 + (Math.random() * 24 - 12);
+            const randomY = 65 + (Math.random() * 10 - 5);
+            item.style.left = `${randomX}%`;
+            item.style.top = `${randomY}%`;
+            zone.appendChild(item);
+            setTimeout(() => item.remove(), 1100);
+        }
+
+        function triggerFishBounce() {
+            const fish = document.getElementById('muyuWoodfishContainer');
+            if (fish) {
+                fish.classList.remove('muyu-fish-interactive-bounce');
+                void fish.offsetWidth;
+                fish.classList.add('muyu-fish-interactive-bounce');
+            }
+        }
+
+        function spawnRipple() {
+            const container = document.getElementById('muyuRippleContainer');
+            if (!container) return;
+            const ripple = document.createElement('div');
+            ripple.className = 'muyu-ripple';
+            const skin = MUYU_SKINS.find(s => s.id === _muyuState.activeSkin);
+            if (skin) ripple.style.borderColor = skin.glow || 'rgba(212, 182, 136, 0.6)';
+            container.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 750);
+        }
+
+        function updateMuyuComboDisplay() {
+            const banner = document.getElementById('muyuComboBanner');
+            const countEl = document.getElementById('muyuComboCount');
+            const titleEl = document.getElementById('muyuComboTitle');
+            if (!banner || !countEl || !titleEl) return;
+
+            if (_muyuCombo >= 3) {
+                banner.classList.remove('hidden');
+                countEl.textContent = `🔥 ${_muyuCombo} 連擊`;
+                const title = _muyuCombo >= 50 ? '佛光普照' :
+                              _muyuCombo >= 30 ? '功德無量' :
+                              _muyuCombo >= 15 ? '六根清淨' : '心如止水';
+                titleEl.textContent = title;
+            } else {
+                banner.classList.add('hidden');
+            }
+        }
+
+        function processMuyuHit(isHall = false) {
+            _muyuState.totalMerit++;
+            _muyuState.todayMerit++;
+            writeMuyuState(_muyuState);
+
+            _muyuCombo++;
+            if (_muyuComboTimer) clearTimeout(_muyuComboTimer);
+            _muyuComboTimer = setTimeout(() => {
+                _muyuCombo = 0;
+                updateMuyuComboDisplay();
+            }, 1600);
+
+            const pitchMultiplier = 1.0 + Math.min(_muyuCombo * 0.008, 0.25);
+            playWoodenFishSound(_muyuState.activeSkin, pitchMultiplier);
+            if ('vibrate' in navigator) navigator.vibrate(12);
+
+            const word = getCurrentBlessingWord();
+
+            if (isHall) {
+                spawnHallFloatingText(word);
+                triggerFishBounce();
+                spawnRipple();
+                updateMuyuComboDisplay();
+                updateMuyuModalUI();
+            } else {
+                spawnRingFloatingText(word);
+            }
+
+            // Companion EXP synergy
+            if (_muyuState.totalMerit % 50 === 0 && typeof appSettings !== 'undefined') {
+                appSettings.elfExp = (appSettings.elfExp || 0) + 10;
+                try { localStorage.setItem('appSettings', JSON.stringify(appSettings)); } catch(e){}
+            }
         }
 
         function tapOfficeMuyu(e) {
@@ -7755,22 +8397,147 @@
                 e.stopPropagation();
                 e.preventDefault();
             }
+            processMuyuHit(false);
+        }
 
-            // Tactile vibration + Authentic Real Wooden Fish Audio
-            if ('vibrate' in navigator) navigator.vibrate(12);
-            playWoodenFishSound();
+        function tapHallMuyu(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            processMuyuHit(true);
+        }
 
-            // Spawn floating text micro-interaction
-            const ring = document.getElementById('ringContainer');
-            if (ring) {
-                const floater = document.createElement('div');
-                floater.className = 'muyu-float-text';
-                const blessing = MUYU_BLESSINGS[Math.floor(Math.random() * MUYU_BLESSINGS.length)];
-                floater.textContent = blessing;
-                ring.appendChild(floater);
-                setTimeout(() => floater.remove(), 920);
+        function openMuyuModal() {
+            _muyuState = readMuyuState();
+            const modal = document.getElementById('muyuModal');
+            if (!modal) return;
+            updateMuyuModalUI();
+            modal.classList.remove('hidden');
+        }
+
+        function closeMuyuModal() {
+            const modal = document.getElementById('muyuModal');
+            if (modal) modal.classList.add('hidden');
+            if (_muyuAutoTimer) {
+                clearInterval(_muyuAutoTimer);
+                _muyuAutoTimer = null;
+            }
+            _muyuState.autoBpm = 0;
+        }
+
+        function updateMuyuModalUI() {
+            const totalDisplay = document.getElementById('muyuTotalMeritDisplay');
+            if (totalDisplay) totalDisplay.textContent = _muyuState.totalMerit.toLocaleString();
+
+            const rank = getMuyuRank(_muyuState.totalMerit);
+            const rankBadge = document.getElementById('muyuRankBadge');
+            if (rankBadge) {
+                rankBadge.textContent = rank.title;
+                rankBadge.style.color = rank.color;
+            }
+
+            const fishEl = document.getElementById('muyuVectorFish');
+            if (fishEl) {
+                fishEl.innerHTML = renderWoodenFishSVG(_muyuState.activeSkin);
+            }
+
+            const ambient = document.getElementById('muyuStageAmbient');
+            if (ambient) {
+                const skinObj = MUYU_SKINS.find(s => s.id === _muyuState.activeSkin);
+                if (skinObj) ambient.style.background = `radial-gradient(circle at 50% 50%, ${skinObj.glow} 0%, transparent 70%)`;
+            }
+
+            const sampleWordEl = document.getElementById('muyuCurrentSampleWord');
+            if (sampleWordEl) {
+                sampleWordEl.textContent = getCurrentBlessingWord();
+            }
+
+            // Render Skins Grid
+            const grid = document.getElementById('muyuSkinGrid');
+            if (grid) {
+                grid.innerHTML = MUYU_SKINS.map(skin => {
+                    const isUnlocked = _muyuState.totalMerit >= skin.threshold;
+                    const isActive = _muyuState.activeSkin === skin.id;
+                    return `
+                        <div class="muyu-skin-card ${isActive ? 'active' : ''} ${isUnlocked ? '' : 'locked'}"
+                            onclick="selectMuyuSkin('${skin.id}')"
+                            title="${skin.name}（${skin.desc}）">
+                            <span style="font-size:20px; line-height:1;">${isUnlocked ? skin.icon : '🔒'}</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--label); white-space:nowrap;">${skin.name}</span>
+                            <span style="font-size:9.5px; color:var(--label-tertiary);">${isUnlocked ? '已解鎖' : `${skin.threshold} 功德`}</span>
+                        </div>
+                    `;
+                }).join('');
             }
         }
+
+        function selectMuyuSkin(skinId) {
+            const skin = MUYU_SKINS.find(s => s.id === skinId);
+            if (!skin) return;
+            if (_muyuState.totalMerit < skin.threshold) {
+                showToast(`🔒 需累積 ${skin.threshold} 功德值方可解鎖「${skin.name}」`);
+                return;
+            }
+            _muyuState.activeSkin = skinId;
+            writeMuyuState(_muyuState);
+            playWoodenFishSound(skinId, 1.0);
+            updateMuyuModalUI();
+        }
+
+        function setMuyuMode(mode) {
+            _muyuState.activeMode = mode;
+            writeMuyuState(_muyuState);
+
+            ['work', 'heal', 'custom'].forEach(m => {
+                const btn = document.getElementById(`muyuMode${m.charAt(0).toUpperCase() + m.slice(1)}`);
+                if (btn) btn.classList.toggle('active', m === mode);
+            });
+
+            const customRow = document.getElementById('muyuCustomInputRow');
+            if (customRow) customRow.classList.toggle('hidden', mode !== 'custom');
+
+            updateMuyuModalUI();
+        }
+
+        function onMuyuCustomTextInput(e) {
+            _muyuState.customText = e.target.value || '功德 +1 ✨';
+            writeMuyuState(_muyuState);
+            const sampleWordEl = document.getElementById('muyuCurrentSampleWord');
+            if (sampleWordEl) sampleWordEl.textContent = _muyuState.customText;
+        }
+
+        function setMuyuAutoSpeed(bpm) {
+            _muyuState.autoBpm = bpm;
+            ['Off', '30', '60', '90'].forEach(b => {
+                const btn = document.getElementById(`autoBpm${b}`);
+                if (btn) {
+                    const match = (b === 'Off' && bpm === 0) || (parseInt(b, 10) === bpm);
+                    btn.classList.toggle('active', match);
+                }
+            });
+
+            if (_muyuAutoTimer) {
+                clearInterval(_muyuAutoTimer);
+                _muyuAutoTimer = null;
+            }
+
+            if (bpm > 0) {
+                const intervalMs = (60 / bpm) * 1000;
+                _muyuAutoTimer = setInterval(() => {
+                    processMuyuHit(true);
+                }, intervalMs);
+            }
+        }
+
+        window.tapOfficeMuyu = tapOfficeMuyu;
+        window.tapHallMuyu = tapHallMuyu;
+        window.openMuyuModal = openMuyuModal;
+        window.closeMuyuModal = closeMuyuModal;
+        window.selectMuyuSkin = selectMuyuSkin;
+        window.setMuyuMode = setMuyuMode;
+        window.onMuyuCustomTextInput = onMuyuCustomTextInput;
+        window.setMuyuAutoSpeed = setMuyuAutoSpeed;
 
         // =============================================
         // ZEN SAGE (雲遊仙人 · 光環右側微光守護與神諭賜福)
