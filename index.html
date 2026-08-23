@@ -513,7 +513,7 @@
             transform: scale(0.92);
         }
         .weather-icon {
-            font-size: 14px;
+            font-size: 13.5px;
             line-height: 1;
             display: inline-block;
             transition: transform 0.2s ease;
@@ -523,12 +523,52 @@
         }
         .weather-temp {
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 600;
             color: var(--label);
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.02em;
             line-height: 1;
+        }
+        .weather-pop-sub {
+            font-size: 8px;
+            color: var(--blue);
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        /* Apple Weather Modal & Inset Cards */
+        .weather-hourly-track {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 12px 14px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .weather-hourly-col {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 48px;
+        }
+        .weather-metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .weather-metric-cell {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
 
         /* 2. 右上角：待辦筆記 */
@@ -3530,10 +3570,11 @@
                 <!-- Hero: Circular Ring with Time Inside (Apple Native Masterpiece - 264px) -->
                 <div class="hero-section">
                     <div class="ring-container" id="ringContainer" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
-                        <!-- 1. Top-Left: 即時天氣 (38px 圓圈) -->
-                        <div id="ringWeatherBadge" class="ring-weather-badge active-scale" onclick="refreshLiveWeather(event)" title="即時天氣 · 點擊手動更新" aria-label="即時天氣">
+                        <!-- 1. Top-Left: 即時天氣 (44px 圓圈) -->
+                        <div id="ringWeatherBadge" class="ring-weather-badge active-scale" onclick="openWeatherModal(event)" title="即時天氣 · 點擊查看詳細預報" aria-label="即時天氣">
                             <span id="weatherIcon" class="weather-icon" style="pointer-events:none;">☀️</span>
                             <span id="weatherTemp" class="weather-temp" style="pointer-events:none;">--°</span>
+                            <span id="weatherPopSub" class="weather-pop-sub hidden" style="pointer-events:none;">💧 0%</span>
                         </div>
 
                         <!-- 2. Top-Right: 待辦筆記 (38px 圓圈) -->
@@ -4214,13 +4255,16 @@
                             即時呈現今日工時進度。<strong>輕點中央數字</strong>即可切換「今日已做」或「倒數剩餘」工時。
                         </p>
                     </div>
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">☀️</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">左上 · 即時天氣</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openWeatherModal();">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:14px;">☀️</span>
+                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">左上 · 即時天氣與預報</span>
+                            </div>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">詳細預報 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            免權限自動顯示當前氣溫與天候，點擊可手動刷新。
+                            自動顯示當前氣溫與降雨率。點擊可查看 12 小時逐時預報、下班雨具提醒與 6 大氣象指標。
                         </p>
                     </div>
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
@@ -4487,6 +4531,131 @@
 
                 <button onclick="closePetPreviewModal()" class="active-scale"
                     style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">返回展台</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 即時天氣詳細預報 Modal (Apple Inset Grouped Sheet) -->
+    <div id="weatherModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)" onclick="closeWeatherModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto" style="background:var(--bg);max-height:92vh;overflow-y:auto;">
+            <div style="padding:14px 20px 0; position:sticky; top:0; background:var(--bg); z-index:10;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:17px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">✦ 即時天氣與預報</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button onclick="requestAccurateGPSWeather(event)" id="weatherRefreshBtn" title="重新整理天氣" aria-label="重新整理"
+                            style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label); cursor:pointer;">
+                            <i class="fas fa-rotate" style="font-size:12px;" id="weatherRefreshIcon"></i>
+                        </button>
+                        <button onclick="closeWeatherModal()" aria-label="關閉天氣"
+                            style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                            <i class="fas fa-times" style="font-size:12px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding:16px 20px 32px;">
+                <!-- 頂部 Hero 天氣卡 (Apple Weather Header) -->
+                <div style="text-align:center; padding:12px 0 16px;">
+                    <div style="display:inline-flex; align-items:center; gap:5px; font-size:15px; font-weight:600; color:var(--label); margin-bottom:4px;">
+                        <span id="weatherModalLocation">台北市</span>
+                        <span style="font-size:11px; opacity:0.6;">📍</span>
+                    </div>
+                    <div style="display:flex; justify-content:center; align-items:baseline; gap:4px; margin-bottom:2px;">
+                        <span id="weatherModalMainTemp" style="font-size:52px; font-weight:800; color:var(--label); font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; letter-spacing:-0.04em; line-height:1;">28°</span>
+                    </div>
+                    <div id="weatherModalConditionText" style="font-size:15px; font-weight:600; color:var(--label-secondary); margin-bottom:4px;">
+                        ☀️ 晴時多雲
+                    </div>
+                    <div id="weatherModalHighLow" style="font-size:12.5px; color:var(--label-tertiary); font-weight:500;">
+                        最高 32° · 最低 24° · 體感 29°
+                    </div>
+                </div>
+
+                <!-- 通勤與天氣智慧建言卡 -->
+                <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:13px 15px; display:flex; align-items:flex-start; gap:10px;">
+                    <span style="font-size:18px; line-height:1.2;">💡</span>
+                    <div>
+                        <div style="font-size:12px; font-weight:600; color:var(--label); margin-bottom:2px;">通勤與工作建言</div>
+                        <p id="weatherModalAdvice" style="font-size:12.5px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            今日降雨機率低（10%），下班時段天氣舒適，無需攜帶雨具。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 未來 12 小時逐時預報 (Horizontal Carousel) -->
+                <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:12px 14px; border-bottom:0.5px solid var(--separator); font-size:11.5px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.04em; display:flex; justify-content:space-between; align-items:center;">
+                        <span>✦ 未來 12 小時預報</span>
+                        <span style="font-size:11px; font-weight:500; color:var(--label-tertiary);">氣溫 · 降雨趨勢</span>
+                    </div>
+                    <div class="weather-hourly-track" id="weatherHourlyTrack">
+                    </div>
+                </div>
+
+                <!-- 6 大即時環境指標網格 (2x3 Inset Cards) -->
+                <div class="weather-metric-grid mb-5">
+                    <!-- 1. 降雨機率 -->
+                    <div class="weather-metric-cell">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); display:flex; align-items:center; gap:5px;">
+                            <span>💧</span> <span>今日降雨機率</span>
+                        </div>
+                        <div id="weatherMetricRain" style="font-size:19px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">10%</div>
+                        <div id="weatherMetricRainSub" style="font-size:11px; color:var(--label-secondary);">下班時段無雨</div>
+                    </div>
+
+                    <!-- 2. 體感溫度 -->
+                    <div class="weather-metric-cell">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); display:flex; align-items:center; gap:5px;">
+                            <span>🌡️</span> <span>體感溫度</span>
+                        </div>
+                        <div id="weatherMetricApparent" style="font-size:19px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">29°C</div>
+                        <div id="weatherMetricApparentSub" style="font-size:11px; color:var(--label-secondary);">溫潤舒適</div>
+                    </div>
+
+                    <!-- 3. 即時風速 -->
+                    <div class="weather-metric-cell">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); display:flex; align-items:center; gap:5px;">
+                            <span>💨</span> <span>即時風速</span>
+                        </div>
+                        <div id="weatherMetricWind" style="font-size:19px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">11 km/h</div>
+                        <div id="weatherMetricWindSub" style="font-size:11px; color:var(--label-secondary);">微風吹拂</div>
+                    </div>
+
+                    <!-- 4. 空氣濕度 -->
+                    <div class="weather-metric-cell">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); display:flex; align-items:center; gap:5px;">
+                            <span>💧</span> <span>相對濕度</span>
+                        </div>
+                        <div id="weatherMetricHumidity" style="font-size:19px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">65%</div>
+                        <div id="weatherMetricHumiditySub" style="font-size:11px; color:var(--label-secondary);">濕度適中</div>
+                    </div>
+
+                    <!-- 5. 紫外線指數 -->
+                    <div class="weather-metric-cell">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); display:flex; align-items:center; gap:5px;">
+                            <span>☀️</span> <span>紫外線指數</span>
+                        </div>
+                        <div id="weatherMetricUV" style="font-size:19px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">4 中量</div>
+                        <div id="weatherMetricUVSub" style="font-size:11px; color:var(--label-secondary);">外出可防曬</div>
+                    </div>
+
+                    <!-- 6. 日出與日落 -->
+                    <div class="weather-metric-cell">
+                        <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); display:flex; align-items:center; gap:5px;">
+                            <span>🌇</span> <span>今日日落</span>
+                        </div>
+                        <div id="weatherMetricSunset" style="font-size:19px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">18:32</div>
+                        <div id="weatherMetricSunriseSub" style="font-size:11px; color:var(--label-secondary);">日出 05:42</div>
+                    </div>
+                </div>
+
+                <button onclick="closeWeatherModal()" class="active-scale"
+                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em;">返回</button>
             </div>
         </div>
     </div>
@@ -7308,7 +7477,7 @@
         }
 
         // =============================================
-        // APPLE LIVE WEATHER MODULE (即時微氣候引擎)
+        // APPLE LIVE WEATHER MODULE (即時微氣候與逐時預報引擎)
         // =============================================
         const WMO_WEATHER_MAP = {
             0:  { icon: '☀️', text: '晴朗' },
@@ -7336,6 +7505,34 @@
 
         let _weatherData = null;
         let _weatherTimer = null;
+        let _isWeatherLoading = false;
+
+        function getUVLevelText(uv) {
+            if (uv <= 2) return '低量';
+            if (uv <= 5) return '中量';
+            if (uv <= 7) return '高量';
+            if (uv <= 10) return '過量';
+            return '危險';
+        }
+
+        function generateWeatherAdvice(data) {
+            let rainText = '🌤️ 今日降雨機率低，下班時段天氣舒適，無需攜帶雨具。';
+            if (data.popMax >= 70) {
+                rainText = `🌧️ 今日降雨機率高達 ${data.popMax}%，下班時段容易遇雨，外出請務必攜帶雨具！`;
+            } else if (data.popMax >= 40) {
+                rainText = `🌦️ 今日有局部短暫陣雨機會（降雨機率 ${data.popMax}%），建議隨身攜帶折傘備用。`;
+            }
+
+            const tempDiff = data.tempMax - data.tempMin;
+            let tempAdvice = '';
+            if (tempDiff >= 7) {
+                tempAdvice = ` 早晚溫差達 ${tempDiff}°C，下班夜歸建議備妥薄外套。`;
+            } else if (data.tempMax >= 33) {
+                tempAdvice = ` 白天高溫達 ${data.tempMax}°C，請注意補水防中暑。`;
+            }
+
+            return `${rainText}${tempAdvice}`;
+        }
 
         function initWeatherEngine() {
             try {
@@ -7351,24 +7548,34 @@
             _weatherTimer = setInterval(fetchLiveWeatherData, 30 * 60 * 1000);
         }
 
-        async function fetchLiveWeatherData(isManual = false) {
-            try {
-                let lat = 25.033, lon = 121.5654, cityName = '台北';
-                
-                try {
-                    const geoRes = await fetch('https://get.geojs.io/v1/ip/geo.json', { signal: AbortSignal.timeout(3500) });
-                    if (geoRes.ok) {
-                        const geoData = await geoRes.json();
-                        if (geoData.latitude && geoData.longitude) {
-                            lat = parseFloat(geoData.latitude);
-                            lon = parseFloat(geoData.longitude);
-                            cityName = geoData.city || cityName;
-                        }
-                    }
-                } catch (err) {}
+        async function fetchLiveWeatherData(isManual = false, customLat = null, customLon = null, customCity = null) {
+            if (_isWeatherLoading) return;
+            _isWeatherLoading = true;
 
-                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,apparent_temperature&timezone=auto`;
-                const res = await fetch(weatherUrl, { signal: AbortSignal.timeout(4500) });
+            const refreshIcon = document.getElementById('weatherRefreshIcon');
+            if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
+            try {
+                let lat = customLat || 25.033;
+                let lon = customLon || 121.5654;
+                let cityName = customCity || '台北市';
+
+                if (!customLat || !customLon) {
+                    try {
+                        const geoRes = await fetch('https://get.geojs.io/v1/ip/geo.json', { signal: AbortSignal.timeout(3500) });
+                        if (geoRes.ok) {
+                            const geoData = await geoRes.json();
+                            if (geoData.latitude && geoData.longitude) {
+                                lat = parseFloat(geoData.latitude);
+                                lon = parseFloat(geoData.longitude);
+                                cityName = geoData.city ? `${geoData.city}` : cityName;
+                            }
+                        }
+                    } catch (err) {}
+                }
+
+                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max&timezone=auto&forecast_days=2`;
+                const res = await fetch(weatherUrl, { signal: AbortSignal.timeout(5000) });
                 if (res.ok) {
                     const data = await res.json();
                     if (data.current) {
@@ -7377,33 +7584,102 @@
                         const apparent = Math.round(data.current.apparent_temperature);
                         const wInfo = WMO_WEATHER_MAP[code] || { icon: '🌤️', text: '多雲' };
 
+                        const tempMax = data.daily && data.daily.temperature_2m_max ? Math.round(data.daily.temperature_2m_max[0]) : temp + 3;
+                        const tempMin = data.daily && data.daily.temperature_2m_min ? Math.round(data.daily.temperature_2m_min[0]) : temp - 3;
+                        const popMax = data.daily && data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[0] : 0;
+                        const sunrise = data.daily && data.daily.sunrise ? data.daily.sunrise[0].split('T')[1] : '05:42';
+                        const sunset = data.daily && data.daily.sunset ? data.daily.sunset[0].split('T')[1] : '18:32';
+                        const uvMax = data.daily && data.daily.uv_index_max ? Math.round(data.daily.uv_index_max[0]) : 4;
+
+                        // Parse next 12 hours from hourly
+                        const hourlyList = [];
+                        if (data.hourly && data.hourly.time) {
+                            const now = new Date();
+                            const currentHourISO = now.toISOString().slice(0, 13);
+                            let startIndex = data.hourly.time.findIndex(t => t.startsWith(currentHourISO));
+                            if (startIndex < 0) startIndex = now.getHours();
+
+                            for (let i = 0; i < 12; i++) {
+                                const idx = startIndex + i;
+                                if (idx < data.hourly.time.length) {
+                                    const hTimeStr = data.hourly.time[idx];
+                                    const hourNum = parseInt(hTimeStr.split('T')[1].split(':')[0], 10);
+                                    const hCode = data.hourly.weather_code[idx];
+                                    const hInfo = WMO_WEATHER_MAP[hCode] || { icon: '🌤️', text: '多雲' };
+                                    hourlyList.push({
+                                        timeStr: i === 0 ? '現在' : `${String(hourNum).padStart(2, '0')}:00`,
+                                        icon: hInfo.icon,
+                                        text: hInfo.text,
+                                        temp: Math.round(data.hourly.temperature_2m[idx]),
+                                        pop: data.hourly.precipitation_probability ? data.hourly.precipitation_probability[idx] : 0
+                                    });
+                                }
+                            }
+                        }
+
                         _weatherData = {
                             city: cityName,
                             temp: temp,
                             apparent: apparent,
+                            weatherCode: code,
                             icon: wInfo.icon,
                             text: wInfo.text,
+                            humidity: data.current.relative_humidity_2m || 65,
+                            windSpeed: Math.round(data.current.wind_speed_10m || 0),
+                            precipitation: data.current.precipitation || 0,
+                            tempMax: tempMax,
+                            tempMin: tempMin,
+                            popMax: popMax,
+                            sunrise: sunrise,
+                            sunset: sunset,
+                            uvMax: uvMax,
+                            hourly: hourlyList,
                             time: Date.now()
                         };
 
                         localStorage.setItem('cachedWeather', JSON.stringify(_weatherData));
                         renderWeatherBadge();
+                        renderWeatherModal();
 
                         if (isManual) {
                             showZenCapsuleNotification({
                                 emoji: _weatherData.icon,
                                 title: `${_weatherData.city} · ${_weatherData.temp}°C ${_weatherData.text}`,
-                                message: `體感 ${_weatherData.apparent}°C`,
+                                message: `體感 ${_weatherData.apparent}°C · 降雨率 ${_weatherData.popMax}%`,
                                 duration: 2500
                             });
                         }
                     }
                 }
             } catch (e) {
-                console.log('Weather notice:', e);
+                console.log('Weather fetch notice:', e);
                 if (!_weatherData) {
-                    _weatherData = { city: '台北', temp: 28, apparent: 29, icon: '☀️', text: '晴朗', time: Date.now() };
+                    _weatherData = {
+                        city: '台北市',
+                        temp: 28,
+                        apparent: 29,
+                        weatherCode: 1,
+                        icon: '🌤️',
+                        text: '晴時多雲',
+                        humidity: 65,
+                        windSpeed: 11,
+                        precipitation: 0,
+                        tempMax: 32,
+                        tempMin: 24,
+                        popMax: 10,
+                        sunrise: '05:42',
+                        sunset: '18:32',
+                        uvMax: 4,
+                        hourly: [],
+                        time: Date.now()
+                    };
                     renderWeatherBadge();
+                    renderWeatherModal();
+                }
+            } finally {
+                _isWeatherLoading = false;
+                if (refreshIcon) {
+                    setTimeout(() => refreshIcon.classList.remove('fa-spin'), 300);
                 }
             }
         }
@@ -7412,21 +7688,144 @@
             if (!_weatherData) return;
             const iconEl = document.getElementById('weatherIcon');
             const tempEl = document.getElementById('weatherTemp');
+            const popEl = document.getElementById('weatherPopSub');
             const badgeEl = document.getElementById('ringWeatherBadge');
+
             if (iconEl) iconEl.textContent = _weatherData.icon || '☀️';
             if (tempEl) tempEl.textContent = `${_weatherData.temp || 28}°`;
-            if (badgeEl) badgeEl.title = `${_weatherData.city || ''} ${_weatherData.temp}°C ${_weatherData.text || ''} (點擊更新)`;
+            if (popEl) {
+                if (_weatherData.popMax !== undefined) {
+                    popEl.textContent = `💧 ${_weatherData.popMax}%`;
+                    popEl.classList.remove('hidden');
+                } else {
+                    popEl.classList.add('hidden');
+                }
+            }
+            if (badgeEl) {
+                badgeEl.title = `${_weatherData.city || ''} ${_weatherData.temp}°C ${_weatherData.text || ''} · 降雨率 ${_weatherData.popMax || 0}% (點擊查看詳細預報)`;
+            }
         }
 
-        function refreshLiveWeather(e) {
+        function renderWeatherModal() {
+            if (!_weatherData) return;
+
+            const locEl = document.getElementById('weatherModalLocation');
+            const mainTempEl = document.getElementById('weatherModalMainTemp');
+            const condEl = document.getElementById('weatherModalConditionText');
+            const highLowEl = document.getElementById('weatherModalHighLow');
+            const adviceEl = document.getElementById('weatherModalAdvice');
+
+            if (locEl) locEl.textContent = _weatherData.city || '台北市';
+            if (mainTempEl) mainTempEl.textContent = `${_weatherData.temp || 28}°`;
+            if (condEl) condEl.textContent = `${_weatherData.icon || '☀️'} ${_weatherData.text || '晴朗'}`;
+            if (highLowEl) {
+                highLowEl.textContent = `最高 ${_weatherData.tempMax}° · 最低 ${_weatherData.tempMin}° · 體感 ${_weatherData.apparent}°`;
+            }
+            if (adviceEl) {
+                adviceEl.textContent = generateWeatherAdvice(_weatherData);
+            }
+
+            // Render Hourly Track
+            const trackEl = document.getElementById('weatherHourlyTrack');
+            if (trackEl && _weatherData.hourly && _weatherData.hourly.length > 0) {
+                trackEl.innerHTML = _weatherData.hourly.map(h => `
+                    <div class="weather-hourly-col">
+                        <span style="font-size:11px; font-weight:600; color:var(--label-tertiary);">${h.timeStr}</span>
+                        <span style="font-size:16px;">${h.icon}</span>
+                        <span style="font-size:12.5px; font-weight:700; color:var(--label);">${h.temp}°</span>
+                        <span style="font-size:9.5px; font-weight:600; color:var(--blue); min-height:13px;">${h.pop > 0 ? `${h.pop}%` : ''}</span>
+                    </div>
+                `).join('');
+            }
+
+            // Render Inset 6 Metrics
+            const rainEl = document.getElementById('weatherMetricRain');
+            const rainSub = document.getElementById('weatherMetricRainSub');
+            if (rainEl) rainEl.textContent = `${_weatherData.popMax || 0}%`;
+            if (rainSub) rainSub.textContent = _weatherData.popMax >= 60 ? '外出請備雨具' : _weatherData.popMax >= 30 ? '有局部小雨機會' : '下班時段無雨';
+
+            const appEl = document.getElementById('weatherMetricApparent');
+            const appSub = document.getElementById('weatherMetricApparentSub');
+            if (appEl) appEl.textContent = `${_weatherData.apparent || _weatherData.temp}°C`;
+            if (appSub) appSub.textContent = _weatherData.apparent > 30 ? '體感偏悶熱' : _weatherData.apparent < 20 ? '體感偏微涼' : '溫潤舒適';
+
+            const windEl = document.getElementById('weatherMetricWind');
+            const windSub = document.getElementById('weatherMetricWindSub');
+            if (windEl) windEl.textContent = `${_weatherData.windSpeed || 11} km/h`;
+            if (windSub) windSub.textContent = _weatherData.windSpeed > 20 ? '風勢明顯' : '微風吹拂';
+
+            const humEl = document.getElementById('weatherMetricHumidity');
+            const humSub = document.getElementById('weatherMetricHumiditySub');
+            if (humEl) humEl.textContent = `${_weatherData.humidity || 65}%`;
+            if (humSub) humSub.textContent = _weatherData.humidity > 75 ? '體感潮濕' : _weatherData.humidity < 40 ? '乾燥清爽' : '濕度適中';
+
+            const uvEl = document.getElementById('weatherMetricUV');
+            const uvSub = document.getElementById('weatherMetricUVSub');
+            if (uvEl) uvEl.textContent = `${_weatherData.uvMax || 4} ${getUVLevelText(_weatherData.uvMax || 4)}`;
+            if (uvSub) uvSub.textContent = _weatherData.uvMax >= 6 ? '注意防曬補充水分' : '紫外線溫和';
+
+            const sunsetEl = document.getElementById('weatherMetricSunset');
+            const sunriseSub = document.getElementById('weatherMetricSunriseSub');
+            if (sunsetEl) sunsetEl.textContent = _weatherData.sunset || '18:32';
+            if (sunriseSub) sunriseSub.textContent = `日出 ${_weatherData.sunrise || '05:42'}`;
+        }
+
+        function openWeatherModal(e) {
             if (e) {
                 e.stopPropagation();
                 e.preventDefault();
             }
             if ('vibrate' in navigator) navigator.vibrate(10);
-            playSingleClickSound('A4');
-            fetchLiveWeatherData(true);
+            renderWeatherBadge();
+            renderWeatherModal();
+            const modal = document.getElementById('weatherModal');
+            if (modal) modal.classList.remove('hidden');
         }
+
+        function closeWeatherModal() {
+            const modal = document.getElementById('weatherModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function requestAccurateGPSWeather(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            if ('vibrate' in navigator) navigator.vibrate(12);
+
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        const lat = pos.coords.latitude;
+                        const lon = pos.coords.longitude;
+                        let resolvedCity = '當前位置';
+                        try {
+                            const revRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=zh`, { signal: AbortSignal.timeout(3000) });
+                            if (revRes.ok) {
+                                const revData = await revRes.json();
+                                resolvedCity = revData.locality || revData.city || revData.principalSubdivision || '當前位置';
+                            }
+                        } catch (err) {}
+                        fetchLiveWeatherData(true, lat, lon, resolvedCity);
+                    },
+                    (err) => {
+                        fetchLiveWeatherData(true);
+                    },
+                    { timeout: 6000, maximumAge: 60000 }
+                );
+            } else {
+                fetchLiveWeatherData(true);
+            }
+        }
+
+        function refreshLiveWeather(e) {
+            requestAccurateGPSWeather(e);
+        }
+
+        window.openWeatherModal = openWeatherModal;
+        window.closeWeatherModal = closeWeatherModal;
+        window.requestAccurateGPSWeather = requestAccurateGPSWeather;
 
         // ===== ZEN THEME CONTROLLER (Apple 禪意主題色彩切換) =====
         const ZEN_THEMES = {
