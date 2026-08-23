@@ -3966,7 +3966,7 @@
                             <span style="font-size:13.5px; font-weight:600; color:var(--label);">1 分鐘正念深呼吸</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            點擊打卡下方的「正念呼吸」，跟隨 4-7-8 呼吸光環放鬆 1 分鐘、重拾心流。
+                            點擊「正念呼吸」，跟隨呼吸光環放鬆 1 分鐘，緩解疲勞。
                         </p>
                     </div>
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
@@ -4082,10 +4082,10 @@
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div style="padding:16px; display:flex; flex-direction:column; gap:6px;">
                         <div style="font-size:14.5px; font-weight:600; color:var(--label); display:flex; align-items:center; gap:6px;">
-                            <span>🌿</span> TIME 8 · 禪意專注工時
+                            <span>🌿</span> TIME 8 · 簡約工時記錄
                         </div>
                         <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            專為追求心流的專業工作者設計。結合 Apple 原生極簡美學、1 分鐘正念深呼吸與 432Hz 空靈頌缽，讓專注與生活從容平衡。
+                            專為工作者設計的工時記錄工具。採用 Apple 原生簡約設計，支援工時倒數、正念調息與法規提醒，讓工作與休息更從容。
                         </p>
                     </div>
 
@@ -4208,8 +4208,8 @@
         <div id="zenDynamicCapsule" class="zen-dynamic-capsule" onclick="dismissZenCapsule()" role="status" aria-live="polite">
             <span class="zen-capsule-emoji" id="zenCapsuleEmoji">🌿</span>
             <div class="zen-capsule-content">
-                <div class="zen-capsule-title" id="zenCapsuleTitle">心流提醒</div>
-                <div class="zen-capsule-msg" id="zenCapsuleMsg">已專注一段時間，建議放鬆片刻</div>
+                <div class="zen-capsule-title" id="zenCapsuleTitle">提醒</div>
+                <div class="zen-capsule-msg" id="zenCapsuleMsg">已工作一段時間，建議休息片刻</div>
             </div>
         </div>
     </div>
@@ -4439,7 +4439,7 @@
         const HATCH_COST = 7;
         const RARITY_LABELS = { common: '一般', rare: '稀有', epic: '珍稀', hidden: '隱藏' };
         const CODEX_SPECIES = [
-            { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '💎', desc: '初生紫晶靈體，能感應專注的心流波動。' },
+            { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '💎', desc: '初生紫晶靈體，能感應工作專注的節奏。' },
             { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common', icon: '🌿', desc: '生長於靜心土壤，散發自然安寧氣息。' },
             { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common', icon: '🔥', desc: '工時熱忱凝聚而成，充滿朝氣與動力。' },
             { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare', icon: '🌙', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。' },
@@ -4578,7 +4578,7 @@
             if (heroTitle) heroTitle.textContent = pet ? (pet.name || '工時晶靈') : `${count} / ${HATCH_COST} 蛋殼碎片`;
             const heroSub = byId('partnerHeroSub');
             if (heroSub) {
-                heroSub.textContent = pet ? `${pet.series} 系列 · ${RARITY_LABELS[pet.rarity] || '一般'} · 伴隨日常心流專注` : (isReady ? '✨ 7 顆星軌碎片已滿載，隨時可喚醒專屬晶靈' : (count === 0 ? '完成今日標準工時，即可凝聚第 1 顆星軌碎片' : `今日工時已凝聚 · 還需專注 ${HATCH_COST - count} 天破殼`));
+                heroSub.textContent = pet ? `${pet.series} 系列 · ${RARITY_LABELS[pet.rarity] || '一般'} · 陪伴日常工作` : (isReady ? '✨ 已集滿 7 顆碎片，可隨時喚醒晶靈' : (count === 0 ? '完成今日工時目標，即可獲得第 1 顆碎片' : `今日工時已記錄 · 還需 ${HATCH_COST - count} 天破殼`));
             }
             const actionArea = byId('partnerActionArea');
             if (actionArea) {
@@ -4594,7 +4594,7 @@
                 return;
             }
             hatchLocked = true;
-            showToast('🌱 正在引導心流力量，孵化晶靈中…');
+            showToast('🌱 正在孵化晶靈中…');
             try {
                 const pet = generateBestPet({ isFirstHatch: !before.hatchState.firstHatchCompleted }, 3);
                 const result = commitHatch(before, pet);
@@ -5137,32 +5137,18 @@
             }
         }
 
-        function triggerAlarm(title, body, emoji = '🧘') {
+        function triggerAlarm(title, body, emoji = '⏰') {
             showZenCapsuleNotification({
                 emoji: emoji,
                 title: title,
                 message: body,
-                duration: 4500,
+                duration: 4000,
                 pushToSystem: true
             });
         }
 
-        // --- 久坐伸展提醒 (Non-intrusive) ---
         function checkStretchReminder() {
-            if (punchRecords.length === 0 || punchRecords.length % 2 === 0) return;
-            const lastIn = new Date(punchRecords[punchRecords.length - 1].time);
-            const elapsed = (Date.now() - lastIn.getTime()) / 60000;
-            const sinceLastDismiss = (Date.now() - lastStretchDismiss) / 60000;
-
-            if (elapsed >= 90 && sinceLastDismiss >= 90) {
-                lastStretchDismiss = Date.now();
-                showZenCapsuleNotification({
-                    emoji: '🧘',
-                    title: '久坐 90 分鐘',
-                    message: '走動休息一下 💧',
-                    duration: 3500
-                });
-            }
+            // 工作提醒由設定中的工作時長單一控制，避免多重通知干擾
         }
         // --- 薪資計算已移除 ---
         // --- 成就系統 ---
@@ -5737,10 +5723,10 @@
             });
         }
 
-        // ===== ZEN & MINDFUL FOCUS APHORISMS (心流與心靈勵志哲思名言庫 · 65+ 款精選) =====
+        // ===== ZEN & MINDFUL FOCUS APHORISMS (每日工作哲思名言庫 · 65+ 款精選) =====
         const zenQuotes = [
             "「專注不是做更多事，而是對上千個好點子說不。」— Steve Jobs",
-            "「心流的本質，是將全副身心沉浸於當下熱愛的事物。」— Mihaly Csikszentmihalyi",
+            "「專注於當下，把手邊的事做好。」",
             "「心若澄澈，萬物皆明；步履從容，行則必至。」",
             "「不馳於空想，不騖於虛聲，專注當下的一磚一瓦。」",
             "「流水不爭先，爭的是滔滔不絕。」",
@@ -6136,12 +6122,11 @@
         }
 
         function showReminder(message, type = 'work') {
-            const emoji = type === 'work' ? '✨' : '🌿';
             showZenCapsuleNotification({
-                title: type === 'work' ? '系統提示' : '溫馨提醒',
+                title: '提示',
                 message: message,
-                emoji: emoji,
-                duration: 3800
+                emoji: type === 'work' ? '✨' : '🌿',
+                duration: 3000
             });
         }
 
@@ -6511,7 +6496,7 @@
             if (todos.length === 0) {
                 listEl.innerHTML = `
                     <div style="text-align:center; padding:16px 0; color:var(--label-tertiary); font-size:12.5px;">
-                        尚無待辦事項 · 享受從容心流 🌿
+                        尚無待辦事項
                     </div>
                 `;
                 return;
@@ -6692,8 +6677,8 @@
                             showZenCapsuleNotification({
                                 emoji: _weatherData.icon,
                                 title: `${_weatherData.city} · ${_weatherData.temp}°C ${_weatherData.text}`,
-                                message: `體感 ${_weatherData.apparent}°C · 天候舒心 🍃`,
-                                duration: 3200
+                                message: `體感 ${_weatherData.apparent}°C`,
+                                duration: 2500
                             });
                         }
                     }
@@ -7201,15 +7186,15 @@
                 showZenCapsuleNotification({
                     emoji: '🌙',
                     title: `${prefix} · ${hh}:${mm}`,
-                    message: `${restStr} 🍵`,
-                    duration: 3500
+                    message: restStr,
+                    duration: 3000
                 });
             } else {
                 showZenCapsuleNotification({
                     emoji: '🌙',
                     title: '下班紀錄',
-                    message: '尚無下班打卡紀錄 🌿',
-                    duration: 3000
+                    message: '尚無下班紀錄',
+                    duration: 2500
                 });
             }
         }
@@ -7224,7 +7209,7 @@
             '佛系 +1 🧘',
             '心態和平 +1 🕊️',
             '薪水小偷 +1 💸',
-            '專注心流 +1 🌿',
+            '專注 +1 🌿',
             '煩惱 -10 🌸',
             '大智慧 +1 💡',
             '摸魚無罪 +1 🐟'
@@ -7599,10 +7584,10 @@
                                 const restStr = h > 0 ? `${h}h ${m}m` : `${m}m`;
                                 setTimeout(() => {
                                     showZenCapsuleNotification({
-                                        emoji: '🌙',
-                                        title: `跨日間隔 ${restStr}`,
-                                        message: '未滿 11 小時 🍵',
-                                        duration: 3500
+                                        emoji: '⏰',
+                                        title: `休息間隔 ${restStr}`,
+                                        message: '未滿 11 小時（勞基法第 34 條）',
+                                        duration: 3000
                                     });
                                 }, 600);
                             }
@@ -7675,23 +7660,6 @@
                 setTimeout(() => {
                     autoDrawDailyFortuneSlip();
                 }, 550);
-            }
-
-            // 若今日累計工時已達標，在打卡下班當下預告明日建議上班時間
-            if (type === 'out') {
-                const res = calculateHours();
-                if (res.total >= getTargetMinutes()) {
-                    const nextEarliestIn = new Date(now.getTime() + 11 * 3600000);
-                    const nextStr = nextEarliestIn.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-                    setTimeout(() => {
-                        showZenCapsuleNotification({
-                            emoji: '✨',
-                            title: '今日工時達標',
-                            message: `建議明日 ${nextStr} 上班 🌙`,
-                            duration: 3500
-                        });
-                    }, 500);
-                }
             }
         }
 
@@ -7931,15 +7899,15 @@
                             statusText.textContent = '連續 230m · 準備休息';
                         } else {
                             liveHint.classList.add('status-ongoing');
-                            statusText.textContent = '心流專注中';
+                            statusText.textContent = '工作中';
                         }
                     } else if (punchRecords.length > 0) {
                         if (result.total >= targetMin) {
                             liveHint.classList.add('status-completed');
-                            statusText.textContent = '暮光賦歸';
+                            statusText.textContent = '今日已下班';
                         } else {
                             liveHint.classList.add('status-resting');
-                            statusText.textContent = '身心歇息中';
+                            statusText.textContent = '休息中';
                         }
                     } else {
                         // 今日尚未打卡：檢查距昨日最後下班是否已滿 11 小時
@@ -7961,11 +7929,11 @@
                             const rM = unRestRemMins % 60;
                             const remStr = rH > 0 ? `${rH}h ${rM}m` : `${rM}m`;
                             liveHint.classList.add('status-resting');
-                            statusText.textContent = `身心充能中 · 尚餘 ${remStr}`;
+                            statusText.textContent = `建議休息至 ${earliestStr}`;
                             progressInfo = `<span style="color:var(--orange);font-weight:500;"><i class="fas fa-bed"></i> 建議 ${earliestStr} 後上班 (尚餘 ${remStr} 滿 11h)</span>`;
                         } else {
                             liveHint.classList.add('status-idle');
-                            statusText.textContent = '靜待啟程';
+                            statusText.textContent = '尚未打卡';
                         }
                     }
                 }
@@ -7988,9 +7956,9 @@
                     if (!window._fourHourAlarmTriggered) {
                         window._fourHourAlarmTriggered = true;
                         showZenCapsuleNotification({
-                            emoji: '☕',
+                            emoji: '⏰',
                             title: '連續工作 230 分鐘',
-                            message: '即將滿 4 小時上限 🌿',
+                            message: '即將滿 4 小時上限，建議適度休息',
                             duration: 4000
                         });
                     }
@@ -8008,7 +7976,7 @@
                 if (Date.now() > targetTime) {
                     if (!window._alarmTriggered) {
                         window._alarmTriggered = true;
-                        triggerAlarm(`專注滿 ${appSettings.workReminderMinutes || 120} 分鐘`, '適度休息一下 🍃', '🍃');
+                        triggerAlarm(`已工作滿 ${appSettings.workReminderMinutes || 120} 分鐘`, '記得休息一下', '☕');
                     }
                 }
             } else {
@@ -8024,7 +7992,7 @@
                     if (restMins >= (appSettings.restReminderMinutes || 20)) {
                         if (!window._restAlarmTriggered) {
                             window._restAlarmTriggered = true;
-                            triggerAlarm(`休息滿 ${appSettings.restReminderMinutes || 20} 分鐘`, '準備繼續專注 🌱', '🌱');
+                            triggerAlarm(`已休息滿 ${appSettings.restReminderMinutes || 20} 分鐘`, '準備繼續工作', '🌱');
                         }
                     }
                 }
@@ -8036,14 +8004,11 @@
             if (result.total >= targetMin && punchRecords.length > 0) {
                 if (!window._targetGoalAlarmTriggered) {
                     window._targetGoalAlarmTriggered = true;
-                    triggerAlarm('目標達成 🎉', `今日工時滿 ${appSettings.targetHours || 8} 小時`, '🎉');
+                    triggerAlarm('今日工時已達標', `已滿 ${appSettings.targetHours || 8} 小時`, '🎉');
                 }
             } else if (result.total < targetMin) {
                 window._targetGoalAlarmTriggered = false;
             }
-
-            // --- 久坐檢查 ---
-            checkStretchReminder();
 
             // --- 前日下班光環徽章更新 ---
             updateYesterdayPunchOutDisplay();
@@ -8463,7 +8428,6 @@
         // --- Loops ---
         setInterval(updateDisplay, 10000);
         setInterval(updateCurrentTime, 1000);
-        setInterval(checkStretchReminder, 60000);
         setInterval(playTickSound, 1000);
 
     </script>

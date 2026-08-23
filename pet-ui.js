@@ -8,7 +8,7 @@
     const RARITY_LABELS = { common: '一般', rare: '稀有', epic: '珍稀', hidden: '隱藏' };
 
     const CODEX_SPECIES = [
-        { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '💎', desc: '初生紫晶靈體，能感應專注的心流波動。' },
+        { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '💎', desc: '初生紫晶靈體，能感應工作專注的節奏。' },
         { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common', icon: '🌿', desc: '生長於靜心土壤，散發自然安寧氣息。' },
         { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common', icon: '🔥', desc: '工時熱忱凝聚而成，充滿朝氣與動力。' },
         { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare', icon: '🌙', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。' },
@@ -221,13 +221,13 @@
         const heroSub = byId('partnerHeroSub');
         if (heroSub) {
             if (pet) {
-                heroSub.textContent = `${pet.series} 系列 · ${RARITY_LABELS[pet.rarity] || '一般'} · 伴隨日常心流專注`;
+                heroSub.textContent = `${pet.series} 系列 · ${RARITY_LABELS[pet.rarity] || '一般'} · 陪伴日常工作`;
             } else if (isReady) {
-                heroSub.textContent = '✨ 7 顆星軌碎片已滿載，隨時可喚醒專屬晶靈';
+                heroSub.textContent = '✨ 已集滿 7 顆碎片，可隨時喚醒晶靈';
             } else if (count === 0) {
-                heroSub.textContent = '完成今日標準工時，即可凝聚第 1 顆星軌碎片';
+                heroSub.textContent = '完成今日工時目標，即可獲得第 1 顆碎片';
             } else {
-                heroSub.textContent = `今日工時已凝聚 · 還需專注 ${HATCH_COST - count} 天破殼`;
+                heroSub.textContent = `今日工時已記錄 · 還需 ${HATCH_COST - count} 天破殼`;
             }
         }
 
@@ -259,7 +259,7 @@
             return;
         }
         hatchLocked = true;
-        showToast('🌱 正在引導心流力量，孵化晶靈中…');
+        showToast('🌱 正在孵化晶靈中…');
 
         try {
             const pet = generateBestPet({ isFirstHatch: !before.hatchState.firstHatchCompleted }, 3);
