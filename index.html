@@ -2809,7 +2809,30 @@
             width: 130px;
             height: 130px;
             flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             animation: petFloatBreathe 3.6s ease-in-out infinite;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .pet-vector-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .pet-bounce-interact {
+            animation: petSquishBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        @keyframes petSquishBounce {
+            0% { transform: scale(1, 1); }
+            28% { transform: scale(1.18, 0.82) translateY(5px); }
+            58% { transform: scale(0.88, 1.15) translateY(-8px); }
+            80% { transform: scale(1.04, 0.96) translateY(0); }
+            100% { transform: scale(1, 1); }
         }
 
         @keyframes petFloatBreathe {
@@ -4283,11 +4306,15 @@
                     </div>
                 </div>
 
-                <div style="background:var(--fill-secondary); border-radius:14px; padding:12px 14px; margin-bottom:20px; display:flex; align-items:flex-start; gap:9px;">
-                    <span style="font-size:14px; line-height:1.4;">✨</span>
-                    <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                        每隻靈獸皆採用 Apple 原生極簡美學打造，體態圓潤、柔光律動且富有生命感，陪伴您度過專注的每一天。
-                    </p>
+                <div style="background:var(--fill-secondary); border-radius:14px; padding:13px 15px; margin-bottom:20px; display:flex; flex-direction:column; gap:6px;">
+                    <div style="font-size:12px; font-weight:600; color:var(--label); display:flex; align-items:center; gap:6px;">
+                        <span>💡</span> <span>陪伴功能與互動機制</span>
+                    </div>
+                    <ul style="font-size:11.5px; color:var(--label-secondary); line-height:1.6; margin:0; padding-left:16px;">
+                        <li><strong>工作狀態同步</strong>：打卡工作中進入專注守護姿態，休息時自動切換放鬆小憩。</li>
+                        <li><strong>觸控互動回饋</strong>：在展台輕觸夥伴可觸發彈性動作、專屬音效與加油對話。</li>
+                        <li><strong>陪伴工時成長</strong>：每累積 1 小時工時獲得 60 點經驗值，隨工時逐步成長。</li>
+                    </ul>
                 </div>
 
                 <button onclick="closePetPreviewModal()" class="active-scale"
@@ -4323,7 +4350,7 @@
                             <span>🌿</span> TIME 8 · 簡約工時記錄
                         </div>
                         <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            專為工作者設計的工時記錄工具。採用 Apple 原生簡約設計，支援工時倒數、正念調息與法規提醒，讓工作與休息更從容。
+                            專為工作者設計的工時記錄工具，支援工時倒數、正念調息與法規提醒，協助維持穩定工作節奏。
                         </p>
                     </div>
 
@@ -4588,27 +4615,85 @@
     // ===== PET RENDERER =====
     (function (root) {
         const LAYER_ORDER = ['effectBack', 'tail', 'body', 'feet', 'arms', 'head', 'eyes', 'mouth', 'ears', 'headAccessory', 'bodyAccessory', 'effectFront'];
-        const CLASS_BY_CATEGORY = Object.fromEntries(LAYER_ORDER.map(cat => [cat, `pet-layer ${cat}`]));
+
+        function getPetSVG(specId, options = {}) {
+            switch (specId) {
+                case 'crystal_starter':
+                    return `<svg class="pet-vector-svg" viewBox="0 0 140 140" fill="none"><defs><linearGradient id="cry_b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="25%" stop-color="#E8DCF5"/><stop offset="70%" stop-color="#BA9CD5"/><stop offset="100%" stop-color="#7C5B9E"/></linearGradient><linearGradient id="cry_e" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#EADBFA"/><stop offset="100%" stop-color="#916DB3"/></linearGradient></defs><path d="M 92 88 C 114 85 125 65 118 45 C 110 58 102 70 88 80 Z" fill="url(#cry_e)" filter="drop-shadow(0 4px 8px rgba(124,91,158,0.25))"/><path d="M 108 55 L 122 42 L 115 62 Z" fill="#EADBFA" opacity="0.8"/><path d="M 44 48 L 32 16 C 36 28 44 38 52 44 Z" fill="url(#cry_e)"/><path d="M 38 28 L 44 42 L 35 34 Z" fill="#FFF" opacity="0.6"/><path d="M 96 48 L 108 16 C 104 28 96 38 88 44 Z" fill="url(#cry_e)"/><path d="M 102 28 L 96 42 L 105 34 Z" fill="#FFF" opacity="0.6"/><path d="M 70 34 C 44 34 36 56 38 82 C 40 102 54 114 70 114 C 86 114 100 102 102 82 C 104 56 96 34 70 34 Z" fill="url(#cry_b)" filter="drop-shadow(0 8px 18px rgba(124,91,158,0.3))"/><polygon points="70,68 78,78 70,90 62,78" fill="#FFF" opacity="0.85"/><polygon points="70,72 75,78 70,86 65,78" fill="#BA9CD5"/><ellipse cx="54" cy="62" rx="4.5" ry="6.5" fill="#24182E" transform="rotate(-4 54 62)"/><circle cx="53" cy="60" r="1.8" fill="#FFF"/><ellipse cx="86" cy="62" rx="4.5" ry="6.5" fill="#24182E" transform="rotate(4 86 62)"/><circle cx="85" cy="60" r="1.8" fill="#FFF"/><polygon points="70,69 68,66 72,66" fill="#583A73"/><path d="M 66 73 Q 70 76 74 73" stroke="#583A73" stroke-width="1.8" stroke-linecap="round" fill="none"/><ellipse cx="52" cy="94" rx="6.5" ry="4.5" fill="#BA9CD5"/><ellipse cx="88" cy="94" rx="6.5" ry="4.5" fill="#BA9CD5"/><polygon points="26,52 30,56 26,62 22,56" fill="#BA9CD5" opacity="0.75"/><polygon points="116,74 120,78 116,84 112,78" fill="#EADBFA" opacity="0.8"/></svg>`;
+                case 'moss_starter':
+                    return `<svg class="pet-vector-svg" viewBox="0 0 140 140" fill="none"><defs><linearGradient id="moss_b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="30%" stop-color="#D8F2DF"/><stop offset="70%" stop-color="#85CB97"/><stop offset="100%" stop-color="#3F8354"/></linearGradient><linearGradient id="moss_l" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C2EBCF"/><stop offset="100%" stop-color="#4CAF50"/></linearGradient></defs><path d="M 68 36 C 58 20 42 22 46 34 C 54 36 62 38 68 40 Z" fill="url(#moss_l)"/><path d="M 72 36 C 82 20 98 22 94 34 C 86 36 78 38 72 40 Z" fill="url(#moss_l)"/><circle cx="70" cy="38" r="3" fill="#4CAF50"/><ellipse cx="70" cy="78" rx="46" ry="40" fill="url(#moss_b)" filter="drop-shadow(0 8px 16px rgba(63,131,84,0.25))"/><path d="M 52 46 Q 60 42 68 45 Q 64 52 52 46 Z" fill="#4F9564" opacity="0.8"/><path d="M 88 56 Q 96 54 94 62 Q 88 64 88 56 Z" fill="#4F9564" opacity="0.7"/><circle cx="53" cy="70" r="6" fill="#1C3823"/><circle cx="51" cy="68" r="2.2" fill="#FFF"/><circle cx="87" cy="70" r="6" fill="#1C3823"/><circle cx="85" cy="68" r="2.2" fill="#FFF"/><ellipse cx="44" cy="76" rx="5" ry="3" fill="#FF8A80" opacity="0.4"/><ellipse cx="96" cy="76" rx="5" ry="3" fill="#FF8A80" opacity="0.4"/><path d="M 66 77 Q 70 82 74 77" stroke="#1C3823" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M 70 90 Q 74 94 70 98 Q 66 94 70 92" stroke="#4F9564" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.8"/><ellipse cx="30" cy="82" rx="8" ry="6" fill="#60A874" transform="rotate(-15 30 82)"/><ellipse cx="110" cy="82" rx="8" ry="6" fill="#60A874" transform="rotate(15 110 82)"/><ellipse cx="54" cy="114" rx="9" ry="6" fill="#3D754C"/><ellipse cx="86" cy="114" rx="9" ry="6" fill="#3D754C"/></svg>`;
+                case 'ember_starter':
+                    return `<svg class="pet-vector-svg" viewBox="0 0 140 140" fill="none"><defs><linearGradient id="emb_b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="25%" stop-color="#FFE0D1"/><stop offset="70%" stop-color="#F59779"/><stop offset="100%" stop-color="#CC4C26"/></linearGradient><linearGradient id="emb_c" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#FFF9C4"/><stop offset="100%" stop-color="#FFB74D"/></linearGradient></defs><path d="M 94 84 C 118 80 128 58 116 38 C 110 52 102 62 90 74 Z" fill="#E65100"/><path d="M 104 54 C 114 46 118 36 112 30 C 108 40 102 46 96 52 Z" fill="#FFB74D"/><path d="M 46 44 C 36 22 24 24 30 12 C 40 20 48 30 52 40 Z" fill="#E65100"/><path d="M 38 24 C 34 16 28 18 32 10 C 38 15 42 22 44 30 Z" fill="#FFD54F"/><path d="M 94 44 C 104 22 116 24 110 12 C 100 20 92 30 88 40 Z" fill="#E65100"/><path d="M 102 24 C 106 16 112 18 108 10 C 102 15 98 22 96 30 Z" fill="#FFD54F"/><path d="M 70 28 C 46 28 38 52 40 78 C 42 100 54 114 70 114 C 86 114 98 100 100 78 C 102 52 94 28 70 28 Z" fill="url(#emb_b)" filter="drop-shadow(0 8px 18px rgba(204,76,38,0.3))"/><ellipse cx="70" cy="84" rx="18" ry="20" fill="url(#emb_c)" opacity="0.95"/><polygon points="48,58 58,54 55,68 47,66" fill="#3E1508"/><circle cx="52" cy="60" r="1.8" fill="#FFF"/><polygon points="92,58 82,54 85,68 93,66" fill="#3E1508"/><circle cx="88" cy="60" r="1.8" fill="#FFF"/><path d="M 67 72 Q 72 76 77 71" stroke="#3E1508" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="28" cy="46" r="2.5" fill="#FFB74D" opacity="0.8"/><circle cx="114" cy="68" r="2" fill="#FF7043" opacity="0.75"/></svg>`;
+                case 'crystal_moon':
+                    return `<svg class="pet-vector-svg" viewBox="0 0 140 140" fill="none"><defs><linearGradient id="lun_b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="25%" stop-color="#DCE5F8"/><stop offset="70%" stop-color="#8BA4D9"/><stop offset="100%" stop-color="#3B558E"/></linearGradient><linearGradient id="lun_m" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF9C4"/><stop offset="100%" stop-color="#FFD54F"/></linearGradient></defs><path d="M 48 50 C 38 18 42 4 52 6 C 58 14 56 32 54 48 Z" fill="url(#lun_b)"/><path d="M 47 32 C 43 14 46 8 50 9 C 53 14 52 24 51 34 Z" fill="#FFF" opacity="0.6"/><path d="M 92 50 C 102 18 98 4 88 6 C 82 14 84 32 86 48 Z" fill="url(#lun_b)"/><path d="M 93 32 C 97 14 94 8 90 9 C 87 14 88 24 89 34 Z" fill="#FFF" opacity="0.6"/><circle cx="106" cy="94" r="14" fill="#B0C4DE" opacity="0.85"/><ellipse cx="70" cy="80" rx="38" ry="34" fill="url(#lun_b)" filter="drop-shadow(0 8px 18px rgba(59,85,142,0.3))"/><path d="M 70 42 C 65 42 62 46 62 51 C 62 56 66 60 70 60 C 67 58 66 54 66 51 C 66 47 68 44 70 42 Z" fill="url(#lun_m)" filter="drop-shadow(0 0 4px #FFD54F)"/><path d="M 50 68 Q 56 73 60 68" stroke="#1A2744" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M 80 68 Q 84 73 90 68" stroke="#1A2744" stroke-width="2.2" stroke-linecap="round" fill="none"/><ellipse cx="46" cy="74" rx="4" ry="2.5" fill="#E1BEE7" opacity="0.5"/><ellipse cx="94" cy="74" rx="4" ry="2.5" fill="#E1BEE7" opacity="0.5"/><polygon points="70,72 68,70 72,70" fill="#3B558E"/><path d="M 68 74 Q 70 76 72 74" stroke="#3B558E" stroke-width="1.6" stroke-linecap="round" fill="none"/><polygon points="28,38 30,42 34,42 31,45 32,49 28,46 24,49 25,45 22,42 26,42" fill="#FFD54F" opacity="0.8"/><polygon points="112,48 113,51 116,51 114,53 115,56 112,54 109,56 110,53 108,51 111,51" fill="#FFF" opacity="0.75"/></svg>`;
+                case 'moss_vine':
+                    return `<svg class="pet-vector-svg" viewBox="0 0 140 140" fill="none"><defs><linearGradient id="tre_w" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#A5D6A7"/><stop offset="40%" stop-color="#5A966E"/><stop offset="100%" stop-color="#2D5E3A"/></linearGradient></defs><path d="M 46 44 C 32 30 26 14 18 10 C 22 18 30 26 40 36 Z" fill="#3E2723"/><path d="M 28 20 C 22 16 16 18 20 24 Z" fill="#81C784"/><path d="M 94 44 C 108 30 114 14 122 10 C 118 18 110 26 100 36 Z" fill="#3E2723"/><circle cx="114" cy="18" r="4.5" fill="#F48FB1"/><circle cx="114" cy="18" r="2" fill="#FFF59D"/><path d="M 70 38 C 42 38 34 60 36 86 C 38 106 50 116 70 116 C 90 116 102 106 104 86 C 106 60 98 38 70 38 Z" fill="url(#tre_w)" filter="drop-shadow(0 8px 18px rgba(45,94,58,0.3))"/><path d="M 44 68 Q 70 78 96 68 Q 70 86 44 68 Z" fill="#2E7D32" opacity="0.9"/><path d="M 52 60 Q 56 64 60 60" stroke="#1B3E23" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M 80 60 Q 84 64 88 60" stroke="#1B3E23" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M 66 70 Q 70 73 74 70" stroke="#1B3E23" stroke-width="2" stroke-linecap="round" fill="none"/><ellipse cx="50" cy="116" rx="10" ry="5" fill="#1B3E23"/><ellipse cx="90" cy="116" rx="10" ry="5" fill="#1B3E23"/></svg>`;
+                case 'ember_smirk':
+                    return `<svg class="pet-vector-svg" viewBox="0 0 140 140" fill="none"><defs><linearGradient id="spd_b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFE0B2"/><stop offset="35%" stop-color="#FF7043"/><stop offset="100%" stop-color="#BF360C"/></linearGradient></defs><path d="M 94 82 L 124 64 L 116 78 L 132 70 L 98 94 Z" fill="#FF5722"/><path d="M 90 90 L 118 84 L 110 94 L 126 90 L 94 102 Z" fill="#FFB300"/><path d="M 44 46 L 18 22 C 30 28 42 34 50 44 Z" fill="#D84315"/><path d="M 96 46 L 122 22 C 110 28 98 34 90 44 Z" fill="#D84315"/><path d="M 70 32 C 46 32 38 54 40 80 C 42 100 54 112 70 112 C 86 112 98 100 100 80 C 102 54 94 32 70 32 Z" fill="url(#spd_b)" filter="drop-shadow(0 8px 18px rgba(191,54,12,0.3))"/><path d="M 38 68 L 44 72 L 40 76" stroke="#FFD54F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M 102 68 L 96 72 L 100 76" stroke="#FFD54F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><polygon points="50,60 60,57 56,69 48,67" fill="#210802"/><circle cx="54" cy="62" r="1.6" fill="#FFF"/><polygon points="90,60 80,57 84,69 92,67" fill="#210802"/><circle cx="86" cy="62" r="1.6" fill="#FFF"/><path d="M 68 73 Q 73 77 78 72" stroke="#210802" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`;
+                case 'crystal_epic':
+                    return `<svg class="pet-vector-svg" viewBox="0 0 140 140" fill="none"><defs><linearGradient id="drk_b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="30%" stop-color="#E1BEE7"/><stop offset="70%" stop-color="#9C27B0"/><stop offset="100%" stop-color="#4A148C"/></linearGradient><linearGradient id="drk_w" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F3E5F5"/><stop offset="100%" stop-color="#BA68C8"/></linearGradient></defs><path d="M 40 68 C 16 50 8 26 12 18 C 22 28 32 44 42 58 Z" fill="url(#drk_w)" opacity="0.85" filter="drop-shadow(0 2px 8px rgba(156,39,176,0.3))"/><path d="M 100 68 C 124 50 132 26 128 18 C 118 28 108 44 98 58 Z" fill="url(#drk_w)" opacity="0.85" filter="drop-shadow(0 2px 8px rgba(156,39,176,0.3))"/><path d="M 48 40 C 36 24 38 12 34 8 C 42 16 48 26 52 36 Z" fill="#6A1B9A"/><path d="M 92 40 C 104 24 102 12 106 8 C 98 16 92 26 88 36 Z" fill="#6A1B9A"/><path d="M 70 30 C 48 30 40 52 42 78 C 44 98 54 112 70 112 C 86 112 96 98 98 78 C 100 52 92 30 70 30 Z" fill="url(#drk_b)" filter="drop-shadow(0 8px 20px rgba(74,20,140,0.35))"/><path d="M 90 92 C 112 96 124 110 120 122 C 112 118 104 108 92 98 Z" fill="#6A1B9A"/><polygon points="120,122 128,118 126,128 116,126" fill="#E1BEE7"/><polygon points="70,68 76,76 70,86 64,76" fill="#FFF" filter="drop-shadow(0 0 6px #E1BEE7)"/><polygon points="52,56 60,54 57,64 50,62" fill="#180426"/><circle cx="55" cy="58" r="1.6" fill="#FFD54F"/><polygon points="88,56 80,54 83,64 90,62" fill="#180426"/><circle cx="85" cy="58" r="1.6" fill="#FFD54F"/></svg>`;
+                case 'ember_crown':
+                    return `<svg class="pet-vector-svg" viewBox="0 0 140 140" fill="none"><defs><linearGradient id="crn_g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF59D"/><stop offset="40%" stop-color="#FFD54F"/><stop offset="100%" stop-color="#FF6F00"/></linearGradient><linearGradient id="crn_c" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF9C4"/><stop offset="50%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFA000"/></linearGradient></defs><circle cx="70" cy="74" r="48" fill="url(#crn_g)" opacity="0.85" filter="drop-shadow(0 0 16px rgba(255,160,0,0.4))"/><polygon points="70,16 75,28 65,28" fill="#FFD54F"/><polygon points="120,40 110,48 116,56" fill="#FFD54F"/><polygon points="128,74 116,78 116,70" fill="#FFD54F"/><polygon points="20,40 30,48 24,56" fill="#FFD54F"/><polygon points="12,74 24,78 24,70" fill="#FFD54F"/><g filter="drop-shadow(0 2px 6px rgba(213,0,0,0.4))"><polygon points="54,26 50,14 62,20 70,8 78,20 90,14 86,26" fill="url(#crn_c)"/><rect x="54" y="24" width="32" height="4" rx="1.5" fill="#FFA000"/><circle cx="70" cy="18" r="2.5" fill="#D50000"/></g><circle cx="70" cy="78" r="34" fill="#FFF8E1" filter="drop-shadow(0 6px 14px rgba(230,81,0,0.25))"/><ellipse cx="56" cy="72" rx="4.5" ry="6.5" fill="#BF360C"/><polygon points="56,69 58,72 56,75 54,72" fill="#FFF"/><ellipse cx="84" cy="72" rx="4.5" ry="6.5" fill="#BF360C"/><polygon points="84,69 86,72 84,75 82,72" fill="#FFF"/><polygon points="70,78 67,75 73,75" fill="#FF6F00"/><path d="M 66 82 Q 70 85 74 82" stroke="#BF360C" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`;
+                default:
+                    return '';
+            }
+        }
+
         function renderPet(container, pet, resolvedParts) {
             if (!container) return;
             container.innerHTML = '';
+            container.setAttribute('role', 'img');
+            container.setAttribute('aria-label', `${pet?.name || '夥伴'}，${pet?.rarity || 'common'} 稀有度`);
+
+            const specId = pet?.specId || (
+                pet?.series === 'moss' ? (pet?.rarity === 'rare' ? 'moss_vine' : 'moss_starter') :
+                pet?.series === 'ember' ? (pet?.rarity === 'hidden' ? 'ember_crown' : pet?.rarity === 'rare' ? 'ember_smirk' : 'ember_starter') :
+                (pet?.rarity === 'epic' ? 'crystal_epic' : pet?.rarity === 'rare' ? 'crystal_moon' : 'crystal_starter')
+            );
+
+            const isWorking = (typeof punchRecords !== 'undefined' && punchRecords.length > 0 && punchRecords.length % 2 === 1);
             const art = document.createElement('div');
-            const seriesClass = pet.series ? `series-${pet.series}` : 'series-crystal';
-            const rarityClass = pet.rarity ? `rarity-${pet.rarity}` : 'rarity-common';
+            const seriesClass = pet?.series ? `series-${pet.series}` : 'series-crystal';
+            const rarityClass = pet?.rarity ? `rarity-${pet.rarity}` : 'rarity-common';
             art.className = `partner-art ${seriesClass} ${rarityClass}`;
-            for (const category of LAYER_ORDER) {
-                if (!resolvedParts?.[category]) continue;
-                const layer = document.createElement('div');
-                layer.className = CLASS_BY_CATEGORY[category];
-                if (category === 'head' && (pet.rarity === 'hidden' || pet.rarity === 'epic')) {
-                    layer.innerHTML = '👑';
-                }
-                art.appendChild(layer);
-            }
+            art.setAttribute('onclick', 'window.onPetClick(event)');
+            art.style.cursor = 'pointer';
+            art.title = '輕觸夥伴互動';
+            art.innerHTML = getPetSVG(specId, { isWorking });
             container.appendChild(art);
         }
+        root.getPetSVG = getPetSVG;
         root.renderPet = renderPet;
     })(window);
+
+    // ===== PET TAP INTERACTION =====
+    function onPetClick(event) {
+        if (typeof playSingleClickSound === 'function') playSingleClickSound("E5");
+        const container = document.getElementById('partnerPetArt') || (event && event.currentTarget);
+        if (container) {
+            container.classList.remove('pet-bounce-interact');
+            void container.offsetWidth;
+            container.classList.add('pet-bounce-interact');
+            if (typeof spawnParticles === 'function') {
+                spawnParticles(container, ['✨', '💫', '💖', '⭐', '🎵']);
+            }
+        }
+        const isWorking = (typeof punchRecords !== 'undefined' && punchRecords.length > 0 && punchRecords.length % 2 === 1);
+        const msgs = isWorking ? [
+            "正在陪你專注工作中 ✦",
+            "保持穩定的工作步調 ☕",
+            "專注的你最閃耀 ✨",
+            "深呼吸，維持節奏 🌿"
+        ] : [
+            "隨時準備陪你開始工作 ✨",
+            "喝口水，放鬆一下 🍵",
+            "今天也一起加油！ ✦",
+            "享受屬於自己的放鬆時光 🍃"
+        ];
+        const pick = msgs[Math.floor(Math.random() * msgs.length)];
+        showToast(pick);
+    }
+    window.onPetClick = onPetClick;
 
     // ===== PET GENERATOR =====
     (function (root) {
@@ -4856,22 +4941,14 @@
             renderPreviewTabs();
 
             const stageEl = byId('previewPetStage');
-            if (stageEl && typeof renderPet === 'function' && typeof resolveParts === 'function') {
+            if (stageEl && typeof renderPet === 'function') {
                 const samplePet = {
                     name: spec.name,
                     series: spec.series,
                     rarity: spec.rarity,
-                    parts: {
-                        body: `body_${spec.series}_round_${spec.series === 'moss' ? 'green' : spec.series === 'ember' ? 'red' : 'purple'}_01`,
-                        eyes: `eye_${spec.series === 'ember' ? 'ember_spark_red_epic_01' : spec.series === 'moss' ? 'moss_leaf_green_01' : 'crystal_moon_purple_01'}`,
-                        ears: `ears_${spec.series === 'ember' ? 'ember_flame_red_01' : spec.series === 'moss' ? 'moss_leaf_green_01' : 'crystal_horn_purple_01'}`,
-                        tail: `tail_${spec.series === 'ember' ? 'ember_flame_red_rare_01' : spec.series === 'moss' ? 'moss_vine_green_01' : 'crystal_drop_purple_01'}`,
-                        feet: `feet_${spec.series === 'moss' ? 'moss_root_green_01' : 'crystal_short_purple_01'}`,
-                        arms: `arms_${spec.series === 'ember' ? 'ember_paw_red_epic_01' : spec.series === 'moss' ? 'moss_vine_green_01' : 'crystal_float_purple_01'}`,
-                        head: (spec.rarity === 'hidden' || spec.rarity === 'epic') ? 'head_crystal_crown_purple_01' : null
-                    }
+                    specId: spec.id
                 };
-                renderPet(stageEl, samplePet, resolveParts(samplePet.parts));
+                renderPet(stageEl, samplePet);
             }
 
             const auraEl = byId('previewAuraGlow');
@@ -4895,14 +4972,30 @@
             if (traitEl) traitEl.textContent = spec.trait || '✦ 陪伴日常專注工作';
 
             const state = typeof readPetSystem === 'function' ? readPetSystem() : { pets: [] };
-            const isUnlocked = state.pets && state.pets.some(p => p.series === spec.series && (p.rarity === spec.rarity || spec.rarity === 'common'));
+            const matchingPet = state.pets && state.pets.find(p => p.series === spec.series && (p.rarity === spec.rarity || spec.rarity === 'common'));
+            const isUnlocked = !!matchingPet;
+            const isCurrentlyActive = matchingPet && state.activePetId === matchingPet.petId;
             const unlockEl = byId('previewPetUnlock');
             if (unlockEl) {
-                unlockEl.innerHTML = isUnlocked
-                    ? '<span style="color:var(--green); font-weight:600;">✨ 已解鎖於展台，隨時為您陪伴</span>'
-                    : '<span>🔒 累積 7 顆蛋殼碎片破殼喚醒（每日達成 8 小時標準工時獲 1 顆）</span>';
+                if (isCurrentlyActive) {
+                    unlockEl.innerHTML = '<span style="color:var(--green); font-weight:600;">✨ 目前正在展台陪伴中</span>';
+                } else if (isUnlocked) {
+                    unlockEl.innerHTML = `<button type="button" onclick="window.selectAsActivePet('${matchingPet.petId}')" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px; border:none; background:var(--label); color:var(--bg); font-size:12px; font-weight:600; cursor:pointer; margin-top:4px;">✨ 設為當前陪伴夥伴</button>`;
+                } else {
+                    unlockEl.innerHTML = '<span>🔒 累積 7 顆蛋殼碎片破殼喚醒（每日達成 8 小時標準工時獲 1 顆）</span>';
+                }
             }
         }
+        function selectAsActivePet(petId) {
+            const state = typeof readPetSystem === 'function' ? readPetSystem() : null;
+            if (!state || !state.pets.some(p => p.petId === petId)) return;
+            state.activePetId = petId;
+            writePetSystem(state);
+            showToast('✨ 已更換當前陪伴夥伴！');
+            renderPartnerRoom();
+            switchPetPreview(_currentPreviewIndex);
+        }
+        root.selectAsActivePet = selectAsActivePet;
         root.openPetPreviewModal = openPetPreviewModal;
         root.closePetPreviewModal = closePetPreviewModal;
         root.switchPetPreview = switchPetPreview;
