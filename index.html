@@ -2095,16 +2095,16 @@
             }
         }
 
-        /* --- Bottom Nav --- */
+        /* --- Bottom Nav (Strictly Fixed to Screen Bottom) --- */
         #bottomNav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            width: 100%;
-            max-width: 430px;
-            z-index: 40;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 50% !important;
+            transform: translateX(-50%) translateZ(0) !important;
+            -webkit-transform: translateX(-50%) translateZ(0) !important;
+            width: 100% !important;
+            max-width: 430px !important;
+            z-index: 45 !important;
             background: var(--nav-bg);
             border-top: 0.5px solid var(--separator);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -2113,8 +2113,11 @@
             display: flex;
             align-items: flex-start;
             transition: background 0.4s ease-in-out;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            overscroll-behavior: none;
+            contain: layout paint style;
         }
 
         .nav-tab {
@@ -3653,15 +3656,10 @@
         <header id="appHeader">
             <div class="header-inner">
                 <span class="header-date" id="currentDate">載入中...</span>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <button type="button" onclick="openStoreDirectoryModal(event)" class="active-scale" title="門市聯絡與跨店運費速查" style="display:flex; align-items:center; gap:4px; font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:999px; background:var(--fill-secondary); border:0.5px solid var(--separator); color:var(--label); cursor:pointer;">
-                        <span>🏢</span> <span>門市/運費</span>
-                    </button>
-                    <span class="header-brand" id="headerBrandBtn" onclick="openThemePicker()" title="點擊切換禪意主題風格">
-                        <span>TIME 8</span>
-                        <span style="font-size:8px; opacity:0.6;">✦</span>
-                    </span>
-                </div>
+                <span class="header-brand" id="headerBrandBtn" onclick="openThemePicker()" title="點擊切換禪意主題風格">
+                    <span>TIME 8</span>
+                    <span style="font-size:8px; opacity:0.6;">✦</span>
+                </span>
             </div>
         </header>
 
@@ -3968,37 +3966,51 @@
                     </div>
                 </div>
 
-                <!-- Weekly Summary -->
+                <!-- Store Directory & Cross-Store Freight (Apple Native Inset Module) -->
                 <div>
-                    <div class="editorial-label">本週總覽</div>
-                    <div class="zen-card" style="padding:18px 20px;">
-                        <div id="weeklySummaryContent" style="display:flex; gap:12px; justify-content:space-between;">
-                            <div style="flex:1; text-align:center;">
-                                <div style="font-size:22px; font-weight:700; color:var(--label); font-variant-numeric:tabular-nums;"
-                                    id="weekTotalHours">—</div>
-                                <div
-                                    style="font-size:10px; color:var(--label-tertiary); margin-top:3px; letter-spacing:0.04em;">
-                                    總工時</div>
-                            </div>
-                            <div style="width:0.5px; background:var(--separator);"></div>
-                            <div style="flex:1; text-align:center;">
-                                <div style="font-size:22px; font-weight:700; color:var(--label); font-variant-numeric:tabular-nums;"
-                                    id="weekAvgHours">—</div>
-                                <div
-                                    style="font-size:10px; color:var(--label-tertiary); margin-top:3px; letter-spacing:0.04em;">
-                                    日均工時</div>
-                            </div>
-                            <div style="width:0.5px; background:var(--separator);"></div>
-                            <div style="flex:1; text-align:center;">
-                                <div style="font-size:22px; font-weight:700; color:var(--blue); font-variant-numeric:tabular-nums;"
-                                    id="weekWorkDays">—</div>
-                                <div
-                                    style="font-size:10px; color:var(--label-tertiary); margin-top:3px; letter-spacing:0.04em;">
-                                    工作天數</div>
-                            </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <div class="editorial-label" style="margin:0; letter-spacing:0.04em;">門市與跨店運費</div>
+                        <button onclick="refreshStoreDirectoryData(event)" id="storeRefreshBtn" title="同步最新試算表資料"
+                            style="font-size:11px; color:var(--label-tertiary); font-weight:500; background:none; border:none; cursor:pointer; letter-spacing:0.04em; display:flex; align-items:center; gap:5px; font-family:inherit;">
+                            <i class="fas fa-rotate" id="storeRefreshIcon" style="font-size:9.5px;"></i>
+                            <span id="storeRefreshText">同步最新</span>
+                        </button>
+                    </div>
+
+                    <div class="zen-card" style="padding:16px 18px;">
+                        <!-- Spotlight Search Bar -->
+                        <div style="position:relative; margin-bottom:12px;">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--label-tertiary); pointer-events:none;">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="storeSearchInput" placeholder="搜尋店名、店碼 (022)、電話、區域 (鳳山)..."
+                                oninput="onStoreSearchInput(event)"
+                                style="width:100%; padding:10px 34px 10px 34px; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:12px; font-size:13px; color:var(--label); outline:none; font-family:inherit;" />
+                            <button type="button" id="storeSearchClearBtn" onclick="clearStoreSearch()" class="hidden"
+                                style="position:absolute; right:10px; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%; background:var(--fill); border:none; color:var(--label-tertiary); font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                        <div id="weekBestDay"
-                            style="margin-top:14px; padding-top:12px; border-top:0.5px solid var(--separator); font-size:12px; color:var(--label-secondary); text-align:center; letter-spacing:0.02em;">
+
+                        <!-- Segmented Control -->
+                        <div class="store-segmented-control" style="margin-bottom:12px;">
+                            <button type="button" class="store-seg-btn active" id="storeTabAll" onclick="setStoreDirectoryTab('all')">全部</button>
+                            <button type="button" class="store-seg-btn" id="storeTabStores" onclick="setStoreDirectoryTab('stores')">門市電話</button>
+                            <button type="button" class="store-seg-btn" id="storeTabFreight" onclick="setStoreDirectoryTab('freight')">跨店運費</button>
+                            <button type="button" class="store-seg-btn" id="storeTabMD" onclick="setStoreDirectoryTab('md')">家電 MD</button>
+                        </div>
+
+                        <!-- Database Status Indicator -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 2px;">
+                            <span id="storeStatusBadge" style="font-size:10.5px; color:var(--label-tertiary); letter-spacing:0.02em;">🟢 真實試算表資料已快取</span>
+                            <span id="storeCountBadge" style="font-size:10.5px; font-weight:600; color:var(--label-secondary);">載入中...</span>
+                        </div>
+
+                        <!-- Dynamic Results List -->
+                        <div id="storeResultsZone" style="max-height:480px; overflow-y:auto; padding-right:2px; -webkit-overflow-scrolling:touch;">
+                            <!-- Injected by StoreDirectoryEngine -->
                         </div>
                     </div>
                 </div>
@@ -4653,67 +4665,6 @@
 
                 <button onclick="closePetPreviewModal()" class="active-scale"
                     style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">返回展台</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 門市聯絡與跨店運費 Modal (Apple Inset Grouped Sheet) -->
-    <div id="storeDirectoryModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)" onclick="closeStoreDirectoryModal()"></div>
-        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto" style="background:var(--bg);max-height:92vh;overflow-y:auto;">
-            <div style="padding:14px 20px 0; position:sticky; top:0; background:var(--bg); z-index:10;">
-                <div class="sheet-handle"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; border-bottom:0.5px solid var(--separator);">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-size:17px; font-weight:700; color:var(--label); letter-spacing:-0.02em;">✦ 門市與跨店運費</span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <button onclick="refreshStoreDirectoryData(event)" id="storeRefreshBtn" title="同步最新試算表資料" aria-label="重新整理"
-                            style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label); cursor:pointer;">
-                            <i class="fas fa-rotate" style="font-size:12px;" id="storeRefreshIcon"></i>
-                        </button>
-                        <button onclick="closeStoreDirectoryModal()" aria-label="關閉門市速查"
-                            style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
-                            <i class="fas fa-times" style="font-size:12px;"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div style="padding:14px 20px 32px;">
-                <!-- 搜尋列 (Apple Spotlight Style) -->
-                <div style="position:relative; margin-bottom:12px;">
-                    <i class="fas fa-search" style="position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--label-tertiary);"></i>
-                    <input type="text" id="storeSearchInput" placeholder="搜尋店名、代碼 (如 WG)、電話、區域 (如 鳳山)..."
-                        oninput="onStoreSearchInput(event)"
-                        style="width:100%; padding:11px 36px 11px 36px; background:var(--fill-secondary); border:none; border-radius:12px; font-size:13.5px; color:var(--label); outline:none; font-family:inherit;" />
-                    <button type="button" id="storeSearchClearBtn" onclick="clearStoreSearch()" class="hidden"
-                        style="position:absolute; right:10px; top:50%; transform:translateY(-50%); width:20px; height:20px; border-radius:50%; background:var(--fill); border:none; color:var(--label-tertiary); font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-
-                <!-- 分段控制器 (Segmented Control) -->
-                <div class="store-segmented-control">
-                    <button type="button" class="store-seg-btn active" id="storeTabAll" onclick="setStoreDirectoryTab('all')">全部</button>
-                    <button type="button" class="store-seg-btn" id="storeTabStores" onclick="setStoreDirectoryTab('stores')">🏢 門市電話</button>
-                    <button type="button" class="store-seg-btn" id="storeTabFreight" onclick="setStoreDirectoryTab('freight')">🚚 跨店運費</button>
-                    <button type="button" class="store-seg-btn" id="storeTabMD" onclick="setStoreDirectoryTab('md')">🤖 家電 MD</button>
-                </div>
-
-                <!-- 資料庫狀態指示器 -->
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:0 2px;">
-                    <span id="storeStatusBadge" style="font-size:11px; color:var(--label-tertiary);">🟢 資料庫已離線快取</span>
-                    <span id="storeCountBadge" style="font-size:11px; font-weight:600; color:var(--label-secondary);">載入中...</span>
-                </div>
-
-                <!-- 動態結果卡片容器 -->
-                <div id="storeResultsZone">
-                    <!-- Cards injected by StoreDirectoryEngine -->
-                </div>
-
-                <button onclick="closeStoreDirectoryModal()" class="active-scale"
-                    style="width:100%; padding:14px; margin-top:8px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em;">返回</button>
             </div>
         </div>
     </div>
