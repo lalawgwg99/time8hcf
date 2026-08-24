@@ -2095,29 +2095,38 @@
             }
         }
 
-        /* --- Bottom Nav (Strictly Fixed to Screen Bottom) --- */
+        /* --- Apple Floating Island Capsule Tab Bar (懸浮浮島膠囊導航欄) --- */
         #bottomNav {
             position: fixed !important;
-            bottom: 0 !important;
+            bottom: calc(env(safe-area-inset-bottom, 12px) + 12px) !important;
             left: 50% !important;
             transform: translateX(-50%) translateZ(0) !important;
             -webkit-transform: translateX(-50%) translateZ(0) !important;
-            width: 100% !important;
-            max-width: 430px !important;
+            width: calc(100% - 36px) !important;
+            max-width: 380px !important;
+            height: 58px !important;
             z-index: 45 !important;
             background: var(--nav-bg);
-            border-top: 0.5px solid var(--separator);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            backdrop-filter: blur(24px) saturate(180%);
-            padding: 8px 0 max(8px, env(safe-area-inset-bottom, 0px));
+            border: 0.5px solid var(--separator);
+            border-radius: 999px !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+            backdrop-filter: blur(28px) saturate(190%);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 0 12px;
             display: flex;
-            align-items: flex-start;
-            transition: background 0.4s ease-in-out;
-            touch-action: none;
+            align-items: center;
+            justify-content: space-around;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, background 0.4s ease-in-out;
             user-select: none;
             -webkit-user-select: none;
-            overscroll-behavior: none;
             contain: layout paint style;
+        }
+
+        #bottomNav.nav-hidden {
+            transform: translateX(-50%) translateY(95px) translateZ(0) !important;
+            -webkit-transform: translateX(-50%) translateY(95px) translateZ(0) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
 
         .nav-tab {
@@ -2125,14 +2134,20 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            gap: 3px;
             background: none;
             border: none;
             cursor: pointer;
-            padding: 6px 0 4px;
+            padding: 6px 0;
             color: var(--label-quaternary);
-            transition: color 0.5s ease-in-out;
+            transition: color 0.25s ease, transform 0.2s ease;
             -webkit-tap-highlight-color: transparent;
+            border-radius: 999px;
+        }
+
+        .nav-tab:active {
+            transform: scale(0.92);
         }
 
         .nav-tab.active {
@@ -2140,19 +2155,19 @@
         }
 
         .nav-tab svg {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.4s ease-in-out;
+            width: 19px;
+            height: 19px;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .nav-tab.active svg {
-            transform: scale(1.08);
+            transform: scale(1.12);
         }
 
         .nav-tab span {
             font-size: 10px;
-            font-weight: 400;
-            letter-spacing: 0.08em;
+            font-weight: 500;
+            letter-spacing: 0.04em;
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
@@ -5760,7 +5775,7 @@
             }, 6000);
         }
 
-        // === IPPITSU: Tab Switching ===
+        // === Tab Switching & Floating Nav Controller ===
         function switchTab(tabName) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -5768,10 +5783,51 @@
             const navBtn = document.getElementById('navTab' + tabName);
             if (panel) panel.classList.add('active');
             if (navBtn) navBtn.classList.add('active');
+            const navEl = document.getElementById('bottomNav');
+            if (navEl) navEl.classList.remove('nav-hidden');
             if (tabName === 'Partner' && typeof renderPartnerRoom === 'function') renderPartnerRoom();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if ('vibrate' in navigator) navigator.vibrate(8);
         }
+
+        // ===== SMART FLOATING ISLAND SCROLL CONTROLLER =====
+        (function initSmartNavScroll() {
+            let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+            let ticking = false;
+            const navEl = document.getElementById('bottomNav');
+            if (!navEl) return;
+
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+                        const scrollDelta = currentScrollY - lastScrollY;
+
+                        // Always show near top (< 60px)
+                        if (currentScrollY <= 60) {
+                            navEl.classList.remove('nav-hidden');
+                        } else if (scrollDelta > 18) {
+                            // Scrolling down -> smoothly glide into hiding for clean view
+                            navEl.classList.add('nav-hidden');
+                        } else if (scrollDelta < -10) {
+                            // Scrolling up -> reveal immediately
+                            navEl.classList.remove('nav-hidden');
+                        }
+
+                        lastScrollY = Math.max(0, currentScrollY);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // Bottom touch trigger to reveal immediately
+            document.addEventListener('touchstart', function(e) {
+                if (e.touches && e.touches[0] && (window.innerHeight - e.touches[0].clientY < 80)) {
+                    navEl.classList.remove('nav-hidden');
+                }
+            }, { passive: true });
+        })();
 
         // === Circular Ring Init & Update (Apple Native Masterpiece) ===
         let _ringMode = 'elapsed'; // 'elapsed' | 'remaining'
