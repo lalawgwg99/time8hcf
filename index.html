@@ -670,6 +670,25 @@
             background: rgba(154, 112, 64, 0.12);
             color: var(--orange);
         }
+        .store-email-link {
+            font-size: 11px;
+            color: var(--blue);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 3.5px;
+            background: var(--fill);
+            padding: 1.5px 7px;
+            border-radius: 6px;
+            border: 0.5px solid var(--separator);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", monospace;
+            word-break: break-all;
+            transition: background 0.15s ease, opacity 0.15s ease;
+        }
+        .store-email-link:active {
+            background: var(--fill-secondary);
+            opacity: 0.7;
+        }
 
         /* 2. 右上角：待辦筆記 */
         .ring-accessory-btn {
@@ -8244,6 +8263,38 @@
             return { raw: '$' + num.toLocaleString(), amount: num, isFree: num === 0 };
         }
 
+        function parseStaffContact(rawStr) {
+            if (!rawStr || !rawStr.trim()) return { name: '', email: '', note: '' };
+            const str = rawStr.trim();
+            const emailMatch = str.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/i);
+            const email = emailMatch ? emailMatch[0].trim() : '';
+
+            let textWithoutEmail = str.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi, '');
+            const lines = textWithoutEmail.split(/[\r\n]+/).map(l => l.trim()).filter(Boolean);
+            
+            let name = '';
+            let notes = [];
+            
+            lines.forEach((line, idx) => {
+                if (idx === 0 && !line.startsWith('(') && !line.startsWith('<')) {
+                    name = line;
+                } else {
+                    notes.push(line);
+                }
+            });
+
+            if (!name && lines.length > 0) {
+                name = lines[0];
+                notes = lines.slice(1);
+            }
+
+            return {
+                name: name || (email ? email.split('@')[0] : ''),
+                email: email,
+                note: notes.join(' ')
+            };
+        }
+
         function initStoreDirectoryEngine() {
             try {
                 const cached = JSON.parse(localStorage.getItem(STORE_DIRECTORY_STORAGE_KEY) || 'null');
@@ -8431,11 +8482,11 @@
                 const name = String(c['店名'] || c['部門'] || '').trim();
                 const code = String(c['代碼'] || '').trim();
                 const phone = String(c['電話'] || c['課長電話'] || c['助理電話'] || '').trim();
-                const staff = String(c['店長'] || c['處長'] || c['課長'] || c['助理'] || c['負責人'] || '').trim();
                 const address = String(c['地址'] || '').trim();
+                const allStaffStr = [c['店長'], c['處長'], c['課長'], c['助理'], c['負責人'], c['部門']].filter(Boolean).join(' ');
 
                 const isMatch = !q || name.toLowerCase().includes(q) || code.toLowerCase().includes(q) ||
-                                phone.toLowerCase().includes(q) || staff.toLowerCase().includes(q) || address.toLowerCase().includes(q);
+                                phone.toLowerCase().includes(q) || allStaffStr.toLowerCase().includes(q) || address.toLowerCase().includes(q);
 
                 if (isMD) {
                     if (tab === 'all' || tab === 'md') {
@@ -8530,25 +8581,87 @@
                     html += '</div>';
 
                     html += '<div style="padding:9px 13px; font-size:12px; color:var(--label-secondary); line-height:1.55;">';
-                    if (storeManager) {
-                        html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">店長</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(storeManager) + '</span></div>';
+                    if (storeManager && storeManager.trim()) {
+                        const parsedMgr = parseStaffContact(storeManager);
+                        html += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:3px; flex-wrap:wrap; gap:4px;">';
+                        html += '<div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">';
+                        html += '<span style="color:var(--label-tertiary); width:36px; flex-shrink:0;">店長</span>';
+                        html += '<span style="font-weight:600; color:var(--label);">' + escapeHtml(parsedMgr.name) + '</span>';
+                        if (parsedMgr.email) {
+                            html += '<a href="mailto:' + escapeHtml(parsedMgr.email) + '" class="store-email-link active-scale" title="寄信給店長">';
+                            html += '<svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>';
+                            html += '<span>' + escapeHtml(parsedMgr.email) + '</span>';
+                            html += '</a>';
+                        }
+                        if (parsedMgr.note) {
+                            html += '<span style="font-size:10.5px; color:var(--label-tertiary);">' + escapeHtml(parsedMgr.note) + '</span>';
+                        }
+                        html += '</div>';
+                        html += '</div>';
                     }
                     if (director && director.trim()) {
-                        html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">處長</span><span style="color:var(--label); font-weight:500;">' + escapeHtml(director.split('\n')[0]) + '</span></div>';
+                        const parsedDir = parseStaffContact(director);
+                        html += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:3px; flex-wrap:wrap; gap:4px;">';
+                        html += '<div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">';
+                        html += '<span style="color:var(--label-tertiary); width:36px; flex-shrink:0;">處長</span>';
+                        if (parsedDir.name) {
+                            html += '<span style="color:var(--label); font-weight:500;">' + escapeHtml(parsedDir.name) + '</span>';
+                        }
+                        if (parsedDir.email) {
+                            html += '<a href="mailto:' + escapeHtml(parsedDir.email) + '" class="store-email-link active-scale" title="寄信給處長">';
+                            html += '<svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>';
+                            html += '<span>' + escapeHtml(parsedDir.email) + '</span>';
+                            html += '</a>';
+                        }
+                        if (parsedDir.note) {
+                            html += '<span style="font-size:10.5px; color:var(--label-tertiary);">' + escapeHtml(parsedDir.note) + '</span>';
+                        }
+                        html += '</div>';
+                        html += '</div>';
                     }
-                    if (sectionChief) {
-                        html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">';
-                        html += '<div style="display:flex; gap:6px;"><span style="color:var(--label-tertiary); width:36px;">課長</span><span>' + escapeHtml(sectionChief.split('\n')[0]) + '</span></div>';
+                    if (sectionChief && sectionChief.trim()) {
+                        const parsedSec = parseStaffContact(sectionChief);
+                        html += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:3px; flex-wrap:wrap; gap:4px;">';
+                        html += '<div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">';
+                        html += '<span style="color:var(--label-tertiary); width:36px; flex-shrink:0;">課長</span>';
+                        if (parsedSec.name) {
+                            html += '<span style="color:var(--label); font-weight:500;">' + escapeHtml(parsedSec.name) + '</span>';
+                        }
+                        if (parsedSec.email) {
+                            html += '<a href="mailto:' + escapeHtml(parsedSec.email) + '" class="store-email-link active-scale" title="寄信給課長">';
+                            html += '<svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>';
+                            html += '<span>' + escapeHtml(parsedSec.email) + '</span>';
+                            html += '</a>';
+                        }
+                        if (parsedSec.note) {
+                            html += '<span style="font-size:10.5px; color:var(--label-tertiary);">' + escapeHtml(parsedSec.note) + '</span>';
+                        }
+                        html += '</div>';
                         if (sectionPhone) {
-                            html += '<a href="tel:' + cleanSecPhone + '" style="font-size:11px; font-weight:600; color:var(--blue); text-decoration:none; display:inline-flex; align-items:center; gap:3px;"><span>' + escapeHtml(sectionPhone) + '</span></a>';
+                            html += '<a href="tel:' + cleanSecPhone + '" style="font-size:11px; font-weight:600; color:var(--blue); text-decoration:none; display:inline-flex; align-items:center; gap:3px; margin-left:auto;"><span>' + escapeHtml(sectionPhone) + '</span></a>';
                         }
                         html += '</div>';
                     }
-                    if (assistant) {
-                        html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">';
-                        html += '<div style="display:flex; gap:6px;"><span style="color:var(--label-tertiary); width:36px;">助理</span><span>' + escapeHtml(assistant.split('\n')[0]) + '</span></div>';
+                    if (assistant && assistant.trim()) {
+                        const parsedAst = parseStaffContact(assistant);
+                        html += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:3px; flex-wrap:wrap; gap:4px;">';
+                        html += '<div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">';
+                        html += '<span style="color:var(--label-tertiary); width:36px; flex-shrink:0;">助理</span>';
+                        if (parsedAst.name) {
+                            html += '<span style="color:var(--label); font-weight:500;">' + escapeHtml(parsedAst.name) + '</span>';
+                        }
+                        if (parsedAst.email) {
+                            html += '<a href="mailto:' + escapeHtml(parsedAst.email) + '" class="store-email-link active-scale" title="寄信給助理">';
+                            html += '<svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>';
+                            html += '<span>' + escapeHtml(parsedAst.email) + '</span>';
+                            html += '</a>';
+                        }
+                        if (parsedAst.note) {
+                            html += '<span style="font-size:10.5px; color:var(--label-tertiary);">' + escapeHtml(parsedAst.note) + '</span>';
+                        }
+                        html += '</div>';
                         if (assistantPhone) {
-                            html += '<a href="tel:' + cleanAstPhone + '" style="font-size:11px; font-weight:600; color:var(--blue); text-decoration:none; display:inline-flex; align-items:center; gap:3px;"><span>' + escapeHtml(assistantPhone) + '</span></a>';
+                            html += '<a href="tel:' + cleanAstPhone + '" style="font-size:11px; font-weight:600; color:var(--blue); text-decoration:none; display:inline-flex; align-items:center; gap:3px; margin-left:auto;"><span>' + escapeHtml(assistantPhone) + '</span></a>';
                         }
                         html += '</div>';
                     }

@@ -35,10 +35,10 @@ function searchDirectory(dataStore, query, activeTab) {
         const name = String(c['店名'] || c['部門'] || '').toLowerCase();
         const code = String(c['代碼'] || '').toLowerCase();
         const phone = String(c['電話'] || c['課長電話'] || c['助理電話'] || '').toLowerCase();
-        const staff = String(c['店長'] || c['課長'] || c['處長'] || c['助理'] || c['負責人'] || '').toLowerCase();
+        const allStaffStr = [c['店長'], c['處長'], c['課長'], c['助理'], c['負責人'], c['部門']].filter(Boolean).join(' ').toLowerCase();
         const address = String(c['地址'] || '').toLowerCase();
 
-        const match = !q || name.includes(q) || code.includes(q) || phone.includes(q) || staff.includes(q) || address.includes(q);
+        const match = !q || name.includes(q) || code.includes(q) || phone.includes(q) || allStaffStr.includes(q) || address.includes(q);
 
         if (match) {
             if (isMD) {
@@ -117,5 +117,60 @@ assert.strictEqual(parsed.amount, 1500);
 assert.strictEqual(parsed.raw, '$1,500');
 assert.strictEqual(parsed.isFree, false);
 console.log("✅ Test 6: 千分位運費解析 ($1,500) 通過");
+
+// 處長與課長 Email 解析測試
+function parseStaffContact(rawStr) {
+    if (!rawStr || !rawStr.trim()) return { name: '', email: '', note: '' };
+    const str = rawStr.trim();
+    const emailMatch = str.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/i);
+    const email = emailMatch ? emailMatch[0].trim() : '';
+
+    let textWithoutEmail = str.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi, '');
+    const lines = textWithoutEmail.split(/[\r\n]+/).map(l => l.trim()).filter(Boolean);
+    
+    let name = '';
+    let notes = [];
+    
+    lines.forEach((line, idx) => {
+        if (idx === 0 && !line.startsWith('(') && !line.startsWith('<')) {
+            name = line;
+        } else {
+            notes.push(line);
+        }
+    });
+
+    if (!name && lines.length > 0) {
+        name = lines[0];
+        notes = lines.slice(1);
+    }
+
+    return {
+        name: name || (email ? email.split('@')[0] : ''),
+        email: email,
+        note: notes.join(' ')
+    };
+}
+
+// 測試天母課長 Email 解析
+const tmContact = realDataStore.contacts.find(c => c['店名'] === 'TM天母');
+assert.ok(tmContact, "應找到天母門市");
+const tmSec = parseStaffContact(tmContact['課長']);
+assert.strictEqual(tmSec.email, 'steven_yang@uni-prosperity.com.tw');
+assert.ok(tmSec.name.includes('Steven YANG 楊風吟'));
+
+// 測試五甲處長與課長 Email 解析
+const wgContact = realDataStore.contacts.find(c => c['店名'] === 'WG五甲');
+assert.ok(wgContact, "應找到五甲門市");
+const wgDir = parseStaffContact(wgContact['處長']);
+const wgSec = parseStaffContact(wgContact['課長']);
+assert.strictEqual(wgDir.email, 'cathy_tseng@uni-prosperity.com.tw');
+assert.strictEqual(wgSec.email, 'jung_te_huang@uni-Prosperity.com.tw');
+console.log("✅ Test 7: 處長與課長 Email 精準解析提取通過");
+
+// 測試以 Email 關鍵字進行門市搜尋
+const resEmailSearch = searchDirectory(realDataStore, 'steven_yang', 'all');
+assert.ok(resEmailSearch.stores.length > 0, "應依 email 關鍵字找到天母門市");
+assert.strictEqual(resEmailSearch.stores[0]['店名'], 'TM天母');
+console.log("✅ Test 8: Email 關鍵字即時反查門市通過 (找到 TM天母)");
 
 console.log("🎉 所有真實試算表資料檢索測試 100% 全部通過！");
