@@ -2029,11 +2029,137 @@
             align-items: center;
         }
 
+        .header-date-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            margin-left: -8px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s ease, opacity 0.15s ease;
+        }
+
+        .header-date-btn:active {
+            background: var(--fill);
+            opacity: 0.7;
+        }
+
         .header-date {
             font-size: 13px;
-            font-weight: 400;
-            color: var(--label-tertiary);
-            letter-spacing: 0.06em;
+            font-weight: 500;
+            color: var(--label-secondary);
+            letter-spacing: 0.04em;
+        }
+
+        /* --- Calendar Modal Components (Apple Inset Style) --- */
+        .cal-nav-arrow-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--fill);
+            border: none;
+            color: var(--label-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+
+        .cal-nav-arrow-btn:active {
+            transform: scale(0.9);
+            background: var(--fill-secondary);
+        }
+
+        .cal-quick-today-btn {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--blue);
+            background: var(--fill);
+            border: 0.5px solid var(--separator);
+            border-radius: 999px;
+            padding: 3px 10px;
+            cursor: pointer;
+            transition: opacity 0.15s ease;
+        }
+
+        .cal-quick-today-btn:active {
+            opacity: 0.7;
+        }
+
+        .cal-cell-btn {
+            width: 42px;
+            height: 48px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            position: relative;
+            transition: background 0.15s ease, transform 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .cal-cell-btn:active {
+            transform: scale(0.92);
+        }
+
+        .cal-cell-btn.selected {
+            background: var(--fill-secondary) !important;
+            box-shadow: inset 0 0 0 1.5px var(--blue);
+        }
+
+        .cal-cell-date {
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--label);
+            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
+            font-variant-numeric: tabular-nums;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .cal-cell-btn.is-today .cal-cell-date {
+            color: #FFFFFF !important;
+            background: var(--blue) !important;
+            font-weight: 700;
+            box-shadow: var(--shadow-blue);
+        }
+
+        .cal-cell-btn.is-off .cal-cell-date {
+            color: var(--label-quaternary);
+            text-decoration: line-through;
+        }
+
+        .cal-cell-subtext {
+            font-size: 8.5px;
+            font-weight: 600;
+            height: 10px;
+            line-height: 10px;
+            color: var(--green);
+            letter-spacing: -0.2px;
+        }
+
+        .cal-cell-holiday {
+            font-size: 8px;
+            color: var(--red);
+            font-weight: 600;
+            max-width: 36px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .header-brand {
@@ -3667,10 +3793,13 @@
     <div style="max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;"
         id="app">
 
-        <!-- Header: Minimal Editorial (No redundant system time) -->
+        <!-- Header: Minimal Editorial -->
         <header id="appHeader">
             <div class="header-inner">
-                <span class="header-date" id="currentDate"><script>(function(){var d=new Date(),w=['週日','週一','週二','週三','週四','週五','週六'];document.write(w[d.getDay()]+' · '+(d.getMonth()+1)+'月'+d.getDate()+'日');})();</script></span>
+                <button type="button" class="header-date-btn" id="currentDateBtn" onclick="openCalendarModal()" title="點擊開啟出勤與排休日曆">
+                    <span class="header-date" id="currentDate"><script>(function(){var d=new Date(),w=['週日','週一','週二','週三','週四','週五','週六'];document.write(w[d.getDay()]+' · '+(d.getMonth()+1)+'月'+d.getDate()+'日');})();</script></span>
+                    <i class="far fa-calendar-days" style="font-size:11.5px; color:var(--label-tertiary); margin-left:3px; opacity:0.8;"></i>
+                </button>
                 <span class="header-brand" id="headerBrandBtn" onclick="openThemePicker()" title="點擊切換色彩主題">
                     <span>TIME 8</span>
                     <span style="font-size:8px; opacity:0.6;">✦</span>
@@ -4030,65 +4159,6 @@
                     </div>
                 </div>
 
-                <!-- Calendar -->
-                <div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <div class="editorial-label" style="margin:0;">假期日曆</div>
-                    </div>
-                    <div>
-                        <div class="zen-card" style="padding:20px;">
-                            <div
-                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-                                <h3 style="font-family:"SF Pro Display", -apple-system, BlinkMacSystemFont,Georgia,serif; font-size:18px; font-weight:400; color:var(--label); margin:0; letter-spacing:0.02em;"
-                                    id="calendarTitle">Month Year</h3>
-                                <div style="display:flex; gap:4px;">
-                                    <button onclick="changeMonth(-1)" aria-label="上個月"
-                                        style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--label-tertiary); cursor:pointer;">
-                                        <i class="fas fa-chevron-left" style="font-size:9px;"></i>
-                                    </button>
-                                    <button onclick="changeMonth(1)" aria-label="下個月"
-                                        style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:none; border:none; color:var(--label-tertiary); cursor:pointer;">
-                                        <i class="fas fa-chevron-right" style="font-size:9px;"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div
-                                style="display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:10px; text-align:center;">
-                                <span
-                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">日</span>
-                                <span
-                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">一</span>
-                                <span
-                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">二</span>
-                                <span
-                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">三</span>
-                                <span
-                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">四</span>
-                                <span
-                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">五</span>
-                                <span
-                                    style="font-size:10px; font-weight:400; color:var(--label-quaternary); letter-spacing:0.06em;">六</span>
-                            </div>
-                            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px 0; place-items:center;"
-                                id="calendarGrid"></div>
-                            <div
-                                style="margin-top:14px; padding-top:10px; border-top:0.5px solid var(--separator); display:flex; justify-content:center; gap:20px; font-size:10px; color:var(--label-tertiary); letter-spacing:0.06em;">
-                                <div style="display:flex; align-items:center; gap:5px;">
-                                    <div style="width:5px; height:5px; border-radius:50%; background:var(--blue);">
-                                    </div>今日
-                                </div>
-                                <div style="display:flex; align-items:center; gap:5px;">
-                                    <div
-                                        style="width:5px; height:5px; border-radius:50%; background:var(--fill-secondary);">
-                                    </div>排休
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
             </section>
 
         </main>
@@ -4134,6 +4204,124 @@
     <div id="inkDropOverlay"></div>
 
     <!-- Modals: iOS Action Sheet Style -->
+
+    <!-- Attendance & Shift Calendar Modal (出勤與排休日曆 - Apple Inset Grouped Sheet) -->
+    <div id="calendarModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeCalendarModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg);max-height:88vh;overflow-y:auto;">
+            <div style="padding:14px 20px 0; position:sticky; top:0; background:var(--bg); z-index:2;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; border-bottom:0.5px solid var(--separator);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button type="button" onclick="changeCalendarMonth(-1)" aria-label="上個月" class="cal-nav-arrow-btn">
+                            <i class="fas fa-chevron-left" style="font-size:11px;"></i>
+                        </button>
+                        <h3 id="calModalMonthTitle" style="font-size:16.5px; font-weight:700; color:var(--label); margin:0; min-width:96px; text-align:center;">
+                            2026年 8月
+                        </h3>
+                        <button type="button" onclick="changeCalendarMonth(1)" aria-label="下個月" class="cal-nav-arrow-btn">
+                            <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+                        </button>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button type="button" onclick="jumpToCalendarToday()" class="cal-quick-today-btn">
+                            今日
+                        </button>
+                        <button type="button" onclick="closeCalendarModal()" aria-label="關閉"
+                            style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                            <i class="fas fa-times" style="font-size:11px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding:16px 20px 36px;">
+                <!-- 1. 當月出勤 KPI 摘要卡片 (SwiftUI Metric Strip) -->
+                <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:12px 14px;">
+                    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; text-align:center;">
+                        <div style="padding:4px 0;">
+                            <div id="calStatWorkDays" style="font-size:17px; font-weight:700; color:var(--label); font-variant-numeric:tabular-nums;">0 天</div>
+                            <div style="font-size:10.5px; color:var(--label-tertiary); margin-top:2px;">出勤天數</div>
+                        </div>
+                        <div style="padding:4px 0; border-left:0.5px solid var(--separator);">
+                            <div id="calStatTotalHours" style="font-size:17px; font-weight:700; color:var(--label); font-variant-numeric:tabular-nums;">0.0h</div>
+                            <div style="font-size:10.5px; color:var(--label-tertiary); margin-top:2px;">累積工時</div>
+                        </div>
+                        <div style="padding:4px 0; border-left:0.5px solid var(--separator);">
+                            <div id="calStatOffDays" style="font-size:17px; font-weight:700; color:var(--label-secondary); font-variant-numeric:tabular-nums;">0 天</div>
+                            <div style="font-size:10.5px; color:var(--label-tertiary); margin-top:2px;">排休天數</div>
+                        </div>
+                        <div style="padding:4px 0; border-left:0.5px solid var(--separator);">
+                            <div id="calStatAvgHours" style="font-size:17px; font-weight:700; color:var(--label); font-variant-numeric:tabular-nums;">0.0h</div>
+                            <div style="font-size:10.5px; color:var(--label-tertiary); margin-top:2px;">日均工時</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 月曆主體網格 -->
+                <div class="rounded-2xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 12px;">
+                    <!-- 星期標頭 -->
+                    <div style="display:grid; grid-template-columns:repeat(7, 1fr); margin-bottom:8px; text-align:center;">
+                        <span style="font-size:11px; font-weight:600; color:var(--red); opacity:0.8;">日</span>
+                        <span style="font-size:11px; font-weight:600; color:var(--label-tertiary);">一</span>
+                        <span style="font-size:11px; font-weight:600; color:var(--label-tertiary);">二</span>
+                        <span style="font-size:11px; font-weight:600; color:var(--label-tertiary);">三</span>
+                        <span style="font-size:11px; font-weight:600; color:var(--label-tertiary);">四</span>
+                        <span style="font-size:11px; font-weight:600; color:var(--label-tertiary);">五</span>
+                        <span style="font-size:11px; font-weight:600; color:var(--red); opacity:0.8;">六</span>
+                    </div>
+                    <!-- 日期單元格 -->
+                    <div id="calModalGrid" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px 0; place-items:center;">
+                    </div>
+                    <!-- 圖例與標註說明 -->
+                    <div style="margin-top:14px; padding-top:10px; border-top:0.5px solid var(--separator); display:flex; justify-content:center; gap:16px; font-size:11px; color:var(--label-tertiary);">
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="width:6px; height:6px; border-radius:50%; background:var(--blue);"></span>
+                            <span>今日</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="width:6px; height:6px; border-radius:50%; background:var(--green);"></span>
+                            <span>出勤打卡</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="width:6px; height:6px; border-radius:50%; background:var(--fill-secondary);"></span>
+                            <span>排休日</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="font-size:9px; color:var(--red);">✦</span>
+                            <span>國定假日</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 選定日期詳情與排休設定卡片 -->
+                <div class="section-label" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span id="calSelectedDateLabel">選定日期詳情</span>
+                    <span id="calSelectedHolidayBadge" style="font-size:11px; font-weight:600; color:var(--red);"></span>
+                </div>
+                <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                    <div id="calDayDetailContent">
+                        <!-- Injected by Calendar Engine -->
+                    </div>
+                </div>
+
+                <!-- 4. 行事曆匯出與同步按鈕 -->
+                <div style="display:flex; gap:10px;">
+                    <button type="button" onclick="exportCalendarIcsMonth()" class="active-scale"
+                        style="flex:1; padding:13px; border-radius:var(--radius-sm); font-size:13.5px; font-weight:600; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                        <i class="fas fa-calendar-arrow-down" style="color:var(--blue);"></i>
+                        <span>匯出本月出勤 (.ics)</span>
+                    </button>
+                    <button type="button" onclick="closeCalendarModal()" class="active-scale"
+                        style="padding:13px 22px; border-radius:var(--radius-sm); font-size:13.5px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer;">
+                        完成
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Zen Theme Picker Modal (Apple Action Sheet) -->
     <div id="themePickerModal" class="fixed inset-0 hidden" style="z-index: 105;">
@@ -8569,71 +8757,390 @@
         }
 
         // --- 月曆功能邏輯 ---
-        // --- 可收合日曆 ---
-        function toggleCalendar() {
-            const content = document.getElementById('calendarCollapsible');
-            const chevron = document.getElementById('calendarChevron');
-            content.classList.toggle('open');
-            chevron.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        // =============================================
+        // APPLE ATTENDANCE & SHIFT CALENDAR ENGINE
+        // =============================================
+        let selectedCalendarDateStr = getLocalDateStr(new Date());
+
+        const TAIWAN_HOLIDAYS_MAP = {
+            '2026-01-01': '元旦',
+            '2026-02-15': '小年夜',
+            '2026-02-16': '除夕',
+            '2026-02-17': '春節',
+            '2026-02-18': '初二',
+            '2026-02-19': '初三',
+            '2026-02-20': '初四',
+            '2026-02-28': '和平紀念日',
+            '2026-04-03': '兒童節補假',
+            '2026-04-04': '清明節',
+            '2026-05-01': '勞動節',
+            '2026-06-19': '端午節',
+            '2026-09-25': '中秋節',
+            '2026-10-10': '國慶日'
+        };
+
+        function openCalendarModal() {
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            playSingleClickSound("G4");
+
+            selectedCalendarDateStr = getLocalDateStr(new Date());
+            currentCalendarDate = new Date();
+
+            const modal = document.getElementById('calendarModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                renderCalendarModal();
+            }
         }
 
-        function renderCalendar() {
+        function closeCalendarModal() {
+            const modal = document.getElementById('calendarModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function changeCalendarMonth(delta) {
+            if ('vibrate' in navigator) navigator.vibrate(8);
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendarModal();
+        }
+
+        function jumpToCalendarToday() {
+            if ('vibrate' in navigator) navigator.vibrate(12);
+            currentCalendarDate = new Date();
+            selectedCalendarDateStr = getLocalDateStr(new Date());
+            renderCalendarModal();
+        }
+
+        function getDayRecords(dateStr) {
+            const todayKey = getTodayKey();
+            if (dateStr === todayKey && Array.isArray(punchRecords) && punchRecords.length > 0) {
+                return punchRecords;
+            }
+            if (timecardHistory && timecardHistory[dateStr]) {
+                const recs = timecardHistory[dateStr];
+                return Array.isArray(recs) ? recs : (recs.records || []);
+            }
+            return [];
+        }
+
+        function calculateDayWorkedMinutes(records) {
+            if (!Array.isArray(records) || records.length === 0) return 0;
+            let totalMins = 0;
+            for (let i = 0; i < records.length; i += 2) {
+                const inRec = records[i];
+                const outRec = records[i + 1];
+                if (inRec && inRec.time) {
+                    const inTime = new Date(inRec.time).getTime();
+                    const outTime = (outRec && outRec.time) ? new Date(outRec.time).getTime() : (records === punchRecords ? Date.now() : inTime);
+                    const diffMins = Math.max(0, Math.floor((outTime - inTime) / 60000));
+                    totalMins += diffMins;
+                }
+            }
+            return totalMins;
+        }
+
+        function renderCalendarModal() {
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
 
-            // 更新標題
-            document.getElementById('calendarTitle').textContent = `${year}年 ${month + 1}月`;
+            const titleEl = document.getElementById('calModalMonthTitle');
+            if (titleEl) {
+                titleEl.textContent = `${year}年 ${month + 1}月`;
+            }
 
-            const grid = document.getElementById('calendarGrid');
+            const grid = document.getElementById('calModalGrid');
+            if (!grid) return;
             grid.innerHTML = '';
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const today = new Date();
+            const todayStr = getLocalDateStr(today);
 
-            // 空白格 (上個月)
-            for (let i = 0; i < firstDay; i++) {
-                grid.appendChild(document.createElement('div'));
+            // Calculate Monthly Stats
+            let monthWorkDays = 0;
+            let monthTotalMinutes = 0;
+            let monthOffDays = 0;
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                if (offDays.has(dStr)) {
+                    monthOffDays++;
+                }
+                const dayRecs = getDayRecords(dStr);
+                const dayMins = calculateDayWorkedMinutes(dayRecs);
+                if (dayRecs.length > 0) {
+                    monthWorkDays++;
+                    monthTotalMinutes += dayMins;
+                }
             }
 
-            // 日期格
+            // Update KPI Dashboard Strip
+            const statWorkDays = document.getElementById('calStatWorkDays');
+            const statTotalHours = document.getElementById('calStatTotalHours');
+            const statOffDays = document.getElementById('calStatOffDays');
+            const statAvgHours = document.getElementById('calStatAvgHours');
+
+            if (statWorkDays) statWorkDays.textContent = `${monthWorkDays} 天`;
+            if (statTotalHours) statTotalHours.textContent = `${(monthTotalMinutes / 60).toFixed(1)}h`;
+            if (statOffDays) statOffDays.textContent = `${monthOffDays} 天`;
+            const avgH = monthWorkDays > 0 ? (monthTotalMinutes / 60 / monthWorkDays) : 0;
+            if (statAvgHours) statAvgHours.textContent = `${avgH.toFixed(1)}h`;
+
+            // Preceding empty days
+            for (let i = 0; i < firstDay; i++) {
+                const blank = document.createElement('div');
+                blank.style.cssText = 'width:42px;height:48px;';
+                grid.appendChild(blank);
+            }
+
+            // Month date cells
             for (let d = 1; d <= daysInMonth; d++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                 const isOff = offDays.has(dateStr);
-                const isToday = (today.getFullYear() === year && today.getMonth() === month && today.getDate() === d);
+                const isToday = (dateStr === todayStr);
+                const isSelected = (dateStr === selectedCalendarDateStr);
+                const holidayName = TAIWAN_HOLIDAYS_MAP[dateStr] || '';
+                const dayRecs = getDayRecords(dateStr);
+                const dayMins = calculateDayWorkedMinutes(dayRecs);
+                const hasPunch = dayRecs.length > 0;
 
                 const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `cal-cell-btn ${isToday ? 'is-today' : ''} ${isOff ? 'is-off' : ''} ${isSelected ? 'selected' : ''}`;
+                btn.setAttribute('data-date', dateStr);
 
-                if (isOff) {
-                    btn.style.cssText = 'width:32px;height:32px;border-radius:50%;background:var(--fill);color:var(--label-quaternary);text-decoration:line-through;font-size:13px;font-weight:400;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;';
-                } else if (isToday) {
-                    btn.style.cssText = 'width:32px;height:32px;border-radius:50%;background:var(--blue);color:#FFFFFF;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;box-shadow:var(--shadow-blue);';
+                let subHtml = '';
+                if (holidayName) {
+                    subHtml = `<span class="cal-cell-holiday">${holidayName}</span>`;
+                } else if (hasPunch) {
+                    const hVal = (dayMins / 60).toFixed(1);
+                    subHtml = `<span class="cal-cell-subtext">${hVal > 0 ? hVal + 'h' : '●'}</span>`;
+                } else if (isOff) {
+                    subHtml = `<span style="font-size:8px; color:var(--label-quaternary);">休</span>`;
                 } else {
-                    btn.style.cssText = 'width:32px;height:32px;border-radius:50%;font-size:13px;font-weight:400;color:var(--label);background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;';
+                    subHtml = `<span style="height:10px;"></span>`;
                 }
 
-                btn.textContent = d;
-                btn.onclick = () => toggleOffDay(dateStr);
+                btn.innerHTML = `
+                    <span class="cal-cell-date">${d}</span>
+                    ${subHtml}
+                `;
+
+                btn.onclick = () => {
+                    selectCalendarDate(dateStr);
+                };
 
                 grid.appendChild(btn);
             }
+
+            // Render detail for selected date
+            renderCalendarDayDetail(selectedCalendarDateStr);
         }
 
-        function toggleOffDay(dateStr) {
-            playSingleClickSound("E5"); // 輕微的回饋音效
+        function selectCalendarDate(dateStr) {
+            selectedCalendarDateStr = dateStr;
+            if ('vibrate' in navigator) navigator.vibrate(6);
+
+            document.querySelectorAll('.cal-cell-btn').forEach(btn => {
+                if (btn.getAttribute('data-date') === dateStr) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+
+            renderCalendarDayDetail(dateStr);
+        }
+
+        function renderCalendarDayDetail(dateStr) {
+            const detailContainer = document.getElementById('calDayDetailContent');
+            const labelEl = document.getElementById('calSelectedDateLabel');
+            const holidayBadgeEl = document.getElementById('calSelectedHolidayBadge');
+            if (!detailContainer) return;
+
+            const dateParts = dateStr.split('-');
+            const y = parseInt(dateParts[0], 10);
+            const m = parseInt(dateParts[1], 10);
+            const d = parseInt(dateParts[2], 10);
+            const targetDate = new Date(y, m - 1, d);
+            const weekDays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+            const weekStr = weekDays[targetDate.getDay()];
+            const isToday = (dateStr === getLocalDateStr(new Date()));
+            const isOff = offDays.has(dateStr);
+            const holidayName = TAIWAN_HOLIDAYS_MAP[dateStr] || '';
+            const shiftTag = localStorage.getItem('shiftTag_' + dateStr) || '';
+
+            if (labelEl) {
+                labelEl.textContent = `${m}月${d}日 · ${weekStr}${isToday ? '（今日）' : ''}`;
+            }
+            if (holidayBadgeEl) {
+                holidayBadgeEl.textContent = holidayName ? `✦ 國定假日：${holidayName}` : '';
+            }
+
+            const dayRecs = getDayRecords(dateStr);
+            const dayMins = calculateDayWorkedMinutes(dayRecs);
+
+            let recordsHtml = '';
+            if (dayRecs.length > 0) {
+                let sessionList = '';
+                for (let i = 0; i < dayRecs.length; i += 2) {
+                    const inRec = dayRecs[i];
+                    const outRec = dayRecs[i + 1];
+                    const inTimeStr = inRec && inRec.time ? formatTime(new Date(inRec.time)) : '--:--';
+                    const outTimeStr = outRec && outRec.time ? formatTime(new Date(outRec.time)) : (dateStr === getTodayKey() ? '進行中' : '--:--');
+                    sessionList += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:0.5px solid var(--separator); font-size:12.5px;">
+                            <span style="color:var(--label-secondary);">階段 ${Math.floor(i/2) + 1}</span>
+                            <span style="font-weight:600; color:var(--label); font-variant-numeric:tabular-nums;">${inTimeStr} → ${outTimeStr}</span>
+                        </div>
+                    `;
+                }
+
+                recordsHtml = `
+                    <div style="margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span style="font-size:12px; font-weight:600; color:var(--label-tertiary);">出勤打卡明細</span>
+                            <span style="font-size:12px; font-weight:700; color:var(--green); background:rgba(77,122,82,0.12); padding:2px 8px; border-radius:999px;">
+                                累計 ${(dayMins / 60).toFixed(1)} 小時
+                            </span>
+                        </div>
+                        <div style="background:var(--fill); border-radius:10px; padding:6px 12px;">
+                            ${sessionList}
+                        </div>
+                    </div>
+                `;
+            } else {
+                recordsHtml = `
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0 12px; border-bottom:0.5px solid var(--separator); margin-bottom:12px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <i class="${isOff ? 'fas fa-bed' : 'far fa-calendar-xmark'}" style="font-size:14px; color:${isOff ? 'var(--blue)' : 'var(--label-quaternary)'};"></i>
+                            <span style="font-size:13px; color:var(--label-secondary);">${isOff ? '本天已標記為【排休】' : '本天無打卡紀錄'}</span>
+                        </div>
+                        <span style="font-size:11px; color:var(--label-tertiary);">${isOff ? '已休假' : '無工時'}</span>
+                    </div>
+                `;
+            }
+
+            // Quick Shift Tag Pills
+            const tags = ['🏢 常規班', '🌴 特休', '🩺 事病假', '⏳ 補休', '💼 公差'];
+            const tagPillsHtml = tags.map(t => {
+                const isActive = (shiftTag === t);
+                return `<button type="button" onclick="setDayShiftTag('${dateStr}', '${t}')" class="task-chip ${isActive ? 'active' : ''}" style="${isActive ? 'background:var(--blue); color:#fff; font-weight:600;' : ''}">${t}</button>`;
+            }).join('');
+
+            detailContainer.innerHTML = `
+                ${recordsHtml}
+
+                <!-- Action Toolbar for Selected Date -->
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11.5px; font-weight:600; color:var(--label-tertiary);">快速排休管理</span>
+                        <button type="button" onclick="toggleDateOffDay('${dateStr}')" class="active-scale"
+                            style="padding:5px 12px; border-radius:999px; font-size:12px; font-weight:600; border:0.5px solid var(--separator); cursor:pointer; background:${isOff ? 'var(--label)' : 'var(--fill)'}; color:${isOff ? 'var(--bg)' : 'var(--label)'}; transition:all 0.2s;">
+                            ${isOff ? '✓ 取消排休' : '＋ 設為排休'}
+                        </button>
+                    </div>
+
+                    <!-- Shift Tag Buttons -->
+                    <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:2px;">
+                        ${tagPillsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleDateOffDay(dateStr) {
+            playSingleClickSound("E5");
             if (offDays.has(dateStr)) {
                 offDays.delete(dateStr);
             } else {
                 offDays.add(dateStr);
             }
-            // 儲存休假設定
             localStorage.setItem('offDays', JSON.stringify([...offDays]));
-            renderCalendar();
+            renderCalendarModal();
+        }
+
+        function setDayShiftTag(dateStr, tag) {
+            playSingleClickSound("C5");
+            const current = localStorage.getItem('shiftTag_' + dateStr);
+            if (current === tag) {
+                localStorage.removeItem('shiftTag_' + dateStr);
+            } else {
+                localStorage.setItem('shiftTag_' + dateStr, tag);
+            }
+            renderCalendarDayDetail(dateStr);
+        }
+
+        // Backward compatibility for legacy calendar calls if any
+        function renderCalendar() {
+            renderCalendarModal();
+        }
+
+        function toggleOffDay(dateStr) {
+            toggleDateOffDay(dateStr);
         }
 
         function changeMonth(delta) {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
-            renderCalendar();
+            changeCalendarMonth(delta);
+        }
+
+        // Monthly .ics calendar exporter
+        function exportCalendarIcsMonth() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            let icsContent = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TIME 8//Attendance Calendar//ZH-TW\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n";
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const isOff = offDays.has(dStr);
+                const holiday = TAIWAN_HOLIDAYS_MAP[dStr];
+                const shiftTag = localStorage.getItem('shiftTag_' + dStr) || '';
+                const dayRecs = getDayRecords(dStr);
+
+                if (dayRecs.length > 0) {
+                    for (let i = 0; i < dayRecs.length; i += 2) {
+                        const inRec = dayRecs[i];
+                        const outRec = dayRecs[i + 1];
+                        if (inRec && inRec.time) {
+                            const startTime = new Date(inRec.time);
+                            const endTime = (outRec && outRec.time) ? new Date(outRec.time) : new Date(startTime.getTime() + 8 * 3600000);
+                            const startStr = startTime.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+                            const endStr = endTime.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+                            icsContent += `BEGIN:VEVENT\r\nUID:time8-${dStr}-${i}@time8.local\r\nDTSTAMP:${startStr}\r\nDTSTART:${startStr}\r\nDTEND:${endStr}\r\nSUMMARY:出勤工時 (TIME 8)\r\nDESCRIPTION:工作紀錄 ${shiftTag ? '[' + shiftTag + ']' : ''}\r\nSTATUS:CONFIRMED\r\nEND:VEVENT\r\n`;
+                        }
+                    }
+                } else if (isOff || holiday) {
+                    const tagTitle = holiday ? `國定假日 · ${holiday}` : (shiftTag ? `排休 [${shiftTag}]` : '排休日 (TIME 8)');
+                    const dateNoHyphen = `${year}${String(month + 1).padStart(2, '0')}${String(d).padStart(2, '0')}`;
+                    icsContent += `BEGIN:VEVENT\r\nUID:time8-off-${dStr}@time8.local\r\nDTSTAMP:${dateNoHyphen}T000000Z\r\nDTSTART;VALUE=DATE:${dateNoHyphen}\r\nSUMMARY:${tagTitle}\r\nSTATUS:CONFIRMED\r\nEND:VEVENT\r\n`;
+                }
+            }
+
+            icsContent += "END:VCALENDAR\r\n";
+
+            const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `TIME8_出勤紀錄_${year}年${month + 1}月.ics`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showZenCapsuleNotification({
+                title: '行事曆匯出完成',
+                message: `已下載 ${year}年${month + 1}月出勤排程 .ics 檔案`,
+                emoji: '📅'
+            });
         }
 
         // --- WLB 健康度計算 ---
