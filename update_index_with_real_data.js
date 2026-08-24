@@ -4,18 +4,6 @@ const fs = require('fs');
 const storeData = JSON.parse(fs.readFileSync('store_data.json', 'utf8'));
 let indexHtml = fs.readFileSync('index.html', 'utf8');
 
-// Update switchTab to render store directory when tab is Insights
-indexHtml = indexHtml.replace(
-    "if (tabName === 'Partner' && typeof renderPartnerRoom === 'function') renderPartnerRoom();",
-    "if (tabName === 'Partner' && typeof renderPartnerRoom === 'function') renderPartnerRoom();\n            if (tabName === 'Insights' && typeof renderStoreDirectoryUI === 'function') renderStoreDirectoryUI();"
-);
-
-// Update user manual link to switch to Insights tab
-indexHtml = indexHtml.replace(
-    'onclick="closeUserManual(); closeSettings(); openStoreDirectoryModal();"',
-    'onclick="closeUserManual(); closeSettings(); switchTab(\'Insights\');"'
-);
-
 const engineHeader = "// STORE DIRECTORY & FREIGHT ENGINE (門市聯絡與跨店運費引擎)";
 const endMarker = "window.refreshStoreDirectoryData = refreshStoreDirectoryData;";
 
@@ -247,7 +235,7 @@ const newEngineCode = `// =============================================
                 const name = String(c['店名'] || c['部門'] || '').trim();
                 const code = String(c['代碼'] || '').trim();
                 const phone = String(c['電話'] || c['課長電話'] || c['助理電話'] || '').trim();
-                const staff = String(c['店長'] || c['課長'] || c['處長'] || c['助理'] || c['負責人'] || '').trim();
+                const staff = String(c['店長'] || c['處長'] || c['課長'] || c['助理'] || c['負責人'] || '').trim();
                 const address = String(c['地址'] || '').trim();
 
                 const isMatch = !q || name.toLowerCase().includes(q) || code.toLowerCase().includes(q) ||
@@ -313,6 +301,7 @@ const newEngineCode = `// =============================================
                     const name = s['店名'] || '門市';
                     const code = s['代碼'] || '';
                     const storeManager = s['店長'] || '';
+                    const director = s['處長'] || '';
                     const sectionChief = s['課長'] || '';
                     const sectionPhone = s['課長電話'] || '';
                     const assistant = s['助理'] || '';
@@ -347,6 +336,9 @@ const newEngineCode = `// =============================================
                     html += '<div style="padding:9px 13px; font-size:12px; color:var(--label-secondary); line-height:1.55;">';
                     if (storeManager) {
                         html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">店長</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(storeManager) + '</span></div>';
+                    }
+                    if (director && director.trim()) {
+                        html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">處長</span><span style="color:var(--label); font-weight:500;">' + escapeHtml(director.split('\\n')[0]) + '</span></div>';
                     }
                     if (sectionChief) {
                         html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">';
@@ -428,7 +420,6 @@ const newEngineCode = `// =============================================
                     const lineId = m['LINE'] || '';
                     const cleanPhone = phone.replace(/[^0-9+]/g, '');
 
-                    // Clean rainbow emojis from staff name for elegance
                     const cleanStaff = staff.replace(/[🌈🐼🦉🐣🐒🐸🧙‍♂️]/g, '').trim();
 
                     html += '<div class="store-card">';
@@ -467,4 +458,4 @@ const newEngineCode = `// =============================================
 
 const updatedHtml = indexHtml.substring(0, realStartIdx) + newEngineCode + indexHtml.substring(realEndIdx);
 fs.writeFileSync('index.html', updatedHtml);
-console.log("🎉 index.html 成功寫入高品質 Apple 向量圖標與洞察內嵌整合！");
+console.log("🎉 index.html 成功加入各店處長欄位！");

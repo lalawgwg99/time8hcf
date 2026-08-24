@@ -8002,23 +8002,6 @@
             }
         }
 
-        function openStoreDirectoryModal(e) {
-            if (e) {
-                e.stopPropagation();
-                e.preventDefault();
-            }
-            if ('vibrate' in navigator) navigator.vibrate(10);
-            initStoreDirectoryEngine();
-            renderStoreDirectoryUI();
-            const modal = document.getElementById('storeDirectoryModal');
-            if (modal) modal.classList.remove('hidden');
-        }
-
-        function closeStoreDirectoryModal() {
-            const modal = document.getElementById('storeDirectoryModal');
-            if (modal) modal.classList.add('hidden');
-        }
-
         function setStoreDirectoryTab(tab) {
             _storeDirectoryState.activeTab = tab;
             ['All', 'Stores', 'Freight', 'MD'].forEach(t => {
@@ -8077,7 +8060,7 @@
             const icon = document.getElementById('storeRefreshIcon');
             const statusEl = document.getElementById('storeStatusBadge');
             if (icon) icon.classList.add('fa-spin');
-            if (statusEl) statusEl.textContent = '🔄 正在連線試算表同步...';
+            if (statusEl) statusEl.textContent = '正在同步試算表...';
 
             if ('vibrate' in navigator) navigator.vibrate(12);
 
@@ -8144,17 +8127,17 @@
                     _storeDirectoryState.dataStore = freshData;
                     localStorage.setItem(STORE_DIRECTORY_STORAGE_KEY, JSON.stringify(freshData));
                     showZenCapsuleNotification({
-                        emoji: '🏢',
-                        title: '試算表資料同步成功',
-                        message: '已更新 ' + freshData.contacts.length + ' 筆真實門市與 MD 名錄',
+                        emoji: '✦',
+                        title: '試算表同步完成',
+                        message: '已更新 ' + freshData.contacts.length + ' 筆門市與 MD 名錄',
                         duration: 2500
                     });
                 }
             } catch (err) {
                 console.log('Store sync notice:', err);
                 showZenCapsuleNotification({
-                    emoji: '📶',
-                    title: '使用本地離線資料庫',
+                    emoji: '✦',
+                    title: '離線資料庫可用',
                     message: '已為您保留 100% 完整門市與運費快取',
                     duration: 2500
                 });
@@ -8170,6 +8153,10 @@
             const statusBadge = document.getElementById('storeStatusBadge');
             const countBadge = document.getElementById('storeCountBadge');
             if (!container) return;
+
+            if (!_storeDirectoryState.dataStore) {
+                initStoreDirectoryEngine();
+            }
 
             const ds = _storeDirectoryState.dataStore || DEFAULT_STORE_DIRECTORY_DATA;
             const q = String(_storeDirectoryState.searchQuery || '').toLowerCase().trim();
@@ -8189,7 +8176,7 @@
                 const name = String(c['店名'] || c['部門'] || '').trim();
                 const code = String(c['代碼'] || '').trim();
                 const phone = String(c['電話'] || c['課長電話'] || c['助理電話'] || '').trim();
-                const staff = String(c['店長'] || c['課長'] || c['處長'] || c['助理'] || c['負責人'] || '').trim();
+                const staff = String(c['店長'] || c['處長'] || c['課長'] || c['助理'] || c['負責人'] || '').trim();
                 const address = String(c['地址'] || '').trim();
 
                 const isMatch = !q || name.toLowerCase().includes(q) || code.toLowerCase().includes(q) ||
@@ -8233,27 +8220,29 @@
             }
 
             if (statusBadge) {
-                statusBadge.textContent = ds.lastSyncTime ? '🟢 已同步 (' + new Date(ds.lastSyncTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ')' : '🟢 真實試算表資料已快取';
+                const dotColor = 'var(--green)';
+                statusBadge.innerHTML = '<span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:' + dotColor + ';"></span><span>' + (ds.lastSyncTime ? '已同步 (' + new Date(ds.lastSyncTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ')' : '資料庫已就緒') + '</span></span>';
             }
             if (countBadge) {
                 const totalResultCount = matchedStores.length + matchedMDs.length + (tab === 'freight' ? matchedFreightStores.length : 0);
-                countBadge.textContent = q ? '找到 ' + totalResultCount + ' 筆' : '共 ' + totalStoreCount + ' 間門市 · ' + Object.keys(storesMap).length + ' 間運費表';
+                countBadge.textContent = q ? '搜尋到 ' + totalResultCount + ' 筆' : totalStoreCount + ' 間門市 · ' + Object.keys(storesMap).length + ' 家運費表';
             }
 
             let html = '';
 
             if (matchedStores.length === 0 && matchedMDs.length === 0 && matchedFreightStores.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px 16px; color:var(--label-tertiary);"><div style="font-size:32px; margin-bottom:8px;">🔍</div><div style="font-size:14px; font-weight:600; color:var(--label);">查無符合條件的門市或運費資料</div><div style="font-size:12px; margin-top:4px;">請嘗試搜尋店名（如 五甲、天母）、店碼（022、014）或區域（鳳山、恆春）</div></div>';
+                container.innerHTML = '<div style="text-align:center; padding:36px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div><div style="font-size:13.5px; font-weight:600; color:var(--label);">查無符合的資料</div><div style="font-size:11.5px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入店名、店碼 (022) 或行政區</div></div>';
                 return;
             }
 
-            // 1. 門市聯絡卡片 (真實 62 家門市)
+            // 1. 門市聯絡卡片
             if (matchedStores.length > 0 && (tab === 'all' || tab === 'stores')) {
-                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.04em; margin:8px 2px 6px;">🏢 全省門市聯絡電話簿 (' + matchedStores.length + ')</div>';
+                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin:6px 2px 8px;">門市電話名錄 (' + matchedStores.length + ')</div>';
                 matchedStores.forEach(s => {
                     const name = s['店名'] || '門市';
                     const code = s['代碼'] || '';
                     const storeManager = s['店長'] || '';
+                    const director = s['處長'] || '';
                     const sectionChief = s['課長'] || '';
                     const sectionPhone = s['課長電話'] || '';
                     const assistant = s['助理'] || '';
@@ -8274,46 +8263,49 @@
                     html += '<div class="store-card">';
                     html += '<div class="store-card-header">';
                     html += '<div style="display:flex; align-items:center; gap:6px;">';
-                    html += '<span style="font-size:15px; font-weight:700; color:var(--label);">' + escapeHtml(name) + '</span>';
-                    if (code) html += '<span class="store-badge-code">店碼 ' + escapeHtml(code) + '</span>';
+                    html += '<span style="font-size:14.5px; font-weight:700; color:var(--label); letter-spacing:-0.01em;">' + escapeHtml(name) + '</span>';
+                    if (code) html += '<span class="store-badge-code">代碼 ' + escapeHtml(code) + '</span>';
                     html += '</div>';
                     if (phone) {
-                        html += '<a href="tel:' + cleanPhone + '" class="store-btn-call active-scale" title="撥打門市電話">';
-                        html += '<i class="fas fa-phone-alt" style="font-size:10px;"></i>';
+                        html += '<a href="tel:' + cleanPhone + '" class="store-btn-call active-scale" title="撥打電話">';
+                        html += '<svg viewBox="0 0 24 24" width="10.5" height="10.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
                         html += '<span>' + escapeHtml(phone.split('\n')[0]) + '</span>';
                         html += '</a>';
                     }
                     html += '</div>';
 
-                    html += '<div style="padding:10px 14px; font-size:12.5px; color:var(--label-secondary); line-height:1.6;">';
+                    html += '<div style="padding:9px 13px; font-size:12px; color:var(--label-secondary); line-height:1.55;">';
                     if (storeManager) {
-                        html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:40px;">店長</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(storeManager) + '</span></div>';
+                        html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">店長</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(storeManager) + '</span></div>';
+                    }
+                    if (director && director.trim()) {
+                        html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">處長</span><span style="color:var(--label); font-weight:500;">' + escapeHtml(director.split('\n')[0]) + '</span></div>';
                     }
                     if (sectionChief) {
                         html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">';
-                        html += '<div style="display:flex; gap:6px;"><span style="color:var(--label-tertiary); width:40px;">課長</span><span>' + escapeHtml(sectionChief.split('\n')[0]) + '</span></div>';
+                        html += '<div style="display:flex; gap:6px;"><span style="color:var(--label-tertiary); width:36px;">課長</span><span>' + escapeHtml(sectionChief.split('\n')[0]) + '</span></div>';
                         if (sectionPhone) {
-                            html += '<a href="tel:' + cleanSecPhone + '" style="font-size:11.5px; font-weight:600; color:var(--blue); text-decoration:none;">📞 ' + escapeHtml(sectionPhone) + '</a>';
+                            html += '<a href="tel:' + cleanSecPhone + '" style="font-size:11px; font-weight:600; color:var(--blue); text-decoration:none; display:inline-flex; align-items:center; gap:3px;"><span>' + escapeHtml(sectionPhone) + '</span></a>';
                         }
                         html += '</div>';
                     }
                     if (assistant) {
                         html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">';
-                        html += '<div style="display:flex; gap:6px;"><span style="color:var(--label-tertiary); width:40px;">助理</span><span>' + escapeHtml(assistant.split('\n')[0]) + '</span></div>';
+                        html += '<div style="display:flex; gap:6px;"><span style="color:var(--label-tertiary); width:36px;">助理</span><span>' + escapeHtml(assistant.split('\n')[0]) + '</span></div>';
                         if (assistantPhone) {
-                            html += '<a href="tel:' + cleanAstPhone + '" style="font-size:11.5px; font-weight:600; color:var(--blue); text-decoration:none;">📞 ' + escapeHtml(assistantPhone) + '</a>';
+                            html += '<a href="tel:' + cleanAstPhone + '" style="font-size:11px; font-weight:600; color:var(--blue); text-decoration:none; display:inline-flex; align-items:center; gap:3px;"><span>' + escapeHtml(assistantPhone) + '</span></a>';
                         }
                         html += '</div>';
                     }
                     if (address) {
-                        html += '<div style="display:flex; gap:6px; margin-top:4px; padding-top:4px; border-top:0.5px solid var(--separator);"><span style="color:var(--label-tertiary); width:40px;">地址</span><a href="https://maps.apple.com/?q=' + encodeURIComponent(address) + '" target="_blank" style="color:var(--label-secondary); text-decoration:none;">📍 ' + escapeHtml(address) + '</a></div>';
+                        html += '<div style="display:flex; gap:6px; margin-top:3px; padding-top:3px; border-top:0.5px solid var(--separator);"><span style="color:var(--label-tertiary); width:36px;">地址</span><a href="https://maps.apple.com/?q=' + encodeURIComponent(address) + '" target="_blank" style="color:var(--label-secondary); text-decoration:none; display:inline-flex; align-items:center; gap:3px;"><span>' + escapeHtml(address) + '</span></a></div>';
                     }
                     html += '</div>';
 
                     if (feeCount > 0) {
-                        html += '<div style="padding:8px 14px; border-top:0.5px solid var(--separator); background:var(--fill-tertiary); display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleStoreFeeAccordion(\'' + escapeHtml(lookupKey) + '\')">';
-                        html += '<span style="font-size:12px; font-weight:600; color:var(--blue);">🚚 跨店外送運費標準（收錄 ' + feeCount + ' 區）</span>';
-                        html += '<i class="fas fa-chevron-' + (isExpanded ? 'up' : 'down') + '" style="font-size:11px; color:var(--label-tertiary);"></i>';
+                        html += '<div style="padding:7px 13px; border-top:0.5px solid var(--separator); background:var(--fill-tertiary); display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleStoreFeeAccordion(\'' + escapeHtml(lookupKey) + '\')">';
+                        html += '<span style="font-size:11.5px; font-weight:600; color:var(--blue); display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg> 跨店外送運費（收錄 ' + feeCount + ' 區）</span>';
+                        html += '<svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--label-tertiary); transform:' + (isExpanded ? 'rotate(180deg)' : 'none') + '; transition:transform 0.2s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>';
                         html += '</div>';
 
                         if (isExpanded) {
@@ -8321,7 +8313,7 @@
                             freightData.fees.forEach(f => {
                                 const feeObj = parseSafeFreightFee(f.fee);
                                 html += '<div class="store-fee-row">';
-                                html += '<span style="font-size:12px; font-weight:500;">📍 ' + escapeHtml(f.area) + '</span>';
+                                html += '<span style="font-size:11.5px; font-weight:500;">' + escapeHtml(f.area) + '</span>';
                                 html += '<span class="store-fee-pill ' + (feeObj.isFree ? 'free' : 'paid') + '">' + feeObj.raw + '</span>';
                                 html += '</div>';
                             });
@@ -8335,21 +8327,21 @@
 
             // 2. 跨店運費獨立搜尋卡片 (Freight Tab)
             if (matchedFreightStores.length > 0 && tab === 'freight') {
-                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.04em; margin:8px 2px 6px;">🚚 門市跨區外送運費標準 (' + matchedFreightStores.length + ')</div>';
+                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin:6px 2px 8px;">跨區外送運費標準 (' + matchedFreightStores.length + ')</div>';
                 matchedFreightStores.forEach(fs => {
                     html += '<div class="store-card">';
                     html += '<div class="store-card-header">';
                     html += '<div style="display:flex; align-items:center; gap:6px;">';
-                    html += '<span style="font-size:15px; font-weight:700; color:var(--label);">' + escapeHtml(fs.name) + '</span>';
+                    html += '<span style="font-size:14.5px; font-weight:700; color:var(--label);">' + escapeHtml(fs.name) + '</span>';
                     html += '<span class="store-badge-code">' + escapeHtml(fs.code) + '</span>';
                     html += '</div>';
-                    html += '<span style="font-size:11.5px; color:var(--label-tertiary);">收錄 ' + fs.fees.length + ' 區域</span>';
+                    html += '<span style="font-size:11px; color:var(--label-tertiary);">收錄 ' + fs.fees.length + ' 區域</span>';
                     html += '</div>';
                     html += '<div>';
                     fs.fees.forEach(f => {
                         const feeObj = parseSafeFreightFee(f.fee);
                         html += '<div class="store-fee-row">';
-                        html += '<span style="font-size:12px; font-weight:500;">📍 ' + escapeHtml(f.area) + '</span>';
+                        html += '<span style="font-size:11.5px; font-weight:500;">' + escapeHtml(f.area) + '</span>';
                         html += '<span class="store-fee-pill ' + (feeObj.isFree ? 'free' : 'paid') + '">' + feeObj.raw + '</span>';
                         html += '</div>';
                     });
@@ -8358,9 +8350,9 @@
                 });
             }
 
-            // 3. 家電 MD 聯絡卡片 (真實 21 位 MD)
+            // 3. 家電 MD 聯絡卡片
             if (matchedMDs.length > 0 && (tab === 'all' || tab === 'md')) {
-                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); text-transform:uppercase; letter-spacing:0.04em; margin:12px 2px 6px;">🤖 家電 MD 專業聯絡名錄 (' + matchedMDs.length + ')</div>';
+                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin:10px 2px 8px;">家電 MD 專業名錄 (' + matchedMDs.length + ')</div>';
                 matchedMDs.forEach(m => {
                     const dept = m['部門'] || '家電 MD';
                     const staff = m['負責人'] || '';
@@ -8369,25 +8361,27 @@
                     const lineId = m['LINE'] || '';
                     const cleanPhone = phone.replace(/[^0-9+]/g, '');
 
+                    const cleanStaff = staff.replace(/[🌈🐼🦉🐣🐒🐸🧙‍♂️]/g, '').trim();
+
                     html += '<div class="store-card">';
                     html += '<div class="store-card-header">';
                     html += '<div>';
-                    html += '<span style="font-size:14.5px; font-weight:700; color:var(--label);">' + escapeHtml(dept.replace(/\n/g, ' ')) + '</span>';
-                    if (staff) html += '<div style="font-size:13px; color:var(--label-secondary); font-weight:600; margin-top:2px;">' + escapeHtml(staff) + '</div>';
+                    html += '<span style="font-size:14px; font-weight:700; color:var(--label);">' + escapeHtml(dept.replace(/\n/g, ' ')) + '</span>';
+                    if (cleanStaff) html += '<div style="font-size:12.5px; color:var(--label-secondary); font-weight:600; margin-top:2px;">' + escapeHtml(cleanStaff) + '</div>';
                     html += '</div>';
                     if (phone) {
-                        html += '<a href="tel:' + cleanPhone + '" class="store-btn-call active-scale" title="撥打行動電話">';
-                        html += '<i class="fas fa-phone-alt" style="font-size:10px;"></i>';
+                        html += '<a href="tel:' + cleanPhone + '" class="store-btn-call active-scale" title="撥打電話">';
+                        html += '<svg viewBox="0 0 24 24" width="10.5" height="10.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
                         html += '<span>' + escapeHtml(phone) + '</span>';
                         html += '</a>';
                     }
                     html += '</div>';
-                    html += '<div style="padding:10px 14px; font-size:12.5px; color:var(--label-secondary); display:flex; justify-content:space-between; align-items:center;">';
+                    html += '<div style="padding:9px 13px; font-size:12px; color:var(--label-secondary); display:flex; justify-content:space-between; align-items:center;">';
                     html += '<div>';
-                    if (ext) html += '<span style="margin-right:10px;">分機：<strong style="color:var(--label); font-family:monospace; font-size:13px;">' + escapeHtml(ext) + '</strong></span>';
+                    if (ext) html += '<span style="margin-right:10px;">分機 <strong style="color:var(--label); font-family:ui-monospace, monospace; font-size:12px;">' + escapeHtml(ext) + '</strong></span>';
                     if (lineId) html += '<span>LINE: <strong style="color:var(--label);">' + escapeHtml(lineId) + '</strong></span>';
                     html += '</div>';
-                    html += '<span style="font-size:11px; color:var(--label-tertiary);">採購與營運支援</span>';
+                    html += '<span style="font-size:10.5px; color:var(--label-tertiary);">採購營運</span>';
                     html += '</div>';
                     html += '</div>';
                 });
@@ -8396,13 +8390,12 @@
             container.innerHTML = html;
         }
 
-        window.openStoreDirectoryModal = openStoreDirectoryModal;
-        window.closeStoreDirectoryModal = closeStoreDirectoryModal;
         window.setStoreDirectoryTab = setStoreDirectoryTab;
         window.onStoreSearchInput = onStoreSearchInput;
         window.clearStoreSearch = clearStoreSearch;
         window.toggleStoreFeeAccordion = toggleStoreFeeAccordion;
         window.refreshStoreDirectoryData = refreshStoreDirectoryData;
+        window.renderStoreDirectoryUI = renderStoreDirectoryUI;
 
         // ===== ZEN THEME CONTROLLER (Apple 禪意主題色彩切換) =====
         const ZEN_THEMES = {
