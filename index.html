@@ -5241,7 +5241,7 @@
                         <span style="font-size:11.5px; color:var(--label); font-weight:600; letter-spacing:0.04em;">德</span>
                     </div>
                     <div style="font-size:10.5px; color:var(--label-quaternary); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">
-                        TIME 8 · 簡約工時記錄 · v1.0
+                        TIME 8 · 簡約工時記錄 · v2.0
                     </div>
                 </div>
             </div><!-- /content padding -->
@@ -7624,9 +7624,19 @@
             document.getElementById('targetHoursInput').value = appSettings.targetHours || 8;
             updateNotificationStatusBtn();
 
-            document.getElementById('settingsModal').classList.remove('hidden');
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
         }
-        function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
+        function closeSettings() {
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
         function saveSettings() {
             appSettings.workReminderMinutes = parseInt(document.getElementById('workReminderInput').value) || 120;
             appSettings.restReminderMinutes = parseInt(document.getElementById('restReminderInput').value) || 20;
@@ -8690,12 +8700,18 @@
             updateThemePickerUI(currentTheme);
 
             const modal = document.getElementById('themePickerModal');
-            if (modal) modal.classList.remove('hidden');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function closeThemePicker() {
             const modal = document.getElementById('themePickerModal');
-            if (modal) modal.classList.add('hidden');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
         }
 
         function selectZenTheme(themeKey) {
@@ -11219,6 +11235,22 @@
                 }
             }
         }
+
+        // --- Global Keyboard Shortcuts ---
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCalendarModal();
+                closeThemePicker();
+                closeWeatherModal();
+                closeNotesModal();
+                closeMuyuModal();
+                closeSettings();
+                closeUserManual();
+                closeFortuneModal();
+                closePetPreviewModal();
+                closeInstallGuide();
+            }
+        });
 
         // 初始化
         showOnboarding();

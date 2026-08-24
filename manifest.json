@@ -1,13 +1,13 @@
 {
-    "name": "工時紀錄",
-    "short_name": "工時紀錄",
-    "start_url": "/",
-    "scope": "/",
-    "id": "/",
+    "name": "TIME 8 · 簡約工時記錄",
+    "short_name": "TIME 8",
+    "start_url": "./",
+    "scope": "./",
+    "id": "./",
     "display": "standalone",
-    "background_color": "#F2F2F7",
-    "theme_color": "#F2F2F7",
-    "description": "工時追蹤工具",
+    "background_color": "#F4EFE6",
+    "theme_color": "#F4EFE6",
+    "description": "TIME 8 工時記錄與門市速查工具 v2.0",
     "icons": [
         {
             "src": "icon-192.png",
