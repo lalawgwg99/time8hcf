@@ -3655,7 +3655,7 @@
         <!-- Header: Minimal Editorial (No redundant system time) -->
         <header id="appHeader">
             <div class="header-inner">
-                <span class="header-date" id="currentDate">載入中...</span>
+                <span class="header-date" id="currentDate"><script>(function(){var d=new Date(),w=['週日','週一','週二','週三','週四','週五','週六'];document.write(w[d.getDay()]+' · '+(d.getMonth()+1)+'月'+d.getDate()+'日');})();</script></span>
                 <span class="header-brand" id="headerBrandBtn" onclick="openThemePicker()" title="點擊切換禪意主題風格">
                     <span>TIME 8</span>
                     <span style="font-size:8px; opacity:0.6;">✦</span>
@@ -10474,8 +10474,10 @@
         initWeatherEngine();
         initOfficeMuyu();
 
-        // --- 本週總覽 ---
+        // --- 本週總覽 (安全相容) ---
         function renderWeeklySummary() {
+            const totalHoursEl = document.getElementById('weekTotalHours');
+            if (!totalHoursEl) return; // 該區塊已由門市與跨店運費模組替換，安全略過
             const dayNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
             const today = new Date();
             let totalMins = 0;
@@ -10500,16 +10502,20 @@
             const totalH = (totalMins / 60).toFixed(1);
             const avgH = workDays > 0 ? (totalMins / 60 / workDays).toFixed(1) : '—';
 
-            document.getElementById('weekTotalHours').textContent = `${totalH}h`;
-            document.getElementById('weekAvgHours').textContent = workDays > 0 ? `${avgH}h` : '—';
-            document.getElementById('weekWorkDays').textContent = workDays > 0 ? `${workDays}天` : '—';
+            if (totalHoursEl) totalHoursEl.textContent = `${totalH}h`;
+            const avgEl = document.getElementById('weekAvgHours');
+            if (avgEl) avgEl.textContent = workDays > 0 ? `${avgH}h` : '—';
+            const daysEl = document.getElementById('weekWorkDays');
+            if (daysEl) daysEl.textContent = workDays > 0 ? `${workDays}天` : '—';
 
             const bestDayEl = document.getElementById('weekBestDay');
-            if (workDays > 0 && bestDay) {
-                const bestH = (bestMins / 60).toFixed(1);
-                bestDayEl.innerHTML = `<i class="fas fa-trophy" style="color:var(--orange);margin-right:4px;font-size:10px;"></i>最高產日：${bestDay}（${bestH}h）`;
-            } else {
-                bestDayEl.textContent = '本週尚無工作紀錄';
+            if (bestDayEl) {
+                if (workDays > 0 && bestDay) {
+                    const bestH = (bestMins / 60).toFixed(1);
+                    bestDayEl.innerHTML = `<i class="fas fa-trophy" style="color:var(--orange);margin-right:4px;font-size:10px;"></i>最高產日：${bestDay}（${bestH}h）`;
+                } else {
+                    bestDayEl.textContent = '本週尚無工作紀錄';
+                }
             }
         }
 
