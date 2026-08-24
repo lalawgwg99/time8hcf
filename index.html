@@ -3656,7 +3656,7 @@
         <header id="appHeader">
             <div class="header-inner">
                 <span class="header-date" id="currentDate"><script>(function(){var d=new Date(),w=['週日','週一','週二','週三','週四','週五','週六'];document.write(w[d.getDay()]+' · '+(d.getMonth()+1)+'月'+d.getDate()+'日');})();</script></span>
-                <span class="header-brand" id="headerBrandBtn" onclick="openThemePicker()" title="點擊切換禪意主題風格">
+                <span class="header-brand" id="headerBrandBtn" onclick="openThemePicker()" title="點擊切換色彩主題">
                     <span>TIME 8</span>
                     <span style="font-size:8px; opacity:0.6;">✦</span>
                 </span>
@@ -3808,11 +3808,11 @@
                         </div>
                     </div>
 
-                    <!-- Zen Rest Toolbar: In-place Mindfulness Breathe -->
+                    <!-- Rest Toolbar: In-place Deep Breathe -->
                     <div id="zenRestBar" class="zen-rest-bar">
-                        <button class="zen-tool-btn" id="breatheToolBtn" onclick="toggleZenBreathe()" title="開啟 1 分鐘正念深呼吸">
+                        <button class="zen-tool-btn" id="breatheToolBtn" onclick="toggleZenBreathe()" title="開啟 1 分鐘深呼吸放鬆">
                             <i class="fas fa-wind zen-tool-icon"></i>
-                            <span>正念呼吸</span>
+                            <span>深呼吸</span>
                             <span class="zen-tool-badge">1 min</span>
                         </button>
                     </div>
@@ -3861,16 +3861,16 @@
 
             <section id="tabPartner" class="tab-panel">
                 <div class="partner-room">
-                    <!-- Hero Zen Companion Stage Card -->
+                    <!-- Hero Companion Stage Card -->
                     <div class="partner-stage-card">
                         <div class="partner-stage-header">
-                            <span class="partner-stage-title">✦ 靈魂夥伴展台</span>
+                            <span class="partner-stage-title">✦ 工時夥伴展台</span>
                             <span id="partnerStageBadge" class="partner-pill-badge">凝聚中</span>
                         </div>
 
                         <!-- 7-Segment Orbital Halo Stage -->
                         <div id="partnerStageContainer">
-                            <div class="partner-orbital-container" aria-label="7 段工時星軌光環，進度 0 / 7">
+                            <div class="partner-orbital-container" aria-label="7 段工時進度光環，進度 0 / 7">
                                 <div class="orbital-stage-bg"></div>
                                 <svg class="orbital-svg" viewBox="0 0 220 220">
                                     <defs>
@@ -3906,11 +3906,11 @@
 
                         <!-- Hero Information Hierarchy -->
                         <div class="partner-hero-meta">
-                            <div id="partnerHeroTitle" class="partner-hero-title">0 / 7 蛋殼碎片</div>
-                            <div id="partnerHeroSub" class="partner-hero-sub">完成今日標準工時，即可凝聚第 1 顆星軌碎片</div>
+                            <div id="partnerHeroTitle" class="partner-hero-title">0 / 7 工時結晶</div>
+                            <div id="partnerHeroSub" class="partner-hero-sub">完成今日標準工時，即可凝聚第 1 顆工時結晶</div>
                             <div class="partner-feature-row">
-                                <span class="partner-feature-pill">✦ 獨特外觀</span>
-                                <span class="partner-feature-pill">✦ 陪伴呼吸</span>
+                                <span class="partner-feature-pill">✦ 專屬外觀</span>
+                                <span class="partner-feature-pill">✦ 工作陪伴</span>
                                 <span class="partner-feature-pill">✦ 工時成長</span>
                             </div>
                         </div>
@@ -3918,7 +3918,7 @@
                         <!-- Action / Guidance Area -->
                         <div id="partnerActionArea">
                             <div class="partner-status-box">
-                                <span>🔒 每日達成 8 小時標準工時即可獲 1 顆碎片</span>
+                                <span>每日達成 8 小時標準工時即可獲 1 顆工時結晶</span>
                             </div>
                         </div>
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
@@ -4129,8 +4129,8 @@
             
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:0 2px;">
                 <div>
-                    <h3 style="font-size:17px; font-weight:700; color:var(--label); margin:0;">禪意主題色彩</h3>
-                    <div style="font-size:12px; color:var(--label-tertiary); margin-top:2px;">4 款極致克制之自然調色</div>
+                    <h3 style="font-size:17px; font-weight:700; color:var(--label); margin:0;">色彩主題</h3>
+                    <div style="font-size:12px; color:var(--label-tertiary); margin-top:2px;">4 款 Apple 系統風格調色</div>
                 </div>
                 <button onclick="closeThemePicker()" aria-label="關閉"
                     style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
@@ -4141,7 +4141,7 @@
             <!-- Theme Cards List (Apple Inset Grouped) -->
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
                 
-                <!-- 1. 和風暖白 -->
+                <!-- 1. 經典素白 -->
                 <div class="theme-card-option" id="themeOpt_alabaster" onclick="selectZenTheme('alabaster')">
                     <div style="display:flex; align-items:center; gap:12px;">
                         <div class="theme-palette-preview" style="background:#F4EFE6; border:1px solid rgba(40,32,20,0.12);">
@@ -4149,8 +4149,8 @@
                             <span style="background:#6E7D6A;"></span>
                         </div>
                         <div>
-                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">和風暖白</div>
-                            <div style="font-size:12px; color:var(--label-tertiary);">日本和紙白 · 大地金褐光環</div>
+                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">經典素白</div>
+                            <div style="font-size:12px; color:var(--label-tertiary);">極簡暖白 · 金褐光環</div>
                         </div>
                     </div>
                     <div class="theme-check-icon" id="themeCheck_alabaster">
@@ -4167,7 +4167,7 @@
                         </div>
                         <div>
                             <div style="font-size:14.5px; font-weight:600; color:var(--label);">黑曜夜色</div>
-                            <div style="font-size:12px; color:var(--label-tertiary);">極簡深空黑 · 琉璃微光</div>
+                            <div style="font-size:12px; color:var(--label-tertiary);">深空純黑 · OLED 省電微光</div>
                         </div>
                     </div>
                     <div class="theme-check-icon" id="themeCheck_obsidian">
@@ -4175,7 +4175,7 @@
                     </div>
                 </div>
 
-                <!-- 3. 竹影森綠 -->
+                <!-- 3. 竹影青綠 -->
                 <div class="theme-card-option" id="themeOpt_sage" onclick="selectZenTheme('sage')">
                     <div style="display:flex; align-items:center; gap:12px;">
                         <div class="theme-palette-preview" style="background:#EFF4EE; border:1px solid rgba(30,50,32,0.12);">
@@ -4183,8 +4183,8 @@
                             <span style="background:#4D7A52;"></span>
                         </div>
                         <div>
-                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">竹影森綠</div>
-                            <div style="font-size:12px; color:var(--label-tertiary);">清幽鼠尾草灰綠 · 翠竹光環</div>
+                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">竹影青綠</div>
+                            <div style="font-size:12px; color:var(--label-tertiary);">清幽鼠尾草綠 · 翠綠光環</div>
                         </div>
                     </div>
                     <div class="theme-check-icon" id="themeCheck_sage">
@@ -4192,7 +4192,7 @@
                     </div>
                 </div>
 
-                <!-- 4. 暮光煙紫 -->
+                <!-- 4. 暮光晨紫 -->
                 <div class="theme-card-option" id="themeOpt_twilight" onclick="selectZenTheme('twilight')">
                     <div style="display:flex; align-items:center; gap:12px;">
                         <div class="theme-palette-preview" style="background:#F4EFF4; border:1px solid rgba(50,30,60,0.12);">
@@ -4200,8 +4200,8 @@
                             <span style="background:#7A5A8A;"></span>
                         </div>
                         <div>
-                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">暮光煙紫</div>
-                            <div style="font-size:12px; color:var(--label-tertiary);">靜謐薰衣草霧灰 · 暮靄光環</div>
+                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">暮光晨紫</div>
+                            <div style="font-size:12px; color:var(--label-tertiary);">薰衣草灰紫 · 晨霧光環</div>
                         </div>
                     </div>
                     <div class="theme-check-icon" id="themeCheck_twilight">
@@ -4360,173 +4360,174 @@
             </div>
             <div style="padding:16px 24px 36px;">
 
-                <!-- 1. 光環與四角小功能 -->
-                <div class="section-label">1. 光環與四角功能</div>
+                <!-- 1. 工時光環與四角工具 -->
+                <div class="section-label">1. 工時光環與快捷工具</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">⭕</span>
                             <span style="font-size:13.5px; font-weight:600; color:var(--label);">中央工時光環</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            即時呈現今日工時進度。<strong>輕點中央數字</strong>即可切換「今日已做」或「倒數剩餘」工時。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            即時顯示今日累積工時進度。<strong>輕點中央時間</strong>即可在「今日累計」與「倒數剩餘」模式之間自由切換。
                         </p>
                     </div>
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openWeatherModal();">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:14px;">☀️</span>
                                 <span style="font-size:13.5px; font-weight:600; color:var(--label);">左上 · 即時天氣與預報</span>
                             </div>
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">詳細預報 ↗</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            自動顯示當前氣溫與降雨率。點擊可查看 12 小時逐時預報、下班雨具提醒與 6 大氣象指標。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            自動顯示當前氣溫與降雨機率。點擊可查看 12 小時逐時天氣預報、下班降雨提醒與 6 大氣象指標。
                         </p>
                     </div>
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">📝</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">右上 · 待辦筆記</span>
-                        </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            隨手記錄今日專注目標與待辦清單，有未完成項目時會亮起小圓點。
-                        </p>
-                    </div>
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeSettings(); openMuyuModal();">
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openNotesModal();">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:14px;">🪵</span>
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">左下 · 電子木魚功德堂</span>
+                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">右上 · 待辦事項與筆記</span>
                             </div>
-                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">進入功德堂 ↗</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開啟筆記 ↗</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            輕點即敲積功德。長按或點此進入功德堂，解鎖 5 款木魚音色、自訂祈福詞與定速禪修。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            隨手記錄今日工作目標、待辦清單與臨時便籤。有未完成項目時會顯示提醒標記。
                         </p>
                     </div>
-                    <div style="padding:13px 16px;">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">🌙</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">右下 · 下班紀錄</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openMuyuModal();">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">左下 · 電子木魚放鬆</span>
+                            </div>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開啟設定 ↗</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            顯示今日或前次下班時間。點擊可查看已間隔時長或已休假天數。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            工作間隙輕觸即可敲擊放鬆。長按或點此可進入設定，自由更換敲擊音色與自訂提示文字。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px; cursor:pointer;" onclick="closeUserManual(); closeSettings(); showYesterdayPunchOutDetail();">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">右下 · 下班紀錄</span>
+                            </div>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">查看休息 ↗</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            即時顯示前次或今日下班時間點。輕點可查看班次間隔時長或休假天數。
                         </p>
                     </div>
                 </div>
 
-                <!-- 2. 打卡與防誤觸 -->
-                <div class="section-label">2. 俐落打卡操作</div>
+                <!-- 2. 打卡操作與防誤觸 -->
+                <div class="section-label">2. 打卡操作與安全防護</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">☕</span>
                             <span style="font-size:13.5px; font-weight:600; color:var(--label);">上班打卡</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            輕點「上班」按鈕立即啟動計時，伴隨清脆水滴音與細膩觸覺回饋。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            輕點中央「上班」按鈕立即啟動工時計算，伴隨觸覺回饋與時間記錄。
                         </p>
                     </div>
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">👉</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">下班防誤觸滑動</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">下班滑動確認</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            下班採用<strong>「向右滑動打卡」</strong>機制，防止口袋誤觸，安全收工。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            下班採用<strong>「向右滑動打卡」</strong>機制，防止口袋或誤觸導致提早結束計時。
                         </p>
                     </div>
                     <div style="padding:13px 16px;">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">⛩️</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">晨曦啟程 · 每日靈籤</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">晨曦啟程 · 每日箴言</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            每日<strong>第一次打卡上班</strong>時，系統將自動為您搖筒抽取今日古剎靈籤與事業、求財、健康神諭指引。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            每日<strong>第一次打卡上班</strong>時，系統將自動為您呈現今日勉勵箴言與專注引導。
                         </p>
                     </div>
                 </div>
 
-                <!-- 3. 業務速查（全省門市與跨店運費） -->
-                <div class="section-label">3. 業務速查與運費試算</div>
+                <!-- 3. 門市速查與跨店運費 -->
+                <div class="section-label">3. 門市速查與跨店運費</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:13px 16px; cursor:pointer;" onclick="closeUserManual(); closeSettings(); openStoreDirectoryModal();">
+                    <div style="padding:13px 16px; cursor:pointer;" onclick="closeUserManual(); closeSettings(); switchTab('Insights');">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:14px;">🏢</span>
                                 <span style="font-size:13.5px; font-weight:600; color:var(--label);">全省門市與跨店運費速查</span>
                             </div>
-                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開啟速查 ↗</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">前往洞察 ↗</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            整合全台門市聯絡電話、家電 MD 分機與各店跨區外送費用對照，支援離線 0 毫秒即時搜尋與一鍵撥號。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            位於「洞察」分頁核心。完整整合全台 62 間門市聯絡電話、店長/處長/課長/助理窗口、59 家門市跨區運費標準與家電 MD 分機，支援 0 毫秒即時搜尋與一鍵撥號。
                         </p>
                     </div>
                 </div>
 
-                <!-- 4. 勞基法守護防線 -->
+                <!-- 4. 勞基法健康守護 -->
                 <div class="section-label">4. 勞基法健康守護</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">⏳</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">連續 230 分鐘工作提醒 (§35)</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">連續工作 230 分鐘預警 (第 35 條)</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            單次工作滿 3 小時 50 分時主動提醒，讓您提前收尾休息，不超時工作。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            單次連續工作滿 3 小時 50 分時主動發出提醒，讓您提前收尾休息，避免超時工作。
                         </p>
                     </div>
                     <div style="padding:13px 16px;">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">🛌</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">11 小時跨日休息守護 (§34)</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">11 小時跨日休息守護 (第 34 條)</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            上班時自動檢測距離上次下班是否休滿 11 小時，守護夜間睡眠充足。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            上班時自動比對距離前一次下班是否休滿 11 小時，守護睡眠與健康充足。
                         </p>
                     </div>
                 </div>
 
-                <!-- 4. 正念調息與主題 -->
-                <div class="section-label">4. 禪意放鬆與個人化</div>
+                <!-- 5. 個人化與外觀設定 -->
+                <div class="section-label">5. 個人化與系統設定</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">🧘</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">1 分鐘正念深呼吸</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); startBreatheGuide();">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">1 分鐘深呼吸放鬆</span>
+                            </div>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開始深呼吸 ↗</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            點擊「正念呼吸」，跟隨呼吸光環放鬆 1 分鐘，緩解疲勞。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            點擊「深呼吸」，跟隨引導光環進行 1 分鐘吸氣、屏息與呼氣，舒緩工作疲勞。
                         </p>
                     </div>
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">🎨</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">4 款 Apple 禪意主題</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openThemePicker();">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">4 款 Apple 系統主題</span>
+                            </div>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">切換主題 ↗</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            輕觸首頁右上角 <strong>TIME 8 ✦</strong>，可隨時切換：暖白、黑曜 (OLED 省電)、森綠、煙紫。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            輕觸首頁右上角 <strong>TIME 8 ✦</strong>，可自由切換：經典素白、黑曜夜色 (OLED 省電)、竹影青綠、暮光晨紫。
                         </p>
                     </div>
-                    <div style="padding:13px 16px;">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:14px;">📲</span>
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">加入手機主畫面 (PWA)</span>
+                    <div style="padding:13px 16px; cursor:pointer;" onclick="closeUserManual(); showInstallGuide();">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">加入手機主畫面 (PWA)</span>
+                            </div>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">安裝說明 ↗</span>
                         </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.5; margin:0;">
-                            在 Safari 點選分享按鈕 ➔「加入主畫面」，即可享有全螢幕 App 體驗。
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            在 Safari 點選分享按鈕 ➔「加入主畫面」，享有全螢幕獨立 App 體驗與極速啟動。
                         </p>
                     </div>
                 </div>
 
                 <button onclick="closeUserManual()" class="active-scale"
-                    style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:500; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">返回設定</button>
+                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em;">返回設定</button>
             </div>
         </div>
     </div>
 
-    <!-- Temple Fortune Slip Modal (傳統寺廟靈籤紙彈窗) -->
+    <!-- Daily Wisdom Modal (晨曦啟程 · 每日箴言) -->
     <div id="fortuneModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/45" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)" onclick="closeFortuneModal()"></div>
         <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
@@ -4534,11 +4535,11 @@
             <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:2;">
                 <div class="sheet-handle"></div>
                 <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
-                    <div style="font-size:13.5px; font-weight:600; color:#C64C3A; letter-spacing:0.08em; display:flex; align-items:center; gap:6px;">
-                        <span>⛩️</span>
-                        <span>晨曦啟程 · 每日靈籤</span>
+                    <div style="font-size:13.5px; font-weight:600; color:var(--label); letter-spacing:0.04em; display:flex; align-items:center; gap:6px;">
+                        <span>✦</span>
+                        <span>晨曦啟程 · 每日箴言</span>
                     </div>
-                    <button onclick="closeFortuneModal()" aria-label="關閉靈籤"
+                    <button onclick="closeFortuneModal()" aria-label="關閉"
                         style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
                         <i class="fas fa-times" style="font-size:12px;"></i>
                     </button>
@@ -4546,15 +4547,15 @@
             </div>
             
             <div style="padding:20px 24px 36px;">
-                <!-- 寺廟靈籤紙 -->
+                <!-- 每日箴言卡片 -->
                 <div class="fortune-paper-card">
-                    <!-- 籤首 -->
+                    <!-- 標題 -->
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <div id="fortuneTitle" class="fortune-vermilion-badge">第十八籤 · 上上大吉</div>
-                        <div id="fortuneStory" style="font-size:12px; font-weight:600; color:var(--label-secondary);">典故：【太白醉酒】</div>
+                        <div id="fortuneTitle" class="fortune-vermilion-badge">今日箴言 · 專注致遠</div>
+                        <div id="fortuneStory" style="font-size:12px; font-weight:600; color:var(--label-secondary);">【晨曦啟發】</div>
                     </div>
 
-                    <!-- 四句七言古風籤詩 -->
+                    <!-- 箴言金句 -->
                     <div class="fortune-poem-box" id="fortunePoem">
                         巍巍獨步向雲間<br>
                         玉殿千官第一班<br>
@@ -4562,29 +4563,29 @@
                         福如東海壽如山
                     </div>
 
-                    <!-- 解籤四柱 -->
+                    <!-- 分類指引 -->
                     <div style="margin-top:16px; padding:0 4px;">
                         <div class="fortune-meta-row">
-                            <span class="fortune-meta-label">💼 事業功名：</span>
-                            <span id="fortuneCareer">時機已至，專注耕耘，貴人即將現身相助。</span>
+                            <span class="fortune-meta-label">工作事業：</span>
+                            <span id="fortuneCareer">時機已至，專注耕耘，循序漸進達成目標。</span>
                         </div>
                         <div class="fortune-meta-row">
-                            <span class="fortune-meta-label">💰 求財所得：</span>
-                            <span id="fortuneWealth">穩紮穩打，勤勉不輟，必有豐厚回報。</span>
+                            <span class="fortune-meta-label">財務思考：</span>
+                            <span id="fortuneWealth">穩紮穩打，勤勉不輟，長期累積必有回報。</span>
                         </div>
                         <div class="fortune-meta-row">
-                            <span class="fortune-meta-label">🕊️ 身心境況：</span>
-                            <span id="fortuneHealth">心寬病退，作息有常，莫為虛名煩擾。</span>
+                            <span class="fortune-meta-label">身心健康：</span>
+                            <span id="fortuneHealth">作息有常，勞逸結合，維持身心充沛活力。</span>
                         </div>
                         <div class="fortune-meta-row" style="margin-bottom:0;">
-                            <span class="fortune-meta-label">💡 智慧神諭：</span>
-                            <span id="fortuneAdvice" style="color:#C64C3A; font-weight:600;">流水不爭先，爭的是滔滔不絕。</span>
+                            <span class="fortune-meta-label">專注指引：</span>
+                            <span id="fortuneAdvice" style="color:var(--label); font-weight:600;">流水不爭先，爭的是滔滔不絕。</span>
                         </div>
                     </div>
                 </div>
 
                 <button onclick="closeFortuneModal()" class="active-scale"
-                    style="margin-top:20px; width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:600; background:#C64C3A; color:#FFF; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(198,76,58,0.3); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">收下今日靈籤 (鐫刻心間)</button>
+                    style="margin-top:20px; width:100%; padding:14px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">收下今日箴言</button>
             </div>
         </div>
     </div>
@@ -4877,12 +4878,12 @@
                     </div>
                 </div>
 
-                <!-- 自動定速 Auto-Zen 禪修控制 -->
+                <!-- 自動定速 Auto 敲擊控制 -->
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div>
-                            <div style="font-size:13px; font-weight:600; color:var(--label);">自動定速木魚（Auto-Zen）</div>
-                            <div style="font-size:11.5px; color:var(--label-tertiary); margin-top:2px;">桌面靜心、放鬆與呼吸節奏引導</div>
+                            <div style="font-size:13px; font-weight:600; color:var(--label);">定速自動敲擊（BPM）</div>
+                            <div style="font-size:11.5px; color:var(--label-tertiary); margin-top:2px;">穩定工作節奏與深呼吸放鬆</div>
                         </div>
                         <div style="display:flex; align-items:center; gap:6px;">
                             <button type="button" onclick="setMuyuAutoSpeed(0)" id="autoBpmOff" class="muyu-bpm-btn active">關閉</button>
@@ -4926,7 +4927,7 @@
                             <span>🌿</span> TIME 8 · 簡約工時記錄
                         </div>
                         <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            專為工作者設計的工時記錄工具，支援工時倒數、正念調息與法規提醒，協助維持穩定工作節奏。
+                            專為工作者設計的工時記錄工具，支援工時倒數、深呼吸放鬆與法規提醒，協助維持穩定工作節奏。
                         </p>
                     </div>
 
@@ -5037,14 +5038,14 @@
                         <span style="font-size:11.5px; color:var(--label); font-weight:600; letter-spacing:0.04em;">德</span>
                     </div>
                     <div style="font-size:10.5px; color:var(--label-quaternary); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">
-                        TIME 8 · 禪意專注工時 · v1.0
+                        TIME 8 · 簡約工時記錄 · v1.0
                     </div>
                 </div>
             </div><!-- /content padding -->
         </div><!-- /outer modal -->
     </div>
 
-    <!-- Apple Dynamic Capsule Notification Toast (非侵入式頂部禪意膠囊) -->
+    <!-- Apple Dynamic Capsule Notification Toast (頂部動態膠囊通知) -->
     <div class="zen-capsule-container">
         <div id="zenDynamicCapsule" class="zen-dynamic-capsule" onclick="dismissZenCapsule()" role="status" aria-live="polite">
             <span class="zen-capsule-emoji" id="zenCapsuleEmoji">🌿</span>
@@ -6937,7 +6938,7 @@
 
             const eyebrowEl = document.getElementById('heroEyebrow');
             if (eyebrowEl) {
-                eyebrowEl.innerHTML = `正念呼吸 · 1分鐘 <button class="breathe-exit-btn" onclick="stopZenBreathe()">✕ 結束</button>`;
+                eyebrowEl.innerHTML = `深呼吸 · 1分鐘 <button class="breathe-exit-btn" onclick="stopZenBreathe()">✕ 結束</button>`;
             }
 
             const totalHoursEl = document.getElementById('totalHours');
@@ -6984,7 +6985,7 @@
                     ringContainer.classList.remove('inhale', 'exhale');
                     ringContainer.classList.add('hold');
                 }
-                if (actionText) actionText.textContent = '屏息靜心';
+                if (actionText) actionText.textContent = '屏息';
                 if ('vibrate' in navigator) navigator.vibrate([10]);
 
             } else if (cycleSec === 8) {
@@ -7002,7 +7003,7 @@
                     ringContainer.classList.remove('inhale', 'exhale');
                     ringContainer.classList.add('hold');
                 }
-                if (actionText) actionText.textContent = '身心放空';
+                if (actionText) actionText.textContent = '平緩放鬆';
                 if ('vibrate' in navigator) navigator.vibrate([10]);
             }
 
@@ -7018,7 +7019,7 @@
             _breatheTimer = null;
 
             const actionText = document.getElementById('breatheActionText');
-            if (actionText) actionText.textContent = '身心澄澈 ✦';
+            if (actionText) actionText.textContent = '放鬆完成 ✦';
 
             ZenAudio.playSingingBowl(540, 4.0);
             if ('vibrate' in navigator) navigator.vibrate([25, 60, 25]);
@@ -8597,62 +8598,109 @@
             // Load settings first
             const savedSettings = localStorage.getItem('appSettings');
             if (savedSettings) {
-                const loaded = JSON.parse(savedSettings);
-                appSettings = { ...appSettings, ...loaded };
-                if (appSettings.workReminderMinutes === 180 || appSettings.workReminderMinutes === 230) {
-                    appSettings.workReminderMinutes = 120;
-                    appSettings.restReminderMinutes = 20;
+                try {
+                    const loaded = JSON.parse(savedSettings);
+                    appSettings = { ...appSettings, ...loaded };
+                    if (appSettings.workReminderMinutes === 180 || appSettings.workReminderMinutes === 230) {
+                        appSettings.workReminderMinutes = 120;
+                        appSettings.restReminderMinutes = 20;
+                    }
+                } catch (e) {
+                    console.error("Failed to parse appSettings:", e);
                 }
             }
             if (!appSettings.targetHours) appSettings.targetHours = 8;
             applyZenTheme(appSettings.zenTheme || 'alabaster');
 
-            // Migrate old flat data to per-day if needed
-            const oldData = localStorage.getItem('timecardData');
-            if (oldData) {
-                const parsed = JSON.parse(oldData);
-                if (parsed.records && parsed.records.length > 0) {
-                    // Archive old records by date
-                    const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-                    parsed.records.forEach(r => {
-                        const dateKey = r.time.slice(0, 10);
-                        if (!history[dateKey]) history[dateKey] = [];
-                        history[dateKey].push(r);
+            // 1. 讀取並整合所有歷史儲存來源 (包含 timecardHistory 與舊版相容資料)
+            let history = {};
+            try {
+                history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+            } catch (e) {
+                history = {};
+            }
+
+            // 遷移或合併舊版 timecardData (flat array 或 { records: [...] })
+            try {
+                const oldData = localStorage.getItem('timecardData');
+                if (oldData) {
+                    const parsed = JSON.parse(oldData);
+                    const list = Array.isArray(parsed) ? parsed : (parsed.records || []);
+                    list.forEach(r => {
+                        if (r && r.time) {
+                            const dateKey = getLocalDateStr(new Date(r.time));
+                            if (!history[dateKey]) history[dateKey] = [];
+                            if (!history[dateKey].some(existing => existing.time === r.time && existing.type === r.type)) {
+                                history[dateKey].push(r);
+                            }
+                        }
                     });
-                    localStorage.setItem('timecardHistory', JSON.stringify(history));
-                    localStorage.removeItem('timecardData');
                 }
+            } catch (e) {
+                console.error("Migration error from timecardData:", e);
             }
 
-            // Auto-settle past unclosed sessions before loading today
-            const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+            // 2. 標準化所有 key 依據本地日期歸戶 (修復時區或日期格式差異)
+            const normalizedHistory = {};
+            for (const rawKey in history) {
+                const recs = history[rawKey] || [];
+                if (!Array.isArray(recs)) continue;
+                recs.forEach(r => {
+                    if (r && r.time) {
+                        const targetKey = getLocalDateStr(new Date(r.time));
+                        if (!normalizedHistory[targetKey]) normalizedHistory[targetKey] = [];
+                        if (!normalizedHistory[targetKey].some(ex => ex.time === r.time && ex.type === r.type)) {
+                            normalizedHistory[targetKey].push(r);
+                        }
+                    }
+                });
+            }
+
+            // 依時間先後排序
+            for (const k in normalizedHistory) {
+                normalizedHistory[k].sort((a, b) => new Date(a.time) - new Date(b.time));
+            }
+
             const todayKey = getTodayKey();
-            let historyChanged = false;
-            for (const dateKey in history) {
-                if (dateKey >= todayKey) continue; // skip today & future
-                const recs = history[dateKey];
-                if (recs.length > 0 && recs.length % 2 !== 0) {
-                    // Unclosed session — auto clock-out at 23:59:59 of that day
-                    const autoOut = dateKey + 'T23:59:59';
-                    recs.push({ time: autoOut, type: 'out', task: '（自動結算）' });
-                    historyChanged = true;
+
+            // 3. 自動結算過去未打下班的班次
+            for (const dateKey in normalizedHistory) {
+                if (dateKey < todayKey) {
+                    const recs = normalizedHistory[dateKey];
+                    if (recs.length > 0 && recs.length % 2 !== 0) {
+                        const autoOut = dateKey + 'T23:59:59';
+                        recs.push({ time: autoOut, type: 'out', task: '（自動結算）' });
+                    }
                 }
             }
-            if (historyChanged) {
+
+            history = normalizedHistory;
+            try {
                 localStorage.setItem('timecardHistory', JSON.stringify(history));
+            } catch (e) {
+                console.error("Failed to save normalized history:", e);
             }
 
-            // Load today's records from history
+            // 4. 載入今日紀錄 (若無則預設空陣列)
             punchRecords = history[todayKey] || [];
 
             const savedOffDays = localStorage.getItem('offDays');
-            if (savedOffDays) offDays = new Set(JSON.parse(savedOffDays));
+            if (savedOffDays) {
+                try { offDays = new Set(JSON.parse(savedOffDays)); } catch (e) {}
+            }
+
+            // 5. 即刻同步前日/今日下班小圓圈
+            updateYesterdayPunchOutDisplay();
         }
 
         function saveData() {
-            const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-            history[getTodayKey()] = punchRecords;
-            localStorage.setItem('timecardHistory', JSON.stringify(history));
+            try {
+                const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+                history[getTodayKey()] = punchRecords;
+                localStorage.setItem('timecardHistory', JSON.stringify(history));
+            } catch (e) {
+                console.error("Failed to save punch records:", e);
+            }
         }
 
         function getTargetMinutes() {
@@ -8720,7 +8768,8 @@
             }
             chart.innerHTML = bars;
             const avg = workDays > 0 ? (totalHours / workDays).toFixed(1) : '—';
-            document.getElementById('weeklyAvg').textContent = `平均 ${avg}h / 日`;
+            const avgEl = document.getElementById('weeklyAvg');
+            if (avgEl) avgEl.textContent = `平均 ${avg}h / 日`;
         }
 
         function updateCurrentTime() {
@@ -8743,7 +8792,7 @@
                 for (const dateKey of pastDates) {
                     const recs = history[dateKey] || [];
                     for (let i = recs.length - 1; i >= 0; i--) {
-                        if (recs[i].type === 'out' && recs[i].time) {
+                        if (recs[i] && recs[i].type === 'out' && recs[i].time) {
                             return recs[i];
                         }
                     }
@@ -8758,23 +8807,25 @@
         // 1. 若今日已有任何下班紀錄，優先返回今日最新的下班點。
         // 2. 若今日尚未有任何下班紀錄（剛上班或今日尚未打卡），則回溯查找最近過去工作日的最後下班點。
         function getLatestRelevantPunchOut() {
-            // 1. 查找今日 records 中最新的 'out' 紀錄
-            for (let i = punchRecords.length - 1; i >= 0; i--) {
-                if (punchRecords[i].type === 'out' && punchRecords[i].time) {
-                    return { record: punchRecords[i], isToday: true, dateKey: getTodayKey() };
+            // 1. 先查找今日記憶體中的 punchRecords
+            if (Array.isArray(punchRecords)) {
+                for (let i = punchRecords.length - 1; i >= 0; i--) {
+                    if (punchRecords[i] && punchRecords[i].type === 'out' && punchRecords[i].time) {
+                        return { record: punchRecords[i], isToday: true, dateKey: getTodayKey() };
+                    }
                 }
             }
 
-            // 2. 若今日無下班點，向歷史回溯查找
+            // 2. 向歷史紀錄回溯查找最近一次有效下班點 (包含今日歷史與過去所有日期)
             try {
                 const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
                 const todayKey = getTodayKey();
-                const pastDates = Object.keys(history).filter(d => d < todayKey).sort().reverse();
-                for (const dateKey of pastDates) {
+                const allDates = Object.keys(history).sort().reverse();
+                for (const dateKey of allDates) {
                     const recs = history[dateKey] || [];
                     for (let i = recs.length - 1; i >= 0; i--) {
-                        if (recs[i].type === 'out' && recs[i].time) {
-                            return { record: recs[i], isToday: false, dateKey: dateKey };
+                        if (recs[i] && recs[i].type === 'out' && recs[i].time) {
+                            return { record: recs[i], isToday: (dateKey === todayKey), dateKey: dateKey };
                         }
                     }
                 }
