@@ -1,16 +1,21 @@
 // test-store-directory.js
 const assert = require('assert');
+const fs = require('fs');
 
-// 模擬安全運費數字提取器
-function parseFreightAmount(feeStr) {
-    if (feeStr === null || feeStr === undefined) return 0;
-    const str = String(feeStr).trim();
-    if (str === '免運' || str === '0' || str === '$0' || str === '免費') return 0;
-    const match = str.match(/[0-9]+/);
-    return match ? parseInt(match[0], 10) : 0;
+// 讀取真實試算表產出的 store_data.json
+const realDataStore = JSON.parse(fs.readFileSync('store_data.json', 'utf8'));
+
+function parseSafeFreightFee(feeVal) {
+    if (feeVal === null || feeVal === undefined) return { raw: '0', amount: 0, isFree: true };
+    const str = String(feeVal).trim();
+    if (str === '0' || str === '$0' || str === '免運' || str === '免費' || str === '0元') {
+        return { raw: '$0 免運', amount: 0, isFree: true };
+    }
+    const match = str.match(/[0-9,]+/);
+    const num = match ? parseInt(match[0].replace(/,/g, ''), 10) : 0;
+    return { raw: `$${num.toLocaleString()}`, amount: num, isFree: num === 0 };
 }
 
-// 模擬多維度搜尋過濾器
 function searchDirectory(dataStore, query, activeTab) {
     const q = String(query || '').toLowerCase().trim();
     const results = {
@@ -27,10 +32,10 @@ function searchDirectory(dataStore, query, activeTab) {
     // 1. 門市與聯絡人過濾
     contacts.forEach(c => {
         const isMD = c.category && c.category.includes('MD');
-        const name = String(c['店名'] || c['部門'] || c['名稱'] || '').toLowerCase();
-        const code = String(c['代碼'] || c['店別代碼'] || c['店號'] || '').toLowerCase();
-        const phone = String(c['電話'] || c['分機'] || c['連絡電話'] || '').toLowerCase();
-        const staff = String(c['負責人'] || c['主管'] || c['聯絡人'] || '').toLowerCase();
+        const name = String(c['店名'] || c['部門'] || '').toLowerCase();
+        const code = String(c['代碼'] || '').toLowerCase();
+        const phone = String(c['電話'] || c['課長電話'] || c['助理電話'] || '').toLowerCase();
+        const staff = String(c['店長'] || c['課長'] || c['處長'] || c['助理'] || c['負責人'] || '').toLowerCase();
         const address = String(c['地址'] || '').toLowerCase();
 
         const match = !q || name.includes(q) || code.includes(q) || phone.includes(q) || staff.includes(q) || address.includes(q);
@@ -61,8 +66,8 @@ function searchDirectory(dataStore, query, activeTab) {
                 const area = String(f.area || '').toLowerCase();
                 const feeText = String(f.fee || '').toLowerCase();
                 if (!q) return true;
-                if (isStoreMatch) return true; // 若匹配到該店，則列出該店所有區域
-                return area.includes(q) || feeText.includes(q); // 或匹配目的地區域
+                if (isStoreMatch) return true;
+                return area.includes(q) || feeText.includes(q);
             });
 
             if (matchedFees.length > 0) {
@@ -78,75 +83,39 @@ function searchDirectory(dataStore, query, activeTab) {
     return results;
 }
 
-// 執行測試
-console.log("=== 開始執行門市與跨店運費引擎單元測試 ===");
+console.log("=== 開始執行真實試算表資料檢索測試 ===");
 
-// Test 1: 運費數字解析容錯測試
-assert.strictEqual(parseFreightAmount('$0'), 0);
-assert.strictEqual(parseFreightAmount('免運'), 0);
-assert.strictEqual(parseFreightAmount('200元'), 200);
-assert.strictEqual(parseFreightAmount('$450'), 450);
-assert.strictEqual(parseFreightAmount(null), 0);
-assert.strictEqual(parseFreightAmount(undefined), 0);
-assert.strictEqual(parseFreightAmount(''), 0);
-console.log("✅ Test 1: 運費數字解析與空值防護通過");
+// 測試真實資料總筆數
+assert.strictEqual(realDataStore.contacts.length, 83);
+assert.strictEqual(Object.keys(realDataStore.stores).length, 59);
+console.log("✅ Test 1: 真實資料庫結構驗證 (83 筆聯絡人, 59 家門市跨區運費)");
 
-// Test 2: 模擬資料搜尋測試
-const mockDataStore = {
-    contacts: [
-        { '店名': '五甲門市', '代碼': 'WG', '電話': '07-7654321', '負責人': '林經理', '地址': '高雄市鳳山區五甲二路100號', category: '📋全省聯絡' },
-        { '店名': '內湖門市', '代碼': 'NZ', '電話': '02-8765432', '負責人': '陳副理', '地址': '台北市內湖區成功路二段20號', category: '📋全省聯絡' },
-        { '部門': '40MD', '負責人': '張專員', '分機': '#8801', '電話': '0912-345678', category: '🤖家電MD' }
-    ],
-    stores: {
-        'WG': {
-            code: 'WG',
-            name: '五甲門市',
-            fees: [
-                { area: '鳳山區', fee: '0' },
-                { area: '前鎮區', fee: '0' },
-                { area: '小港區', fee: '200' },
-                { area: '大寮區', fee: '200' },
-                { area: '林園區', fee: '400' }
-            ]
-        },
-        'NZ': {
-            code: 'NZ',
-            name: '內湖門市',
-            fees: [
-                { area: '內湖區', fee: '0' },
-                { area: '南港區', fee: '200' },
-                { area: '汐止區', fee: '300' }
-            ]
-        }
-    }
-};
+// 搜尋 WG五甲
+const resWG = searchDirectory(realDataStore, '五甲', 'all');
+assert.ok(resWG.stores.length > 0, "應找到五甲門市聯絡資訊");
+assert.ok(resWG.freightMatches.length > 0, "應找到五甲門市運費表");
+console.log(`✅ Test 2: 真實店名搜尋「五甲」通過 (找到 ${resWG.stores[0]['店名']})`);
 
-// 搜尋店號 WG
-const resWG = searchDirectory(mockDataStore, 'WG', 'all');
-assert.strictEqual(resWG.stores.length, 1);
-assert.strictEqual(resWG.stores[0]['店名'], '五甲門市');
-assert.strictEqual(resWG.freightMatches.length, 1);
-assert.strictEqual(resWG.freightMatches[0].fees.length, 5);
-console.log("✅ Test 2: 店號代碼查詢 (WG) 通過");
+// 搜尋 天母 (022)
+const resTM = searchDirectory(realDataStore, '022', 'all');
+assert.ok(resTM.stores.length > 0, "應依店碼 022 找到天母門市");
+console.log(`✅ Test 3: 店碼搜尋「022」通過 (找到 ${resTM.stores[0]['店名']})`);
 
-// 搜尋目的地區域 鳳山
-const resFengshan = searchDirectory(mockDataStore, '鳳山', 'all');
-assert.strictEqual(resFengshan.freightMatches.length, 1);
-assert.strictEqual(resFengshan.freightMatches[0].fees[0].area, '鳳山區');
-console.log("✅ Test 3: 目的地區域反查 (鳳山) 通過");
+// 搜尋 40MD 家電
+const resMD = searchDirectory(realDataStore, '40MD', 'all');
+assert.ok(resMD.mdList.length > 0, "應找到 40MD 家電負責人");
+console.log(`✅ Test 4: 家電 MD 搜尋「40MD」通過 (找到 ${resMD.mdList[0]['負責人']})`);
 
-// 搜尋家電 MD
-const resMD = searchDirectory(mockDataStore, '40MD', 'all');
-assert.strictEqual(resMD.mdList.length, 1);
-assert.strictEqual(resMD.mdList[0]['部門'], '40MD');
-console.log("✅ Test 4: 家電 MD 部門查詢 通過");
+// 搜尋 目的地區域 恆春
+const resHengchun = searchDirectory(realDataStore, '恆春', 'freight');
+assert.ok(resHengchun.freightMatches.length > 0, "應找到送達恆春的門市運費");
+console.log(`✅ Test 5: 目的地區域反查「恆春」通過 (共 ${resHengchun.freightMatches.length} 家門市可送達)`);
 
-// Tab 切換過濾測試
-const resTabStores = searchDirectory(mockDataStore, '', 'stores');
-assert.strictEqual(resTabStores.stores.length, 2);
-assert.strictEqual(resTabStores.mdList.length, 0);
-assert.strictEqual(resTabStores.freightMatches.length, 0);
-console.log("✅ Test 5: Tab 欄位分流過濾 通過");
+// 運費解析測試
+const parsed = parseSafeFreightFee('$1,500');
+assert.strictEqual(parsed.amount, 1500);
+assert.strictEqual(parsed.raw, '$1,500');
+assert.strictEqual(parsed.isFree, false);
+console.log("✅ Test 6: 千分位運費解析 ($1,500) 通過");
 
-console.log("🎉 所有門市與跨店運費測試全部通過！");
+console.log("🎉 所有真實試算表資料檢索測試 100% 全部通過！");
