@@ -4165,8 +4165,7 @@
                         <!-- Segmented Control -->
                         <div class="store-segmented-control" style="margin-bottom:12px;">
                             <button type="button" class="store-seg-btn active" id="storeTabAll" onclick="setStoreDirectoryTab('all')">全部</button>
-                            <button type="button" class="store-seg-btn" id="storeTabStores" onclick="setStoreDirectoryTab('stores')">門市電話</button>
-                            <button type="button" class="store-seg-btn" id="storeTabFreight" onclick="setStoreDirectoryTab('freight')">跨店運費</button>
+                            <button type="button" class="store-seg-btn" id="storeTabStores" onclick="setStoreDirectoryTab('stores')">門市及跨店</button>
                             <button type="button" class="store-seg-btn" id="storeTabMD" onclick="setStoreDirectoryTab('md')">家電 MD</button>
                         </div>
 
@@ -8305,7 +8304,7 @@
 
         function setStoreDirectoryTab(tab) {
             _storeDirectoryState.activeTab = tab;
-            ['All', 'Stores', 'Freight', 'MD'].forEach(t => {
+            ['All', 'Stores', 'MD'].forEach(t => {
                 const btn = document.getElementById('storeTab' + t);
                 if (btn) btn.classList.toggle('active', t.toLowerCase() === tab);
             });
@@ -8470,7 +8469,6 @@
 
             const matchedStores = [];
             const matchedMDs = [];
-            const matchedFreightStores = [];
 
             contacts.forEach(c => {
                 const isMD = c.category && c.category.includes('MD');
@@ -8480,8 +8478,13 @@
                 const address = String(c['地址'] || '').trim();
                 const allStaffStr = [c['店長'], c['處長'], c['課長'], c['助理'], c['負責人'], c['部門']].filter(Boolean).join(' ');
 
+                const codeMatch = name.match(/^[A-Za-z]{2,3}/);
+                const lookupKey = (codeMatch ? codeMatch[0] : (code || name)).toUpperCase();
+                const freightData = storesMap[lookupKey] || storesMap[name] || null;
+                const freightMatch = q && freightData && (freightData.fees || []).some(f => (String(f.area || '') + ' ' + String(f.fee || '')).toLowerCase().includes(q));
+
                 const isMatch = !q || name.toLowerCase().includes(q) || code.toLowerCase().includes(q) ||
-                                phone.toLowerCase().includes(q) || allStaffStr.toLowerCase().includes(q) || address.toLowerCase().includes(q);
+                                phone.toLowerCase().includes(q) || allStaffStr.toLowerCase().includes(q) || address.toLowerCase().includes(q) || freightMatch;
 
                 if (isMD) {
                     if (tab === 'all' || tab === 'md') {
@@ -8490,55 +8493,35 @@
                 } else {
                     totalStoreCount++;
                     if (tab === 'all' || tab === 'stores') {
-                        if (isMatch) matchedStores.push(c);
+                        if (isMatch) {
+                            matchedStores.push({
+                                ...c,
+                                _freightMatch: freightMatch
+                            });
+                        }
                     }
                 }
             });
-
-            if (tab === 'all' || tab === 'freight') {
-                Object.keys(storesMap).forEach(codeKey => {
-                    const storeObj = storesMap[codeKey];
-                    const storeCode = String(storeObj.code || codeKey).trim();
-                    const storeName = String(storeObj.name || codeKey).trim();
-                    const isStoreMatch = q && (storeCode.toLowerCase().includes(q) || storeName.toLowerCase().includes(q));
-
-                    const filteredFees = (storeObj.fees || []).filter(f => {
-                        if (!q) return true;
-                        if (isStoreMatch) return true;
-                        const area = String(f.area || '').toLowerCase();
-                        const feeStr = String(f.fee || '').toLowerCase();
-                        return area.includes(q) || feeStr.includes(q);
-                    });
-
-                    if (filteredFees.length > 0) {
-                        matchedFreightStores.push({
-                            code: storeCode,
-                            name: storeName,
-                            fees: filteredFees
-                        });
-                    }
-                });
-            }
 
             if (statusBadge) {
                 const dotColor = 'var(--green)';
                 statusBadge.innerHTML = '<span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:' + dotColor + ';"></span><span>' + (ds.lastSyncTime ? '已同步 (' + new Date(ds.lastSyncTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ')' : '資料庫已就緒') + '</span></span>';
             }
             if (countBadge) {
-                const totalResultCount = matchedStores.length + matchedMDs.length + (tab === 'freight' ? matchedFreightStores.length : 0);
+                const totalResultCount = matchedStores.length + matchedMDs.length;
                 countBadge.textContent = q ? '搜尋到 ' + totalResultCount + ' 筆' : totalStoreCount + ' 間門市 · ' + Object.keys(storesMap).length + ' 家運費表';
             }
 
             let html = '';
 
-            if (matchedStores.length === 0 && matchedMDs.length === 0 && matchedFreightStores.length === 0) {
+            if (matchedStores.length === 0 && matchedMDs.length === 0) {
                 container.innerHTML = '<div style="text-align:center; padding:36px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div><div style="font-size:13.5px; font-weight:600; color:var(--label);">查無符合的資料</div><div style="font-size:11.5px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入店名、店碼 (022) 或行政區</div></div>';
                 return;
             }
 
-            // 1. 門市聯絡卡片
+            // 1. 門市及跨店聯絡卡片 (Store Directory & Integrated Freight)
             if (matchedStores.length > 0 && (tab === 'all' || tab === 'stores')) {
-                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin:6px 2px 8px;">門市電話名錄 (' + matchedStores.length + ')</div>';
+                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin:6px 2px 8px;">門市及跨店名錄 (' + matchedStores.length + ')</div>';
                 matchedStores.forEach(s => {
                     const name = s['店名'] || '門市';
                     const code = s['代碼'] || '';
@@ -8559,7 +8542,7 @@
                     const lookupKey = (codeMatch ? codeMatch[0] : (code || name)).toUpperCase();
                     const freightData = storesMap[lookupKey] || storesMap[name] || null;
                     const feeCount = freightData && freightData.fees ? freightData.fees.length : 0;
-                    const isExpanded = _storeDirectoryState.expandedStoreCodes.has(lookupKey);
+                    const isExpanded = _storeDirectoryState.expandedStoreCodes.has(lookupKey) || (Boolean(s._freightMatch) && Boolean(q));
 
                     html += '<div class="store-card">';
                     html += '<div class="store-card-header">';
@@ -8675,8 +8658,9 @@
                             html += '<div style="border-top:0.5px solid var(--separator); background:var(--fill-tertiary);">';
                             freightData.fees.forEach(f => {
                                 const feeObj = parseSafeFreightFee(f.fee);
-                                html += '<div class="store-fee-row">';
-                                html += '<span style="font-size:11.5px; font-weight:500;">' + escapeHtml(f.area) + '</span>';
+                                const isAreaMatch = q && (String(f.area || '') + ' ' + String(f.fee || '')).toLowerCase().includes(q);
+                                html += '<div class="store-fee-row" style="' + (isAreaMatch ? 'background:rgba(30,58,138,0.06); font-weight:600;' : '') + '">';
+                                html += '<span style="font-size:11.5px; font-weight:500;">' + (isAreaMatch ? '✦ ' : '') + escapeHtml(f.area) + '</span>';
                                 html += '<span class="store-fee-pill ' + (feeObj.isFree ? 'free' : 'paid') + '">' + feeObj.raw + '</span>';
                                 html += '</div>';
                             });
@@ -8684,31 +8668,6 @@
                         }
                     }
 
-                    html += '</div>';
-                });
-            }
-
-            // 2. 跨店運費獨立搜尋卡片 (Freight Tab)
-            if (matchedFreightStores.length > 0 && tab === 'freight') {
-                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin:6px 2px 8px;">跨區外送運費標準 (' + matchedFreightStores.length + ')</div>';
-                matchedFreightStores.forEach(fs => {
-                    html += '<div class="store-card">';
-                    html += '<div class="store-card-header">';
-                    html += '<div style="display:flex; align-items:center; gap:6px;">';
-                    html += '<span style="font-size:14.5px; font-weight:700; color:var(--label);">' + escapeHtml(fs.name) + '</span>';
-                    html += '<span class="store-badge-code">' + escapeHtml(fs.code) + '</span>';
-                    html += '</div>';
-                    html += '<span style="font-size:11px; color:var(--label-tertiary);">收錄 ' + fs.fees.length + ' 區域</span>';
-                    html += '</div>';
-                    html += '<div>';
-                    fs.fees.forEach(f => {
-                        const feeObj = parseSafeFreightFee(f.fee);
-                        html += '<div class="store-fee-row">';
-                        html += '<span style="font-size:11.5px; font-weight:500;">' + escapeHtml(f.area) + '</span>';
-                        html += '<span class="store-fee-pill ' + (feeObj.isFree ? 'free' : 'paid') + '">' + feeObj.raw + '</span>';
-                        html += '</div>';
-                    });
-                    html += '</div>';
                     html += '</div>';
                 });
             }

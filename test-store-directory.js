@@ -20,8 +20,7 @@ function searchDirectory(dataStore, query, activeTab) {
     const q = String(query || '').toLowerCase().trim();
     const results = {
         stores: [],
-        mdList: [],
-        freightMatches: []
+        mdList: []
     };
 
     if (!dataStore) return results;
@@ -29,7 +28,7 @@ function searchDirectory(dataStore, query, activeTab) {
     const contacts = dataStore.contacts || [];
     const storesMap = dataStore.stores || {};
 
-    // 1. 門市與聯絡人過濾
+    // 1. 門市及跨店 (含運費目的地) 與家電 MD 過濾
     contacts.forEach(c => {
         const isMD = c.category && c.category.includes('MD');
         const name = String(c['店名'] || c['部門'] || '').toLowerCase();
@@ -38,7 +37,12 @@ function searchDirectory(dataStore, query, activeTab) {
         const allStaffStr = [c['店長'], c['處長'], c['課長'], c['助理'], c['負責人'], c['部門']].filter(Boolean).join(' ').toLowerCase();
         const address = String(c['地址'] || '').toLowerCase();
 
-        const match = !q || name.includes(q) || code.includes(q) || phone.includes(q) || allStaffStr.includes(q) || address.includes(q);
+        const codeMatch = name.match(/^[A-Za-z]{2,3}/);
+        const lookupKey = (codeMatch ? codeMatch[0] : (code || name)).toUpperCase();
+        const freightData = storesMap[lookupKey] || storesMap[c['店名']] || null;
+        const freightMatch = q && freightData && (freightData.fees || []).some(f => (String(f.area || '') + ' ' + String(f.fee || '')).toLowerCase().includes(q));
+
+        const match = !q || name.includes(q) || code.includes(q) || phone.includes(q) || allStaffStr.includes(q) || address.includes(q) || freightMatch;
 
         if (match) {
             if (isMD) {
@@ -47,38 +51,14 @@ function searchDirectory(dataStore, query, activeTab) {
                 }
             } else {
                 if (activeTab === 'all' || activeTab === 'stores') {
-                    results.stores.push(c);
+                    results.stores.push({
+                        ...c,
+                        _freightData: freightData
+                    });
                 }
             }
         }
     });
-
-    // 2. 跨店運費雙向過濾 (店名/代碼 OR 目的地區域)
-    if (activeTab === 'all' || activeTab === 'freight') {
-        Object.keys(storesMap).forEach(codeKey => {
-            const storeObj = storesMap[codeKey];
-            const storeCode = String(storeObj.code || codeKey).toLowerCase();
-            const storeName = String(storeObj.name || '').toLowerCase();
-
-            const isStoreMatch = q && (storeCode.includes(q) || storeName.includes(q));
-
-            const matchedFees = (storeObj.fees || []).filter(f => {
-                const area = String(f.area || '').toLowerCase();
-                const feeText = String(f.fee || '').toLowerCase();
-                if (!q) return true;
-                if (isStoreMatch) return true;
-                return area.includes(q) || feeText.includes(q);
-            });
-
-            if (matchedFees.length > 0) {
-                results.freightMatches.push({
-                    code: storeObj.code || codeKey,
-                    name: storeObj.name || codeKey,
-                    fees: matchedFees
-                });
-            }
-        });
-    }
 
     return results;
 }
@@ -93,8 +73,8 @@ console.log("✅ Test 1: 真實資料庫結構驗證 (83 筆聯絡人, 59 家門
 // 搜尋 WG五甲
 const resWG = searchDirectory(realDataStore, '五甲', 'all');
 assert.ok(resWG.stores.length > 0, "應找到五甲門市聯絡資訊");
-assert.ok(resWG.freightMatches.length > 0, "應找到五甲門市運費表");
-console.log(`✅ Test 2: 真實店名搜尋「五甲」通過 (找到 ${resWG.stores[0]['店名']})`);
+assert.ok(resWG.stores[0]._freightData && resWG.stores[0]._freightData.fees.length > 0, "五甲門市卡片應整合運費表");
+console.log(`✅ Test 2: 真實店名搜尋「五甲」通過 (找到 ${resWG.stores[0]['店名']}, 整合 ${resWG.stores[0]._freightData.fees.length} 區運費)`);
 
 // 搜尋 天母 (022)
 const resTM = searchDirectory(realDataStore, '022', 'all');
@@ -106,10 +86,10 @@ const resMD = searchDirectory(realDataStore, '40MD', 'all');
 assert.ok(resMD.mdList.length > 0, "應找到 40MD 家電負責人");
 console.log(`✅ Test 4: 家電 MD 搜尋「40MD」通過 (找到 ${resMD.mdList[0]['負責人']})`);
 
-// 搜尋 目的地區域 恆春
-const resHengchun = searchDirectory(realDataStore, '恆春', 'freight');
-assert.ok(resHengchun.freightMatches.length > 0, "應找到送達恆春的門市運費");
-console.log(`✅ Test 5: 目的地區域反查「恆春」通過 (共 ${resHengchun.freightMatches.length} 家門市可送達)`);
+// 搜尋 目的地區域 恆春 (在「門市及跨店」整合標籤下直接搜尋)
+const resHengchun = searchDirectory(realDataStore, '恆春', 'stores');
+assert.ok(resHengchun.stores.length > 0, "應在門市及跨店名錄中直接找到送達恆春的門市");
+console.log(`✅ Test 5: 目的地區域反查「恆春」通過 (在門市及跨店中找到 ${resHengchun.stores.length} 家可送達門市)`);
 
 // 運費解析測試
 const parsed = parseSafeFreightFee('$1,500');
