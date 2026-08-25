@@ -659,97 +659,95 @@ const TAIWAN_GEO_ZIP_MAP = {
         }
 
         function getSmartStoreRecommendations(addressStr) {
-            if (!_storeDirectoryState.dataStore) initStoreDirectoryEngine();
-            const ds = _storeDirectoryState.dataStore || DEFAULT_STORE_DIRECTORY_DATA;
-            const parsed = parseDestinationAddress(addressStr);
-            if (!parsed.cleanDist && !parsed.city && !parsed.raw) return { parsed, topStore: null, alternatives: [] };
+    const ds = realDataStore;
+    const parsed = parseDestinationAddress(addressStr);
+    if (!parsed.cleanDist && !parsed.city && !parsed.raw) return { parsed, topStore: null, alternatives: [] };
 
-            const storesMap = ds.stores || {};
-            const contacts = ds.contacts || [];
+    const storesMap = ds.stores || {};
+    const contacts = ds.contacts || [];
+    const destLoc = parsed.loc;
+    const candidates = [];
 
-            const destLoc = parsed.loc;
-            const candidates = [];
+    contacts.forEach(c => {
+        if (c.category && c.category.includes("MD")) return;
+        const storeName = c["店名"] || "";
+        const storeCode = c["代碼"] || "";
+        const storeAddress = c["地址"] || "";
+        const codeMatch = storeName.match(/^[A-Za-z]{2,3}/);
+        const lookupKey = (codeMatch ? codeMatch[0] : (storeCode || storeName)).toUpperCase();
+        
+        let storeLoc = STORE_PRECISE_COORDS[storeName] || (lookupKey && STORE_PRECISE_COORDS[lookupKey]) || resolveLocationInfo(storeAddress);
+        const freightData = storesMap[lookupKey] || storesMap[storeName] || null;
 
-            contacts.forEach(c => {
-                if (c.category && c.category.includes('MD')) return;
-                const storeName = c['店名'] || '';
-                const storeCode = c['代碼'] || '';
-                const storeAddress = c['地址'] || '';
-                const codeMatch = storeName.match(/^[A-Za-z]{2,3}/);
-                const lookupKey = (codeMatch ? codeMatch[0] : (storeCode || storeName)).toUpperCase();
-                
-                // Use precise real-world store GPS coordinates
-                let storeLoc = STORE_PRECISE_COORDS[storeName] || (lookupKey && STORE_PRECISE_COORDS[lookupKey]) || resolveLocationInfo(storeAddress);
-                const freightData = storesMap[lookupKey] || storesMap[storeName] || null;
+        const distKm = (destLoc && storeLoc) ? calculateGeoDistanceKm(destLoc.lat, destLoc.lon, storeLoc.lat, storeLoc.lon) : null;
 
-                const distKm = (destLoc && storeLoc) ? calculateGeoDistanceKm(destLoc.lat, destLoc.lon, storeLoc.lat, storeLoc.lon) : null;
-
-                let isLocalStore = false;
-                if (storeLoc && parsed.cleanDist && (storeLoc.cleanDist === parsed.cleanDist || (storeLoc.district && storeLoc.district.includes(parsed.cleanDist)))) {
-                    if (!parsed.city || !storeLoc.city || parsed.city.slice(0, 2) === storeLoc.city.slice(0, 2)) {
-                        isLocalStore = true;
-                    }
-                }
-
-                let feeAmount = Infinity;
-                let feeRaw = '';
-                let matchedAreaText = '';
-
-                if (freightData && freightData.fees && parsed.cleanDist) {
-                    freightData.fees.forEach(f => {
-                        const areaStr = String(f.area || '');
-                        if (areaStr.includes(parsed.cleanDist)) {
-                            const match = String(f.fee || '').match(/[0-9,]+/);
-                            const num = match ? parseInt(match[0].replace(/,/g, ''), 10) : 0;
-                            if (num < feeAmount) {
-                                feeAmount = num;
-                                feeRaw = f.fee;
-                                matchedAreaText = f.area;
-                            }
-                        }
-                    });
-                }
-
-                const isSameCity = (parsed.city && storeAddress.includes(parsed.city.slice(0, 2))) || (destLoc && storeLoc && destLoc.city === storeLoc.city);
-
-                if (isLocalStore || feeAmount !== Infinity || isSameCity || distKm !== null) {
-                    let sortScore = 0;
-                    if (isLocalStore) {
-                        sortScore = 100; // Local store first
-                    } else if (distKm !== null && distKm < 8) {
-                        sortScore = 200 + distKm; // Very close neighboring store
-                    } else if (feeAmount !== Infinity) {
-                        sortScore = 300 + feeAmount; // Supported delivery fee
-                    } else if (distKm !== null) {
-                        sortScore = 400 + distKm; // Distance in km
-                    } else {
-                        sortScore = 900;
-                    }
-
-                    candidates.push({
-                        contact: c,
-                        freightData: freightData,
-                        distKm: distKm,
-                        feeAmount: feeAmount === Infinity ? (isLocalStore ? 0 : 9999) : feeAmount,
-                        feeRaw: feeRaw || (isLocalStore ? '$0 (同區在地門市)' : (distKm !== null ? '約 ' + distKm + ' km (鄰近門市)' : '洽詢門市')),
-                        matchedAreaText: matchedAreaText,
-                        isLocalStore: isLocalStore,
-                        isSameCity: isSameCity,
-                        sortScore: sortScore
-                    });
-                }
-            });
-
-            candidates.sort((a, b) => a.sortScore - b.sortScore);
-
-            return {
-                parsed: parsed,
-                topStore: candidates.length > 0 ? candidates[0] : null,
-                alternatives: candidates.slice(1)
-            };
+        let isLocalStore = false;
+        if (storeLoc && parsed.cleanDist && (storeLoc.cleanDist === parsed.cleanDist || (storeLoc.district && storeLoc.district.includes(parsed.cleanDist)))) {
+            if (!parsed.city || !storeLoc.city || parsed.city.slice(0, 2) === storeLoc.city.slice(0, 2)) {
+                isLocalStore = true;
+            }
         }
 
-        
+        let feeAmount = Infinity;
+        let feeRaw = "";
+        let matchedAreaText = "";
+
+        if (freightData && freightData.fees && parsed.cleanDist) {
+            freightData.fees.forEach(f => {
+                const areaStr = String(f.area || "");
+                if (areaStr.includes(parsed.cleanDist)) {
+                    const match = String(f.fee || "").match(/[0-9,]+/);
+                    const num = match ? parseInt(match[0].replace(/,/g, ""), 10) : (f.fee.includes("0元") ? 0 : 0);
+                    if (num < feeAmount) {
+                        feeAmount = num;
+                        feeRaw = f.fee;
+                        matchedAreaText = f.area;
+                    }
+                }
+            });
+        }
+
+        const isSameCity = (parsed.city && storeAddress.includes(parsed.city.slice(0, 2))) || (destLoc && storeLoc && destLoc.city && storeLoc.city && destLoc.city.slice(0, 2) === storeLoc.city.slice(0, 2));
+
+        // Primary sort: Pure physical GPS distance (distKm)
+        let sortScore = (distKm !== null ? distKm : 999);
+        if (isLocalStore) {
+            sortScore = (distKm !== null ? distKm * 0.1 : 0);
+        }
+
+        let feeDisplayText = '';
+        if (isLocalStore) {
+            feeDisplayText = '免跨店費 ($0 同區直出)';
+        } else if (feeAmount !== Infinity) {
+            feeDisplayText = (feeAmount === 0 ? '免跨店費 ($0)' : ('運費 $' + feeAmount.toLocaleString()));
+        } else if (distKm !== null) {
+            feeDisplayText = '約 ' + distKm + ' km (洽詢門市)';
+        } else {
+            feeDisplayText = '依門市洽詢';
+        }
+
+        candidates.push({
+            contact: c,
+            freightData: freightData,
+            distKm: distKm,
+            feeAmount: feeAmount === Infinity ? (isLocalStore ? 0 : null) : feeAmount,
+            feeRaw: feeDisplayText,
+            matchedAreaText: matchedAreaText,
+            isLocalStore: isLocalStore,
+            isSameCity: isSameCity,
+            sortScore: sortScore
+        });
+    });
+
+    candidates.sort((a, b) => a.sortScore - b.sortScore);
+
+    return {
+        parsed: parsed,
+        topStore: candidates.length > 0 ? candidates[0] : null,
+        top3Stores: candidates.slice(0, 3),
+        alternatives: candidates.slice(3)
+    };
+}
 
 const p1 = parseDestinationAddress("高雄市楠梓區藍昌路300號");
 assert.strictEqual(p1.city, "高雄市");
@@ -758,36 +756,57 @@ assert.strictEqual(p1.cleanDist, "楠梓");
 console.log("✅ Test 9: 智慧地址解析 (高雄楠梓) 通過");
 
 const rec1 = getSmartStoreRecommendations("高雄市楠梓區藍昌路300號");
-assert.ok(rec1.topStore);
-assert.ok(rec1.topStore.contact["店名"].includes("楠梓") || rec1.topStore.contact["店名"].includes("新楠") || rec1.topStore.isLocalStore);
-assert.ok(rec1.alternatives.length > 0);
-console.log("✅ Test 10: 智慧選店推薦「高雄楠梓」通過 (首選: " + rec1.topStore.contact["店名"] + ", 備選 " + rec1.alternatives.length + " 家)");
+assert.strictEqual(rec1.top3Stores.length, 3);
+assert.ok(rec1.top3Stores[0].contact["店名"].includes("新楠") || rec1.top3Stores[0].contact["店名"].includes("楠梓"));
+console.log("✅ Test 10: 智慧選店推薦「高雄楠梓」Top 3 通過 (第1: " + rec1.top3Stores[0].contact["店名"] + " " + rec1.top3Stores[0].distKm + "km, 第2: " + rec1.top3Stores[1].contact["店名"] + " " + rec1.top3Stores[1].distKm + "km, 第3: " + rec1.top3Stores[2].contact["店名"] + " " + rec1.top3Stores[2].distKm + "km)");
 
 const recLingya = getSmartStoreRecommendations("高雄苓雅區和平二路");
-assert.ok(recLingya.topStore);
-assert.strictEqual(recLingya.topStore.contact["店名"], "KH光華");
-assert.ok(recLingya.topStore.distKm <= 0.5);
-console.log("✅ Test 11: 智慧選店推薦「高雄苓雅區和平二路」通過 (精準首選: " + recLingya.topStore.contact["店名"] + ", 距離: " + recLingya.topStore.distKm + " km)");
+assert.strictEqual(recLingya.top3Stores.length, 3);
+assert.strictEqual(recLingya.top3Stores[0].contact["店名"], "KH光華");
+assert.ok(recLingya.top3Stores[0].distKm <= 0.5);
+assert.strictEqual(recLingya.top3Stores[1].contact["店名"], "ZK成功");
+assert.strictEqual(recLingya.top3Stores[2].contact["店名"], "WG五甲");
+console.log("✅ Test 11: 智慧選店推薦「高雄苓雅區和平二路」Top 3 通過 (第1: KH光華 " + recLingya.top3Stores[0].distKm + "km, 第2: ZK成功 " + recLingya.top3Stores[1].distKm + "km, 第3: WG五甲 " + recLingya.top3Stores[2].distKm + "km)");
 
-const recDaan = getSmartStoreRecommendations("台北市大安區忠孝東路四段");
-assert.ok(recDaan.topStore);
-assert.ok(["SM三民", "KL桂林24", "CQ重慶", "NH內湖"].includes(recDaan.topStore.contact["店名"]));
-console.log("✅ Test 12: 智慧選店推薦「台北大安」通過 (首選: " + recDaan.topStore.contact["店名"] + ", 距離: " + recDaan.topStore.distKm + " km)");
+// 台南全區 Top 3 測試
+const recTainanDong = getSmartStoreRecommendations("台南市東區中華東路三段");
+assert.strictEqual(recTainanDong.top3Stores.length, 3);
+assert.strictEqual(recTainanDong.top3Stores[0].contact["店名"], "XJ新仁");
+console.log("✅ Test 12: 智慧選店推薦「台南東區」Top 3 通過 (第1: " + recTainanDong.top3Stores[0].contact["店名"] + " " + recTainanDong.top3Stores[0].distKm + "km, 第2: " + recTainanDong.top3Stores[1].contact["店名"] + ", 第3: " + recTainanDong.top3Stores[2].contact["店名"] + ")");
 
-const recQingshui = getSmartStoreRecommendations("台中市清水區中興街");
-assert.ok(recQingshui.topStore);
-assert.ok(recQingshui.topStore.contact["店名"].includes("沙鹿") || recQingshui.topStore.contact["店名"].includes("西屯"));
-console.log("✅ Test 13: 智慧選店推薦「台中清水」通過 (首選: " + recQingshui.topStore.contact["店名"] + ", 距離: " + recQingshui.topStore.distKm + " km)");
+const recTainanMadou = getSmartStoreRecommendations("台南市麻豆區興國路");
+assert.strictEqual(recTainanMadou.top3Stores.length, 3);
+assert.strictEqual(recTainanMadou.top3Stores[0].contact["店名"], "HY新營");
+assert.ok(recTainanMadou.top3Stores[0].distKm <= 16);
+console.log("✅ Test 13: 智慧選店推薦「台南麻豆」Top 3 通過 (第1: " + recTainanMadou.top3Stores[0].contact["店名"] + " " + recTainanMadou.top3Stores[0].distKm + "km " + recTainanMadou.top3Stores[0].feeRaw + ", 第2: " + recTainanMadou.top3Stores[1].contact["店名"] + " " + recTainanMadou.top3Stores[1].distKm + "km, 第3: " + recTainanMadou.top3Stores[2].contact["店名"] + " " + recTainanMadou.top3Stores[2].distKm + "km)");
 
-const rec2 = getSmartStoreRecommendations("屏東縣屏東市自由路100號");
-assert.ok(rec2.topStore);
-assert.strictEqual(rec2.topStore.isLocalStore, true);
-console.log("✅ Test 14: 智慧選店推薦「屏東市」通過 (首選: " + rec2.topStore.contact["店名"] + ", 運費: " + rec2.topStore.feeRaw + ")");
+const recTainanRende = getSmartStoreRecommendations("台南市仁德區中山路");
+assert.strictEqual(recTainanRende.top3Stores[0].contact["店名"], "JT仁德");
+console.log("✅ Test 14: 智慧選店推薦「台南仁德」Top 3 通過 (第1: " + recTainanRende.top3Stores[0].contact["店名"] + " " + recTainanRende.top3Stores[0].distKm + "km, 第2: " + recTainanRende.top3Stores[1].contact["店名"] + " " + recTainanRende.top3Stores[1].distKm + "km)");
 
-const rec3 = getSmartStoreRecommendations("新北市汐止區新台五路一段");
-assert.ok(rec3.topStore);
-assert.strictEqual(rec3.topStore.isLocalStore, true);
-console.log("✅ Test 15: 智慧選店推薦「新北汐止」通過 (首選: " + rec3.topStore.contact["店名"] + ", 運費: " + rec3.topStore.feeRaw + ")");
+// 屏東全區 Top 3 測試
+const recPingtungCity = getSmartStoreRecommendations("屏東縣屏東市自由路");
+assert.strictEqual(recPingtungCity.top3Stores[0].contact["店名"], "PT屏東");
+assert.strictEqual(recPingtungCity.top3Stores[1].contact["店名"], "XP新屏");
+console.log("✅ Test 15: 智慧選店推薦「屏東市」Top 3 通過 (第1: PT屏東 " + recPingtungCity.top3Stores[0].distKm + "km, 第2: XP新屏 " + recPingtungCity.top3Stores[1].distKm + "km)");
+
+const recDonggang = getSmartStoreRecommendations("屏東縣東港鎮中正路");
+assert.ok(["XP新屏", "WG五甲", "PT屏東"].includes(recDonggang.top3Stores[0].contact["店名"]));
+assert.ok(recDonggang.top3Stores[0].distKm < 20);
+console.log("✅ Test 16: 智慧選店推薦「屏東東港」Top 3 通過 (第1: " + recDonggang.top3Stores[0].contact["店名"] + " " + recDonggang.top3Stores[0].distKm + "km " + recDonggang.top3Stores[0].feeRaw + ", 第2: " + recDonggang.top3Stores[1].contact["店名"] + " " + recDonggang.top3Stores[1].distKm + "km, 第3: " + recDonggang.top3Stores[2].contact["店名"] + " " + recDonggang.top3Stores[2].distKm + "km)");
+
+const recHengchun = getSmartStoreRecommendations("屏東縣恆春鎮恆南路");
+assert.strictEqual(recHengchun.top3Stores.length, 3);
+const hcNames = recHengchun.top3Stores.map(s => s.contact["店名"]);
+assert.ok(hcNames.includes("XP新屏"));
+assert.ok(hcNames.includes("PT屏東"));
+assert.ok(hcNames.includes("WG五甲"));
+console.log("✅ Test 17: 智慧選店推薦「屏東恆春」Top 3 通過 (包含 XP新屏, PT屏東, WG五甲, 各店顯示精確距離與跨店運費)");
+
+const recChaozhou = getSmartStoreRecommendations("屏東縣潮州鎮新生路");
+assert.strictEqual(recChaozhou.top3Stores[0].contact["店名"], "XP新屏");
+assert.strictEqual(recChaozhou.top3Stores[1].contact["店名"], "PT屏東");
+console.log("✅ Test 18: 智慧選店推薦「屏東潮州」Top 3 通過 (第1: XP新屏 " + recChaozhou.top3Stores[0].distKm + "km, 第2: PT屏東 " + recChaozhou.top3Stores[1].distKm + "km)");
 
 const remoteTests = [
     { addr: "金門縣金寧鄉伯玉路", expectStore: "KM金門" },
@@ -803,7 +822,8 @@ remoteTests.forEach((t, i) => {
     const r = getSmartStoreRecommendations(t.addr);
     assert.ok(r.topStore, "地址 " + t.addr + " 必須有首選推薦門市");
     assert.ok(r.topStore.contact["店名"].includes(t.expectStore), "地址 " + t.addr + " 首選門市應為 " + t.expectStore);
-    console.log("✅ Test " + (16 + i) + ": 全省偏鄉離島涵蓋「" + t.addr + "」通過 (精準在地首選: " + r.topStore.contact["店名"] + ", 運費: " + r.topStore.feeRaw + ")");
+    console.log("✅ Test " + (19 + i) + ": 全省偏鄉離島涵蓋「" + t.addr + "」通過 (精準在地首選: " + r.topStore.contact["店名"] + " " + r.topStore.distKm + "km, 運費: " + r.topStore.feeRaw + ")");
 });
 
-console.log("🎉 所有 20 項真實試算表、精確座標定位與全省 368 鄉鎮智慧選店測試 100% 全部通過！");
+console.log("🎉 所有 23 項真實試算表、精確座標定位與全台 368 鄉鎮「推薦最近 3 家門市並顯示距離」測試 100% 全部通過！");
+

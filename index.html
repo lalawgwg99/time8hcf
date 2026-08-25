@@ -8963,7 +8963,7 @@
             if (!_storeDirectoryState.dataStore) initStoreDirectoryEngine();
             const ds = _storeDirectoryState.dataStore || DEFAULT_STORE_DIRECTORY_DATA;
             const parsed = parseDestinationAddress(addressStr);
-            if (!parsed.cleanDist && !parsed.city && !parsed.raw) return { parsed, topStore: null, alternatives: [] };
+            if (!parsed.cleanDist && !parsed.city && !parsed.raw) return { parsed, topStore: null, top3Stores: [], alternatives: [] };
 
             const storesMap = ds.stores || {};
             const contacts = ds.contacts || [];
@@ -9001,7 +9001,7 @@
                         const areaStr = String(f.area || '');
                         if (areaStr.includes(parsed.cleanDist)) {
                             const match = String(f.fee || '').match(/[0-9,]+/);
-                            const num = match ? parseInt(match[0].replace(/,/g, ''), 10) : 0;
+                            const num = match ? parseInt(match[0].replace(/,/g, ''), 10) : (f.fee.includes('0元') ? 0 : 0);
                             if (num < feeAmount) {
                                 feeAmount = num;
                                 feeRaw = f.fee;
@@ -9013,32 +9013,34 @@
 
                 const isSameCity = (parsed.city && storeAddress.includes(parsed.city.slice(0, 2))) || (destLoc && storeLoc && destLoc.city === storeLoc.city);
 
-                if (isLocalStore || feeAmount !== Infinity || isSameCity || distKm !== null) {
-                    let sortScore = 0;
-                    if (isLocalStore) {
-                        sortScore = 100; // Local store first
-                    } else if (distKm !== null && distKm < 8) {
-                        sortScore = 200 + distKm; // Very close neighboring store
-                    } else if (feeAmount !== Infinity) {
-                        sortScore = 300 + feeAmount; // Supported delivery fee
-                    } else if (distKm !== null) {
-                        sortScore = 400 + distKm; // Distance in km
-                    } else {
-                        sortScore = 900;
-                    }
-
-                    candidates.push({
-                        contact: c,
-                        freightData: freightData,
-                        distKm: distKm,
-                        feeAmount: feeAmount === Infinity ? (isLocalStore ? 0 : 9999) : feeAmount,
-                        feeRaw: feeRaw || (isLocalStore ? '$0 (同區在地門市)' : (distKm !== null ? '約 ' + distKm + ' km (鄰近門市)' : '洽詢門市')),
-                        matchedAreaText: matchedAreaText,
-                        isLocalStore: isLocalStore,
-                        isSameCity: isSameCity,
-                        sortScore: sortScore
-                    });
+                // Primary sort: Pure physical GPS distance (distKm)
+                let sortScore = (distKm !== null ? distKm : 999);
+                if (isLocalStore) {
+                    sortScore = (distKm !== null ? distKm * 0.1 : 0);
                 }
+
+                let feeDisplayText = '';
+                if (isLocalStore) {
+                    feeDisplayText = '免跨店費 ($0 同區直出)';
+                } else if (feeAmount !== Infinity) {
+                    feeDisplayText = (feeAmount === 0 ? '免跨店費 ($0)' : ('運費 $' + feeAmount.toLocaleString()));
+                } else if (distKm !== null) {
+                    feeDisplayText = '約 ' + distKm + ' km (洽詢門市)';
+                } else {
+                    feeDisplayText = '依門市洽詢';
+                }
+
+                candidates.push({
+                    contact: c,
+                    freightData: freightData,
+                    distKm: distKm,
+                    feeAmount: feeAmount === Infinity ? (isLocalStore ? 0 : null) : feeAmount,
+                    feeRaw: feeDisplayText,
+                    matchedAreaText: matchedAreaText,
+                    isLocalStore: isLocalStore,
+                    isSameCity: isSameCity,
+                    sortScore: sortScore
+                });
             });
 
             candidates.sort((a, b) => a.sortScore - b.sortScore);
@@ -9046,7 +9048,8 @@
             return {
                 parsed: parsed,
                 topStore: candidates.length > 0 ? candidates[0] : null,
-                alternatives: candidates.slice(1)
+                top3Stores: candidates.slice(0, 3),
+                alternatives: candidates.slice(3)
             };
         }
 
@@ -9102,11 +9105,12 @@
             }
         }
 
-        function copySmartDispatchNote(storeName, storeCode, feeText, phone, address, destAddr) {
+        function copySmartDispatchNote(storeName, storeCode, feeText, phone, address, destAddr, distKm) {
             if ('vibrate' in navigator) navigator.vibrate(12);
             playSingleClickSound("C5");
 
-            const note = `【跨店出貨派工建議單】\n客戶送達地址：${destAddr || '指定目的地'}\n推薦出貨門市：${storeName} (代碼 ${storeCode})\n運費標準：${feeText}\n門市電話：${phone}\n門市地址：${address}\n(由 TIME 8 智慧選店系統產出)`;
+            const distInfo = (distKm !== null && distKm !== undefined) ? `\n直線距離：約 ${distKm} km` : '';
+            const note = `【跨店出貨派工建議單】\n客戶送達地址：${destAddr || '指定目的地'}\n推薦出貨門市：${storeName} (代碼 ${storeCode})${distInfo}\n運費標準：${feeText}\n門市電話：${phone}\n門市地址：${address}\n(由 TIME 8 智慧選店系統產出)`;
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(note).then(() => {
@@ -9130,108 +9134,136 @@
             if (!container) return;
 
             if (!addressStr || !addressStr.trim()) {
-                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-map-location-dot"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">請輸入送達地址或點選熱門區域</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動比對全台 83 間門市與 59 家跨區外送運費矩陣</div></div>';
+                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-map-location-dot"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">請輸入送達地址或點選熱門區域</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動依真實 GPS 距離推薦最近 3 家出貨門市與運費</div></div>';
                 return;
             }
 
             const analysis = getSmartStoreRecommendations(addressStr);
-            const { parsed, topStore, alternatives } = analysis;
+            const { parsed, top3Stores, alternatives } = analysis;
 
-            if (!topStore) {
-                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-circle-question"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">暫查無匹配的跨店配送規則</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入完整縣市與行政區（如：高雄市楠梓區）</div></div>';
+            if (!top3Stores || top3Stores.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-circle-question"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">查無匹配的門市資訊</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入完整縣市與行政區（如：台南市麻豆區 或 屏東縣潮州鎮）</div></div>';
                 return;
             }
 
-            const topC = topStore.contact;
-            const topName = topC['店名'] || '門市';
-            const topCode = topC['代碼'] || '';
-            const topPhone = topC['電話'] || '';
-            const cleanTopPhone = topPhone.replace(/[^0-9+]/g, '');
-            const topAddress = topC['地址'] || '';
-            const topManager = topC['店長'] || '';
-            const topChief = topC['課長'] || '';
-            const topDirector = topC['處長'] || '';
-
-            const parsedChief = parseStaffContact(topChief);
-            const parsedDir = parseStaffContact(topDirector);
-            const parsedMgr = parseStaffContact(topManager);
-
             let html = '';
 
-            // Top Recommendation Card
-            html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-bottom:6px;">👑 最優出貨門市推薦</div>';
-            html += '<div class="store-card" style="border:1.5px solid rgba(30,58,138,0.25); background:var(--card); box-shadow:0 4px 16px rgba(0,0,0,0.05); margin-bottom:14px;">';
-            html += '<div class="store-card-header" style="background:rgba(30,58,138,0.03);">';
-            html += '<div>';
-            html += '<div style="display:flex; align-items:center; gap:6px;">';
-            html += '<span style="font-size:15.5px; font-weight:700; color:var(--label);">' + escapeHtml(topName) + '</span>';
-            if (topCode) html += '<span class="store-badge-code">代碼 ' + escapeHtml(topCode) + '</span>';
-            if (topStore.isLocalStore) html += '<span style="font-size:10px; font-weight:700; padding:2px 7px; border-radius:999px; background:rgba(77,122,82,0.12); color:var(--green);">同區直出</span>';
-            html += '</div>';
-            if (parsed.cleanDist) html += '<div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;">送達目的地：' + escapeHtml(parsed.city + parsed.district) + '</div>';
-            html += '</div>';
-            html += '<div style="text-align:right;">';
-            html += '<div style="font-size:15px; font-weight:700; color:var(--green);">' + escapeHtml(topStore.feeRaw) + '</div>';
-            html += '<div style="font-size:10px; color:var(--label-tertiary);">' + (topStore.isLocalStore ? '同行政區免跨店費' : '跨店運費標準') + '</div>';
-            html += '</div>';
+            // Header summary
+            const destDisplay = (parsed.city || '') + (parsed.district || '') + (parsed.cleanDist && !parsed.district ? parsed.cleanDist : '');
+            html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 2px;">';
+            html += '<div style="font-size:12px; font-weight:700; color:var(--label); display:flex; align-items:center; gap:5px;"><i class="fas fa-location-crosshairs" style="color:var(--blue);"></i> 推薦最近 3 家出貨門市</div>';
+            if (destDisplay) {
+                html += '<div style="font-size:11px; font-weight:600; color:var(--label-secondary); background:var(--fill-secondary); padding:2px 8px; border-radius:6px;">📍 ' + escapeHtml(destDisplay) + '</div>';
+            }
             html += '</div>';
 
-            html += '<div style="padding:10px 14px; font-size:12px; color:var(--label-secondary); line-height:1.6;">';
-            if (parsedMgr.name) html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">店長</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(parsedMgr.name) + '</span></div>';
-            if (parsedChief.name) {
-                html += '<div style="display:flex; gap:6px; align-items:center; margin-bottom:2px; flex-wrap:wrap;">';
-                html += '<span style="color:var(--label-tertiary); width:36px;">課長</span><span style="color:var(--label); font-weight:500;">' + escapeHtml(parsedChief.name) + '</span>';
-                if (parsedChief.email) html += '<a href="mailto:' + escapeHtml(parsedChief.email) + '" class="store-email-link active-scale"><span>' + escapeHtml(parsedChief.email) + '</span></a>';
+            // Render Top 3 Stores
+            const medals = [
+                { rank: '👑 第 1 最近（首選）', bg: 'rgba(30,58,138,0.04)', border: 'rgba(30,58,138,0.3)', badgeBg: 'rgba(30,58,138,0.12)', badgeColor: 'var(--blue)' },
+                { rank: '🥈 第 2 最近門市', bg: 'rgba(0,0,0,0.01)', border: 'var(--separator)', badgeBg: 'var(--fill-secondary)', badgeColor: 'var(--label-secondary)' },
+                { rank: '🥉 第 3 最近門市', bg: 'rgba(0,0,0,0.01)', border: 'var(--separator)', badgeBg: 'var(--fill-secondary)', badgeColor: 'var(--label-secondary)' }
+            ];
+
+            top3Stores.forEach((item, index) => {
+                const conf = medals[index] || medals[2];
+                const c = item.contact;
+                const storeName = c['店名'] || '門市';
+                const storeCode = c['代碼'] || '';
+                const storePhone = c['電話'] || '';
+                const cleanPhone = storePhone.replace(/[^0-9+]/g, '');
+                const storeAddress = c['地址'] || '';
+                const storeManager = c['店長'] || '';
+                const storeChief = c['課長'] || '';
+                const storeDirector = c['處長'] || '';
+
+                const parsedChief = parseStaffContact(storeChief);
+                const parsedMgr = parseStaffContact(storeManager);
+
+                const distLabel = item.distKm !== null ? `直線距離 ${item.distKm} km` : '同區門市';
+
+                html += '<div class="store-card" style="border:1px solid ' + conf.border + '; background:var(--card); box-shadow:0 3px 12px rgba(0,0,0,0.04); margin-bottom:12px;">';
+                
+                // Card Header
+                html += '<div class="store-card-header" style="background:' + conf.bg + '; padding:10px 14px;">';
+                html += '<div>';
+                html += '<div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">';
+                html += '<span style="font-size:11px; font-weight:700; padding:1px 6px; border-radius:4px; background:' + conf.badgeBg + '; color:' + conf.badgeColor + ';">' + conf.rank + '</span>';
+                if (item.isLocalStore) html += '<span style="font-size:10px; font-weight:700; padding:1px 6px; border-radius:4px; background:rgba(77,122,82,0.12); color:var(--green);">同區直出</span>';
                 html += '</div>';
-            }
-            if (topAddress) html += '<div style="display:flex; gap:6px; margin-top:3px; padding-top:3px; border-top:0.5px solid var(--separator);"><span style="color:var(--label-tertiary); width:36px;">地址</span><span style="color:var(--label-secondary);">' + escapeHtml(topAddress) + '</span></div>';
-            html += '</div>';
+                html += '<div style="display:flex; align-items:baseline; gap:6px; margin-top:3px;">';
+                html += '<span style="font-size:16px; font-weight:700; color:var(--label);">' + escapeHtml(storeName) + '</span>';
+                if (storeCode) html += '<span class="store-badge-code">代碼 ' + escapeHtml(storeCode) + '</span>';
+                html += '</div>';
+                html += '</div>';
 
-            // Action Toolbar
-            html += '<div style="padding:8px 14px 12px; display:flex; gap:8px;">';
-            if (topPhone) {
-                html += '<a href="tel:' + cleanTopPhone + '" class="active-scale" style="flex:1; padding:9px; border-radius:10px; background:var(--blue); color:#fff; text-decoration:none; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:4px;">';
-                html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
-                html += '<span>一鍵致電</span>';
-                html += '</a>';
-            }
-            html += '<button type="button" onclick="copySmartDispatchNote(\'' + escapeHtml(topName) + '\', \'' + escapeHtml(topCode) + '\', \'' + escapeHtml(topStore.feeRaw) + '\', \'' + escapeHtml(topPhone.split('\n')[0]) + '\', \'' + escapeHtml(topAddress) + '\', \'' + escapeHtml(parsed.raw) + '\')" class="active-scale" style="flex:1; padding:9px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">';
-            html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>';
-            html += '<span>複製派工單</span>';
-            html += '</button>';
-            if (topAddress) {
-                html += '<a href="https://maps.apple.com/?q=' + encodeURIComponent(topAddress) + '" target="_blank" class="active-scale" style="padding:9px 12px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); text-decoration:none; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center;" title="在地圖中查看">';
-                html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>';
-                html += '</a>';
-            }
-            html += '</div>';
-            html += '</div>';
+                html += '<div style="text-align:right;">';
+                html += '<div style="font-size:13px; font-weight:700; color:var(--blue);">' + escapeHtml(distLabel) + '</div>';
+                html += '<div style="font-size:12px; font-weight:600; color:var(--green); margin-top:2px;">' + escapeHtml(item.feeRaw) + '</div>';
+                html += '</div>';
+                html += '</div>';
 
-            // Alternative Candidate Stores
-            if (alternatives.length > 0) {
-                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin:14px 2px 8px;">🚚 其他可支援門市（依運費排序）</div>';
+                // Details Body
+                html += '<div style="padding:10px 14px; font-size:12px; color:var(--label-secondary); line-height:1.6;">';
+                if (parsedMgr.name) html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">店長</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(parsedMgr.name) + '</span></div>';
+                if (parsedChief.name) {
+                    html += '<div style="display:flex; gap:6px; align-items:center; margin-bottom:2px; flex-wrap:wrap;">';
+                    html += '<span style="color:var(--label-tertiary); width:36px;">課長</span><span style="color:var(--label); font-weight:500;">' + escapeHtml(parsedChief.name) + '</span>';
+                    if (parsedChief.email) html += '<a href="mailto:' + escapeHtml(parsedChief.email) + '" class="store-email-link active-scale"><span>' + escapeHtml(parsedChief.email) + '</span></a>';
+                    html += '</div>';
+                }
+                if (storeAddress) html += '<div style="display:flex; gap:6px; margin-top:3px; padding-top:3px; border-top:0.5px solid var(--separator);"><span style="color:var(--label-tertiary); width:36px;">地址</span><span style="color:var(--label-secondary);">' + escapeHtml(storeAddress) + '</span></div>';
+                html += '</div>';
+
+                // Action Toolbar
+                html += '<div style="padding:8px 14px 12px; display:flex; gap:8px;">';
+                if (storePhone) {
+                    html += '<a href="tel:' + cleanPhone + '" class="active-scale" style="flex:1; padding:8px; border-radius:10px; background:var(--blue); color:#fff; text-decoration:none; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:4px;">';
+                    html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
+                    html += '<span>撥打電話</span>';
+                    html += '</a>';
+                }
+                html += '<button type="button" onclick="copySmartDispatchNote(\'' + escapeHtml(storeName) + '\', \'' + escapeHtml(storeCode) + '\', \'' + escapeHtml(item.feeRaw) + '\', \'' + escapeHtml(storePhone.split('\n')[0]) + '\', \'' + escapeHtml(storeAddress) + '\', \'' + escapeHtml(parsed.raw) + '\', \'' + (item.distKm !== null ? item.distKm : '') + '\')" class="active-scale" style="flex:1; padding:8px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">';
+                html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>';
+                html += '<span>複製派工</span>';
+                html += '</button>';
+                if (storeAddress) {
+                    html += '<a href="https://maps.apple.com/?q=' + encodeURIComponent(storeAddress) + '" target="_blank" class="active-scale" style="padding:8px 12px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); text-decoration:none; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center;" title="在地圖中查看">';
+                    html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>';
+                    html += '</a>';
+                }
+                html += '</div>';
+
+                html += '</div>';
+            });
+
+            // Collapsible Additional Stores (第 4~7 名)
+            if (alternatives && alternatives.length > 0) {
+                const otherList = alternatives.slice(0, 4);
+                html += '<div style="margin-top:14px;">';
+                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-bottom:6px;">🚚 其他鄰近支援門市</div>';
                 html += '<div class="rounded-xl overflow-hidden" style="border:0.5px solid var(--separator); background:var(--card);">';
-                alternatives.slice(0, 5).forEach((alt, idx) => {
+                otherList.forEach((alt, idx) => {
                     const altC = alt.contact;
                     const altName = altC['店名'] || '門市';
                     const altPhone = altC['電話'] || '';
                     const cleanAltPhone = altPhone.replace(/[^0-9+]/g, '');
+                    const altDist = alt.distKm !== null ? `距離 ${alt.distKm} km` : '鄰近門市';
 
                     html += '<div style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center; ' + (idx > 0 ? 'border-top:0.5px solid var(--separator);' : '') + '">';
                     html += '<div>';
                     html += '<div style="font-size:13.5px; font-weight:600; color:var(--label);">' + escapeHtml(altName) + ' <span class="store-badge-code">' + escapeHtml(altC['代碼'] || '') + '</span></div>';
-                    html += '<div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;">' + (alt.isLocalStore ? '同行政區在地門市' : (alt.matchedAreaText ? '外送涵蓋：' + escapeHtml(alt.matchedAreaText.split('、').slice(0, 3).join('、')) : '同縣市門市')) + '</div>';
+                    html += '<div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;">' + escapeHtml(altDist) + ' · ' + escapeHtml(alt.feeRaw) + '</div>';
                     html += '</div>';
                     html += '<div style="display:flex; align-items:center; gap:8px;">';
-                    html += '<span class="store-fee-pill ' + (alt.feeAmount === 0 ? 'free' : 'paid') + '">' + escapeHtml(alt.feeRaw) + '</span>';
                     if (altPhone) {
-                        html += '<a href="tel:' + cleanAltPhone + '" class="store-btn-call active-scale" style="padding:4px 8px; font-size:11px;">';
+                        html += '<a href="tel:' + cleanAltPhone + '" class="store-btn-call active-scale" style="padding:4px 10px; font-size:11px;">';
                         html += '<span>撥打</span>';
                         html += '</a>';
                     }
                     html += '</div>';
                     html += '</div>';
                 });
+                html += '</div>';
                 html += '</div>';
             }
         }
