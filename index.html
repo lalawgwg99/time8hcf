@@ -8858,6 +8858,31 @@
             { name: '河東路', lat: 22.6318, lon: 120.2885, city: '高雄市', district: '前金區', cleanDist: '前金' }
         ];
 
+        // 台灣各主要縣市中心經緯度（用於當僅輸入縣市名或路段未定位時之基準點）
+        const CITY_CENTER_COORDS = {
+            '台北市': { lat: 25.0375, lon: 121.5637, city: '台北市' },
+            '新北市': { lat: 25.0124, lon: 121.4626, city: '新北市' },
+            '基隆市': { lat: 25.1283, lon: 121.7419, city: '基隆市' },
+            '桃園市': { lat: 24.9936, lon: 121.3010, city: '桃園市' },
+            '新竹市': { lat: 24.8039, lon: 120.9647, city: '新竹市' },
+            '新竹縣': { lat: 24.8387, lon: 121.0177, city: '新竹縣' },
+            '苗栗縣': { lat: 24.5650, lon: 120.8207, city: '苗栗縣' },
+            '台中市': { lat: 24.1477, lon: 120.6736, city: '台中市' },
+            '彰化縣': { lat: 24.0815, lon: 120.5385, city: '彰化縣' },
+            '南投縣': { lat: 23.9099, lon: 120.6845, city: '南投縣' },
+            '雲林縣': { lat: 23.7092, lon: 120.4313, city: '雲林縣' },
+            '嘉義市': { lat: 23.4800, lon: 120.4491, city: '嘉義市' },
+            '嘉義縣': { lat: 23.4518, lon: 120.2555, city: '嘉義縣' },
+            '台南市': { lat: 22.9997, lon: 120.2064, city: '台南市' },
+            '高雄市': { lat: 22.6273, lon: 120.3014, city: '高雄市' },
+            '屏東縣': { lat: 22.6782, lon: 120.4905, city: '屏東縣' },
+            '宜蘭縣': { lat: 24.7570, lon: 121.7530, city: '宜蘭縣' },
+            '花蓮縣': { lat: 23.9912, lon: 121.6111, city: '花蓮縣' },
+            '台東縣': { lat: 22.7552, lon: 121.1472, city: '台東縣' },
+            '金門縣': { lat: 24.4452, lon: 118.3412, city: '金門縣' },
+            '澎湖縣': { lat: 23.5711, lon: 119.5793, city: '澎湖縣' }
+        };
+
         function calculateGeoDistanceKm(lat1, lon1, lat2, lon2) {
             if (!lat1 || !lon1 || !lat2 || !lon2) return null;
             const R = 6371;
@@ -8897,29 +8922,42 @@
             // 3. Extract city if explicitly present in address (台北/新北/高雄/南投/花蓮...)
             const cityMatch = text.match(/(台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江)(?:市|縣)?/);
             const specifiedCity = cityMatch ? cityMatch[1] : null;
+            const fullCityName = cityMatch ? (cityMatch[1] + (['台北', '新北', '基隆', '桃園', '新竹', '台中', '嘉義', '台南', '高雄'].includes(cityMatch[1]) ? '市' : '縣')) : null;
+            const textAfterCity = cityMatch ? text.replace(cityMatch[0], '').trim() : text;
 
-            // 4. Match full district name with suffix (e.g. '埔里鎮', '馬公市', '苓雅區', '大安區', '花蓮市')
-            for (const zip of Object.keys(TAIWAN_GEO_ZIP_MAP)) {
-                const item = TAIWAN_GEO_ZIP_MAP[zip];
-                if (specifiedCity && !item.city.includes(specifiedCity)) continue;
-                if (text.includes(item.district)) {
-                    return item;
-                }
-            }
+            // Sort zip codes by district length descending (e.g. "安南區" matches before "南區", "中西區" before "西區")
+            const zipKeys = Object.keys(TAIWAN_GEO_ZIP_MAP).sort((a, b) => {
+                return TAIWAN_GEO_ZIP_MAP[b].district.length - TAIWAN_GEO_ZIP_MAP[a].district.length;
+            });
 
-            // 5. Match clean district name (e.g. '苓雅', '大安', '楠梓') with city guard
             if (specifiedCity) {
-                for (const zip of Object.keys(TAIWAN_GEO_ZIP_MAP)) {
+                // Step 3a: Match full district name (e.g. 潮州鎮, 屏東市, 恆春鎮, 麻豆區, 東區, 安南區)
+                for (const zip of zipKeys) {
                     const item = TAIWAN_GEO_ZIP_MAP[zip];
                     if (!item.city.includes(specifiedCity)) continue;
-                    if (item.cleanDist.length >= 2 && text.includes(item.cleanDist)) {
-                        return item;
-                    }
+                    if (textAfterCity.includes(item.district) || text.includes(item.district)) return item;
+                }
+                // Step 3b: Match clean district name (e.g. 潮州, 恆春, 麻豆, 善化) in textAfterCity
+                for (const zip of zipKeys) {
+                    const item = TAIWAN_GEO_ZIP_MAP[zip];
+                    if (!item.city.includes(specifiedCity)) continue;
+                    const targetClean = item.cleanDist.replace(/^(台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東)/, '');
+                    if (targetClean.length >= 2 && textAfterCity.includes(targetClean)) return item;
+                    if (item.cleanDist.length >= 2 && textAfterCity.includes(item.cleanDist)) return item;
+                }
+                // Fallback to city center coordinates when district is not specified (e.g. "台南", "屏東", "高雄")
+                if (CITY_CENTER_COORDS[fullCityName]) {
+                    return CITY_CENTER_COORDS[fullCityName];
                 }
             } else {
-                for (const zip of Object.keys(TAIWAN_GEO_ZIP_MAP)) {
+                // No city specified: match full district first
+                for (const zip of zipKeys) {
                     const item = TAIWAN_GEO_ZIP_MAP[zip];
                     if (text.includes(item.district)) return item;
+                }
+                // Then match clean district
+                for (const zip of zipKeys) {
+                    const item = TAIWAN_GEO_ZIP_MAP[zip];
                     const regex = new RegExp(item.cleanDist + '(?:區|鄉|鎮|市)');
                     if (regex.test(text)) return item;
                 }
@@ -8933,21 +8971,12 @@
             const text = rawText.trim();
 
             const loc = resolveLocationInfo(text);
-            if (loc) {
-                return {
-                    raw: text,
-                    city: loc.city,
-                    district: loc.district,
-                    cleanDist: loc.cleanDist,
-                    loc: loc
-                };
-            }
 
             const cityMatch = text.match(/(台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東|澎湖|金門|連江)(?:市|縣)?/);
-            const city = cityMatch ? (cityMatch[1] + (['台北', '新北', '基隆', '桃園', '新竹', '台中', '嘉義', '台南', '高雄'].includes(cityMatch[1]) ? '市' : '縣')) : '';
+            const city = cityMatch ? (cityMatch[1] + (['台北', '新北', '基隆', '桃園', '新竹', '台中', '嘉義', '台南', '高雄'].includes(cityMatch[1]) ? '市' : '縣')) : (loc ? (loc.city || '') : '');
             let textAfterCity = cityMatch ? text.replace(cityMatch[0], '').trim() : text;
             let distMatch = textAfterCity.match(/^([^\s,市縣0-9]{1,4}?(?:區|鄉|鎮|市))/);
-            let district = distMatch ? distMatch[1] : '';
+            let district = distMatch ? distMatch[1] : (loc ? (loc.district || '') : '');
             let cleanDist = district.replace(/[區鄉鎮市]$/, '');
 
             return {
@@ -8955,8 +8984,55 @@
                 city: city,
                 district: district,
                 cleanDist: cleanDist,
-                loc: null
+                loc: loc
             };
+        }
+
+        function matchStoreFreightFee(freightData, parsed) {
+            let feeAmount = Infinity;
+            let feeRaw = '';
+            let matchedAreaText = '';
+            if (!freightData || !freightData.fees) return { feeAmount, feeRaw, matchedAreaText };
+
+            const targetDist = parsed.district || '';
+            const targetClean = parsed.cleanDist ? parsed.cleanDist.replace(/^(台北|新北|基隆|桃園|新竹|苗栗|台中|彰化|南投|雲林|嘉義|台南|高雄|屏東|宜蘭|花蓮|台東)/, '') : '';
+
+            freightData.fees.forEach(f => {
+                const areaStr = String(f.area || '');
+                const tokens = areaStr.split(/[、,，/\s\n]+/).map(t => t.trim().replace(/\([^)]*\)/g, '')).filter(Boolean);
+
+                for (let t of tokens) {
+                    const cleanT = t.replace(/市區$|[市區鄉鎮]$/, '');
+                    let isMatch = false;
+
+                    if (t === targetDist || t === targetClean || cleanT === targetClean) {
+                        isMatch = true;
+                    } else if (targetDist && t.includes(targetDist)) {
+                        isMatch = true;
+                    } else if (targetClean && targetClean.length >= 2 && cleanT.includes(targetClean)) {
+                        isMatch = true;
+                    }
+
+                    // Exclusion guards for small partial tokens
+                    if (targetClean === '東' && cleanT !== '東') isMatch = false;
+                    if (targetClean === '南' && cleanT !== '南') isMatch = false;
+                    if (targetClean === '西' && cleanT !== '西') isMatch = false;
+                    if (targetClean === '北' && cleanT !== '北') isMatch = false;
+
+                    if (isMatch) {
+                        const match = String(f.fee || '').match(/[0-9,]+/);
+                        const num = match ? parseInt(match[0].replace(/,/g, ''), 10) : (f.fee.includes('0元') ? 0 : 0);
+                        if (num < feeAmount) {
+                            feeAmount = num;
+                            feeRaw = f.fee;
+                            matchedAreaText = f.area;
+                        }
+                        break;
+                    }
+                }
+            });
+
+            return { feeAmount, feeRaw, matchedAreaText };
         }
 
         function getSmartStoreRecommendations(addressStr) {
@@ -8992,31 +9068,20 @@
                     }
                 }
 
-                let feeAmount = Infinity;
-                let feeRaw = '';
-                let matchedAreaText = '';
+                const feeResult = matchStoreFreightFee(freightData, parsed);
+                const feeAmount = feeResult.feeAmount;
+                const feeRaw = feeResult.feeRaw;
+                const matchedAreaText = feeResult.matchedAreaText;
 
-                if (freightData && freightData.fees && parsed.cleanDist) {
-                    freightData.fees.forEach(f => {
-                        const areaStr = String(f.area || '');
-                        if (areaStr.includes(parsed.cleanDist)) {
-                            const match = String(f.fee || '').match(/[0-9,]+/);
-                            const num = match ? parseInt(match[0].replace(/,/g, ''), 10) : (f.fee.includes('0元') ? 0 : 0);
-                            if (num < feeAmount) {
-                                feeAmount = num;
-                                feeRaw = f.fee;
-                                matchedAreaText = f.area;
-                            }
-                        }
-                    });
-                }
-
-                const isSameCity = (parsed.city && storeAddress.includes(parsed.city.slice(0, 2))) || (destLoc && storeLoc && destLoc.city === storeLoc.city);
+                const isSameCity = (parsed.city && storeAddress.includes(parsed.city.slice(0, 2))) || (destLoc && storeLoc && destLoc.city && storeLoc.city && destLoc.city.slice(0, 2) === storeLoc.city.slice(0, 2));
 
                 // Primary sort: Pure physical GPS distance (distKm)
-                let sortScore = (distKm !== null ? distKm : 999);
-                if (isLocalStore) {
-                    sortScore = (distKm !== null ? distKm * 0.1 : 0);
+                let sortScore = 999;
+                if (distKm !== null) {
+                    sortScore = distKm;
+                    if (isLocalStore) sortScore = distKm * 0.1;
+                } else if (isSameCity) {
+                    sortScore = 50; // Prioritize same-city stores even without full street GPS
                 }
 
                 let feeDisplayText = '';
@@ -9026,6 +9091,8 @@
                     feeDisplayText = (feeAmount === 0 ? '免跨店費 ($0)' : ('運費 $' + feeAmount.toLocaleString()));
                 } else if (distKm !== null) {
                     feeDisplayText = '約 ' + distKm + ' km (洽詢門市)';
+                } else if (isSameCity) {
+                    feeDisplayText = '同縣市門市 (洽詢門市)';
                 } else {
                     feeDisplayText = '依門市洽詢';
                 }
@@ -9105,26 +9172,26 @@
             }
         }
 
-        function copySmartDispatchNote(storeName, storeCode, feeText, phone, address, destAddr, distKm) {
+        function copySmartDispatchNote(storeName, storeCode, phone, address, destAddr, distKm) {
             if ('vibrate' in navigator) navigator.vibrate(12);
             playSingleClickSound("C5");
 
-            const distInfo = (distKm !== null && distKm !== undefined) ? `\n直線距離：約 ${distKm} km` : '';
-            const note = `【跨店出貨派工建議單】\n客戶送達地址：${destAddr || '指定目的地'}\n推薦出貨門市：${storeName} (代碼 ${storeCode})${distInfo}\n運費標準：${feeText}\n門市電話：${phone}\n門市地址：${address}\n(由 TIME 8 智慧選店系統產出)`;
+            const distInfo = (distKm !== null && distKm !== undefined && distKm !== '') ? `\n直線距離：約 ${distKm} km` : '';
+            const note = `【出貨門市派工建議單】\n客戶送達地址：${destAddr || '指定目的地'}\n推薦出貨門市：${storeName} (代碼 ${storeCode})${distInfo}\n門市地址：${address}\n門市電話：${phone}\n(由 TIME 8 智慧選店系統依門市地址距離產出)`;
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(note).then(() => {
                     showZenCapsuleNotification({
                         title: '派工單已複製',
-                        message: `已複製 ${storeName} 出貨派工備忘錄`,
+                        message: `已複製 ${storeName} 門市出貨備忘錄`,
                         emoji: '📋'
                     });
                 });
             } else {
                 showZenCapsuleNotification({
                     title: '派工資訊已產出',
-                    message: `${storeName} · 運費 ${feeText}`,
-                    emoji: '🚚'
+                    message: `${storeName} · 距離 ${distKm || ''} km`,
+                    emoji: '🏠'
                 });
             }
         }
@@ -9134,7 +9201,7 @@
             if (!container) return;
 
             if (!addressStr || !addressStr.trim()) {
-                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-map-location-dot"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">請輸入送達地址或點選熱門區域</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動依真實 GPS 距離推薦最近 3 家出貨門市與運費</div></div>';
+                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-map-location-dot"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">請輸入送達地址或點選熱門區域</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動依門市地址與真實距離推薦最近 3 家門市</div></div>';
                 return;
             }
 
@@ -9142,7 +9209,7 @@
             const { parsed, top3Stores, alternatives } = analysis;
 
             if (!top3Stores || top3Stores.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-circle-question"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">查無匹配的門市資訊</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入完整縣市與行政區（如：台南市麻豆區 或 屏東縣潮州鎮）</div></div>';
+                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-circle-question"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">查無匹配的門市資訊</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入完整縣市與行政區（如：台南市東區 或 屏東縣屏東市）</div></div>';
                 return;
             }
 
@@ -9174,12 +9241,11 @@
                 const storeAddress = c['地址'] || '';
                 const storeManager = c['店長'] || '';
                 const storeChief = c['課長'] || '';
-                const storeDirector = c['處長'] || '';
 
                 const parsedChief = parseStaffContact(storeChief);
                 const parsedMgr = parseStaffContact(storeManager);
 
-                const distLabel = item.distKm !== null ? `直線距離 ${item.distKm} km` : '同區門市';
+                const distLabel = item.distKm !== null ? `直線距離 ${item.distKm} km` : '同縣市門市';
 
                 html += '<div class="store-card" style="border:1px solid ' + conf.border + '; background:var(--card); box-shadow:0 3px 12px rgba(0,0,0,0.04); margin-bottom:12px;">';
                 
@@ -9188,7 +9254,7 @@
                 html += '<div>';
                 html += '<div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">';
                 html += '<span style="font-size:11px; font-weight:700; padding:1px 6px; border-radius:4px; background:' + conf.badgeBg + '; color:' + conf.badgeColor + ';">' + conf.rank + '</span>';
-                if (item.isLocalStore) html += '<span style="font-size:10px; font-weight:700; padding:1px 6px; border-radius:4px; background:rgba(77,122,82,0.12); color:var(--green);">同區直出</span>';
+                if (item.isLocalStore) html += '<span style="font-size:10px; font-weight:700; padding:1px 6px; border-radius:4px; background:rgba(77,122,82,0.12); color:var(--green);">同區在地</span>';
                 html += '</div>';
                 html += '<div style="display:flex; align-items:baseline; gap:6px; margin-top:3px;">';
                 html += '<span style="font-size:16px; font-weight:700; color:var(--label);">' + escapeHtml(storeName) + '</span>';
@@ -9198,20 +9264,19 @@
 
                 html += '<div style="text-align:right;">';
                 html += '<div style="font-size:13px; font-weight:700; color:var(--blue);">' + escapeHtml(distLabel) + '</div>';
-                html += '<div style="font-size:12px; font-weight:600; color:var(--green); margin-top:2px;">' + escapeHtml(item.feeRaw) + '</div>';
                 html += '</div>';
                 html += '</div>';
 
                 // Details Body
                 html += '<div style="padding:10px 14px; font-size:12px; color:var(--label-secondary); line-height:1.6;">';
-                if (parsedMgr.name) html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">店長</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(parsedMgr.name) + '</span></div>';
+                if (storeAddress) html += '<div style="display:flex; gap:6px; margin-bottom:3px;"><span style="color:var(--label-tertiary); width:36px;">地址</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(storeAddress) + '</span></div>';
+                if (parsedMgr.name) html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">店長</span><span style="color:var(--label);">' + escapeHtml(parsedMgr.name) + '</span></div>';
                 if (parsedChief.name) {
                     html += '<div style="display:flex; gap:6px; align-items:center; margin-bottom:2px; flex-wrap:wrap;">';
                     html += '<span style="color:var(--label-tertiary); width:36px;">課長</span><span style="color:var(--label); font-weight:500;">' + escapeHtml(parsedChief.name) + '</span>';
                     if (parsedChief.email) html += '<a href="mailto:' + escapeHtml(parsedChief.email) + '" class="store-email-link active-scale"><span>' + escapeHtml(parsedChief.email) + '</span></a>';
                     html += '</div>';
                 }
-                if (storeAddress) html += '<div style="display:flex; gap:6px; margin-top:3px; padding-top:3px; border-top:0.5px solid var(--separator);"><span style="color:var(--label-tertiary); width:36px;">地址</span><span style="color:var(--label-secondary);">' + escapeHtml(storeAddress) + '</span></div>';
                 html += '</div>';
 
                 // Action Toolbar
@@ -9222,7 +9287,7 @@
                     html += '<span>撥打電話</span>';
                     html += '</a>';
                 }
-                html += '<button type="button" onclick="copySmartDispatchNote(\'' + escapeHtml(storeName) + '\', \'' + escapeHtml(storeCode) + '\', \'' + escapeHtml(item.feeRaw) + '\', \'' + escapeHtml(storePhone.split('\n')[0]) + '\', \'' + escapeHtml(storeAddress) + '\', \'' + escapeHtml(parsed.raw) + '\', \'' + (item.distKm !== null ? item.distKm : '') + '\')" class="active-scale" style="flex:1; padding:8px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">';
+                html += '<button type="button" onclick="copySmartDispatchNote(\'' + escapeHtml(storeName) + '\', \'' + escapeHtml(storeCode) + '\', \'' + escapeHtml(storePhone.split('\n')[0]) + '\', \'' + escapeHtml(storeAddress) + '\', \'' + escapeHtml(parsed.raw) + '\', \'' + (item.distKm !== null ? item.distKm : '') + '\')" class="active-scale" style="flex:1; padding:8px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">';
                 html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>';
                 html += '<span>複製派工</span>';
                 html += '</button>';
@@ -9240,7 +9305,7 @@
             if (alternatives && alternatives.length > 0) {
                 const otherList = alternatives.slice(0, 4);
                 html += '<div style="margin-top:14px;">';
-                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-bottom:6px;">🚚 其他鄰近支援門市</div>';
+                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-bottom:6px;">🚚 其他鄰近門市</div>';
                 html += '<div class="rounded-xl overflow-hidden" style="border:0.5px solid var(--separator); background:var(--card);">';
                 otherList.forEach((alt, idx) => {
                     const altC = alt.contact;
@@ -9252,7 +9317,7 @@
                     html += '<div style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center; ' + (idx > 0 ? 'border-top:0.5px solid var(--separator);' : '') + '">';
                     html += '<div>';
                     html += '<div style="font-size:13.5px; font-weight:600; color:var(--label);">' + escapeHtml(altName) + ' <span class="store-badge-code">' + escapeHtml(altC['代碼'] || '') + '</span></div>';
-                    html += '<div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;">' + escapeHtml(altDist) + ' · ' + escapeHtml(alt.feeRaw) + '</div>';
+                    html += '<div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;">' + escapeHtml(altDist) + ' · ' + escapeHtml(altC['地址'] || '') + '</div>';
                     html += '</div>';
                     html += '<div style="display:flex; align-items:center; gap:8px;">';
                     if (altPhone) {
