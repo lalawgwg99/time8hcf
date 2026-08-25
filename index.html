@@ -4138,11 +4138,18 @@
                 <div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <div class="editorial-label" style="margin:0; letter-spacing:0.04em;">門市與跨店運費</div>
-                        <button onclick="refreshStoreDirectoryData(event)" id="storeRefreshBtn" title="同步最新試算表資料"
-                            style="font-size:11px; color:var(--label-tertiary); font-weight:500; background:none; border:none; cursor:pointer; letter-spacing:0.04em; display:flex; align-items:center; gap:5px; font-family:inherit;">
-                            <i class="fas fa-rotate" id="storeRefreshIcon" style="font-size:9.5px;"></i>
-                            <span id="storeRefreshText">同步最新</span>
-                        </button>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <button onclick="openSmartStoreModal()" title="輸入出貨地址，自動推薦最靠近與最低運費門市"
+                                style="font-size:11px; color:var(--blue); font-weight:600; background:rgba(30,58,138,0.08); border:0.5px solid rgba(30,58,138,0.18); border-radius:999px; padding:3px 9px; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:inherit;">
+                                <i class="fas fa-compass" style="font-size:9.5px;"></i>
+                                <span>智慧選店</span>
+                            </button>
+                            <button onclick="refreshStoreDirectoryData(event)" id="storeRefreshBtn" title="同步最新試算表資料"
+                                style="font-size:11px; color:var(--label-tertiary); font-weight:500; background:none; border:none; cursor:pointer; letter-spacing:0.04em; display:flex; align-items:center; gap:5px; font-family:inherit;">
+                                <i class="fas fa-rotate" id="storeRefreshIcon" style="font-size:9.5px;"></i>
+                                <span id="storeRefreshText">同步最新</span>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="zen-card" style="padding:16px 18px;">
@@ -4153,7 +4160,7 @@
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
-                            <input type="text" id="storeSearchInput" placeholder="搜尋店名、店碼 (022)、電話、區域 (鳳山)..."
+                            <input type="text" id="storeSearchInput" placeholder="搜尋地址 (如: 高雄楠梓藍昌路)、店名、店碼..."
                                 oninput="onStoreSearchInput(event)"
                                 style="width:100%; padding:10px 34px 10px 34px; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:12px; font-size:13px; color:var(--label); outline:none; font-family:inherit;" />
                             <button type="button" id="storeSearchClearBtn" onclick="clearStoreSearch()" class="hidden"
@@ -4333,6 +4340,70 @@
                 style="width:100%; padding:14px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:14.5px; font-weight:600; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em;">
                 完成
             </button>
+        </div>
+    </div>
+
+    <!-- Smart Store Dispatch Recommender Modal (智慧跨店選店推薦 - Apple Inset Sheet) -->
+    <div id="smartStoreModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeSmartStoreModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:16px 20px 32px; max-height:88vh; overflow-y:auto;">
+            <div class="sheet-handle" style="margin-bottom:14px;"></div>
+            
+            <!-- Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding:0 4px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:50%; background:rgba(30,58,138,0.1); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:12px;">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">
+                        智慧跨店選店推薦
+                    </h3>
+                </div>
+                <button type="button" onclick="closeSmartStoreModal()" aria-label="關閉"
+                    style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:11px;"></i>
+                </button>
+            </div>
+
+            <!-- Input Box -->
+            <div class="rounded-2xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                <label style="display:block; font-size:11.5px; font-weight:600; color:var(--label-tertiary); margin-bottom:6px;">
+                    輸入客戶送達地址或行政區
+                </label>
+                <div style="position:relative;">
+                    <input type="text" id="smartAddressInput" placeholder="例：高雄市楠梓區藍昌路300號 或 屏東市..."
+                        oninput="onSmartAddressInput(event)"
+                        style="width:100%; padding:10px 34px 10px 12px; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:12px; font-size:13.5px; color:var(--label); outline:none; font-family:inherit;" />
+                    <button type="button" id="smartAddressClearBtn" onclick="clearSmartAddressInput()" class="hidden"
+                        style="position:absolute; right:10px; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%; background:var(--fill); border:none; color:var(--label-tertiary); font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Quick District Chips -->
+                <div style="margin-top:10px;">
+                    <span style="font-size:10.5px; color:var(--label-tertiary); margin-right:6px;">常用熱門區域：</span>
+                    <div style="display:inline-flex; flex-wrap:wrap; gap:5px; margin-top:4px;">
+                        <button type="button" onclick="setSmartQuickArea('高雄市楠梓區')" class="task-chip" style="font-size:11px; padding:3px 8px;">高雄楠梓</button>
+                        <button type="button" onclick="setSmartQuickArea('高雄市鳳山區')" class="task-chip" style="font-size:11px; padding:3px 8px;">高雄鳳山</button>
+                        <button type="button" onclick="setSmartQuickArea('屏東市')" class="task-chip" style="font-size:11px; padding:3px 8px;">屏東市</button>
+                        <button type="button" onclick="setSmartQuickArea('新北市汐止區')" class="task-chip" style="font-size:11px; padding:3px 8px;">新北汐止</button>
+                        <button type="button" onclick="setSmartQuickArea('新北市淡水區')" class="task-chip" style="font-size:11px; padding:3px 8px;">新北淡水</button>
+                        <button type="button" onclick="setSmartQuickArea('台南市永康區')" class="task-chip" style="font-size:11px; padding:3px 8px;">台南永康</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendation Results Zone -->
+            <div id="smartResultsZone">
+                <div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);">
+                    <div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-map-location-dot"></i></div>
+                    <div style="font-size:13px; font-weight:600; color:var(--label);">請輸入送達地址或點選熱門區域</div>
+                    <div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動比對全台 83 間門市與 59 家跨區外送運費矩陣</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -8289,6 +8360,324 @@
             };
         }
 
+        // =============================================
+        // SMART STORE DISPATCH & RECOMMENDER ENGINE (智慧跨店選店引擎)
+        // =============================================
+        function parseDestinationAddress(rawText) {
+            if (!rawText || !rawText.trim()) return { city: '', district: '', cleanDist: '', raw: '' };
+            const text = rawText.trim();
+
+            const cityMatch = text.match(/(台北市|新北市|基隆市|桃園市|新竹市|新竹縣|苗栗縣|台中市|彰化縣|南投縣|雲林縣|嘉義市|嘉義縣|台南市|高雄市|屏東縣|屏東市|宜蘭縣|花蓮縣|台東縣|澎湖縣|金門縣|連江縣)/);
+            const city = cityMatch ? cityMatch[1] : '';
+
+            let textAfterCity = city ? text.replace(city, '').trim() : text;
+
+            let district = '';
+            const distMatch = textAfterCity.match(/^([^\s,市縣0-9]{1,4}?(?:區|鄉|鎮))/);
+            if (distMatch) {
+                district = distMatch[1];
+            } else {
+                const distMatch2 = textAfterCity.match(/([^\s,市縣0-9]{1,3}(?:區|鄉|鎮))/);
+                if (distMatch2) {
+                    district = distMatch2[1];
+                } else {
+                    const cityDistMatch = textAfterCity.match(/^([^\s,0-9]{1,3}市)(?![路街])/);
+                    if (cityDistMatch) district = cityDistMatch[1];
+                }
+            }
+
+            let cleanDist = district ? district.replace(/[區鄉鎮市]$/, '') : '';
+
+            if (!cleanDist) {
+                const commonDistricts = [
+                    '楠梓', '鳳山', '三民', '苓雅', '左營', '小港', '前鎮', '鼓山', '岡山', '旗津', '林園', '大樹', '燕巢', '梓官', '橋頭', '仁武', '大社', '鳥松', '路竹', '阿蓮', '美濃', '旗山', '內門', '湖內',
+                    '屏東', '潮州', '恆春', '萬丹', '東港', '新園', '崁頂', '竹田', '麟洛', '萬巒', '內埔', '里港', '高樹', '九如', '鹽埔', '長治',
+                    '板橋', '新莊', '中和', '永和', '三重', '淡水', '汐止', '新店', '土城', '蘆洲', '樹林', '鶯歌', '三峽', '五股', '泰山', '林口', '八里', '三芝', '石門', '金山', '萬里',
+                    '士林', '內湖', '南港', '文山', '信義', '大安', '中山', '松山', '北投', '萬華', '大同', '中正',
+                    '西屯', '北屯', '南屯', '大里', '太平', '豐原', '沙鹿', '清水', '潭子', '大雅',
+                    '中壢', '桃園', '平鎮', '八德', '楊梅', '蘆竹', '龜山',
+                    '永康', '安南', '安平', '新化', '歸仁', '仁德', '善化', '新營'
+                ];
+                for (const cd of commonDistricts) {
+                    if (text.includes(cd)) {
+                        cleanDist = cd;
+                        district = cd;
+                        break;
+                    }
+                }
+            }
+
+            return {
+                raw: text,
+                city: city,
+                district: district,
+                cleanDist: cleanDist
+            };
+        }
+
+        function getSmartStoreRecommendations(addressStr) {
+            if (!_storeDirectoryState.dataStore) initStoreDirectoryEngine();
+            const ds = _storeDirectoryState.dataStore || DEFAULT_STORE_DIRECTORY_DATA;
+            const parsed = parseDestinationAddress(addressStr);
+            if (!parsed.cleanDist && !parsed.city && !parsed.raw) return { parsed, topStore: null, alternatives: [] };
+
+            const storesMap = ds.stores || {};
+            const contacts = ds.contacts || [];
+
+            const candidates = [];
+
+            contacts.forEach(c => {
+                if (c.category && c.category.includes('MD')) return;
+                const storeName = c['店名'] || '';
+                const storeCode = c['代碼'] || '';
+                const storeAddress = c['地址'] || '';
+                const codeMatch = storeName.match(/^[A-Za-z]{2,3}/);
+                const lookupKey = (codeMatch ? codeMatch[0] : (storeCode || storeName)).toUpperCase();
+                const freightData = storesMap[lookupKey] || storesMap[storeName] || null;
+
+                let feeAmount = Infinity;
+                let feeRaw = '';
+                let matchedAreaText = '';
+                let isLocalStore = false;
+
+                // Check if store is located in the exact same district
+                if (parsed.cleanDist && storeAddress.includes(parsed.cleanDist)) {
+                    isLocalStore = true;
+                    feeAmount = 0;
+                    feeRaw = '$0 (同區在地門市)';
+                }
+
+                // Check freight table
+                if (freightData && freightData.fees && parsed.cleanDist) {
+                    freightData.fees.forEach(f => {
+                        const areaStr = String(f.area || '');
+                        if (areaStr.includes(parsed.cleanDist)) {
+                            const match = String(f.fee || '').match(/[0-9,]+/);
+                            const num = match ? parseInt(match[0].replace(/,/g, ''), 10) : 0;
+                            if (num < feeAmount) {
+                                feeAmount = num;
+                                feeRaw = f.fee;
+                                matchedAreaText = f.area;
+                            }
+                        }
+                    });
+                }
+
+                const isSameCity = parsed.city && storeAddress.includes(parsed.city.slice(0, 2));
+
+                if (feeAmount !== Infinity || isLocalStore || isSameCity) {
+                    candidates.push({
+                        contact: c,
+                        freightData: freightData,
+                        feeAmount: feeAmount === Infinity ? 9999 : feeAmount,
+                        feeRaw: feeRaw || (isLocalStore ? '$0 (同區直出)' : '洽詢門市'),
+                        matchedAreaText: matchedAreaText,
+                        isLocalStore: isLocalStore,
+                        isSameCity: isSameCity
+                    });
+                }
+            });
+
+            // Sort candidate stores: isLocalStore first, then lowest fee, then same city
+            candidates.sort((a, b) => {
+                if (a.isLocalStore && !b.isLocalStore) return -1;
+                if (!a.isLocalStore && b.isLocalStore) return 1;
+                return a.feeAmount - b.feeAmount;
+            });
+
+            return {
+                parsed: parsed,
+                topStore: candidates.length > 0 ? candidates[0] : null,
+                alternatives: candidates.slice(1)
+            };
+        }
+
+        function openSmartStoreModal(prefillAddr) {
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            playSingleClickSound("G4");
+
+            const modal = document.getElementById('smartStoreModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+
+                const input = document.getElementById('smartAddressInput');
+                if (input) {
+                    if (prefillAddr) input.value = prefillAddr;
+                    renderSmartStoreResults(input.value || '');
+                    setTimeout(() => input.focus(), 150);
+                }
+            }
+        }
+
+        function closeSmartStoreModal() {
+            const modal = document.getElementById('smartStoreModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function onSmartAddressInput(e) {
+            const val = e.target.value || '';
+            const clearBtn = document.getElementById('smartAddressClearBtn');
+            if (clearBtn) clearBtn.classList.toggle('hidden', val.length === 0);
+            renderSmartStoreResults(val);
+        }
+
+        function clearSmartAddressInput() {
+            const input = document.getElementById('smartAddressInput');
+            if (input) input.value = '';
+            const clearBtn = document.getElementById('smartAddressClearBtn');
+            if (clearBtn) clearBtn.classList.add('hidden');
+            renderSmartStoreResults('');
+        }
+
+        function setSmartQuickArea(areaStr) {
+            if ('vibrate' in navigator) navigator.vibrate(8);
+            const input = document.getElementById('smartAddressInput');
+            if (input) {
+                input.value = areaStr;
+                const clearBtn = document.getElementById('smartAddressClearBtn');
+                if (clearBtn) clearBtn.classList.remove('hidden');
+                renderSmartStoreResults(areaStr);
+            }
+        }
+
+        function copySmartDispatchNote(storeName, storeCode, feeText, phone, address, destAddr) {
+            if ('vibrate' in navigator) navigator.vibrate(12);
+            playSingleClickSound("C5");
+
+            const note = `【跨店出貨派工建議單】\n客戶送達地址：${destAddr || '指定目的地'}\n推薦出貨門市：${storeName} (代碼 ${storeCode})\n運費標準：${feeText}\n門市電話：${phone}\n門市地址：${address}\n(由 TIME 8 智慧選店系統產出)`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(note).then(() => {
+                    showZenCapsuleNotification({
+                        title: '派工單已複製',
+                        message: `已複製 ${storeName} 出貨派工備忘錄`,
+                        emoji: '📋'
+                    });
+                });
+            } else {
+                showZenCapsuleNotification({
+                    title: '派工資訊已產出',
+                    message: `${storeName} · 運費 ${feeText}`,
+                    emoji: '🚚'
+                });
+            }
+        }
+
+        function renderSmartStoreResults(addressStr) {
+            const container = document.getElementById('smartResultsZone');
+            if (!container) return;
+
+            if (!addressStr || !addressStr.trim()) {
+                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-map-location-dot"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">請輸入送達地址或點選熱門區域</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動比對全台 83 間門市與 59 家跨區外送運費矩陣</div></div>';
+                return;
+            }
+
+            const analysis = getSmartStoreRecommendations(addressStr);
+            const { parsed, topStore, alternatives } = analysis;
+
+            if (!topStore) {
+                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-circle-question"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">暫查無匹配的跨店配送規則</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入完整縣市與行政區（如：高雄市楠梓區）</div></div>';
+                return;
+            }
+
+            const topC = topStore.contact;
+            const topName = topC['店名'] || '門市';
+            const topCode = topC['代碼'] || '';
+            const topPhone = topC['電話'] || '';
+            const cleanTopPhone = topPhone.replace(/[^0-9+]/g, '');
+            const topAddress = topC['地址'] || '';
+            const topManager = topC['店長'] || '';
+            const topChief = topC['課長'] || '';
+            const topDirector = topC['處長'] || '';
+
+            const parsedChief = parseStaffContact(topChief);
+            const parsedDir = parseStaffContact(topDirector);
+            const parsedMgr = parseStaffContact(topManager);
+
+            let html = '';
+
+            // Top Recommendation Card
+            html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-bottom:6px;">👑 最優出貨門市推薦</div>';
+            html += '<div class="store-card" style="border:1.5px solid rgba(30,58,138,0.25); background:var(--card); box-shadow:0 4px 16px rgba(0,0,0,0.05); margin-bottom:14px;">';
+            html += '<div class="store-card-header" style="background:rgba(30,58,138,0.03);">';
+            html += '<div>';
+            html += '<div style="display:flex; align-items:center; gap:6px;">';
+            html += '<span style="font-size:15.5px; font-weight:700; color:var(--label);">' + escapeHtml(topName) + '</span>';
+            if (topCode) html += '<span class="store-badge-code">代碼 ' + escapeHtml(topCode) + '</span>';
+            if (topStore.isLocalStore) html += '<span style="font-size:10px; font-weight:700; padding:2px 7px; border-radius:999px; background:rgba(77,122,82,0.12); color:var(--green);">同區直出</span>';
+            html += '</div>';
+            if (parsed.cleanDist) html += '<div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;">送達目的地：' + escapeHtml(parsed.city + parsed.district) + '</div>';
+            html += '</div>';
+            html += '<div style="text-align:right;">';
+            html += '<div style="font-size:15px; font-weight:700; color:var(--green);">' + escapeHtml(topStore.feeRaw) + '</div>';
+            html += '<div style="font-size:10px; color:var(--label-tertiary);">' + (topStore.isLocalStore ? '同行政區免跨店費' : '跨店運費標準') + '</div>';
+            html += '</div>';
+            html += '</div>';
+
+            html += '<div style="padding:10px 14px; font-size:12px; color:var(--label-secondary); line-height:1.6;">';
+            if (parsedMgr.name) html += '<div style="display:flex; gap:6px; margin-bottom:2px;"><span style="color:var(--label-tertiary); width:36px;">店長</span><span style="font-weight:600; color:var(--label);">' + escapeHtml(parsedMgr.name) + '</span></div>';
+            if (parsedChief.name) {
+                html += '<div style="display:flex; gap:6px; align-items:center; margin-bottom:2px; flex-wrap:wrap;">';
+                html += '<span style="color:var(--label-tertiary); width:36px;">課長</span><span style="color:var(--label); font-weight:500;">' + escapeHtml(parsedChief.name) + '</span>';
+                if (parsedChief.email) html += '<a href="mailto:' + escapeHtml(parsedChief.email) + '" class="store-email-link active-scale"><span>' + escapeHtml(parsedChief.email) + '</span></a>';
+                html += '</div>';
+            }
+            if (topAddress) html += '<div style="display:flex; gap:6px; margin-top:3px; padding-top:3px; border-top:0.5px solid var(--separator);"><span style="color:var(--label-tertiary); width:36px;">地址</span><span style="color:var(--label-secondary);">' + escapeHtml(topAddress) + '</span></div>';
+            html += '</div>';
+
+            // Action Toolbar
+            html += '<div style="padding:8px 14px 12px; display:flex; gap:8px;">';
+            if (topPhone) {
+                html += '<a href="tel:' + cleanTopPhone + '" class="active-scale" style="flex:1; padding:9px; border-radius:10px; background:var(--blue); color:#fff; text-decoration:none; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:4px;">';
+                html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
+                html += '<span>一鍵致電</span>';
+                html += '</a>';
+            }
+            html += '<button type="button" onclick="copySmartDispatchNote(\'' + escapeHtml(topName) + '\', \'' + escapeHtml(topCode) + '\', \'' + escapeHtml(topStore.feeRaw) + '\', \'' + escapeHtml(topPhone.split('\n')[0]) + '\', \'' + escapeHtml(topAddress) + '\', \'' + escapeHtml(parsed.raw) + '\')" class="active-scale" style="flex:1; padding:9px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">';
+            html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>';
+            html += '<span>複製派工單</span>';
+            html += '</button>';
+            if (topAddress) {
+                html += '<a href="https://maps.apple.com/?q=' + encodeURIComponent(topAddress) + '" target="_blank" class="active-scale" style="padding:9px 12px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); text-decoration:none; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center;" title="在地圖中查看">';
+                html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>';
+                html += '</a>';
+            }
+            html += '</div>';
+            html += '</div>';
+
+            // Alternative Candidate Stores
+            if (alternatives.length > 0) {
+                html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin:14px 2px 8px;">🚚 其他可支援門市（依運費排序）</div>';
+                html += '<div class="rounded-xl overflow-hidden" style="border:0.5px solid var(--separator); background:var(--card);">';
+                alternatives.slice(0, 5).forEach((alt, idx) => {
+                    const altC = alt.contact;
+                    const altName = altC['店名'] || '門市';
+                    const altPhone = altC['電話'] || '';
+                    const cleanAltPhone = altPhone.replace(/[^0-9+]/g, '');
+
+                    html += '<div style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center; ' + (idx > 0 ? 'border-top:0.5px solid var(--separator);' : '') + '">';
+                    html += '<div>';
+                    html += '<div style="font-size:13.5px; font-weight:600; color:var(--label);">' + escapeHtml(altName) + ' <span class="store-badge-code">' + escapeHtml(altC['代碼'] || '') + '</span></div>';
+                    html += '<div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;">' + (alt.isLocalStore ? '同行政區在地門市' : (alt.matchedAreaText ? '外送涵蓋：' + escapeHtml(alt.matchedAreaText.split('、').slice(0, 3).join('、')) : '同縣市門市')) + '</div>';
+                    html += '</div>';
+                    html += '<div style="display:flex; align-items:center; gap:8px;">';
+                    html += '<span class="store-fee-pill ' + (alt.feeAmount === 0 ? 'free' : 'paid') + '">' + escapeHtml(alt.feeRaw) + '</span>';
+                    if (altPhone) {
+                        html += '<a href="tel:' + cleanAltPhone + '" class="store-btn-call active-scale" style="padding:4px 8px; font-size:11px;">';
+                        html += '<span>撥打</span>';
+                        html += '</a>';
+                    }
+                    html += '</div>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+        }
+
         function initStoreDirectoryEngine() {
             try {
                 const cached = JSON.parse(localStorage.getItem(STORE_DIRECTORY_STORAGE_KEY) || 'null');
@@ -8514,8 +8903,40 @@
 
             let html = '';
 
+            // Check Smart Store Dispatch Recommendation for current query
+            if (q && q.length >= 2) {
+                const smartAnalysis = getSmartStoreRecommendations(q);
+                if (smartAnalysis && smartAnalysis.topStore && (smartAnalysis.parsed.cleanDist || smartAnalysis.parsed.city)) {
+                    const topC = smartAnalysis.topStore.contact;
+                    const topName = topC['店名'] || '門市';
+                    const topCode = topC['代碼'] || '';
+                    const topPhone = topC['電話'] || '';
+                    const cleanTopPhone = topPhone.replace(/[^0-9+]/g, '');
+                    
+                    html += '<div style="background:rgba(30,58,138,0.05); border:1px solid rgba(30,58,138,0.2); border-radius:14px; padding:12px 14px; margin-bottom:12px;">';
+                    html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">';
+                    html += '<span style="font-size:11px; font-weight:700; color:var(--blue); display:inline-flex; align-items:center; gap:4px;"><i class="fas fa-compass"></i> 智慧選店推薦：' + escapeHtml(topName) + (topCode ? ' (' + escapeHtml(topCode) + ')' : '') + '</span>';
+                    html += '<span class="store-fee-pill ' + (smartAnalysis.topStore.isLocalStore ? 'free' : 'paid') + '">' + escapeHtml(smartAnalysis.topStore.feeRaw) + '</span>';
+                    html += '</div>';
+                    html += '<div style="font-size:11.5px; color:var(--label-secondary); margin-bottom:8px; line-height:1.4;">';
+                    html += '目的地 ' + escapeHtml(smartAnalysis.parsed.city + smartAnalysis.parsed.district) + ' · ' + (smartAnalysis.topStore.isLocalStore ? '同行政區直出最快' : '外送支援門市');
+                    html += '</div>';
+                    html += '<div style="display:flex; gap:6px;">';
+                    if (topPhone) {
+                        html += '<a href="tel:' + cleanTopPhone + '" class="store-btn-call active-scale" style="flex:1; justify-content:center; padding:5px 8px; font-size:11px;">';
+                        html += '<i class="fas fa-phone" style="font-size:9.5px;"></i> 致電門市';
+                        html += '</a>';
+                    }
+                    html += '<button type="button" onclick="openSmartStoreModal(\'' + escapeHtml(q) + '\')" class="active-scale" style="flex:1; background:var(--card); border:0.5px solid var(--separator); border-radius:8px; font-size:11px; font-weight:600; color:var(--label); cursor:pointer; padding:5px 8px; display:flex; align-items:center; justify-content:center; gap:4px;">';
+                    html += '<i class="fas fa-arrow-up-right-from-square" style="font-size:9.5px;"></i> 完整選店分析';
+                    html += '</button>';
+                    html += '</div>';
+                    html += '</div>';
+                }
+            }
+
             if (matchedStores.length === 0 && matchedMDs.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:36px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div><div style="font-size:13.5px; font-weight:600; color:var(--label);">查無符合的資料</div><div style="font-size:11.5px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入店名、店碼 (022) 或行政區</div></div>';
+                container.innerHTML = html + '<div style="text-align:center; padding:36px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div><div style="font-size:13.5px; font-weight:600; color:var(--label);">查無符合的資料</div><div style="font-size:11.5px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入店名、店碼 (022) 或行政區</div></div>';
                 return;
             }
 
@@ -11061,6 +11482,7 @@
         window.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeCalendarModal();
+                closeSmartStoreModal();
                 closeThemePicker();
                 closeWeatherModal();
                 closeNotesModal();
