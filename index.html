@@ -8836,26 +8836,70 @@
             'XJ新仁': { lat: 22.9652, lon: 120.2285, city: '台南市', district: '仁德區' }
         };
 
-        // 主要幹道與代表地標經緯度（精確定位至路段）
+        // 主要幹道與代表地標經緯度（精確定位至路段，涵蓋全台門市所在地段）
         const MAJOR_ROAD_COORDS = [
+            // 62 家量販門市實體店周邊路段
+            { name: '德行西路', lat: 25.1122, lon: 121.5238, city: '台北市', district: '士林區', cleanDist: '士林' },
+            { name: '中山北路二段', lat: 25.1878, lon: 121.4428, city: '新北市', district: '淡水區', cleanDist: '淡水' },
+            { name: '民善街', lat: 25.0602, lon: 121.5746, city: '台北市', district: '內湖區', cleanDist: '內湖' },
+            { name: '重慶北路', lat: 25.0594, lon: 121.5134, city: '台北市', district: '大同區', cleanDist: '大同' },
+            { name: '桂林路', lat: 25.0378, lon: 121.5061, city: '台北市', district: '萬華區', cleanDist: '萬華' },
+            { name: '五華街', lat: 25.0863, lon: 121.4925, city: '新北市', district: '三重區', cleanDist: '三重' },
+            { name: '新台五路', lat: 25.0607, lon: 121.6521, city: '新北市', district: '汐止區', cleanDist: '汐止' },
+            { name: '重新路', lat: 25.0487, lon: 121.4728, city: '新北市', district: '三重區', cleanDist: '三重' },
+            { name: '南港路', lat: 25.0562, lon: 121.6112, city: '台北市', district: '南港區', cleanDist: '南港' },
+            { name: '中平路', lat: 25.0478, lon: 121.4429, city: '新北市', district: '新莊區', cleanDist: '新莊' },
+            { name: '中興路三段', lat: 24.9752, lon: 121.5446, city: '新北市', district: '新店區', cleanDist: '新店' },
+            { name: '青雲路', lat: 24.9839, lon: 121.4589, city: '新北市', district: '土城區', cleanDist: '土城' },
+            { name: '大安路', lat: 24.9961, lon: 121.4172, city: '新北市', district: '樹林區', cleanDist: '樹林' },
+            { name: '經國路', lat: 25.0163, lon: 121.3056, city: '桃園市', district: '桃園區', cleanDist: '桃園' },
+            { name: '文化二路', lat: 25.0718, lon: 121.3682, city: '新北市', district: '林口區', cleanDist: '林口' },
+            { name: '中山東路', lat: 24.9538, lon: 121.2384, city: '桃園市', district: '中壢區', cleanDist: '中壢' },
+            { name: '坤慶路', lat: 24.9189, lon: 121.2052, city: '桃園市', district: '平鎮區', cleanDist: '平鎮' },
+            { name: '介壽路', lat: 24.9452, lon: 121.2941, city: '桃園市', district: '八德區', cleanDist: '八德' },
+            { name: '大雅路', lat: 24.9459, lon: 121.3782, city: '新北市', district: '樹林區', cleanDist: '樹林' },
+            { name: '高鐵南路', lat: 24.9942, lon: 121.2045, city: '桃園市', district: '中壢區', cleanDist: '中壢' },
+            { name: '國華路', lat: 24.5712, lon: 120.8248, city: '苗栗縣', district: '苗栗市', cleanDist: '苗栗' },
+            { name: '中清路', lat: 24.2042, lon: 120.6558, city: '台中市', district: '西屯區', cleanDist: '西屯' },
+            { name: '青海路', lat: 24.1685, lon: 120.6472, city: '台中市', district: '西屯區', cleanDist: '西屯' },
+            { name: '三和三路', lat: 23.9084, lon: 120.6865, city: '南投縣', district: '南投市', cleanDist: '南投' },
+            { name: '文心路', lat: 24.1482, lon: 120.6472, city: '台中市', district: '南屯區', cleanDist: '南屯' },
+            { name: '金馬路', lat: 24.0935, lon: 120.5368, city: '彰化縣', district: '彰化市', cleanDist: '彰化' },
+            { name: '成功路', lat: 24.2486, lon: 120.7102, city: '台中市', district: '豐原區', cleanDist: '豐原' },
+            { name: '中平七街', lat: 24.1315, lon: 120.7126, city: '台中市', district: '太平區', cleanDist: '太平' },
+            { name: '博愛路', lat: 23.4735, lon: 120.4358, city: '嘉義市', district: '西區', cleanDist: '嘉義' },
+            { name: '雲林路', lat: 23.6982, lon: 120.5284, city: '雲林縣', district: '斗六市', cleanDist: '斗六' },
+            { name: '台灣大道', lat: 24.1842, lon: 120.6082, city: '台中市', district: '西屯區', cleanDist: '西屯' },
+            { name: '華南路', lat: 23.5702, lon: 120.3015, city: '雲林縣', district: '北港鎮', cleanDist: '北港' },
+            { name: '信義路', lat: 23.9721, lon: 120.9782, city: '南投縣', district: '埔里鎮', cleanDist: '埔里' },
+            { name: '立新街', lat: 23.7125, lon: 120.4382, city: '雲林縣', district: '虎尾鎮', cleanDist: '虎尾' },
+            { name: '健康路', lat: 23.3082, lon: 120.3052, city: '台南市', district: '新營區', cleanDist: '新營' },
+            { name: '中正南路', lat: 23.0372, lon: 120.2285, city: '台南市', district: '永康區', cleanDist: '永康' },
+            { name: '中華二路', lat: 23.0082, lon: 120.2312, city: '台南市', district: '永康區', cleanDist: '永康' },
+            { name: '中華西路', lat: 22.9982, lon: 120.1885, city: '台南市', district: '中西區', cleanDist: '中西區' },
+            { name: '鼎山街', lat: 22.6562, lon: 120.3235, city: '高雄市', district: '三民區', cleanDist: '三民' },
+            { name: '河東路', lat: 22.6318, lon: 120.2885, city: '高雄市', district: '前金區', cleanDist: '前金' },
+            { name: '林森路', lat: 22.5937, lon: 120.3392, city: '高雄市', district: '鳳山區', cleanDist: '鳳山' },
+            { name: '中山西路', lat: 22.6258, lon: 120.3508, city: '高雄市', district: '鳳山區', cleanDist: '鳳山' },
+            { name: '仁愛路', lat: 22.6782, lon: 120.4905, city: '屏東縣', district: '屏東市', cleanDist: '屏東' },
+            { name: '中華五路', lat: 22.6042, lon: 120.3045, city: '高雄市', district: '前鎮區', cleanDist: '前鎮' },
+            { name: '光華二路', lat: 22.6158, lon: 120.3188, city: '高雄市', district: '前鎮區', cleanDist: '前鎮' },
+            { name: '澄清路', lat: 22.6425, lon: 120.3440, city: '高雄市', district: '三民區', cleanDist: '三民' },
+            { name: '藍田路', lat: 22.7340, lon: 120.2865, city: '高雄市', district: '楠梓區', cleanDist: '楠梓' },
+            { name: '藍昌路', lat: 22.7290, lon: 120.2890, city: '高雄市', district: '楠梓區', cleanDist: '楠梓' },
+            { name: '正氣路', lat: 22.7552, lon: 121.1472, city: '台東縣', district: '台東市', cleanDist: '台東' },
+            { name: '伯玉路', lat: 24.4452, lon: 118.3412, city: '金門縣', district: '金寧鄉', cleanDist: '金門' },
+            { name: '台糖街', lat: 22.6652, lon: 120.4912, city: '屏東縣', district: '屏東市', cleanDist: '屏東' },
+            { name: '土庫一路', lat: 22.7380, lon: 120.3315, city: '高雄市', district: '楠梓區', cleanDist: '楠梓' },
             { name: '和平二路', lat: 22.6145, lon: 120.3205, city: '高雄市', district: '前鎮/苓雅', cleanDist: '苓雅' },
             { name: '和平一路', lat: 22.6265, lon: 120.3205, city: '高雄市', district: '苓雅區', cleanDist: '苓雅' },
-            { name: '光華二路', lat: 22.6158, lon: 120.3188, city: '高雄市', district: '前鎮區', cleanDist: '前鎮' },
-            { name: '光華一路', lat: 22.6248, lon: 120.3188, city: '高雄市', district: '苓雅區', cleanDist: '苓雅' },
             { name: '三多一路', lat: 22.6225, lon: 120.3320, city: '高雄市', district: '苓雅區', cleanDist: '苓雅' },
             { name: '三多二路', lat: 22.6195, lon: 120.3205, city: '高雄市', district: '苓雅區', cleanDist: '苓雅' },
             { name: '三多三路', lat: 22.6165, lon: 120.3090, city: '高雄市', district: '前鎮/苓雅', cleanDist: '苓雅' },
             { name: '三多四路', lat: 22.6135, lon: 120.3005, city: '高雄市', district: '苓雅區', cleanDist: '苓雅' },
-            { name: '中華五路', lat: 22.6042, lon: 120.3045, city: '高雄市', district: '前鎮區', cleanDist: '前鎮' },
-            { name: '中華四路', lat: 22.6185, lon: 120.2985, city: '高雄市', district: '前金/苓雅', cleanDist: '前金' },
             { name: '五甲一路', lat: 22.6120, lon: 120.3540, city: '高雄市', district: '鳳山區', cleanDist: '鳳山' },
             { name: '五甲二路', lat: 22.5990, lon: 120.3420, city: '高雄市', district: '鳳山區', cleanDist: '鳳山' },
-            { name: '五甲三路', lat: 22.5930, lon: 120.3320, city: '高雄市', district: '鳳山區', cleanDist: '鳳山' },
-            { name: '鼎山街', lat: 22.6562, lon: 120.3235, city: '高雄市', district: '三民區', cleanDist: '三民' },
-            { name: '澄清路', lat: 22.6425, lon: 120.3440, city: '高雄市', district: '三民區', cleanDist: '三民' },
-            { name: '藍田路', lat: 22.7340, lon: 120.2865, city: '高雄市', district: '楠梓區', cleanDist: '楠梓' },
-            { name: '土庫一路', lat: 22.7380, lon: 120.3315, city: '高雄市', district: '楠梓區', cleanDist: '楠梓' },
-            { name: '河東路', lat: 22.6318, lon: 120.2885, city: '高雄市', district: '前金區', cleanDist: '前金' }
+            { name: '五甲三路', lat: 22.5930, lon: 120.3320, city: '高雄市', district: '鳳山區', cleanDist: '鳳山' }
         ];
 
         // 台灣各主要縣市中心經緯度（用於當僅輸入縣市名或路段未定位時之基準點）
@@ -9039,12 +9083,16 @@
             if (!_storeDirectoryState.dataStore) initStoreDirectoryEngine();
             const ds = _storeDirectoryState.dataStore || DEFAULT_STORE_DIRECTORY_DATA;
             const parsed = parseDestinationAddress(addressStr);
-            if (!parsed.cleanDist && !parsed.city && !parsed.raw) return { parsed, topStore: null, top3Stores: [], alternatives: [] };
+            const destLoc = parsed.loc;
+
+            // Strict safety guard: Must have resolved GPS location to calculate distance
+            if (!destLoc) {
+                return { parsed, topStore: null, top3Stores: [], alternatives: [] };
+            }
 
             const storesMap = ds.stores || {};
             const contacts = ds.contacts || [];
 
-            const destLoc = parsed.loc;
             const candidates = [];
 
             contacts.forEach(c => {
@@ -9076,7 +9124,7 @@
                 const isSameCity = (parsed.city && storeAddress.includes(parsed.city.slice(0, 2))) || (destLoc && storeLoc && destLoc.city && storeLoc.city && destLoc.city.slice(0, 2) === storeLoc.city.slice(0, 2));
 
                 // Primary sort: Pure physical GPS distance (distKm)
-                let sortScore = (distKm !== null ? distKm : (isSameCity ? 500 : 999));
+                let sortScore = (distKm !== null ? distKm : 9999);
 
                 let feeDisplayText = '';
                 if (isLocalStore) {
@@ -9190,27 +9238,19 @@
             }
         }
 
-        function renderSmartStoreResults(addressStr) {
-            const container = document.getElementById('smartResultsZone');
-            if (!container) return;
+        function escapeJsAttr(str) {
+            if (!str) return '';
+            return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\r?\n/g, ' ');
+        }
 
-            if (!addressStr || !addressStr.trim()) {
-                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-map-location-dot"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">請輸入送達地址或點選熱門區域</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動依門市地址與真實距離推薦最近 3 家門市</div></div>';
-                return;
-            }
-
-            const analysis = getSmartStoreRecommendations(addressStr);
+        function generateSmartStoreCardsHtml(analysis, isMainView) {
             const { parsed, top3Stores, alternatives } = analysis;
-
-            if (!top3Stores || top3Stores.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-circle-question"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">查無匹配的門市資訊</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入完整縣市與行政區（如：台南市東區 或 屏東縣屏東市）</div></div>';
-                return;
-            }
+            if (!top3Stores || top3Stores.length === 0) return '';
 
             let html = '';
-
-            // Header summary
             const destDisplay = (parsed.city || '') + (parsed.district || '') + (parsed.cleanDist && !parsed.district ? parsed.cleanDist : '');
+            
+            html += '<div style="margin-bottom:14px;">';
             html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 2px;">';
             html += '<div style="font-size:12px; font-weight:700; color:var(--label); display:flex; align-items:center; gap:5px;"><i class="fas fa-location-crosshairs" style="color:var(--blue);"></i> 推薦最近 3 家出貨門市</div>';
             if (destDisplay) {
@@ -9218,7 +9258,6 @@
             }
             html += '</div>';
 
-            // Render Top 3 Stores
             const medals = [
                 { rank: '👑 第 1 最近（首選）', bg: 'rgba(30,58,138,0.04)', border: 'rgba(30,58,138,0.3)', badgeBg: 'rgba(30,58,138,0.12)', badgeColor: 'var(--blue)' },
                 { rank: '🥈 第 2 最近門市', bg: 'rgba(0,0,0,0.01)', border: 'var(--separator)', badgeBg: 'var(--fill-secondary)', badgeColor: 'var(--label-secondary)' },
@@ -9241,7 +9280,7 @@
 
                 const distLabel = item.distKm !== null ? `直線距離 ${item.distKm} km` : '同縣市門市';
 
-                html += '<div class="store-card" style="border:1px solid ' + conf.border + '; background:var(--card); box-shadow:0 3px 12px rgba(0,0,0,0.04); margin-bottom:12px;">';
+                html += '<div class="store-card" style="border:1px solid ' + conf.border + '; background:var(--card); box-shadow:0 3px 12px rgba(0,0,0,0.04); margin-bottom:10px;">';
                 
                 // Card Header
                 html += '<div class="store-card-header" style="background:' + conf.bg + '; padding:10px 14px;">';
@@ -9251,7 +9290,7 @@
                 if (item.isLocalStore) html += '<span style="font-size:10px; font-weight:700; padding:1px 6px; border-radius:4px; background:rgba(77,122,82,0.12); color:var(--green);">同區在地</span>';
                 html += '</div>';
                 html += '<div style="display:flex; align-items:baseline; gap:6px; margin-top:3px;">';
-                html += '<span style="font-size:16px; font-weight:700; color:var(--label);">' + escapeHtml(storeName) + '</span>';
+                html += '<span style="font-size:15px; font-weight:700; color:var(--label);">' + escapeHtml(storeName) + '</span>';
                 if (storeCode) html += '<span class="store-badge-code">代碼 ' + escapeHtml(storeCode) + '</span>';
                 html += '</div>';
                 html += '</div>';
@@ -9276,17 +9315,18 @@
                 // Action Toolbar
                 html += '<div style="padding:8px 14px 12px; display:flex; gap:8px;">';
                 if (storePhone) {
-                    html += '<a href="tel:' + cleanPhone + '" class="active-scale" style="flex:1; padding:8px; border-radius:10px; background:var(--blue); color:#fff; text-decoration:none; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:4px;">';
+                    html += '<a href="tel:' + cleanPhone + '" class="active-scale" style="flex:1; padding:7px; border-radius:10px; background:var(--blue); color:#fff; text-decoration:none; font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:4px;">';
                     html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
                     html += '<span>撥打電話</span>';
                     html += '</a>';
                 }
-                html += '<button type="button" onclick="copySmartDispatchNote(\'' + escapeHtml(storeName) + '\', \'' + escapeHtml(storeCode) + '\', \'' + escapeHtml(storePhone.split('\n')[0]) + '\', \'' + escapeHtml(storeAddress) + '\', \'' + escapeHtml(parsed.raw) + '\', \'' + (item.distKm !== null ? item.distKm : '') + '\')" class="active-scale" style="flex:1; padding:8px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">';
+                const firstPhone = storePhone ? storePhone.split('\n')[0] : '';
+                html += '<button type="button" onclick="copySmartDispatchNote(\'' + escapeJsAttr(storeName) + '\', \'' + escapeJsAttr(storeCode) + '\', \'' + escapeJsAttr(firstPhone) + '\', \'' + escapeJsAttr(storeAddress) + '\', \'' + escapeJsAttr(parsed.raw) + '\', \'' + (item.distKm !== null ? item.distKm : '') + '\')" class="active-scale" style="flex:1; padding:7px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">';
                 html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>';
                 html += '<span>複製派工</span>';
                 html += '</button>';
                 if (storeAddress) {
-                    html += '<a href="https://maps.apple.com/?q=' + encodeURIComponent(storeAddress) + '" target="_blank" class="active-scale" style="padding:8px 12px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); text-decoration:none; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center;" title="在地圖中查看">';
+                    html += '<a href="https://maps.apple.com/?q=' + encodeURIComponent(storeAddress) + '" target="_blank" class="active-scale" style="padding:7px 11px; border-radius:10px; background:var(--fill-secondary); color:var(--label); border:0.5px solid var(--separator); text-decoration:none; font-size:11.5px; font-weight:600; display:flex; align-items:center; justify-content:center;" title="在地圖中查看">';
                     html += '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>';
                     html += '</a>';
                 }
@@ -9295,10 +9335,9 @@
                 html += '</div>';
             });
 
-            // Collapsible Additional Stores (第 4~7 名)
             if (alternatives && alternatives.length > 0) {
                 const otherList = alternatives.slice(0, 4);
-                html += '<div style="margin-top:14px;">';
+                html += '<div style="margin-top:10px; margin-bottom:12px;">';
                 html += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-bottom:6px;">🚚 其他鄰近門市</div>';
                 html += '<div class="rounded-xl overflow-hidden" style="border:0.5px solid var(--separator); background:var(--card);">';
                 otherList.forEach((alt, idx) => {
@@ -9308,14 +9347,14 @@
                     const cleanAltPhone = altPhone.replace(/[^0-9+]/g, '');
                     const altDist = alt.distKm !== null ? `距離 ${alt.distKm} km` : '鄰近門市';
 
-                    html += '<div style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center; ' + (idx > 0 ? 'border-top:0.5px solid var(--separator);' : '') + '">';
+                    html += '<div style="padding:8px 12px; display:flex; justify-content:space-between; align-items:center; ' + (idx > 0 ? 'border-top:0.5px solid var(--separator);' : '') + '">';
                     html += '<div>';
-                    html += '<div style="font-size:13.5px; font-weight:600; color:var(--label);">' + escapeHtml(altName) + ' <span class="store-badge-code">' + escapeHtml(altC['代碼'] || '') + '</span></div>';
+                    html += '<div style="font-size:13px; font-weight:600; color:var(--label);">' + escapeHtml(altName) + ' <span class="store-badge-code">' + escapeHtml(altC['代碼'] || '') + '</span></div>';
                     html += '<div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;">' + escapeHtml(altDist) + ' · ' + escapeHtml(altC['地址'] || '') + '</div>';
                     html += '</div>';
                     html += '<div style="display:flex; align-items:center; gap:8px;">';
                     if (altPhone) {
-                        html += '<a href="tel:' + cleanAltPhone + '" class="store-btn-call active-scale" style="padding:4px 10px; font-size:11px;">';
+                        html += '<a href="tel:' + cleanAltPhone + '" class="store-btn-call active-scale" style="padding:4px 8px; font-size:11px;">';
                         html += '<span>撥打</span>';
                         html += '</a>';
                     }
@@ -9325,6 +9364,27 @@
                 html += '</div>';
                 html += '</div>';
             }
+
+            html += '</div>';
+            return html;
+        }
+
+        function renderSmartStoreResults(addressStr) {
+            const container = document.getElementById('smartResultsZone');
+            if (!container) return;
+
+            if (!addressStr || !addressStr.trim()) {
+                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-map-location-dot"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">請輸入送達地址或點選熱門區域</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動依門市地址與真實距離推薦最近 3 家門市</div></div>';
+                return;
+            }
+
+            const analysis = getSmartStoreRecommendations(addressStr);
+            if (!analysis.top3Stores || analysis.top3Stores.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:28px 16px; color:var(--label-tertiary);"><div style="font-size:24px; margin-bottom:6px; opacity:0.6;"><i class="fas fa-circle-question"></i></div><div style="font-size:13px; font-weight:600; color:var(--label);">查無匹配的門市資訊</div><div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">可嘗試輸入完整縣市與行政區（如：台南市東區 或 屏東縣屏東市）</div></div>';
+                return;
+            }
+
+            container.innerHTML = generateSmartStoreCardsHtml(analysis, false);
         }
 
         function initStoreDirectoryEngine() {
@@ -9552,35 +9612,11 @@
 
             let html = '';
 
-            // Check Smart Store Dispatch Recommendation for current query
+            // Check Smart Store Dispatch Recommendation for current query (Render Top 3 Directly!)
             if (q && q.length >= 2) {
                 const smartAnalysis = getSmartStoreRecommendations(q);
-                if (smartAnalysis && smartAnalysis.topStore && (smartAnalysis.parsed.cleanDist || smartAnalysis.parsed.city)) {
-                    const topC = smartAnalysis.topStore.contact;
-                    const topName = topC['店名'] || '門市';
-                    const topCode = topC['代碼'] || '';
-                    const topPhone = topC['電話'] || '';
-                    const cleanTopPhone = topPhone.replace(/[^0-9+]/g, '');
-                    
-                    html += '<div style="background:rgba(30,58,138,0.05); border:1px solid rgba(30,58,138,0.2); border-radius:14px; padding:12px 14px; margin-bottom:12px;">';
-                    html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">';
-                    html += '<span style="font-size:11px; font-weight:700; color:var(--blue); display:inline-flex; align-items:center; gap:4px;"><i class="fas fa-compass"></i> 智慧選店推薦：' + escapeHtml(topName) + (topCode ? ' (' + escapeHtml(topCode) + ')' : '') + '</span>';
-                    html += '<span class="store-fee-pill ' + (smartAnalysis.topStore.isLocalStore ? 'free' : 'paid') + '">' + escapeHtml(smartAnalysis.topStore.feeRaw) + '</span>';
-                    html += '</div>';
-                    html += '<div style="font-size:11.5px; color:var(--label-secondary); margin-bottom:8px; line-height:1.4;">';
-                    html += '目的地 ' + escapeHtml(smartAnalysis.parsed.city + smartAnalysis.parsed.district) + ' · ' + (smartAnalysis.topStore.isLocalStore ? '同行政區直出最快' : '外送支援門市');
-                    html += '</div>';
-                    html += '<div style="display:flex; gap:6px;">';
-                    if (topPhone) {
-                        html += '<a href="tel:' + cleanTopPhone + '" class="store-btn-call active-scale" style="flex:1; justify-content:center; padding:5px 8px; font-size:11px;">';
-                        html += '<i class="fas fa-phone" style="font-size:9.5px;"></i> 致電門市';
-                        html += '</a>';
-                    }
-                    html += '<button type="button" onclick="openSmartStoreModal(\'' + escapeHtml(q) + '\')" class="active-scale" style="flex:1; background:var(--card); border:0.5px solid var(--separator); border-radius:8px; font-size:11px; font-weight:600; color:var(--label); cursor:pointer; padding:5px 8px; display:flex; align-items:center; justify-content:center; gap:4px;">';
-                    html += '<i class="fas fa-arrow-up-right-from-square" style="font-size:9.5px;"></i> 完整選店分析';
-                    html += '</button>';
-                    html += '</div>';
-                    html += '</div>';
+                if (smartAnalysis && smartAnalysis.top3Stores && smartAnalysis.top3Stores.length > 0 && (smartAnalysis.parsed.cleanDist || smartAnalysis.parsed.city || smartAnalysis.parsed.loc)) {
+                    html += generateSmartStoreCardsHtml(smartAnalysis, true);
                 }
             }
 
