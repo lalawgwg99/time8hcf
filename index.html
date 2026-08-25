@@ -9076,13 +9076,7 @@
                 const isSameCity = (parsed.city && storeAddress.includes(parsed.city.slice(0, 2))) || (destLoc && storeLoc && destLoc.city && storeLoc.city && destLoc.city.slice(0, 2) === storeLoc.city.slice(0, 2));
 
                 // Primary sort: Pure physical GPS distance (distKm)
-                let sortScore = 999;
-                if (distKm !== null) {
-                    sortScore = distKm;
-                    if (isLocalStore) sortScore = distKm * 0.1;
-                } else if (isSameCity) {
-                    sortScore = 50; // Prioritize same-city stores even without full street GPS
-                }
+                let sortScore = (distKm !== null ? distKm : (isSameCity ? 500 : 999));
 
                 let feeDisplayText = '';
                 if (isLocalStore) {
