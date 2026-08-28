@@ -4318,20 +4318,43 @@
             <!-- ===== TAB: 洞察 ===== -->
             <section id="tabInsights" class="tab-panel">
 
-                <!-- News Digest (即時新聞 · Apple 專題晨報) -->
+                <!-- News Digest (即時新聞 · Apple 專題晨報 · 24H 直播) -->
                 <div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                         <div class="editorial-label" style="margin:0; display:flex; align-items:center; gap:6px;">
                             <span>即時新聞</span>
                             <span id="newsCategoryBadge" style="font-size:10px; font-weight:600; color:var(--blue); background:rgba(30,58,138,0.08); padding:1px 6px; border-radius:999px;">焦點</span>
                         </div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span id="newsUpdatedTime" style="font-size:10.5px; color:var(--label-tertiary);">剛剛更新</span>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <!-- 24H 直播膠囊按鈕 -->
+                            <button type="button" onclick="toggleLiveNewsStream()" id="newsLiveStreamBtn" class="active-scale" title="收看 24H 電視新聞直播"
+                                style="font-size:11px; color:#E02424; font-weight:600; background:rgba(224,36,36,0.08); border:0.5px solid rgba(224,36,36,0.22); border-radius:999px; padding:3px 9px; cursor:pointer; display:flex; align-items:center; gap:5px; font-family:inherit;">
+                                <span style="width:6px; height:6px; border-radius:50%; background:#E02424; box-shadow:0 0 6px rgba(224,36,36,0.6); animation:liveDotPulse 1.5s infinite;"></span>
+                                <span>24H 直播</span>
+                            </button>
+                            <span id="newsUpdatedTime" style="font-size:10px; color:var(--label-tertiary); margin-left:2px;">剛剛更新</span>
                             <button onclick="fetchNews(true)" id="newsRefreshBtn" class="active-scale" title="刷新即時新聞"
-                                style="font-size:11px; color:var(--label-secondary); font-weight:500; background:var(--fill); border:0.5px solid var(--separator); border-radius:999px; padding:3px 9px; cursor:pointer; letter-spacing:0.02em; display:flex; align-items:center; gap:4px; font-family:inherit;">
+                                style="font-size:11px; color:var(--label-secondary); font-weight:500; background:var(--fill); border:0.5px solid var(--separator); border-radius:999px; padding:3px 8px; cursor:pointer; letter-spacing:0.02em; display:flex; align-items:center; gap:4px; font-family:inherit;">
                                 <i class="fas fa-rotate" id="newsSyncIcon" style="font-size:9.5px;"></i>
                                 <span>更新</span>
                             </button>
+                        </div>
+                    </div>
+
+                    <!-- 折疊式 16:9 新聞電視直播視窗 (Lazy Loaded) -->
+                    <div id="liveStreamWrapper" class="hidden" style="margin-bottom:12px; border-radius:14px; overflow:hidden; background:var(--card); border:0.5px solid var(--separator); box-shadow:0 2px 10px rgba(0,0,0,0.04); transition:all 0.3s ease;">
+                        <div style="padding:8px 14px; display:flex; justify-content:space-between; align-items:center; background:var(--fill); border-bottom:0.5px solid var(--separator);">
+                            <div style="display:flex; align-items:center; gap:7px; font-size:12px; font-weight:600; color:var(--label);">
+                                <span style="width:6px; height:6px; border-radius:50%; background:#E02424; animation:liveDotPulse 1.5s infinite;"></span>
+                                <span>TVBS 新聞台 · 24H 線上直播</span>
+                            </div>
+                            <button type="button" onclick="toggleLiveNewsStream(false)" class="active-scale" style="background:none; border:none; color:var(--label-tertiary); font-size:12px; cursor:pointer; padding:2px 6px; font-family:inherit; display:flex; align-items:center; gap:4px;">
+                                <i class="fas fa-xmark"></i>
+                                <span>收起</span>
+                            </button>
+                        </div>
+                        <div style="position:relative; width:100%; padding-top:56.25%; background:#000;">
+                            <div id="liveIframeContainer" style="position:absolute; inset:0; width:100%; height:100%;"></div>
                         </div>
                     </div>
 
@@ -13159,6 +13182,41 @@
                 expandBtn.classList.add('hidden');
             }
         }
+        // --- 24H 電視新聞直播 (TVBS 24H Live Stream) ---
+        let _isLiveStreamOpen = false;
+        const LIVE_STREAM_VIDEO_ID = 'm_dhMSvUCIc';
+
+        function toggleLiveNewsStream(forceState) {
+            _isLiveStreamOpen = (typeof forceState === 'boolean') ? forceState : !_isLiveStreamOpen;
+            const wrapper = document.getElementById('liveStreamWrapper');
+            const container = document.getElementById('liveIframeContainer');
+            const btn = document.getElementById('newsLiveStreamBtn');
+
+            if ('vibrate' in navigator) navigator.vibrate(12);
+
+            if (_isLiveStreamOpen) {
+                if (wrapper) wrapper.classList.remove('hidden');
+                if (container) {
+                    container.innerHTML = `
+                        <iframe 
+                            src="https://www.youtube-nocookie.com/embed/${LIVE_STREAM_VIDEO_ID}?autoplay=1&playsinline=1&rel=0&modestbranding=1" 
+                            title="TVBS 新聞台 24H 線上直播" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen
+                            style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
+                        </iframe>
+                    `;
+                }
+                if (btn) btn.style.background = 'rgba(224,36,36,0.18)';
+            } else {
+                if (wrapper) wrapper.classList.add('hidden');
+                if (container) container.innerHTML = ''; // 徹底銷毀 iframe，立刻靜音並釋放記憶體
+                if (btn) btn.style.background = 'rgba(224,36,36,0.08)';
+            }
+        }
+        window.toggleLiveNewsStream = toggleLiveNewsStream;
+
         window.switchNewsCategory = switchNewsCategory;
         window.toggleNewsExpanded = toggleNewsExpanded;
         window.fetchNews = fetchNews;
