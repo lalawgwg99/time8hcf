@@ -4275,17 +4275,21 @@
     <div style="max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;"
         id="app">
 
-        <!-- Header: Minimal Editorial -->
+        <!-- Header: Minimal Editorial (方案 B: 個人中心與主題一體化) -->
         <header id="appHeader">
             <div class="header-inner">
                 <button type="button" class="header-date-btn" id="currentDateBtn" onclick="openCalendarModal()" title="點擊開啟出勤與排休日曆">
                     <span class="header-date" id="currentDate"><script>(function(){var d=new Date(),w=['週日','週一','週二','週三','週四','週五','週六'];document.write(w[d.getDay()]+' · '+(d.getMonth()+1)+'月'+d.getDate()+'日');})();</script></span>
                     <i class="far fa-calendar-days" style="font-size:11.5px; color:var(--label-tertiary); margin-left:3px; opacity:0.8;"></i>
                 </button>
-                <span class="header-brand" id="headerBrandBtn" onclick="openThemePicker()" title="點擊切換色彩主題">
-                    <span>TIME 8</span>
-                    <span style="font-size:8px; opacity:0.6;">✦</span>
-                </span>
+                <button type="button" id="userProfileBtn" onclick="openUserProfileModal()" title="個人檔案與主題設定" class="active-scale"
+                    style="display:flex; align-items:center; gap:7px; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:999px; padding:3px 10px 3px 4px; cursor:pointer; font-family:inherit;">
+                    <div id="headerAvatarContainer" style="width:26px; height:26px; border-radius:50%; overflow:hidden; background:var(--purple); display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-size:11px; font-weight:700; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.1);">
+                        <span id="headerAvatarInitial">T8</span>
+                    </div>
+                    <span id="headerUserName" style="font-size:12px; font-weight:600; color:var(--label); letter-spacing:0.02em; max-width:85px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">TIME 8</span>
+                    <i class="fas fa-sliders" style="font-size:9.5px; color:var(--label-tertiary); opacity:0.75;"></i>
+                </button>
             </div>
         </header>
 
@@ -11167,7 +11171,11 @@
             const now = new Date();
             const dateStr = now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0');
 
+            const userProf = typeof getUserProfile === 'function' ? getUserProfile() : { name: '', store: '' };
+            const reporterInfo = (userProf.store || userProf.name) ? `銷售人員：${userProf.store ? userProf.store + ' ' : ''}${userProf.name || ''}\n` : '';
+
             let text = '【T8 家電台獎銷售回報】\n' +
+                reporterInfo +
                 '日期：' + dateStr + '\n' +
                 '售出數量：共 ' + totalCount + ' 件\n' +
                 '台獎總額：$ ' + totalAmount.toLocaleString() + ' 元\n' +
@@ -12856,7 +12864,194 @@
             }
         };
 
+
+        // =============================================
+        // USER PROFILE & THEME CENTRAL ENGINE (個人檔案與主題整合)
+        // =============================================
+        const USER_PROFILE_STORAGE_KEY = 't8_user_profile_v1';
+
+        function getUserProfile() {
+            try {
+                const raw = localStorage.getItem(USER_PROFILE_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : { name: '', store: '', avatarPhoto: null };
+            } catch (e) {
+                return { name: '', store: '', avatarPhoto: null };
+            }
+        }
+
+        function saveUserProfile(profile) {
+            try {
+                localStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(profile));
+            } catch (e) {}
+        }
+
+        let _tempAvatarPhoto = null;
+
+        function openUserProfileModal() {
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            if (typeof playSingleClickSound === 'function') playSingleClickSound("G4");
+
+            const profile = getUserProfile();
+            _tempAvatarPhoto = profile.avatarPhoto || null;
+
+            const nameInput = document.getElementById('userProfileNameInput');
+            if (nameInput) nameInput.value = profile.name || '';
+
+            const storeInput = document.getElementById('userProfileStoreInput');
+            if (storeInput) storeInput.value = profile.store || '';
+
+            updateModalAvatarDisplay(_tempAvatarPhoto, profile.name || 'TIME 8');
+
+            const currentTheme = appSettings.zenTheme || 'alabaster';
+            updateThemePickerUI(currentTheme);
+
+            const modal = document.getElementById('userProfileModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeUserProfileModal() {
+            const modal = document.getElementById('userProfileModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
         function openThemePicker() {
+            openUserProfileModal();
+        }
+
+        function closeThemePicker() {
+            closeUserProfileModal();
+        }
+
+        function previewUserProfileName(e) {
+            const val = e ? e.target.value.trim() : '';
+            if (!_tempAvatarPhoto) {
+                const initial = val ? val.slice(0, 2).toUpperCase() : 'T8';
+                const modalInit = document.getElementById('modalAvatarInitial');
+                if (modalInit) modalInit.textContent = initial;
+            }
+        }
+
+        function handleUserAvatarUpload(e) {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                if (typeof showToast === 'function') showToast('相片檔案較大，請選擇小於 5MB 的圖片');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                // Compress/resize image with canvas for fast loading
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxDim = 240;
+                    let w = img.width;
+                    let h = img.height;
+                    if (w > h) {
+                        if (w > maxDim) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+                    } else {
+                        if (h > maxDim) { w = Math.round(w * (maxDim / h)); h = maxDim; }
+                    }
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    const compressed = canvas.toDataURL('image/jpeg', 0.85);
+                    _tempAvatarPhoto = compressed;
+                    updateModalAvatarDisplay(_tempAvatarPhoto, '');
+                    if (typeof showToast === 'function') showToast('📷 相片已載入，點擊「完成並儲存」套用');
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetUserAvatarToInitial() {
+            _tempAvatarPhoto = null;
+            const nameInput = document.getElementById('userProfileNameInput');
+            const name = nameInput ? nameInput.value.trim() : '';
+            updateModalAvatarDisplay(null, name);
+            if (typeof showToast === 'function') showToast('已重設為預設頭像');
+        }
+
+        function updateModalAvatarDisplay(photoUrl, name) {
+            const container = document.getElementById('modalAvatarPreview');
+            if (!container) return;
+            if (photoUrl) {
+                container.innerHTML = `<img src="${photoUrl}" alt="Avatar" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />`;
+            } else {
+                const initial = name && name.trim() ? name.trim().slice(0, 2).toUpperCase() : 'T8';
+                container.innerHTML = `<span id="modalAvatarInitial">${escapeHtml(initial)}</span>`;
+            }
+        }
+
+        function saveUserProfileSettings() {
+            const nameInput = document.getElementById('userProfileNameInput');
+            const storeInput = document.getElementById('userProfileStoreInput');
+
+            const name = nameInput ? nameInput.value.trim() : '';
+            const store = storeInput ? storeInput.value.trim() : '';
+
+            const profile = {
+                name: name,
+                store: store,
+                avatarPhoto: _tempAvatarPhoto
+            };
+
+            saveUserProfile(profile);
+            syncUserProfileToUI();
+
+            closeUserProfileModal();
+            if ('vibrate' in navigator) navigator.vibrate([15, 30]);
+            if (typeof showToast === 'function') {
+                showToast(`✦ 個人檔案已儲存${name ? '，歡迎 ' + name : ''}！`);
+            }
+        }
+
+        function syncUserProfileToUI() {
+            const profile = getUserProfile();
+            const headerAvatar = document.getElementById('headerAvatarContainer');
+            const headerName = document.getElementById('headerUserName');
+
+            if (headerName) {
+                headerName.textContent = profile.name || 'TIME 8';
+            }
+
+            if (headerAvatar) {
+                if (profile.avatarPhoto) {
+                    headerAvatar.innerHTML = `<img src="${profile.avatarPhoto}" alt="Avatar" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />`;
+                } else {
+                    const initial = profile.name && profile.name.trim() ? profile.name.trim().slice(0, 2).toUpperCase() : 'T8';
+                    headerAvatar.innerHTML = `<span id="headerAvatarInitial">${escapeHtml(initial)}</span>`;
+                }
+            }
+        }
+
+        // Export to window
+        window.openUserProfileModal = openUserProfileModal;
+        window.closeUserProfileModal = closeUserProfileModal;
+        window.saveUserProfileSettings = saveUserProfileSettings;
+        window.handleUserAvatarUpload = handleUserAvatarUpload;
+        window.resetUserAvatarToInitial = resetUserAvatarToInitial;
+        window.previewUserProfileName = previewUserProfileName;
+        window.syncUserProfileToUI = syncUserProfileToUI;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            syncUserProfileToUI();
+        });
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            syncUserProfileToUI();
+        }
+
+        function openThemePicker_old() {
             if ('vibrate' in navigator) navigator.vibrate(10);
             playSingleClickSound("G4");
 
