@@ -3328,6 +3328,201 @@
             50% { transform: translateY(-4px) scale(1.02); }
         }
 
+        /* --- Live State Resonance Styles --- */
+        .partner-art.pet-state-working {
+            filter: drop-shadow(0 10px 24px rgba(122, 90, 138, 0.22));
+        }
+        .partner-art.pet-state-working .pet-vector-svg {
+            filter: drop-shadow(0 0 12px rgba(122, 90, 138, 0.35));
+        }
+        .partner-art.pet-state-completed {
+            filter: drop-shadow(0 0 18px rgba(217, 138, 22, 0.4)) drop-shadow(0 10px 24px rgba(63, 131, 84, 0.25));
+        }
+        .partner-art.pet-state-completed::after {
+            content: "✦";
+            position: absolute;
+            top: -4px;
+            right: 14px;
+            font-size: 16px;
+            color: #FFD700;
+            filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.85));
+            animation: starPulse 2.4s ease-in-out infinite;
+        }
+
+        /* --- 7-Day Constellation SVG Track Nodes --- */
+        .orbital-node-label {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            font-size: 9.5px;
+            font-weight: 600;
+            text-anchor: middle;
+            dominant-baseline: central;
+            fill: var(--label-tertiary);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .orbital-node-label.active {
+            fill: var(--purple);
+            font-weight: 700;
+        }
+        .orbital-node-label.completed {
+            fill: #3D8254;
+            font-weight: 700;
+        }
+
+        .constellation-bead {
+            filter: drop-shadow(0 0 3px rgba(122, 90, 138, 0.5));
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .constellation-bead.completed {
+            filter: drop-shadow(0 0 7px rgba(61, 130, 84, 0.85));
+        }
+        .constellation-bead.pulse-today {
+            animation: beadPulse 2s ease-in-out infinite;
+        }
+        @keyframes beadPulse {
+            0%, 100% { r: 4.8; opacity: 0.85; filter: drop-shadow(0 0 4px rgba(122, 90, 138, 0.6)); }
+            50% { r: 6.2; opacity: 1; filter: drop-shadow(0 0 9px rgba(122, 90, 138, 1)); }
+        }
+
+        /* --- 7-Day Streak & Live Activity Card Styles --- */
+        .partner-streak-card {
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            box-shadow: var(--shadow-card);
+            margin-top: 14px;
+            transition: all 0.3s ease;
+        }
+        .streak-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .streak-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--label);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .streak-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(61, 130, 84, 0.1);
+            color: #2F693F;
+            border: 0.5px solid rgba(61, 130, 84, 0.2);
+        }
+        .streak-days-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 2px 2px;
+        }
+        .streak-day-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .streak-bead-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11.5px;
+            background: var(--fill-secondary);
+            color: var(--label-tertiary);
+            border: 0.5px solid var(--separator);
+            transition: all 0.3s ease;
+        }
+        .streak-bead-icon.completed {
+            background: linear-gradient(135deg, #E2F5E9, #78C291);
+            color: #1D4A2B;
+            border: 0.5px solid rgba(61, 130, 84, 0.35);
+            box-shadow: 0 2px 6px rgba(61, 130, 84, 0.22);
+        }
+        .streak-bead-icon.today-active {
+            background: rgba(122, 90, 138, 0.14);
+            color: var(--purple);
+            border: 1px solid var(--purple);
+            box-shadow: 0 0 8px rgba(122, 90, 138, 0.3);
+        }
+        .streak-day-label {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--label-tertiary);
+        }
+        .streak-day-hours {
+            font-size: 9px;
+            color: var(--label-tertiary);
+            font-weight: 500;
+        }
+
+        /* --- iOS Live Activity / Widget Glance Card --- */
+        .partner-widget-glance {
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            box-shadow: var(--shadow-card);
+            margin-top: 14px;
+        }
+        .glance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .glance-pill {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--label-tertiary);
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .glance-body {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 0 2px;
+        }
+        .glance-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--fill-secondary);
+            border: 0.5px solid var(--separator);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .glance-progress-track {
+            height: 6px;
+            border-radius: 999px;
+            background: var(--fill-secondary);
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .glance-progress-bar {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #78C291, #3D8254);
+            transition: width 0.4s ease;
+        }
+
         .pet-layer {
             position: absolute;
             left: 50%;
@@ -5938,21 +6133,88 @@
             );
 
             const isWorking = (typeof punchRecords !== 'undefined' && punchRecords.length > 0 && punchRecords.length % 2 === 1);
+            const todayMins = typeof getDayTotalMinutes === 'function' ? getDayTotalMinutes(typeof getTodayKey === 'function' ? getTodayKey() : '') : 0;
+            const targetMin = typeof getTargetMinutes === 'function' ? getTargetMinutes() : 480;
+            const isTargetMet = todayMins >= targetMin;
+
+            const liveStateClass = isTargetMet ? 'pet-state-completed' : (isWorking ? 'pet-state-working' : 'pet-state-resting');
             const art = document.createElement('div');
             const seriesClass = pet?.series ? `series-${pet.series}` : 'series-crystal';
             const rarityClass = pet?.rarity ? `rarity-${pet.rarity}` : 'rarity-common';
-            art.className = `partner-art ${seriesClass} ${rarityClass}`;
+            art.className = `partner-art ${seriesClass} ${rarityClass} ${liveStateClass}`;
             art.setAttribute('onclick', 'window.onPetClick(event)');
             art.style.cursor = 'pointer';
             art.title = '輕觸夥伴互動';
-            art.innerHTML = getPetSVG(specId, { isWorking });
+            art.innerHTML = getPetSVG(specId, { isWorking, isTargetMet });
             container.appendChild(art);
         }
         root.getPetSVG = getPetSVG;
         root.renderPet = renderPet;
     })(window);
 
-    // ===== PET TAP INTERACTION =====
+    // ===== 7-DAY CONSTELLATION STREAK & LIVE ACTIVITY HELPER =====
+    function getWeeklyStreakData() {
+        const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+        const today = new Date();
+        const currentDay = today.getDay(); // 0: Sun, 1: Mon...
+        const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + mondayOffset);
+
+        const daysOfWeek = ['一', '二', '三', '四', '五', '六', '日'];
+        const weekDays = [];
+        let streakCount = 0;
+        let totalCompleted = 0;
+        const targetMin = typeof getTargetMinutes === 'function' ? getTargetMinutes() : 480;
+        const todayKey = typeof getTodayKey === 'function' ? getTodayKey() : '';
+
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(monday);
+            d.setDate(monday.getDate() + i);
+            const dateKey = typeof getLocalDateStr === 'function' ? getLocalDateStr(d) : `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            
+            let mins = 0;
+            if (typeof getDayTotalMinutes === 'function') {
+                mins = getDayTotalMinutes(dateKey);
+            } else {
+                const records = history[dateKey] || [];
+                for (let j = 0; j < records.length; j += 2) {
+                    if (records[j] && records[j].type === 'in') {
+                        const start = new Date(records[j].time);
+                        const end = (records[j+1] && records[j+1].type === 'out') ? new Date(records[j+1].time) : new Date();
+                        mins += (end - start) / 60000;
+                    }
+                }
+            }
+
+            const isCompleted = mins >= targetMin;
+            const isToday = (dateKey === todayKey);
+            const isPast = d < today && !isToday;
+            const isFuture = d > today && !isToday;
+
+            if (isCompleted) {
+                streakCount++;
+                totalCompleted++;
+            }
+
+            weekDays.push({
+                dayIndex: i,
+                label: daysOfWeek[i],
+                dateKey,
+                mins: Math.round(mins),
+                hours: (mins / 60).toFixed(1),
+                isCompleted,
+                isToday,
+                isPast,
+                isFuture
+            });
+        }
+
+        return { weekDays, streakCount, totalCompleted, targetMin };
+    }
+    window.getWeeklyStreakData = getWeeklyStreakData;
+
+    // ===== PET TAP INTERACTION WITH STATE RESONANCE =====
     function onPetClick(event) {
         if (typeof playSingleClickSound === 'function') playSingleClickSound("E5");
         const container = document.getElementById('partnerPetArt') || (event && event.currentTarget);
@@ -5961,21 +6223,57 @@
             void container.offsetWidth;
             container.classList.add('pet-bounce-interact');
             if (typeof spawnParticles === 'function') {
-                spawnParticles(container, ['✨', '💫', '💖', '⭐', '🎵']);
+                spawnParticles(container, ['✨', '💫', '💖', '⭐', '🌿']);
             }
         }
         const isWorking = (typeof punchRecords !== 'undefined' && punchRecords.length > 0 && punchRecords.length % 2 === 1);
-        const msgs = isWorking ? [
-            "正在陪你專注工作中 ✦",
-            "保持穩定的工作步調 ☕",
-            "專注的你最閃耀 ✨",
-            "深呼吸，維持節奏 🌿"
-        ] : [
-            "隨時準備陪你開始工作 ✨",
-            "喝口水，放鬆一下 🍵",
-            "今天也一起加油！ ✦",
-            "享受屬於自己的放鬆時光 🍃"
-        ];
+        const todayMins = typeof getDayTotalMinutes === 'function' ? getDayTotalMinutes(typeof getTodayKey === 'function' ? getTodayKey() : '') : 0;
+        const hours = (todayMins / 60).toFixed(1);
+
+        let msgs = [];
+        if (isWorking) {
+            if (todayMins < 120) {
+                msgs = [
+                    "今日專注啟程，深呼吸維持好節奏 🌿",
+                    "保持穩定的工作步調，我會一直陪著你 ✦",
+                    "晨曦微光，今天也一起踏實前進 ✨"
+                ];
+            } else if (todayMins < 300) {
+                msgs = [
+                    `已經持續專注 ${hours} 小時囉！適度遠眺、喝口溫水 ☕`,
+                    "專注中的你最耀眼，記得轉動脖子放鬆肩頸 💫",
+                    "保持節奏，中段衝刺平穩前進 ✦"
+                ];
+            } else if (todayMins < 480) {
+                const remain = Math.max(1, Math.ceil(480 - todayMins));
+                msgs = [
+                    `今日工時已累積 ${hours}h！再 ${remain} 分鐘即可點亮今日星宿 ✨`,
+                    "堅持的結晶正在發光，即將達成 8 小時標準工時 ✦",
+                    "最後階段，深呼吸、穩穩收尾 🌿"
+                ];
+            } else {
+                msgs = [
+                    "🎉 今日 8 小時標準工時已圓滿達成！辛苦了，隨時可以準備下班 👑",
+                    "今日星宿結晶已成功點亮！好好享受屬於自己的下班時光 🍃",
+                    "太棒了！今日工時圓滿閉環，為你的專注喝采 ✦"
+                ];
+            }
+        } else {
+            if (todayMins >= 480) {
+                msgs = [
+                    "今日 8 小時任務已圓滿，好好放鬆休息 🍵",
+                    "享受愜意夜晚，明天也一起加油 ✨",
+                    "深呼吸，今晚給自己一個大大的肯定 🍃"
+                ];
+            } else {
+                msgs = [
+                    "隨時準備陪你開啟高效專注的一天 ✨",
+                    "喝口水，放鬆一下 🍵",
+                    "今天也一起加油！ ✦",
+                    "享受屬於自己的放鬆時光 🍃"
+                ];
+            }
+        }
         const pick = msgs[Math.floor(Math.random() * msgs.length)];
         showToast(pick);
     }
@@ -6093,22 +6391,44 @@
             return `M ${start.x} ${start.y} A ${r} ${r} 0 ${arcSweep} 0 ${end.x} ${end.y}`;
         }
         function renderOrbitalHalo(progress, activePetData) {
-            const cx = 110, cy = 110, r = 94, totalSegments = HATCH_COST, step = 360 / totalSegments, gap = 6;
-            let pathsHtml = '', starNodeHtml = '';
+            const cx = 110, cy = 110, r = 94, totalSegments = 7, step = 360 / totalSegments, gap = 7;
+            let pathsHtml = '', nodesHtml = '', labelsHtml = '';
+            const streakInfo = getWeeklyStreakData();
+            const todayMins = typeof getDayTotalMinutes === 'function' ? getDayTotalMinutes(typeof getTodayKey === 'function' ? getTodayKey() : '') : 0;
+            const targetMin = streakInfo.targetMin || 480;
+
             for (let i = 0; i < totalSegments; i++) {
+                const dayData = streakInfo.weekDays[i] || { isCompleted: false, isToday: false, label: ['一','二','三','四','五','六','日'][i] };
                 const startAngle = -90 + (i * step) + (gap / 2);
                 const endAngle = -90 + ((i + 1) * step) - (gap / 2);
                 const d = describeArc(cx, cy, r, startAngle, endAngle);
-                if (i < progress) {
-                    pathsHtml += `<path d="${d}" class="orbital-active-segment" />`;
-                    if (i === progress - 1) {
-                        const nodePos = polarToCartesian(cx, cy, r, endAngle);
-                        starNodeHtml = `<circle class="orbital-star-node" cx="${nodePos.x}" cy="${nodePos.y}" r="4.5" />`;
+                
+                const nodePos = polarToCartesian(cx, cy, r, endAngle);
+                const labelPos = polarToCartesian(cx, cy, r + 13, (startAngle + endAngle) / 2);
+
+                if (dayData.isCompleted) {
+                    pathsHtml += `<path d="${d}" class="orbital-active-segment completed" stroke="url(#orbitalCompletedGradient)" />`;
+                    nodesHtml += `<circle class="constellation-bead completed" cx="${nodePos.x}" cy="${nodePos.y}" r="5.5" fill="#58A873" stroke="#FFFFFF" stroke-width="1.8" />`;
+                    labelsHtml += `<text x="${labelPos.x}" y="${labelPos.y}" class="orbital-node-label completed">${dayData.label}</text>`;
+                } else if (dayData.isToday) {
+                    const todayPct = Math.min(todayMins / targetMin, 1);
+                    if (todayPct > 0) {
+                        const liveEndAngle = startAngle + ((endAngle - startAngle) * todayPct);
+                        const liveArc = describeArc(cx, cy, r, startAngle, liveEndAngle);
+                        pathsHtml += `<path d="${d}" class="orbital-track-segment" />`;
+                        pathsHtml += `<path d="${liveArc}" class="orbital-active-segment" stroke="url(#orbitalGradient)" />`;
+                    } else {
+                        pathsHtml += `<path d="${d}" class="orbital-track-segment" />`;
                     }
+                    nodesHtml += `<circle class="constellation-bead pulse-today" cx="${nodePos.x}" cy="${nodePos.y}" r="5" fill="#FFFFFF" stroke="var(--purple)" stroke-width="2" />`;
+                    labelsHtml += `<text x="${labelPos.x}" y="${labelPos.y}" class="orbital-node-label active">${dayData.label}</text>`;
                 } else {
                     pathsHtml += `<path d="${d}" class="orbital-track-segment" />`;
+                    nodesHtml += `<circle class="constellation-bead" cx="${nodePos.x}" cy="${nodePos.y}" r="3.2" fill="var(--fill-secondary)" stroke="var(--separator)" stroke-width="1" />`;
+                    labelsHtml += `<text x="${labelPos.x}" y="${labelPos.y}" class="orbital-node-label">${dayData.label}</text>`;
                 }
             }
+
             const stage = eggProgressStage(progress);
             const centerVisualHtml = activePetData
                 ? `<div class="orbital-center-pet" id="partnerPetArt"></div>`
@@ -6129,32 +6449,17 @@
                                     <stop offset="70%" stop-color="#C5A6DC" />
                                     <stop offset="100%" stop-color="#9A78B4" />
                                 </linearGradient>
-                                <filter id="veinGlow" x="-20%" y="-20%" width="140%" height="140%">
-                                    <feGaussianBlur stdDeviation="1.4" result="blur" />
-                                    <feMerge>
-                                        <feMergeNode in="blur" />
-                                        <feMergeNode in="SourceGraphic" />
-                                    </feMerge>
-                                </filter>
                             </defs>
-                            <!-- Stage 1-2 -->
-                            <path class="vein-crack vein-1" d="M 52 28 L 56 46 L 49 60" stroke="url(#eggVeinGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
-                            <!-- Stage 3-4 -->
-                            <path class="vein-crack vein-2" d="M 49 60 L 60 78 L 51 96 L 57 112" stroke="url(#eggVeinGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
-                            <path class="vein-crack vein-3" d="M 56 46 L 68 54 L 76 50" stroke="url(#eggVeinGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
-                            <!-- Stage 5-6 -->
-                            <path class="vein-crack vein-4" d="M 49 60 L 36 68 L 27 63" stroke="url(#eggVeinGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
-                            <path class="vein-crack vein-5" d="M 60 78 L 72 85 L 78 98" stroke="url(#eggVeinGrad)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#veinGlow)" />
-                            <!-- Starlight Nodes -->
+                            <path class="vein-crack vein-1" d="M 52 28 L 56 46 L 49 60" stroke="url(#eggVeinGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path class="vein-crack vein-2" d="M 49 60 L 60 78 L 51 96 L 57 112" stroke="url(#eggVeinGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                             <circle class="vein-star star-1" cx="52" cy="28" r="2" fill="#FFF" />
                             <circle class="vein-star star-2" cx="56" cy="46" r="2.2" fill="#FFEBB3" />
-                            <circle class="vein-star star-3" cx="49" cy="60" r="2.6" fill="#FFF" />
-                            <circle class="vein-star star-4" cx="60" cy="78" r="2.2" fill="#FFEAA7" />
                         </svg>
                     </div>
                 </div>`;
+
             return `
-                <div class="partner-orbital-container" aria-label="7 段工時星軌光環，進度 ${progress} / ${totalSegments}">
+                <div class="partner-orbital-container" aria-label="7 日琉璃星宿軌道，本週連擊 ${streakInfo.streakCount} / 7 天">
                     <div class="orbital-stage-bg"></div>
                     <svg class="orbital-svg" viewBox="0 0 220 220">
                         <defs>
@@ -6163,9 +6468,15 @@
                                 <stop offset="50%" stop-color="#9A78B4" />
                                 <stop offset="100%" stop-color="#7A5A8A" />
                             </linearGradient>
+                            <linearGradient id="orbitalCompletedGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#A5D6A7" />
+                                <stop offset="50%" stop-color="#6DBA85" />
+                                <stop offset="100%" stop-color="#3B8254" />
+                            </linearGradient>
                         </defs>
                         ${pathsHtml}
-                        ${starNodeHtml}
+                        ${nodesHtml}
+                        ${labelsHtml}
                     </svg>
                     ${centerVisualHtml}
                 </div>`;
@@ -6199,9 +6510,10 @@
             _currentPreviewIndex = index;
             const modal = byId('petPreviewModal');
             if (!modal) return;
-            renderPreviewTabs();
+            modal.style.display = 'flex';
+            void modal.offsetWidth;
+            modal.classList.add('show');
             switchPetPreview(index);
-            modal.classList.remove('hidden');
         }
         function closePetPreviewModal() {
             const modal = byId('petPreviewModal');
@@ -6298,20 +6610,104 @@
                     renderPet(petArtContainer, pet, resolveParts(pet.parts));
                 }
             }
+
+            const todayMins = typeof getDayTotalMinutes === 'function' ? getDayTotalMinutes(typeof getTodayKey === 'function' ? getTodayKey() : '') : 0;
+            const isWorking = (typeof punchRecords !== 'undefined' && punchRecords.length > 0 && punchRecords.length % 2 === 1);
+            const targetMin = typeof getTargetMinutes === 'function' ? getTargetMinutes() : 480;
+            const isTargetMet = todayMins >= targetMin;
+            const todayHours = (todayMins / 60).toFixed(1);
+
             const stageBadge = byId('partnerStageBadge');
             if (stageBadge) {
-                stageBadge.textContent = pet ? (pet.isFavorite ? '最愛夥伴' : '陪伴中') : (isReady ? '已可破殼' : `凝聚中 (${count}/${HATCH_COST})`);
-                stageBadge.className = pet || isReady ? 'partner-pill-badge active' : 'partner-pill-badge';
+                if (isTargetMet) {
+                    stageBadge.textContent = '👑 8h 工時圓滿達成';
+                    stageBadge.className = 'partner-pill-badge active';
+                    stageBadge.style.background = 'rgba(217, 138, 22, 0.14)';
+                    stageBadge.style.color = '#B87309';
+                    stageBadge.style.borderColor = 'rgba(217, 138, 22, 0.3)';
+                } else if (isWorking) {
+                    stageBadge.textContent = `✦ 專注工作中 · ${todayHours}h / 8h`;
+                    stageBadge.className = 'partner-pill-badge active';
+                    stageBadge.style.background = 'rgba(122, 90, 138, 0.12)';
+                    stageBadge.style.color = 'var(--purple)';
+                    stageBadge.style.borderColor = 'rgba(122, 90, 138, 0.25)';
+                } else {
+                    stageBadge.textContent = pet ? '🍃 舒心安歇中' : (isReady ? '已可破殼' : `凝聚中 (${count}/${HATCH_COST})`);
+                    stageBadge.className = pet || isReady ? 'partner-pill-badge active' : 'partner-pill-badge';
+                    stageBadge.style.background = '';
+                    stageBadge.style.color = '';
+                    stageBadge.style.borderColor = '';
+                }
             }
             const heroTitle = byId('partnerHeroTitle');
-            if (heroTitle) heroTitle.textContent = pet ? (pet.name || '工時晶靈') : `${count} / ${HATCH_COST} 蛋殼碎片`;
+            if (heroTitle) {
+                heroTitle.textContent = pet ? (pet.name || '工時晶靈') : `${count} / ${HATCH_COST} 蛋殼碎片`;
+            }
             const heroSub = byId('partnerHeroSub');
             if (heroSub) {
-                heroSub.textContent = pet ? `${pet.series} 系列 · ${RARITY_LABELS[pet.rarity] || '一般'} · 陪伴日常工作` : (isReady ? '✨ 已集滿 7 顆碎片，可隨時喚醒晶靈' : (count === 0 ? '完成今日工時目標，即可獲得第 1 顆碎片' : `今日工時已記錄 · 還需 ${HATCH_COST - count} 天破殼`));
+                if (isTargetMet) {
+                    heroSub.textContent = '✨ 今日 8 小時標準工時已圓滿達成 · 今日星宿已點亮';
+                } else if (isWorking) {
+                    heroSub.textContent = `正在陪你專注工作中 · 累計 ${todayHours} 小時 · 點擊給予鼓勵`;
+                } else {
+                    heroSub.textContent = pet ? `${pet.series === 'moss' ? '碧苔系列' : pet.series === 'ember' ? '熾焰系列' : '紫晶系列'} · ${RARITY_LABELS[pet.rarity] || '一般'} · 隨時準備陪你開啟工作` : (isReady ? '✨ 已集滿 7 顆碎片，可隨時喚醒晶靈' : (count === 0 ? '完成今日工時目標，即可獲得第 1 顆碎片' : `今日工時已記錄 · 還需 ${HATCH_COST - count} 天破殼`));
+                }
             }
+
             const actionArea = byId('partnerActionArea');
             if (actionArea) {
-                actionArea.innerHTML = isReady ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()">✨ 開啟節奏蛋 · 喚醒晶靈</button>` : `<div class="partner-status-box"><span>🔒 每日達成 8 小時標準工時即可獲 1 顆碎片</span></div>`;
+                const streakInfo = getWeeklyStreakData();
+                const streakRowHtml = streakInfo.weekDays.map(d => {
+                    const iconClass = d.isCompleted ? 'completed' : (d.isToday ? 'today-active' : '');
+                    const iconSymbol = d.isCompleted ? '✦' : (d.isToday ? '●' : '○');
+                    return `
+                        <div class="streak-day-item">
+                            <div class="streak-bead-icon ${iconClass}">${iconSymbol}</div>
+                            <span class="streak-day-label">${d.label}</span>
+                            <span class="streak-day-hours">${d.hours > 0 ? d.hours + 'h' : '-'}</span>
+                        </div>`;
+                }).join('');
+
+                const livePct = Math.min(Math.round((todayMins / targetMin) * 100), 100);
+                const petIcon = pet ? (pet.series === 'moss' ? '🌿' : pet.series === 'ember' ? '🔥' : '💎') : '🌱';
+                const petName = pet ? pet.name : '工時結晶';
+
+                let html = isReady ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()">✨ 開啟節奏蛋 · 喚醒晶靈</button>` : '';
+
+                // 7-Day Constellation Streak Section
+                html += `
+                    <div class="partner-streak-card">
+                        <div class="streak-header">
+                            <span class="streak-title"><i class="fas fa-sparkles" style="color:var(--purple); font-size:11px;"></i> 本週 7-Day 琉璃星宿軌跡</span>
+                            <span class="streak-badge">${streakInfo.totalCompleted >= 7 ? '✨ 星宿共振達成' : `已點亮 ${streakInfo.totalCompleted} / 7 顆`}</span>
+                        </div>
+                        <div class="streak-days-row">
+                            ${streakRowHtml}
+                        </div>
+                    </div>`;
+
+                // iOS Live Activity & Lock Screen Companion Glance
+                html += `
+                    <div class="partner-widget-glance">
+                        <div class="glance-header">
+                            <span class="glance-pill"><i class="fab fa-apple" style="font-size:11.5px;"></i> iOS 鎖定畫面即時動態伴行</span>
+                            <span style="font-size:10.5px; font-weight:600; color:${isTargetMet ? '#3D8254' : (isWorking ? 'var(--blue)' : 'var(--label-tertiary)')};">${isTargetMet ? '圓滿達成' : (isWorking ? '專注中' : '安歇中')}</span>
+                        </div>
+                        <div class="glance-body">
+                            <div class="glance-avatar">${petIcon}</div>
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-size:12.5px; font-weight:600; color:var(--label);">${petName}</span>
+                                    <span style="font-size:11.5px; font-weight:600; color:var(--label-secondary);">${todayHours}h / 8.0h <span style="font-size:10px; color:var(--label-tertiary);">(${livePct}%)</span></span>
+                                </div>
+                                <div class="glance-progress-track">
+                                    <div class="glance-progress-bar" style="width:${livePct}%; ${isTargetMet ? 'background:linear-gradient(90deg, #E5BE65, #D98A16);' : ''}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                actionArea.innerHTML = html;
             }
             renderCodex(state.pets);
         }
@@ -12102,6 +12498,7 @@
             // --- 即時新聞 + 成就 + 寵物獎勵 + 待辦標記 ---
             checkAchievement();
             updateDailyPetReward(result.total >= getTargetMinutes());
+            if (typeof renderPartnerRoom === 'function') renderPartnerRoom();
             renderWeeklyChart();
             if (typeof renderWeeklySummary === 'function') renderWeeklySummary();
             if (typeof updateNotesBadge === 'function') updateNotesBadge();
