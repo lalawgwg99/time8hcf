@@ -4891,8 +4891,8 @@
     </div>
 
     <!-- Companion Showcase / Preview Modal (夥伴外觀鑑賞與預覽彈窗) -->
-    <div id="petPreviewModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/45" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)" onclick="closePetPreviewModal()"></div>
+    <div id="petPreviewModal" class="fixed inset-0 z-50 hidden" style="display:none;">
+        <div class="absolute inset-0 bg-black/45" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)" onclick="window.closePetPreviewModal()"></div>
         <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
             style="background:var(--bg);max-height:88vh;overflow-y:auto;">
             <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:2;">
@@ -4902,9 +4902,9 @@
                         <span>✦</span>
                         <span>夥伴圖鑑 · 外觀鑑賞</span>
                     </div>
-                    <button onclick="closePetPreviewModal()" aria-label="關閉預覽"
+                    <button type="button" onclick="window.closePetPreviewModal()" aria-label="關閉預覽"
                         style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
-                        <i class="fas fa-times" style="font-size:12px;"></i>
+                        <i class="fas fa-times" style="font-size:12px; pointer-events:none;"></i>
                     </button>
                 </div>
             </div>
@@ -4964,7 +4964,7 @@
                     </ul>
                 </div>
 
-                <button onclick="closePetPreviewModal()" class="active-scale"
+                <button type="button" onclick="window.closePetPreviewModal()" class="active-scale"
                     style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">返回展台</button>
             </div>
         </div>
@@ -6311,17 +6311,20 @@
         let _currentPreviewIndex = 0;
         function openPetPreviewModal(index = 0) {
             _currentPreviewIndex = index;
-            const modal = byId('petPreviewModal');
+            const modal = document.getElementById('petPreviewModal');
             if (!modal) return;
-            modal.style.display = 'flex';
-            void modal.offsetWidth;
-            modal.classList.add('show');
             switchPetPreview(index);
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
         }
         function closePetPreviewModal() {
-            const modal = byId('petPreviewModal');
-            if (modal) modal.classList.add('hidden');
+            const modal = document.getElementById('petPreviewModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
         }
+        window.openPetPreviewModal = openPetPreviewModal;
+        window.closePetPreviewModal = closePetPreviewModal;
         function renderPreviewTabs() {
             const tabsContainer = byId('petPreviewTabs');
             if (!tabsContainer) return;
