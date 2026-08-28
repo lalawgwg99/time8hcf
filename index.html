@@ -5302,163 +5302,175 @@
             </div>
             <div style="padding:16px 24px 36px;">
 
-                <!-- 1. 工時光環與四角工具 -->
-                <div class="section-label">1. 工時光環與快捷工具</div>
+                <!-- 1.【今日】工時紀錄與專注守護 -->
+                <div class="section-label">1.【今日】工時記錄與專注守護</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">中央工時光環</span>
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">⏱️ 中央工時光環與模式切換</div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            即時反映今日專注進度。<strong>輕點中央數字</strong>可在「今日累計工時」與「剩餘目標倒數」模式間自由切換。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">🛡️ 上班輕觸 · 下班右滑確認</div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            輕觸即可打卡上班；下班採用<strong>「向右滑動確認」</strong>機制，徹底防止誤觸導致提早結束計時。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openCalendarModal();">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">📅 頂部日期 · 一鍵排休月曆</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開啟月曆 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            即時顯示今日累積工時進度。<strong>輕點中央時間</strong>即可在「今日累計」與「倒數剩餘」模式之間自由切換。
+                            點擊首頁頂部日期即可彈出月曆，支援排休標記、查看每日工時統計與歷史打卡明細。
                         </p>
                     </div>
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openWeatherModal();">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">左上 · 即時天氣與預報</span>
-                            </div>
-                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">詳細預報 ↗</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">🌤️ 四角快捷 · 即時天氣與預報</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">氣象詳情 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            自動顯示當前氣溫與降雨機率。點擊可查看 12 小時逐時天氣預報、下班降雨提醒與 6 大氣象指標。
+                            自動顯示當前氣溫與降雨機率，點擊可查閱逐時預報、下班降雨警示與 6 大氣象指標。
                         </p>
                     </div>
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openNotesModal();">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">右上 · 待辦事項與筆記</span>
-                            </div>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">📝 四角快捷 · 待辦事項與筆記</span>
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開啟筆記 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            隨手記錄今日工作目標、待辦清單與臨時便籤。有未完成項目時會顯示提醒標記。
+                            隨手記錄今日工作目標、備忘錄與臨時便籤，具備未完成任務紅點提醒。
                         </p>
                     </div>
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openMuyuModal();">
+                    <div style="padding:13px 16px; cursor:pointer;" onclick="closeUserManual(); closeSettings(); openMuyuModal();">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">左下 · 電子木魚放鬆</span>
-                            </div>
-                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開啟設定 ↗</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">🧘 四角快捷 · 辦公室木魚祈福</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">功德堂 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            工作間隙輕觸即可敲擊放鬆。長按或點此可進入設定，自由更換敲擊音色與自訂提示文字。
-                        </p>
-                    </div>
-                    <div style="padding:13px 16px; cursor:pointer;" onclick="closeUserManual(); closeSettings(); showYesterdayPunchOutDetail();">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">右下 · 下班紀錄</span>
-                            </div>
-                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">查看休息 ↗</span>
-                        </div>
-                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            即時顯示前次或今日下班時間點。輕點可查看班次間隔時長或休假天數。
+                            工作間隙輕敲積累功德、舒緩焦慮；長按可進入功德堂切換木魚皮膚與自訂文字。
                         </p>
                     </div>
                 </div>
 
-                <!-- 2. 打卡操作與防誤觸 -->
-                <div class="section-label">2. 打卡操作與安全防護</div>
+                <!-- 2.【夥伴】晶靈養成、心靈羈絆與音樂電台 -->
+                <div class="section-label">2.【夥伴】晶靈養成與專注電台</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">上班打卡</span>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);" onclick="closeUserManual(); closeSettings(); switchTab('Partner');">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">✨ 7 段工時光環與結晶孵化</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">前往夥伴 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            輕點中央「上班」按鈕立即啟動工時計算，伴隨觸覺回饋與時間記錄。
+                            每日滿 8 小時標準工時自動凝聚 1 顆工時結晶碎片，集滿 7 顆即可喚醒專屬晶靈寵物。
                         </p>
                     </div>
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">下班滑動確認</span>
-                        </div>
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">✦ 頂部一鍵折疊全圖鑑</div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            下班採用<strong>「向右滑動打卡」</strong>機制，防止口袋或誤觸導致提早結束計時。
+                            點擊標頭 <strong>[ ✦ 圖鑑 (X/8) ▾ ]</strong> 膠囊按鈕，即可平滑展開 8 款精美寵物，支援預覽外觀與出戰切換。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">💖 摸摸互動、動態情緒與羈絆升級</div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            輕觸夥伴會伴隨瞇眼微笑與冒愛心動畫，累積好感度可升級（Lv.3 每日額外贈送 1 顆工時碎片）！
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">💬 一鍵分享回報至 LINE</div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            點擊 <strong>[ 分享 LINE ]</strong>，系統自動整理今日累積工時、各段打卡時間與今日福氣金句，零廢話一鍵發送。
                         </p>
                     </div>
                     <div style="padding:13px 16px;">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">晨曦啟程 · 每日箴言</span>
-                        </div>
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">🎵 華語流行專注電台</div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            每日<strong>第一次打卡上班</strong>時，系統將自動為您呈現今日勉勵箴言與專注引導。
+                            內建精選華語流行、KKBOX 榜、傷感情歌與抖音熱搜，支援 App 內一鍵開啟聲音與自訂 YouTube 頻道。
                         </p>
                     </div>
                 </div>
 
-                <!-- 3. 門市速查與跨店運費 -->
-                <div class="section-label">3. 門市速查與跨店運費</div>
+                <!-- 3.【新聞】即時快訊與 24H 電視直播 -->
+                <div class="section-label">3.【新聞】即時快訊與電視直播</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:13px 16px; cursor:pointer;" onclick="closeUserManual(); closeSettings(); switchTab('Appliance');">
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);" onclick="closeUserManual(); closeSettings(); switchTab('News');">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">全省門市與跨店運費速查</span>
-                            </div>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">🔴 TVBS 24H 電視直播</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">觀看新聞 ↗</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            16:9 Apple 劇院式全景視窗，支援畫中畫（PiP）與 App 內一鍵切換聲音。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px;">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">📰 4 大分類即時新聞摘要</div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            涵蓋即時要聞、科技趨勢、生活焦點與財經觀點，每 15 分鐘自動同步最新重點快訊。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 4.【家電】門市速查、跨店運費與智慧選店 -->
+                <div class="section-label">4.【家電】門市速查與智慧選店</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);" onclick="closeUserManual(); closeSettings(); switchTab('Appliance');">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">🏢 62 間門市名錄與家電 MD</span>
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">前往家電 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            位於「家電」分頁核心。完整整合全台 62 間門市聯絡電話、店長/處長/課長/助理窗口、59 家門市跨區運費標準與家電 MD 分機，支援 0 毫秒即時搜尋與一鍵撥號。
+                            完整收錄店名、店碼、店長/處長/課長/助理電話與分機，支援一鍵直接撥號。
                         </p>
                     </div>
-                </div>
-
-                <!-- 4. 勞基法健康守護 -->
-                <div class="section-label">4. 勞基法健康守護</div>
-                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">連續工作 230 分鐘預警 (第 35 條)</span>
-                        </div>
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">🚚 59 家門市跨區運費標準表</div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            單次連續工作滿 3 小時 50 分時主動發出提醒，讓您提前收尾休息，避免超時工作。
+                            點擊門市卡片即可展開跨區調貨運費明細，快速掌握送達各區域之收費標準。
+                        </p>
+                    </div>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">🧭 智慧選店（輸入地址推薦最近店）</div>
+                        <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
+                            輸入顧客地址（如「高雄五甲」），系統以演算法自動推薦最近 3 家門市與最低跨店運費。
                         </p>
                     </div>
                     <div style="padding:13px 16px;">
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">11 小時跨日休息守護 (第 34 條)</span>
-                        </div>
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">📦 五甲店配送安裝專屬系統</div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            上班時自動比對距離前一次下班是否休滿 11 小時，守護睡眠與健康充足。
+                            提供 wgapp.pages.dev 專屬系統外連入口，方便快速開啟派工與安裝查詢。
                         </p>
                     </div>
                 </div>
 
-                <!-- 5. 個人化與外觀設定 -->
-                <div class="section-label">5. 個人化與系統設定</div>
+                <!-- 5.【設定】個人化與法規守護 -->
+                <div class="section-label">5.【設定】個人化與法規守護</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); startBreatheGuide();">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">1 分鐘深呼吸放鬆</span>
-                            </div>
-                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開始深呼吸 ↗</span>
-                        </div>
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label); margin-bottom:3px;">⚖️ 勞基法雙重自動守護</div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            點擊「深呼吸」，跟隨引導光環進行 1 分鐘吸氣、屏息與呼氣，舒緩工作疲勞。
+                            • <strong>連續工作 230m 預警 (§35)</strong>：提前 10 分鐘發出警示，避免超逾 4 小時上限。<br>
+                            • <strong>11h 跨日休息守護 (§34)</strong>：上班時比對距離前次下班是否休滿 11 小時。
                         </p>
                     </div>
-                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openThemePicker();">
+                    <div style="padding:13px 16px; border-bottom:0.5px solid var(--separator);" onclick="closeUserManual(); closeSettings(); openThemePicker();">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">4 款 Apple 系統主題</span>
-                            </div>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">🎨 4 款 Apple 原生質感主題</span>
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">切換主題 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            輕觸首頁右上角 <strong>TIME 8 ✦</strong>，可自由切換：經典素白、黑曜夜色 (OLED 省電)、竹影青綠、暮光晨紫。
+                            輕觸首頁右上角 <strong>TIME 8 ✦</strong> 可切換：經典素白、黑曜夜色 (OLED 省電)、竹影青綠、暮光晨紫。
                         </p>
                     </div>
-                    <div style="padding:13px 16px; cursor:pointer;" onclick="closeUserManual(); showInstallGuide();">
+                    <div style="padding:13px 16px;" onclick="closeUserManual(); showInstallGuide();">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:13.5px; font-weight:600; color:var(--label);">加入手機主畫面 (PWA)</span>
-                            </div>
-                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">安裝說明 ↗</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">📲 加入手機主畫面 (PWA)</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">安裝教學 ↗</span>
                         </div>
                         <p style="font-size:12px; color:var(--label-secondary); line-height:1.55; margin:0;">
-                            在 Safari 點選分享按鈕 ➔「加入主畫面」，享有全螢幕獨立 App 體驗與極速啟動。
+                            在 Safari 點選分享按鈕 ➔「加入主畫面」，立即享有獨立全螢幕 App 體驗與極速秒開。
                         </p>
                     </div>
                 </div>
