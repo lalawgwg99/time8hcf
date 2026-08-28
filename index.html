@@ -4590,40 +4590,38 @@
                             <div id="partnerHeroSub" class="partner-hero-sub">完成今日標準工時，即可凝聚工時結晶</div>
                         </div>
 
-                        <!-- Bond & Fortune Capsule (心靈羈絆與今日福氣籤) -->
+                        <!-- Bond & Fortune Capsule (極簡純粹 Apple Inset) -->
                         <div id="partnerFortuneBondPill" class="partner-fortune-bond-card">
+                            <!-- Top: Bond Level & Fast Actions -->
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                                 <div style="display:flex; align-items:center; gap:6px;">
-                                    <span style="font-size:13px;" id="fortuneMoodIcon">💖</span>
-                                    <span id="bondLevelText" style="font-size:11.5px; font-weight:700; color:var(--purple);">Lv.1 初識夥伴</span>
-                                    <span id="bondProgressText" style="font-size:10px; color:var(--label-tertiary);">(0/30)</span>
+                                    <span style="font-size:12.5px;" id="fortuneMoodIcon">💖</span>
+                                    <span id="bondLevelText" style="font-size:12px; font-weight:700; color:var(--purple);">Lv.1 初識夥伴</span>
+                                    <span id="bondProgressText" style="font-size:10.5px; color:var(--label-tertiary);">(0/30)</span>
                                 </div>
-                                <div id="petTouchHint" style="font-size:10.5px; color:var(--label-tertiary);">輕觸夥伴互動 ✦</div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <button type="button" onclick="petCompanionWithAnimation(event)" class="active-scale" 
+                                        style="padding:4px 10px; border-radius:999px; background:rgba(122,90,138,0.1); border:0.5px solid rgba(122,90,138,0.2); color:var(--purple); font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:inherit;">
+                                        <span>💖 撫摸</span>
+                                        <span id="todayPetCountBadge" style="font-size:9.5px; opacity:0.8;">(+1)</span>
+                                    </button>
+                                    <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
+                                        style="padding:4px 11px; border-radius:999px; background:#06C755; border:none; color:#FFFFFF; font-size:11px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:inherit; box-shadow:0 2px 6px rgba(6,199,85,0.2);">
+                                        <i class="fab fa-line" style="font-size:11.5px;"></i>
+                                        <span>LINE</span>
+                                    </button>
+                                </div>
                             </div>
                             
-                            <!-- Daily Fortune Quote Box -->
-                            <div id="partnerFortuneQuoteBox" style="background:var(--fill-secondary); border-radius:10px; padding:9px 12px; margin-bottom:10px; border:0.5px solid var(--separator);">
-                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
-                                    <span id="fortuneTitle" style="font-size:10.5px; font-weight:700; color:var(--orange);">✨ 今日福氣 · 靈感湧現</span>
-                                    <span id="fortuneLuckyItem" style="font-size:10px; color:var(--label-tertiary);">☕ 幸運物：美式咖啡</span>
+                            <!-- Bottom: Fortune Quote & Lucky Item -->
+                            <div style="background:var(--fill-secondary); border-radius:10px; padding:8px 12px; border:0.5px solid var(--separator);">
+                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">
+                                    <span id="fortuneTitle" style="font-size:11px; font-weight:700; color:var(--orange);">✨ 今日福氣 · 靈感湧現</span>
+                                    <span id="fortuneLuckyItem" style="font-size:10px; color:var(--label-tertiary);">☕ 美式咖啡</span>
                                 </div>
-                                <div id="fortuneQuoteText" style="font-size:12px; color:var(--label-secondary); line-height:1.45;">
+                                <div id="fortuneQuoteText" style="font-size:12px; color:var(--label-secondary); line-height:1.4;">
                                     「心若從容，步步生花；今日所遇，皆為坦途。」
                                 </div>
-                            </div>
-
-                            <!-- Action Bar: Pet Button & LINE Share Button -->
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <button type="button" onclick="petCompanionWithAnimation(event)" class="active-scale" 
-                                    style="flex:1; padding:7px 10px; border-radius:999px; background:rgba(122,90,138,0.12); border:0.5px solid rgba(122,90,138,0.25); color:var(--purple); font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; font-family:inherit;">
-                                    <span>💖 撫摸夥伴</span>
-                                    <span id="todayPetCountBadge" style="font-size:9.5px; opacity:0.8;">(+1 羈絆)</span>
-                                </button>
-                                <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
-                                    style="padding:7px 14px; border-radius:999px; background:#06C755; border:none; color:#FFFFFF; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; font-family:inherit; box-shadow:0 2px 8px rgba(6,199,85,0.25);">
-                                    <i class="fab fa-line" style="font-size:13px;"></i>
-                                    <span>分享 LINE</span>
-                                </button>
                             </div>
                         </div>
 
@@ -4632,55 +4630,45 @@
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
                     </div>
 
-                    <!-- AI Companion Chat Card (晶靈貼心智囊對話) -->
+                    <!-- AI Companion Chat Card (極簡晶靈智囊對話) -->
                     <div class="partner-ai-card" id="partnerAiCard">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <div style="width:32px; height:32px; border-radius:50%; background:rgba(122,90,138,0.12); display:flex; align-items:center; justify-content:center; font-size:16px;" id="aiPetAvatarIcon">
-                                    🔮
-                                </div>
-                                <div>
-                                    <div style="font-size:13px; font-weight:700; color:var(--label); display:flex; align-items:center; gap:6px;">
-                                        <span id="aiCompanionCardTitle">晶靈心靈智囊</span>
-                                        <span style="font-size:9.5px; padding:1.5px 7px; border-radius:999px; background:rgba(77,122,82,0.12); color:var(--green); font-weight:600; border:0.5px solid rgba(77,122,82,0.2);">在線守護</span>
-                                    </div>
-                                    <div style="font-size:11px; color:var(--label-tertiary);" id="aiCompanionCardSub">
-                                        貼心陪伴 · 繁中回答 · 500~800字精準解答
-                                    </div>
-                                </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="font-size:15px;">🔮</span>
+                                <span style="font-size:13px; font-weight:700; color:var(--label);" id="aiCompanionCardTitle">晶靈心靈智囊</span>
                             </div>
                             <button type="button" onclick="openAiKeyModal()" class="active-scale" 
-                                style="font-size:11px; color:var(--purple); background:var(--fill-secondary); border:0.5px solid var(--separator); padding:4px 9px; border-radius:999px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px;">
-                                <i class="fas fa-key" style="font-size:9px;"></i>
-                                <span id="aiKeyStatusBadge">金鑰設定</span>
+                                style="font-size:11px; color:var(--purple); background:var(--fill-secondary); border:0.5px solid var(--separator); padding:3px 8px; border-radius:999px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:3px; white-space:nowrap;">
+                                <i class="fas fa-key" style="font-size:8.5px;"></i>
+                                <span id="aiKeyStatusBadge">金鑰</span>
                             </button>
                         </div>
 
-                        <!-- Mini Chat Preview / Entry Pill -->
+                        <!-- Speech Bubble Preview (Clean & Clickable) -->
                         <div onclick="openAiChatSheet()" class="active-scale" 
-                            style="background:var(--fill-secondary); border-radius:12px; padding:11px 13px; margin-bottom:10px; border:0.5px solid var(--separator); cursor:pointer;">
-                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-                                <span style="font-size:11px; font-weight:600; color:var(--label-secondary);" id="aiPetLastSpeaker">🐾 夥伴悄悄話：</span>
-                                <span style="font-size:10.5px; color:var(--blue); font-weight:600;">點擊開啟對話 ↗</span>
+                            style="background:var(--fill-secondary); border-radius:12px; padding:10px 12px; margin-bottom:10px; border:0.5px solid var(--separator); cursor:pointer;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
+                                <span style="font-size:11px; font-weight:600; color:var(--label-secondary);">🐾 晶靈在線</span>
+                                <span style="font-size:10.5px; color:var(--blue); font-weight:600;">點擊對話 ↗</span>
                             </div>
                             <div id="aiPetBubblePreview" style="font-size:12px; color:var(--label); line-height:1.45;">
-                                「主人～今天工作辛苦囉！有任何想討論、整理重點或想放鬆聊聊天的，我都一直在這陪著你喔 🌿」
+                                「主人辛苦了！隨時跟我說，我來幫你整理工作重點、想調貨話術喔 🌿」
                             </div>
                         </div>
 
-                        <!-- Quick Action Prompt Chips -->
-                        <div style="display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch; scrollbar-width:none;">
-                            <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知運費與預計抵達時間。')" class="ai-quick-tag active-scale">
-                                📋 調貨話術
+                        <!-- 4 Quick Action Chips (Perfect Grid Fit) -->
+                        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
+                            <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知運費與預計抵達時間。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%;">
+                                📋 話術
                             </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法幫我簡要說明：工作 4 小時休息 30 分鐘與跨日輪班間隔 11 小時的具體重點。')" class="ai-quick-tag active-scale">
-                                ⚖️ 法規諮詢
+                            <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法幫我簡要說明：工作 4 小時休息 30 分鐘與跨日輪班間隔 11 小時的具體重點。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%;">
+                                ⚖️ 法規
                             </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請幫我將這段工作內容精簡整理成 3 點清晰重點，語氣專業俐落。')" class="ai-quick-tag active-scale">
-                                📝 重點濃縮
+                            <button type="button" onclick="triggerAiQuickPrompt('請幫我將這段工作內容精簡整理成 3 點清晰重點，語氣專業俐落。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%;">
+                                📝 濃縮
                             </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('我現在工作有點疲勞、肩頸緊繃，請給我 3 個一分鐘內能完成的放鬆深呼吸建議。')" class="ai-quick-tag active-scale">
-                                🍵 心情打氣
+                            <button type="button" onclick="triggerAiQuickPrompt('我現在工作有點疲勞、肩頸緊繃，請給我 3 個一分鐘內能完成的放鬆深呼吸建議。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%;">
+                                🍵 打氣
                             </button>
                         </div>
                     </div>
@@ -7363,11 +7351,12 @@
             renderAiChatMessages();
             if (badgeEl) badgeEl.textContent = `${successResult.modelName} · 免費線路`;
 
-            // Update mini preview on Partner Tab Card
+            // Update mini preview on Partner Tab Card (Clean plain text without markdown symbols)
             const previewEl = document.getElementById('aiPetBubblePreview');
             if (previewEl) {
-                const shortPreview = successResult.text.length > 55 ? successResult.text.slice(0, 52) + '…' : successResult.text;
-                previewEl.textContent = `「${shortPreview}」`;
+                let cleanPreview = successResult.text.replace(/[-*#_`|~>]/g, ' ').replace(/\s+/g, ' ').trim();
+                if (cleanPreview.length > 46) cleanPreview = cleanPreview.slice(0, 44) + '…';
+                previewEl.textContent = `「${cleanPreview}」`;
             }
 
             if ('vibrate' in navigator) navigator.vibrate(12);
@@ -7892,7 +7881,7 @@
 
             const actionArea = byId('partnerActionArea');
             if (actionArea) {
-                actionArea.innerHTML = isReady ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()" style="margin-top:10px;">✨ 喚醒晶靈</button>` : '';
+                actionArea.innerHTML = (!pet && isReady) ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()" style="margin-top:10px;">✨ 喚醒晶靈</button>` : '';
             }
             renderCodex(state.pets);
             if (typeof updateCompanionAffinityUI === 'function') updateCompanionAffinityUI();
