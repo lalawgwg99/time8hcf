@@ -4468,7 +4468,7 @@
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
                     </div>
 
-                    <!-- Ambient Focus Radio (Apple Native Inset Glassmorphism Player) -->
+                    <!-- 4K Leaf Music Player Card (Apple Inset Cinema Player) -->
                     <div class="partner-radio-card" id="partnerRadioCard">
                         <div class="partner-radio-header">
                             <div style="display:flex; align-items:center; gap:9px;">
@@ -4477,63 +4477,58 @@
                                 </div>
                                 <div>
                                     <div class="partner-radio-title">
-                                        <span id="partnerRadioStationTitle">☕ Lofi Girl · 24H 專注自習</span>
+                                        <span id="partnerRadioStationTitle">🍁 4K Leaf Music · 華語流行專注電台</span>
                                     </div>
                                     <div class="partner-radio-status" id="partnerRadioStatus">
-                                        <span>24H 全球沉浸陪伴中</span>
+                                        <span>@4KLeafMusic 官方精選歌單</span>
                                     </div>
                                 </div>
                             </div>
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <!-- Apple Sound Wave Animation (When Playing) -->
-                                <div class="sound-wave-bars hidden" id="partnerRadioWave">
-                                    <span class="bar bar1"></span>
-                                    <span class="bar bar2"></span>
-                                    <span class="bar bar3"></span>
-                                    <span class="bar bar4"></span>
-                                </div>
-                                <!-- Play / Pause Glassmorphism Pill Button -->
-                                <button type="button" onclick="togglePartnerRadio()" id="partnerRadioPlayBtn" class="active-scale partner-radio-btn" title="播放 / 暫停">
-                                    <i class="fas fa-play" id="partnerRadioPlayIcon" style="font-size:11px;"></i>
-                                    <span id="partnerRadioPlayText">播放</span>
-                                </button>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <a href="https://www.youtube.com/@4KLeafMusic" target="_blank" rel="noopener noreferrer"
+                                    class="active-scale" title="前往 YouTube 頻道"
+                                    style="font-size:11px; color:var(--label-tertiary); text-decoration:none; display:flex; align-items:center; gap:3px; padding:3px 8px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator);">
+                                    <span>頻道</span><i class="fas fa-arrow-up-right-from-square" style="font-size:8.5px;"></i>
+                                </a>
                             </div>
                         </div>
 
-                        <!-- Invisible Background Audio Host -->
-                        <div id="partnerRadioIframeHost" style="width:1px; height:1px; opacity:0.01; position:absolute; pointer-events:none; overflow:hidden;"></div>
+                        <!-- 16:9 Compact Video & Sound Stage -->
+                        <div style="position:relative; width:100%; padding-top:56.25%; background:#000; border-radius:14px; overflow:hidden; margin-bottom:12px; border:0.5px solid var(--separator);">
+                            <iframe 
+                                id="partnerRadioIframe" 
+                                src="https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+2026+華語流行&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1" 
+                                title="4K Leaf Music Player" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen
+                                style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
+                            </iframe>
+                            <!-- In-App Floating Apple Sound Control Button -->
+                            <button type="button" onclick="togglePartnerAudio(event)" id="partnerAudioToggleBtn" class="active-scale" title="點擊在 App 內切換聲音"
+                                style="position:absolute; bottom:10px; right:10px; z-index:10; background:rgba(20,20,20,0.82); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); color:#FFFFFF; border:0.5px solid rgba(255,255,255,0.25); border-radius:999px; padding:5px 12px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(0,0,0,0.35); font-family:inherit; outline:none;">
+                                <i class="fas fa-volume-xmark" id="partnerAudioIcon" style="color:#FFD60A; font-size:12px;"></i>
+                                <span id="partnerAudioText">開啟聲音</span>
+                            </button>
+                        </div>
 
                         <!-- Station Selection Capsules Track (Apple Segments) -->
                         <div class="partner-station-track" id="partnerStationTrack">
-                            <button type="button" class="station-chip active" onclick="switchPartnerStation('lofi')" id="stationChip_lofi">
-                                <span>☕</span><span>Lofi 專注</span>
+                            <button type="button" class="station-chip active" onclick="switchPartnerStation('leaf_hits')" id="stationChip_leaf_hits">
+                                <span>🍁</span><span>熱門精選</span>
                             </button>
-                            <button type="button" class="station-chip" onclick="switchPartnerStation('piano')" id="stationChip_piano">
-                                <span>🎹</span><span>治癒鋼琴</span>
+                            <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_kkbox')" id="stationChip_leaf_kkbox">
+                                <span>📈</span><span>KKBOX 榜</span>
                             </button>
-                            <button type="button" class="station-chip" onclick="switchPartnerStation('nature')" id="stationChip_nature">
-                                <span>🍃</span><span>自然白噪</span>
+                            <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_love')" id="stationChip_leaf_love">
+                                <span>💔</span><span>傷感情歌</span>
                             </button>
-                            <button type="button" class="station-chip" onclick="switchPartnerStation('zen')" id="stationChip_zen">
-                                <span>🌙</span><span>深度靜心</span>
+                            <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_tiktok')" id="stationChip_leaf_tiktok">
+                                <span>⚡</span><span>抖音熱搜</span>
                             </button>
                             <button type="button" class="station-chip" onclick="openCustomStationModal()" id="stationChip_custom">
                                 <span>⚙️</span><span>自訂</span>
                             </button>
-                        </div>
-
-                        <!-- Auto-Failover & Channel Switching Controls -->
-                        <div class="partner-radio-footer">
-                            <div style="display:flex; align-items:center; gap:5px; font-size:10.5px; color:var(--label-tertiary);">
-                                <i class="fas fa-shield-halved" style="color:var(--purple); font-size:10px;"></i>
-                                <span id="partnerRadioResilienceBadge">多重備援自動容災</span>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <button type="button" onclick="switchNextBackupStream()" class="partner-radio-sub-btn" title="手動切換此分類備援直播台">
-                                    <i class="fas fa-shuffle" style="font-size:9.5px;"></i>
-                                    <span>換台備援</span>
-                                </button>
-                            </div>
                         </div>
                     </div>
 
@@ -7257,193 +7252,122 @@
         // ==========================================
         // ===== 24H 夥伴陪伴療癒電台 (Ambient Focus Radio Engine) =====
         // ==========================================
-        const PARTNER_STATIONS = {
-            lofi: {
-                name: '☕ Lofi Girl · 24H 專注自習',
-                desc: '24H 全球沉浸陪伴中',
-                streams: [
-                    '2UUWWRuVMco', // Lofi Girl 24/7 (User specified)
-                    'jfKfPfyJRdk', // Lofi Girl - beats to study/relax to
-                    '5qap5aO4i9A', // Lofi Hip Hop Radio
-                    'DWcJFNfaw90'  // Chillhop Radio 24/7
-                ],
-                currentIndex: 0
+        // ==========================================
+        // ===== 4K Leaf Music 專屬華語音樂電台 (@4KLeafMusic) =====
+        // ==========================================
+        const LEAF_STATIONS = {
+            leaf_hits: {
+                name: '🍁 4K Leaf · 2026 華語熱門流行精選',
+                desc: '@4KLeafMusic 最新流行歌曲與動態歌詞',
+                embedUrl: 'https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+2026+華語流行&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1'
             },
-            piano: {
-                name: '🎹 治癒鋼琴 · 溫柔午後',
-                desc: '吉卜力與舒緩鋼琴現場',
-                streams: [
-                    '4xDzrJKXOOY', // Relaxing Piano Music 24/7
-                    '7NOSDKb0HlU', // Studio Ghibli Piano Live
-                    'WJ3-F02-U_g'  // Peaceful Relaxing Piano
-                ],
-                currentIndex: 0
+            leaf_kkbox: {
+                name: '📈 4K Leaf · KKBOX 華語單曲排行週榜',
+                desc: 'KKBOX 華語排行榜前 50 首循環',
+                embedUrl: 'https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+KKBOX+華語單曲排行&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1'
             },
-            nature: {
-                name: '🍃 大自然白噪音 · 森林微雨',
-                desc: '天然雨聲與深林微風',
-                streams: [
-                    'mPZkdNFkNps', // Rain Sound 24/7
-                    'y7e-CuxQuTQ', // Forest Birds & River
-                    'eKFTSSKCzWA'  // Gentle Ocean Waves 24/7
-                ],
-                currentIndex: 0
+            leaf_love: {
+                name: '💔 4K Leaf · 傷感情歌專注精選',
+                desc: '溫柔抒情動態歌詞 · 陪伴自習時光',
+                embedUrl: 'https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+傷感情歌+精選&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1'
             },
-            zen: {
-                name: '🌙 深度靜心 · 禪意氛圍',
-                desc: '頌缽與冥想頻率',
-                streams: [
-                    '1ZYbU82GVz4', // Tibetan Singing Bowls 24/7
-                    'WPni755-Krg', // Deep Sleep Ambient
-                    '2OEL4P1Rz04'  // Meditation Zen Music
-                ],
-                currentIndex: 0
+            leaf_tiktok: {
+                name: '⚡ 4K Leaf · 抖音熱搜熱播排行榜',
+                desc: 'TikTok / 抖音最新熱門歌曲合集',
+                embedUrl: 'https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+抖音熱門歌曲&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1'
             }
         };
 
-        let _currentStationKey = 'lofi';
-        let _isPartnerRadioPlaying = false;
-        let _customStreamId = localStorage.getItem('t8_custom_partner_stream') || '';
+        let _currentLeafKey = 'leaf_hits';
+        let _isPartnerAudioMuted = true;
+        let _customLeafStreamId = localStorage.getItem('t8_custom_leaf_stream') || '';
 
         function initPartnerRadioEngine() {
-            updatePartnerRadioUI();
-        }
-
-        function getActiveStationStreamId() {
-            if (_currentStationKey === 'custom') {
-                return _customStreamId || '2UUWWRuVMco';
-            }
-            const station = PARTNER_STATIONS[_currentStationKey];
-            if (!station || !station.streams || station.streams.length === 0) return '2UUWWRuVMco';
-            return station.streams[station.currentIndex % station.streams.length];
-        }
-
-        function togglePartnerRadio() {
-            _isPartnerRadioPlaying = !_isPartnerRadioPlaying;
-            if ('vibrate' in navigator) navigator.vibrate(10);
-
-            const host = document.getElementById('partnerRadioIframeHost');
-            if (_isPartnerRadioPlaying) {
-                const streamId = getActiveStationStreamId();
-                if (host) {
-                    host.innerHTML = `
-                        <iframe 
-                            id="partnerRadioIframe" 
-                            src="https://www.youtube-nocookie.com/embed/${streamId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1" 
-                            title="Partner Radio" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            style="width:1px; height:1px; border:none;">
-                        </iframe>
-                    `;
-                }
-            } else {
-                if (host) host.innerHTML = '';
-            }
-            updatePartnerRadioUI();
+            updateLeafRadioUI();
         }
 
         function switchPartnerStation(stationKey) {
             if ('vibrate' in navigator) navigator.vibrate(8);
-            _currentStationKey = stationKey;
+            _currentLeafKey = stationKey;
 
             // Highlight chip
             document.querySelectorAll('.station-chip').forEach(c => c.classList.remove('active'));
             const activeChip = document.getElementById('stationChip_' + stationKey);
             if (activeChip) activeChip.classList.add('active');
 
-            if (_isPartnerRadioPlaying) {
-                // Reload with new station
-                const host = document.getElementById('partnerRadioIframeHost');
-                const streamId = getActiveStationStreamId();
-                if (host) {
-                    host.innerHTML = `
-                        <iframe 
-                            id="partnerRadioIframe" 
-                            src="https://www.youtube-nocookie.com/embed/${streamId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1" 
-                            title="Partner Radio" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            style="width:1px; height:1px; border:none;">
-                        </iframe>
-                    `;
+            const iframe = document.getElementById('partnerRadioIframe');
+            if (!iframe) return;
+
+            if (stationKey === 'custom') {
+                if (_customLeafStreamId) {
+                    iframe.src = `https://www.youtube-nocookie.com/embed/${_customLeafStreamId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1&controls=1`;
+                } else {
+                    openCustomStationModal();
+                }
+            } else {
+                const station = LEAF_STATIONS[stationKey];
+                if (station) {
+                    iframe.src = station.embedUrl;
                 }
             }
-            updatePartnerRadioUI();
+
+            updateLeafRadioUI();
         }
 
-        function switchNextBackupStream() {
-            if (_currentStationKey === 'custom') {
-                openCustomStationModal();
-                return;
+        function togglePartnerAudio(e) {
+            if (e) {
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
             }
-            const station = PARTNER_STATIONS[_currentStationKey];
-            if (!station) return;
-            station.currentIndex = (station.currentIndex + 1) % station.streams.length;
-            const cur = station.currentIndex + 1;
-            const total = station.streams.length;
+            const iframe = document.getElementById('partnerRadioIframe');
+            const icon = document.getElementById('partnerAudioIcon');
+            const text = document.getElementById('partnerAudioText');
+            const btn = document.getElementById('partnerAudioToggleBtn');
 
             if ('vibrate' in navigator) navigator.vibrate(12);
 
-            const badge = document.getElementById('partnerRadioResilienceBadge');
-            if (badge) {
-                badge.textContent = `已切換備援串流 (${cur}/${total})`;
-                badge.style.color = 'var(--blue)';
-                setTimeout(() => {
-                    if (badge) {
-                        badge.textContent = '多重備援自動容災';
-                        badge.style.color = 'var(--purple)';
-                    }
-                }, 3000);
-            }
-
-            if (_isPartnerRadioPlaying) {
-                const host = document.getElementById('partnerRadioIframeHost');
-                const streamId = getActiveStationStreamId();
-                if (host) {
-                    host.innerHTML = `
-                        <iframe 
-                            id="partnerRadioIframe" 
-                            src="https://www.youtube-nocookie.com/embed/${streamId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1" 
-                            title="Partner Radio" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            style="width:1px; height:1px; border:none;">
-                        </iframe>
-                    `;
+            if (_isPartnerAudioMuted) {
+                // 解除靜音並調至最大清晰音量，100% 在 App 內
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+                    iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[100]}', '*');
+                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 }
+                _isPartnerAudioMuted = false;
+                if (icon) {
+                    icon.className = 'fas fa-volume-high';
+                    icon.style.color = '#34C759';
+                }
+                if (text) text.textContent = '靜音';
+                if (btn) btn.style.background = 'rgba(40,40,40,0.88)';
+            } else {
+                // 靜音
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+                }
+                _isPartnerAudioMuted = true;
+                if (icon) {
+                    icon.className = 'fas fa-volume-xmark';
+                    icon.style.color = '#FFD60A';
+                }
+                if (text) text.textContent = '開啟聲音';
+                if (btn) btn.style.background = 'rgba(20,20,20,0.82)';
             }
         }
 
-        function updatePartnerRadioUI() {
+        function updateLeafRadioUI() {
             const titleEl = document.getElementById('partnerRadioStationTitle');
             const statusEl = document.getElementById('partnerRadioStatus');
-            const playBtn = document.getElementById('partnerRadioPlayBtn');
-            const playText = document.getElementById('partnerRadioPlayText');
-            const playIcon = document.getElementById('partnerRadioPlayIcon');
-            const waveEl = document.getElementById('partnerRadioWave');
 
-            if (_currentStationKey === 'custom') {
-                if (titleEl) titleEl.textContent = '⚙️ 自訂專注電台';
-                if (statusEl) statusEl.textContent = _customStreamId ? `自訂串流 ID: ${_customStreamId}` : '尚未設定自訂頻道';
+            if (_currentLeafKey === 'custom') {
+                if (titleEl) titleEl.textContent = '⚙️ 自訂 4K Leaf 音樂頻道';
+                if (statusEl) statusEl.textContent = _customLeafStreamId ? `已載入串流: ${_customLeafStreamId}` : '點擊設定自訂 YouTube 連結';
             } else {
-                const station = PARTNER_STATIONS[_currentStationKey];
+                const station = LEAF_STATIONS[_currentLeafKey];
                 if (station) {
                     if (titleEl) titleEl.textContent = station.name;
                     if (statusEl) statusEl.textContent = station.desc;
                 }
-            }
-
-            if (_isPartnerRadioPlaying) {
-                if (playBtn) playBtn.classList.add('playing');
-                if (playText) playText.textContent = '暫停';
-                if (playIcon) playIcon.className = 'fas fa-pause';
-                if (waveEl) waveEl.classList.remove('hidden');
-            } else {
-                if (playBtn) playBtn.classList.remove('playing');
-                if (playText) playText.textContent = '播放';
-                if (playIcon) playIcon.className = 'fas fa-play';
-                if (waveEl) waveEl.classList.add('hidden');
             }
         }
 
@@ -7451,7 +7375,7 @@
         function openCustomStationModal() {
             const modal = document.getElementById('customStationModal');
             const input = document.getElementById('customStationInput');
-            if (input && _customStreamId) input.value = _customStreamId;
+            if (input && _customLeafStreamId) input.value = _customLeafStreamId;
             if (modal) modal.classList.remove('hidden');
             if ('vibrate' in navigator) navigator.vibrate(8);
         }
@@ -7480,16 +7404,14 @@
                 return;
             }
 
-            _customStreamId = videoId;
-            localStorage.setItem('t8_custom_partner_stream', videoId);
+            _customLeafStreamId = videoId;
+            localStorage.setItem('t8_custom_leaf_stream', videoId);
             closeCustomStationModal();
             switchPartnerStation('custom');
-            if (!_isPartnerRadioPlaying) togglePartnerRadio();
         }
 
-        window.togglePartnerRadio = togglePartnerRadio;
+        window.togglePartnerAudio = togglePartnerAudio;
         window.switchPartnerStation = switchPartnerStation;
-        window.switchNextBackupStream = switchNextBackupStream;
         window.openCustomStationModal = openCustomStationModal;
         window.closeCustomStationModal = closeCustomStationModal;
         window.saveCustomStation = saveCustomStation;
