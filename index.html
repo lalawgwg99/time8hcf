@@ -3840,6 +3840,16 @@
             box-shadow: var(--shadow-card);
         }
 
+        .partner-codex-drawer {
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 10px;
+        }
+
+        .partner-codex-drawer.hidden {
+            display: none;
+        }
+
         .codex-header {
             display: flex;
             justify-content: space-between;
@@ -4418,7 +4428,36 @@
                     <div class="partner-stage-card">
                         <div class="partner-stage-header">
                             <span class="partner-stage-title">工時夥伴</span>
-                            <span id="partnerStageBadge" class="partner-pill-badge">凝聚中</span>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <!-- Collapsible Codex Toggle Capsule (方案 A) -->
+                                <button type="button" onclick="togglePartnerCodexDrawer()" id="partnerCodexToggleBtn" class="active-scale partner-pill-badge"
+                                    style="cursor:pointer; display:flex; align-items:center; gap:4px; border:0.5px solid var(--separator); background:var(--fill); font-family:inherit; color:var(--label-secondary);">
+                                    <span>✦ 圖鑑</span>
+                                    <span id="partnerCodexCountBadge" style="font-size:10.5px; color:var(--purple); font-weight:600;">(0/8)</span>
+                                    <i class="fas fa-chevron-down" id="partnerCodexArrowIcon" style="font-size:8.5px; transition:transform 0.3s ease;"></i>
+                                </button>
+                                <span id="partnerStageBadge" class="partner-pill-badge">凝聚中</span>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Codex Drawer (方案 A 頂部折疊式抽屜) -->
+                        <div id="partnerCodexDrawer" class="partner-codex-drawer hidden">
+                            <div style="padding:12px 14px; background:var(--fill-secondary); border-radius:14px; border:0.5px solid var(--separator); margin-bottom:14px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                    <span style="font-size:12px; font-weight:600; color:var(--label);">✦ 夥伴全圖鑑</span>
+                                    <span id="partnerCodexCount" style="font-size:11px; color:var(--label-tertiary);">已解鎖 0 / 8</span>
+                                </div>
+                                <div id="partnerCodexGrid" class="codex-grid">
+                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">紫晶幼靈</div><div class="codex-item-rarity">一般</div></div>
+                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">碧苔石精</div><div class="codex-item-rarity">一般</div></div>
+                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">熾焰火精</div><div class="codex-item-rarity">一般</div></div>
+                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">幻月晶靈</div><div class="codex-item-rarity">稀有</div></div>
+                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">翠蔓石靈</div><div class="codex-item-rarity">稀有</div></div>
+                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">幻火行者</div><div class="codex-item-rarity">稀有</div></div>
+                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">紫耀天晶</div><div class="codex-item-rarity">珍稀</div></div>
+                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">熾皇晶魄</div><div class="codex-item-rarity">隱藏</div></div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 7-Segment Orbital Halo Stage -->
@@ -4522,24 +4561,6 @@
                             <button type="button" class="station-chip" onclick="openCustomStationModal()" id="stationChip_custom">
                                 <span>⚙️</span><span>自訂</span>
                             </button>
-                        </div>
-                    </div>
-
-                    <!-- Companion Codex Badge Wall -->
-                    <div class="partner-codex-card">
-                        <div class="codex-header">
-                            <span class="codex-title">✦ 夥伴圖鑑</span>
-                            <span id="partnerCodexCount" class="codex-count">已解鎖 0 / 8</span>
-                        </div>
-                        <div id="partnerCodexGrid" class="codex-grid">
-                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">紫晶幼靈</div><div class="codex-item-rarity">一般</div></div>
-                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">碧苔石精</div><div class="codex-item-rarity">一般</div></div>
-                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">熾焰火精</div><div class="codex-item-rarity">一般</div></div>
-                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">幻月晶靈</div><div class="codex-item-rarity">稀有</div></div>
-                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">翠蔓石靈</div><div class="codex-item-rarity">稀有</div></div>
-                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">幻火行者</div><div class="codex-item-rarity">稀有</div></div>
-                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">紫耀天晶</div><div class="codex-item-rarity">珍稀</div></div>
-                            <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">熾皇晶魄</div><div class="codex-item-rarity">隱藏</div></div>
                         </div>
                     </div>
                 </div>
@@ -6848,7 +6869,38 @@
             codexGrid.innerHTML = itemsHtml;
             const countEl = byId('partnerCodexCount');
             if (countEl) countEl.textContent = `已解鎖 ${unlockedCount} / ${CODEX_SPECIES.length}`;
+            const badgeEl = byId('partnerCodexCountBadge');
+            if (badgeEl) badgeEl.textContent = `(${unlockedCount}/${CODEX_SPECIES.length})`;
         }
+
+        let _isCodexDrawerOpen = false;
+        function togglePartnerCodexDrawer(forceState) {
+            _isCodexDrawerOpen = (typeof forceState === 'boolean') ? forceState : !_isCodexDrawerOpen;
+            const drawer = byId('partnerCodexDrawer');
+            const arrow = byId('partnerCodexArrowIcon');
+            const btn = byId('partnerCodexToggleBtn');
+
+            if ('vibrate' in navigator) navigator.vibrate(8);
+
+            if (_isCodexDrawerOpen) {
+                if (drawer) drawer.classList.remove('hidden');
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+                if (btn) {
+                    btn.style.background = 'rgba(122, 90, 138, 0.12)';
+                    btn.style.borderColor = 'rgba(122, 90, 138, 0.25)';
+                }
+            } else {
+                if (drawer) drawer.classList.add('hidden');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+                if (btn) {
+                    btn.style.background = 'var(--fill)';
+                    btn.style.borderColor = 'var(--separator)';
+                }
+            }
+        }
+        root.togglePartnerCodexDrawer = togglePartnerCodexDrawer;
+        window.togglePartnerCodexDrawer = togglePartnerCodexDrawer;
+
         function onCodexClick(index) {
             openPetPreviewModal(index);
         }
