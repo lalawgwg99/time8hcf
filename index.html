@@ -9015,7 +9015,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const sel = document.getElementById('aiProviderSelect');
             if (sel) sel.addEventListener('change', () => {
-                document.getElementById('customEndpointRow').classList.toggle('hidden', sel.value !== 'custom');
+                const row = document.getElementById('customEndpointRow');
+                if (row) row.classList.toggle('hidden', sel.value !== 'custom');
             });
         });
 
@@ -10136,6 +10137,7 @@
         function toggleCustomIcalInput() {
             const select = document.getElementById('icalPresetSelect');
             const customContainer = document.getElementById('customIcalContainer');
+            if (!select || !customContainer) return;
             if (select.value === 'custom') {
                 customContainer.classList.remove('hidden');
             } else {
@@ -10145,9 +10147,11 @@
 
         function handleSyncClick() {
             const select = document.getElementById('icalPresetSelect');
+            if (!select) return;
             let urlToSync = select.value;
             if (urlToSync === 'custom') {
-                urlToSync = document.getElementById('icalUrlInput').value.trim();
+                const input = document.getElementById('icalUrlInput');
+                urlToSync = input ? input.value.trim() : '';
             }
             if (!urlToSync) {
                 showReminder("請選擇或輸入有效的網址", 'rest');
