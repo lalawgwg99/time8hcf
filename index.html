@@ -4637,11 +4637,7 @@
                                 <span style="font-size:15px;">🔮</span>
                                 <span style="font-size:13px; font-weight:700; color:var(--label);" id="aiCompanionCardTitle">晶靈心靈智囊</span>
                             </div>
-                            <button type="button" onclick="openAiKeyModal()" class="active-scale" 
-                                style="font-size:11px; color:var(--purple); background:var(--fill-secondary); border:0.5px solid var(--separator); padding:3px 8px; border-radius:999px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:3px; white-space:nowrap;">
-                                <i class="fas fa-key" style="font-size:8.5px;"></i>
-                                <span id="aiKeyStatusBadge">金鑰</span>
-                            </button>
+                            <span style="font-size:10.5px; font-weight:600; color:var(--green); background:rgba(77,122,82,0.12); padding:2px 8px; border-radius:999px;">在線守護</span>
                         </div>
 
                         <!-- Speech Bubble Preview (Clean & Clickable) -->
@@ -4988,7 +4984,7 @@
                     </button>
                     <div style="text-align:center;">
                         <h3 style="font-size:15px; font-weight:700; color:var(--label); margin:0;" id="aiChatModalTitle">🔮 晶靈心靈智囊</h3>
-                        <div style="font-size:10px; color:var(--label-tertiary);" id="aiChatModelBadge">Minimax · 免費快速線路</div>
+                        <div style="font-size:10px; color:var(--label-tertiary);" id="aiChatModelBadge">✦ 貼心隨行 · 智慧在線</div>
                     </div>
                     <button type="button" onclick="clearAiChatHistory()" aria-label="清空對話" class="active-scale"
                         style="border:none; background:var(--fill-secondary); color:var(--label-secondary); font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer; font-family:inherit;">
@@ -7349,7 +7345,7 @@
             history.push({ role: 'assistant', content: successResult.text, time: new Date().toISOString() });
             saveAiChatHistory(history);
             renderAiChatMessages();
-            if (badgeEl) badgeEl.textContent = `${successResult.modelName} · 免費線路`;
+            if (badgeEl) badgeEl.textContent = '✦ 貼心隨行 · 智慧在線';
 
             // Update mini preview on Partner Tab Card (Clean plain text without markdown symbols)
             const previewEl = document.getElementById('aiPetBubblePreview');
