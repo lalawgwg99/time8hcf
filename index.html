@@ -5457,223 +5457,156 @@
         </div>
     </div>
 
-    <!-- Zen Theme Picker Modal (Apple Action Sheet) -->
-    <div id="themePickerModal" class="fixed inset-0 hidden" style="z-index: 105;">
-        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)" onclick="closeThemePicker()"></div>
+    <!-- User Profile & Unified Theme Center Modal (Apple Action Sheet 方案 B) -->
+    <div id="userProfileModal" class="fixed inset-0 hidden" style="z-index: 105;">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)" onclick="closeUserProfileModal()"></div>
         <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
-            style="background:var(--bg); padding:16px 22px 32px; max-height:85vh; overflow-y:auto;">
+            style="background:var(--bg); padding:16px 20px 32px; max-height:88vh; overflow-y:auto; -webkit-overflow-scrolling:touch;">
             <div class="sheet-handle" style="margin-bottom:14px;"></div>
             
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:0 2px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding:0 2px;">
                 <div>
-                    <h3 style="font-size:17px; font-weight:700; color:var(--label); margin:0;">色彩主題</h3>
-                    <div style="font-size:12px; color:var(--label-tertiary); margin-top:2px;">4 款 Apple 系統風格調色</div>
+                    <h3 style="font-size:17px; font-weight:700; color:var(--label); margin:0;">個人檔案與主題</h3>
+                    <div style="font-size:12px; color:var(--label-tertiary); margin-top:2px;">自訂個人圓形頭像、名稱與介面色彩</div>
                 </div>
-                <button onclick="closeThemePicker()" aria-label="關閉"
+                <button onclick="closeUserProfileModal()" aria-label="關閉"
                     style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
                     <i class="fas fa-times" style="font-size:12px;"></i>
                 </button>
             </div>
 
-            <!-- Theme Cards List (Apple Inset Grouped) -->
-            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
-                
-                <!-- 1. 經典素白 -->
-                <div class="theme-card-option" id="themeOpt_alabaster" onclick="selectZenTheme('alabaster')">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div class="theme-palette-preview" style="background:#F4EFE6; border:1px solid rgba(40,32,20,0.12);">
-                            <span style="background:#D4B688;"></span>
-                            <span style="background:#6E7D6A;"></span>
+            <!-- Module 1: Avatar & Identity Section -->
+            <div class="zen-card" style="padding:16px 18px; margin-bottom:14px;">
+                <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+                    <!-- Circular Avatar Upload Trigger -->
+                    <div style="position:relative; cursor:pointer;" onclick="document.getElementById('userAvatarFileInput').click()" title="點擊更換大頭照">
+                        <div id="modalAvatarPreview" style="width:64px; height:64px; border-radius:50%; overflow:hidden; background:var(--purple); display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-size:22px; font-weight:700; border:2px solid var(--separator); box-shadow:0 3px 12px rgba(0,0,0,0.12);">
+                            <span id="modalAvatarInitial">T8</span>
                         </div>
-                        <div>
-                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">經典素白</div>
-                            <div style="font-size:12px; color:var(--label-tertiary);">極簡暖白 · 金褐光環</div>
+                        <div style="position:absolute; bottom:-2px; right:-2px; width:22px; height:22px; border-radius:50%; background:var(--label); color:var(--bg); display:flex; align-items:center; justify-content:center; font-size:10px; border:2px solid var(--bg); box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+                            <i class="fas fa-camera"></i>
                         </div>
                     </div>
-                    <div class="theme-check-icon" id="themeCheck_alabaster">
-                        <i class="fas fa-check"></i>
+                    <!-- Hidden File Input for Avatar Photo -->
+                    <input type="file" id="userAvatarFileInput" accept="image/*" onchange="handleUserAvatarUpload(event)" style="display:none;" />
+
+                    <div style="flex:1;">
+                        <div style="font-size:13.5px; font-weight:700; color:var(--label); margin-bottom:3px;">個人圓形頭像</div>
+                        <div style="font-size:11.5px; color:var(--label-tertiary); line-height:1.4;">點擊頭像上傳照片，或於下方挑選風格配色</div>
+                        <div style="display:flex; gap:6px; margin-top:8px;">
+                            <button type="button" onclick="document.getElementById('userAvatarFileInput').click()" class="active-scale"
+                                style="padding:4px 10px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator); font-size:11px; font-weight:600; color:var(--label); cursor:pointer; font-family:inherit;">
+                                上傳相片
+                            </button>
+                            <button type="button" onclick="resetUserAvatarToInitial()" class="active-scale"
+                                style="padding:4px 10px; border-radius:999px; background:none; border:none; font-size:11px; font-weight:500; color:var(--label-tertiary); cursor:pointer; font-family:inherit;">
+                                恢復預設
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 2. 黑曜夜色 -->
-                <div class="theme-card-option" id="themeOpt_obsidian" onclick="selectZenTheme('obsidian')">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div class="theme-palette-preview" style="background:#121110; border:1px solid rgba(255,255,255,0.15);">
-                            <span style="background:#E2C799;"></span>
-                            <span style="background:#8BAB86;"></span>
-                        </div>
-                        <div>
-                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">黑曜夜色</div>
-                            <div style="font-size:12px; color:var(--label-tertiary);">深空純黑 · OLED 省電微光</div>
-                        </div>
+                <!-- Input Fields: Name & Store -->
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div>
+                        <label style="font-size:11.5px; font-weight:600; color:var(--label-secondary); margin-bottom:4px; display:block;">
+                            姓名 / 暱稱
+                        </label>
+                        <input type="text" id="userProfileNameInput" placeholder="例: 志豪 或 Belinda"
+                            oninput="previewUserProfileName(event)"
+                            style="width:100%; padding:9px 12px; border-radius:10px; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); font-size:13.5px; outline:none; font-family:inherit;">
                     </div>
-                    <div class="theme-check-icon" id="themeCheck_obsidian">
-                        <i class="fas fa-check"></i>
+                    <div>
+                        <label style="font-size:11.5px; font-weight:600; color:var(--label-secondary); margin-bottom:4px; display:block;">
+                            所屬門市 / 員編 (選填)
+                        </label>
+                        <input type="text" id="userProfileStoreInput" placeholder="例: 五甲店 · 8802"
+                            style="width:100%; padding:9px 12px; border-radius:10px; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); font-size:13.5px; outline:none; font-family:inherit;">
                     </div>
-                </div>
-
-                <!-- 3. 竹影青綠 -->
-                <div class="theme-card-option" id="themeOpt_sage" onclick="selectZenTheme('sage')">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div class="theme-palette-preview" style="background:#EFF4EE; border:1px solid rgba(30,50,32,0.12);">
-                            <span style="background:#72A979;"></span>
-                            <span style="background:#4D7A52;"></span>
-                        </div>
-                        <div>
-                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">竹影青綠</div>
-                            <div style="font-size:12px; color:var(--label-tertiary);">清幽鼠尾草綠 · 翠綠光環</div>
-                        </div>
-                    </div>
-                    <div class="theme-check-icon" id="themeCheck_sage">
-                        <i class="fas fa-check"></i>
-                    </div>
-                </div>
-
-                <!-- 4. 暮光晨紫 -->
-                <div class="theme-card-option" id="themeOpt_twilight" onclick="selectZenTheme('twilight')">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div class="theme-palette-preview" style="background:#F4EFF4; border:1px solid rgba(50,30,60,0.12);">
-                            <span style="background:#A584BE;"></span>
-                            <span style="background:#7A5A8A;"></span>
-                        </div>
-                        <div>
-                            <div style="font-size:14.5px; font-weight:600; color:var(--label);">暮光晨紫</div>
-                            <div style="font-size:12px; color:var(--label-tertiary);">薰衣草灰紫 · 晨霧光環</div>
-                        </div>
-                    </div>
-                    <div class="theme-check-icon" id="themeCheck_twilight">
-                        <i class="fas fa-check"></i>
-                    </div>
-                </div>
-
-            </div>
-
-            <button onclick="closeThemePicker()" class="active-scale"
-                style="width:100%; padding:14px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:14.5px; font-weight:600; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.04em;">完成</button>
-        </div>
-    </div>
-
-    <!-- Install Guide (Apple Action Sheet) -->
-    <div id="installGuideModal" class="fixed inset-0 hidden" style="z-index: 100;">
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeInstallGuide()">
-        </div>
-        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
-            style="background:var(--bg); padding:14px 24px 32px; max-height:85vh; overflow-y:auto;">
-            <div class="sheet-handle"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h3 style="font-size:17px; font-weight:700; color:var(--label);">加入手機主畫面</h3>
-                <button onclick="closeInstallGuide()"
-                    style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
-                    <i class="fas fa-times" style="font-size:12px;"></i>
-                </button>
-            </div>
-            
-            <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.5; margin-bottom:16px;">
-                加入主畫面後即可隱藏瀏覽器網址列，享受 100% 全螢幕原生 App 的沉浸體驗與極速啟動：
-            </p>
-
-            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
-                <div style="font-size:12px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-top:4px;">🍎 iOS (Safari 瀏覽器)</div>
-                <div
-                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
-                    <i class="fas fa-arrow-up-from-bracket"
-                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
-                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">1. 點擊 Safari 底部中央的<br><span style="font-weight:700; color:var(--label);">「分享」按鈕</span></div>
-                </div>
-                <div
-                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
-                    <i class="far fa-plus-square"
-                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
-                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">2. 選單往下滑動，點選<br><span
-                            style="font-weight:700; color:var(--label);">「加入主畫面」</span> ➔ 按右上角「新增」</div>
-                </div>
-
-                <div style="font-size:12px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-top:8px;">🤖 Android (Chrome 瀏覽器)</div>
-                <div
-                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
-                    <i class="fas fa-ellipsis-vertical"
-                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
-                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">點擊右上角「更多選單 (⋮)」➔ 選擇 <span style="font-weight:700; color:var(--label);">「安裝應用程式」</span> 或 <span style="font-weight:700; color:var(--label);">「新增至主螢幕」</span></div>
                 </div>
             </div>
 
-            <button onclick="closeInstallGuide()"
-                style="width:100%; padding:15px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:15px; font-weight:500; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em;">了解並返回</button>
-        </div>
-    </div>
-
-    <!-- Today Notes & Todo Modal (今日待辦與專注筆記) -->
-    <div id="notesModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
-            onclick="closeNotesModal()"></div>
-        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
-            style="background:var(--bg);max-height:88vh;overflow-y:auto;">
-            <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:1;">
-                <div class="sheet-handle"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <i class="fas fa-list-check" style="color:var(--blue); font-size:16px;"></i>
-                        <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">今日待辦與筆記</h3>
+            <!-- Module 2: Unified Theme Cards List (Apple Inset Grouped) -->
+            <div style="margin-bottom:18px;">
+                <div class="editorial-label" style="margin-bottom:8px; padding:0 2px;">介面色彩主題</div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    
+                    <!-- 1. 經典素白 -->
+                    <div class="theme-card-option" id="themeOpt_alabaster" onclick="selectZenTheme('alabaster')">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="theme-palette-preview" style="background:#F4EFE6; border:1px solid rgba(40,32,20,0.12);">
+                                <span style="background:#D4B688;"></span>
+                                <span style="background:#6E7D6A;"></span>
+                            </div>
+                            <div>
+                                <div style="font-size:14px; font-weight:600; color:var(--label);">經典素白</div>
+                                <div style="font-size:11.5px; color:var(--label-tertiary);">極簡暖白 · 金褐光環</div>
+                            </div>
+                        </div>
+                        <div class="theme-check-icon" id="themeCheck_alabaster">
+                            <i class="fas fa-check"></i>
+                        </div>
                     </div>
-                    <button onclick="closeNotesModal()" aria-label="完成"
-                        style="padding:5px 12px; border-radius:999px; background:var(--fill-secondary); border:none; color:var(--blue); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;">
-                        完成
-                    </button>
+
+                    <!-- 2. 黑曜夜色 -->
+                    <div class="theme-card-option" id="themeOpt_obsidian" onclick="selectZenTheme('obsidian')">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="theme-palette-preview" style="background:#121110; border:1px solid rgba(255,255,255,0.15);">
+                                <span style="background:#E2C799;"></span>
+                                <span style="background:#8BAB86;"></span>
+                            </div>
+                            <div>
+                                <div style="font-size:14px; font-weight:600; color:var(--label);">黑曜夜色</div>
+                                <div style="font-size:11.5px; color:var(--label-tertiary);">深空純黑 · OLED 省電微光</div>
+                            </div>
+                        </div>
+                        <div class="theme-check-icon" id="themeCheck_obsidian">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+
+                    <!-- 3. 竹影青綠 -->
+                    <div class="theme-card-option" id="themeOpt_sage" onclick="selectZenTheme('sage')">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="theme-palette-preview" style="background:#EFF4EE; border:1px solid rgba(30,50,32,0.12);">
+                                <span style="background:#72A979;"></span>
+                                <span style="background:#4D7A52;"></span>
+                            </div>
+                            <div>
+                                <div style="font-size:14px; font-weight:600; color:var(--label);">竹影青綠</div>
+                                <div style="font-size:11.5px; color:var(--label-tertiary);">清幽鼠尾草綠 · 翠綠光環</div>
+                            </div>
+                        </div>
+                        <div class="theme-check-icon" id="themeCheck_sage">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+
+                    <!-- 4. 暮光晨紫 -->
+                    <div class="theme-card-option" id="themeOpt_twilight" onclick="selectZenTheme('twilight')">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="theme-palette-preview" style="background:#F4EFF4; border:1px solid rgba(50,30,60,0.12);">
+                                <span style="background:#A584BE;"></span>
+                                <span style="background:#7A5A8A;"></span>
+                            </div>
+                            <div>
+                                <div style="font-size:14px; font-weight:600; color:var(--label);">暮光晨紫</div>
+                                <div style="font-size:11.5px; color:var(--label-tertiary);">薰衣草灰紫 · 晨霧光環</div>
+                            </div>
+                        </div>
+                        <div class="theme-check-icon" id="themeCheck_twilight">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div style="padding:16px 24px 36px;">
 
-                <!-- 1. 當前專注主題 (打卡時自動關聯) -->
-                <div class="section-label" style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>當前專注任務</span>
-                    <span style="font-size:11px; font-weight:400; color:var(--label-tertiary);">打卡時自動記錄</span>
-                </div>
-                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
-                    <input type="text" id="notesTaskInput" placeholder="今天正在進行什麼？（例：核心功能開發）"
-                        oninput="saveCurrentTaskFromNotes()"
-                        style="width:100%; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:10px 12px; font-size:14px; font-family:inherit; outline:none; margin-bottom:10px; transition:border 0.2s;">
-                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                        <button type="button" onclick="setQuickTaskTag('🏢 常規辦公')" class="task-chip">🏢 常規辦公</button>
-                        <button type="button" onclick="setQuickTaskTag('💻 核心開發')" class="task-chip">💻 核心開發</button>
-                        <button type="button" onclick="setQuickTaskTag('📊 專案會議')" class="task-chip">📊 專案會議</button>
-                        <button type="button" onclick="setQuickTaskTag('☕ 外出拜訪')" class="task-chip">☕ 外出拜訪</button>
-                        <button type="button" onclick="setQuickTaskTag('🧘 深度研讀')" class="task-chip">🧘 深度研讀</button>
-                    </div>
-                </div>
-
-                <!-- 2. 今日待辦清單 (To-do Checklist) -->
-                <div class="section-label" style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>今日核心待辦</span>
-                    <span id="todoProgressCount" style="font-size:11px; font-weight:500; color:var(--label-tertiary);">0/0 完成</span>
-                </div>
-                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
-                    <!-- New Todo Input -->
-                    <div style="display:flex; gap:8px; margin-bottom:12px;">
-                        <input type="text" id="newTodoInput" placeholder="新增待辦事項..."
-                            onkeydown="if(event.key==='Enter') addNewTodoItem()"
-                            style="flex:1; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:8px 12px; font-size:13.5px; font-family:inherit; outline:none;">
-                        <button type="button" onclick="addNewTodoItem()"
-                            style="padding:0 14px; background:var(--blue); color:#fff; border:none; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer;">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <!-- Todo Items List -->
-                    <div id="todoItemsList" style="display:flex; flex-direction:column; gap:8px;">
-                        <!-- Rendered by JS -->
-                    </div>
-                </div>
-
-                <!-- 3. 隨手靈感便籤 (Quick Memo) -->
-                <div class="section-label">隨手靈感便籤</div>
-                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
-                    <textarea id="notesMemoTextarea" rows="4" placeholder="記下今日進度、明早待辦、或臨時冒出的靈感想法..."
-                        oninput="saveNotesMemo()"
-                        style="width:100%; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:10px 12px; font-size:13.5px; font-family:inherit; outline:none; resize:none; line-height:1.5;"></textarea>
-                </div>
-
-                <button onclick="closeNotesModal()" class="active-scale"
-                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:14.5px; font-weight:500; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">完成並保存</button>
-            </div>
+            <!-- Save Action Button -->
+            <button type="button" onclick="saveUserProfileSettings()" class="active-scale"
+                style="width:100%; padding:13px; border-radius:var(--radius); font-size:14px; font-weight:700; background:var(--label); color:var(--bg); border:none; cursor:pointer; font-family:inherit; box-shadow:var(--shadow-button);">
+                完成並儲存
+            </button>
         </div>
     </div>
 
