@@ -4497,7 +4497,7 @@
                         <div style="position:relative; width:100%; padding-top:56.25%; background:#000; border-radius:14px; overflow:hidden; margin-bottom:12px; border:0.5px solid var(--separator);">
                             <iframe 
                                 id="partnerRadioIframe" 
-                                src="https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+2026+華語流行&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1" 
+                                src="https://www.youtube-nocookie.com/embed/2UUWWRuVMco?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1" 
                                 title="4K Leaf Music Player" 
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -7250,31 +7250,28 @@
         }
 
         // ==========================================
-        // ===== 24H 夥伴陪伴療癒電台 (Ambient Focus Radio Engine) =====
-        // ==========================================
-        // ==========================================
         // ===== 4K Leaf Music 專屬華語音樂電台 (@4KLeafMusic) =====
         // ==========================================
         const LEAF_STATIONS = {
             leaf_hits: {
-                name: '🍁 4K Leaf · 2026 華語熱門流行精選',
-                desc: '@4KLeafMusic 最新流行歌曲與動態歌詞',
-                embedUrl: 'https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+2026+華語流行&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1'
+                name: '🍁 4K Leaf · 2026 華語熱門新歌精選',
+                desc: '愛就一個字 · 總會有人 · 花海 · 周杰倫/林俊傑/鄧紫棋',
+                videoId: '2UUWWRuVMco'
             },
             leaf_kkbox: {
                 name: '📈 4K Leaf · KKBOX 華語單曲排行週榜',
-                desc: 'KKBOX 華語排行榜前 50 首循環',
-                embedUrl: 'https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+KKBOX+華語單曲排行&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1'
+                desc: '2026 年輕族群最愛 · 40 首超好聽流行歌曲',
+                videoId: 'crjBd2c8lq8'
             },
             leaf_love: {
-                name: '💔 4K Leaf · 傷感情歌專注精選',
-                desc: '溫柔抒情動態歌詞 · 陪伴自習時光',
-                embedUrl: 'https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+傷感情歌+精選&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1'
+                name: '💔 4K Leaf · 最感動華語愛情歌精選',
+                desc: '如果可以 · 孤勇者 · 跳樓機 · 治癒情歌動態歌詞',
+                videoId: 'eiCjFq1fgtc'
             },
             leaf_tiktok: {
-                name: '⚡ 4K Leaf · 抖音熱搜熱播排行榜',
-                desc: 'TikTok / 抖音最新熱門歌曲合集',
-                embedUrl: 'https://www.youtube-nocookie.com/embed?listType=search&list=4K+Leaf+Music+抖音熱門歌曲&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1'
+                name: '⚡ 4K Leaf · 2026 抖音最火爆新歌',
+                desc: '若月亮沒來 · 最偉大的作品 · 抖音熱搜榜',
+                videoId: 'hMDfBaNfLt4'
             }
         };
 
@@ -7300,14 +7297,14 @@
 
             if (stationKey === 'custom') {
                 if (_customLeafStreamId) {
-                    iframe.src = `https://www.youtube-nocookie.com/embed/${_customLeafStreamId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1&controls=1`;
+                    iframe.src = `https://www.youtube-nocookie.com/embed/${_customLeafStreamId}?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1`;
                 } else {
                     openCustomStationModal();
                 }
             } else {
                 const station = LEAF_STATIONS[stationKey];
                 if (station) {
-                    iframe.src = station.embedUrl;
+                    iframe.src = `https://www.youtube-nocookie.com/embed/${station.videoId}?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1`;
                 }
             }
 
