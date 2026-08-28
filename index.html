@@ -4638,8 +4638,7 @@
                             style="background:var(--fill-secondary); border-radius:12px; padding:10px 12px; margin-bottom:10px; border:0.5px solid var(--separator); cursor:pointer;">
                             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
                                 <div style="display:flex; align-items:center; gap:5px;">
-                                    <span style="width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block;"></span>
-                                    <span style="font-size:11px; font-weight:600; color:var(--label-secondary);">智囊在線</span>
+                                    <span style="font-size:11px; font-weight:600; color:var(--label-secondary);">🐾 智囊在線</span>
                                 </div>
                                 <span style="font-size:10.5px; color:var(--blue); font-weight:600;">點擊對話 ↗</span>
                             </div>
@@ -5000,8 +4999,8 @@
 
             <!-- Typing Indicator -->
             <div id="aiTypingIndicator" style="display:none; padding:0 16px 8px; align-items:center; gap:6px;">
-                <i class="fas fa-sparkles" style="font-size:10.5px; color:var(--purple);"></i>
-                <span style="font-size:11.5px; color:var(--label-tertiary);">晶靈正在用心思考回覆中…</span>
+                <span style="font-size:13px;">🐾</span>
+                <span style="font-size:11.5px; color:var(--label-tertiary);">智囊正在用心思考回覆中…</span>
             </div>
 
             <!-- Bottom Input Bar -->
@@ -5053,6 +5052,47 @@
                 style="width:100%; padding:13px; border-radius:var(--radius); font-size:14.5px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); font-family:inherit;">
                 儲存金鑰
             </button>
+        </div>
+    </div>
+
+    <!-- Pet Rename Modal (Apple Inset Action Sheet) -->
+    <div id="petRenameModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closePetRenameModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:16px 20px 32px;">
+            <div class="sheet-handle" style="margin-bottom:14px;"></div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="font-size:16px; font-weight:700; color:var(--label); margin:0;">為夥伴自訂暱稱</h3>
+                <button type="button" onclick="closePetRenameModal()" aria-label="關閉"
+                    style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:11px;"></i>
+                </button>
+            </div>
+
+            <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:14px;">
+                <label style="font-size:12px; font-weight:600; color:var(--label-secondary); margin-bottom:6px; display:block;">
+                    夥伴暱稱
+                </label>
+                <input type="text" id="petRenameInput" maxlength="12" placeholder="輸入自訂名稱 (最多 12 字)"
+                    style="width:100%; padding:10px 12px; border-radius:10px; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); font-size:14px; font-weight:600; outline:none;"
+                    onkeydown="if(event.key==='Enter') savePetRename()">
+                <p style="font-size:11px; color:var(--label-tertiary); margin:6px 0 0;">
+                    自訂名稱將同步顯示於舞台、圖鑑及 AI 對話互動中。
+                </p>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button type="button" onclick="resetPetDefaultName()" class="active-scale"
+                    style="flex:1; padding:12px; border-radius:var(--radius); font-size:13.5px; font-weight:600; background:var(--fill-secondary); color:var(--label-secondary); border:0.5px solid var(--separator); cursor:pointer; font-family:inherit;">
+                    恢復原名
+                </button>
+                <button type="button" onclick="savePetRename()" class="active-scale"
+                    style="flex:2; padding:12px; border-radius:var(--radius); font-size:13.5px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; font-family:inherit; box-shadow:var(--shadow-button);">
+                    確認儲存
+                </button>
+            </div>
         </div>
     </div>
 
@@ -7119,7 +7159,7 @@
         if (typeof readPetSystem === 'function' && typeof activePet === 'function') {
             const state = readPetSystem();
             const pet = activePet(state);
-            if (pet && pet.name) return pet.name;
+            if (pet) return pet.customName || pet.name || '工時晶靈';
         }
         return '工時晶靈';
     }
@@ -7144,6 +7184,82 @@
         }
         closeAiKeyModal();
     }
+
+    // ===== 夥伴自訂暱稱系統 =====
+    let _currentRenamingPetId = null;
+
+    function openRenameModalForPet(petId) {
+        if (typeof event !== 'undefined' && event) {
+            if (typeof event.stopPropagation === 'function') event.stopPropagation();
+            if (typeof event.preventDefault === 'function') event.preventDefault();
+        }
+        const state = typeof readPetSystem === 'function' ? readPetSystem() : null;
+        if (!state || !state.pets) return;
+        const pet = state.pets.find(p => p.petId === petId);
+        if (!pet) return;
+
+        _currentRenamingPetId = petId;
+        const modal = document.getElementById('petRenameModal');
+        const input = document.getElementById('petRenameInput');
+        if (input) {
+            input.value = pet.customName || pet.name || '';
+        }
+        if (modal) modal.classList.remove('hidden');
+        setTimeout(() => {
+            if (input) input.focus();
+        }, 200);
+    }
+
+    function closePetRenameModal() {
+        const modal = document.getElementById('petRenameModal');
+        if (modal) modal.classList.add('hidden');
+        _currentRenamingPetId = null;
+    }
+
+    function savePetRename() {
+        if (!_currentRenamingPetId) return;
+        const input = document.getElementById('petRenameInput');
+        const newName = input ? input.value.trim() : '';
+        if (!newName) {
+            showToast('請輸入有效暱稱');
+            return;
+        }
+        const state = typeof readPetSystem === 'function' ? readPetSystem() : null;
+        if (!state) return;
+        const pet = state.pets.find(p => p.petId === _currentRenamingPetId);
+        if (pet) {
+            pet.customName = newName;
+            writePetSystem(state);
+            showToast(`✦ 夥伴已成功更名為「${newName}」！`);
+            renderPartnerRoom();
+            if (typeof switchPetPreview === 'function' && typeof _currentPreviewIndex === 'number') {
+                switchPetPreview(_currentPreviewIndex);
+            }
+        }
+        closePetRenameModal();
+    }
+
+    function resetPetDefaultName() {
+        if (!_currentRenamingPetId) return;
+        const state = typeof readPetSystem === 'function' ? readPetSystem() : null;
+        if (!state) return;
+        const pet = state.pets.find(p => p.petId === _currentRenamingPetId);
+        if (pet) {
+            delete pet.customName;
+            writePetSystem(state);
+            showToast(`✦ 已恢復夥伴原名「${pet.name}」！`);
+            renderPartnerRoom();
+            if (typeof switchPetPreview === 'function' && typeof _currentPreviewIndex === 'number') {
+                switchPetPreview(_currentPreviewIndex);
+            }
+        }
+        closePetRenameModal();
+    }
+
+    window.openRenameModalForPet = openRenameModalForPet;
+    window.closePetRenameModal = closePetRenameModal;
+    window.savePetRename = savePetRename;
+    window.resetPetDefaultName = resetPetDefaultName;
 
     function openAiChatSheet() {
         const modal = document.getElementById('aiChatSheetModal');
@@ -7195,7 +7311,7 @@
         if (history.length === 0) {
             container.innerHTML = `
                 <div class="ai-msg-bubble-pet">
-                    <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px;">${petName}</div>
+                    <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px; display:flex; align-items:center; gap:4px;"><span>🐾</span> <span>${escapeHtml(petName)}</span></div>
                     <div>主人好呀！我是你的專屬工時智囊～ 🌿<br>今天有什麼需要我協助的嗎？無論是跨店調貨話術、勞基法規諮詢、工作重點濃縮，還是想放鬆聊聊，我都隨時在這裡陪你！</div>
                 </div>
             `;
@@ -7213,7 +7329,7 @@
             } else {
                 html += `
                     <div class="ai-msg-bubble-pet">
-                        <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px;">${petName}</div>
+                        <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px; display:flex; align-items:center; gap:4px;"><span>🐾</span> <span>${escapeHtml(petName)}</span></div>
                         <div style="white-space:pre-wrap;">${escapeHtml(msg.content)}</div>
                     </div>
                 `;
@@ -7695,7 +7811,16 @@
             }
 
             const nameEl = byId('previewPetName');
-            if (nameEl) nameEl.textContent = spec.name;
+            if (nameEl) {
+                const state = typeof readPetSystem === 'function' ? readPetSystem() : { pets: [] };
+                const matchingPet = state.pets && state.pets.find(p => p.specId === spec.id || (p.series === spec.series && p.rarity === spec.rarity));
+                if (matchingPet) {
+                    const displayName = matchingPet.customName || spec.name;
+                    nameEl.innerHTML = `<span style="display:inline-flex; align-items:center; justify-content:center; gap:6px;"><span>${escapeHtml(displayName)}</span> <button type="button" onclick="window.openRenameModalForPet('${matchingPet.petId}')" style="border:none; background:var(--fill); border-radius:999px; padding:3px 9px; color:var(--purple); cursor:pointer; font-size:11.5px; font-weight:500; font-family:inherit; display:inline-flex; align-items:center; gap:4px;"><i class="fas fa-pen" style="font-size:9px;"></i> 改名</button></span>`;
+                } else {
+                    nameEl.textContent = spec.name;
+                }
+            }
 
             const badgeEl = byId('previewPetRarityBadge');
             if (badgeEl) {
@@ -7857,7 +7982,12 @@
             }
             const heroTitle = byId('partnerHeroTitle');
             if (heroTitle) {
-                heroTitle.textContent = pet ? (pet.name || '工時晶靈') : `凝聚中 (${count}/${HATCH_COST})`;
+                if (pet) {
+                    const displayName = pet.customName || pet.name || '工時晶靈';
+                    heroTitle.innerHTML = `<span style="display:inline-flex; align-items:center; justify-content:center; gap:6px;"><span>${escapeHtml(displayName)}</span> <button type="button" onclick="window.openRenameModalForPet('${pet.petId}')" style="border:none; background:rgba(122,90,138,0.08); border-radius:999px; padding:2px 8px; color:var(--purple); cursor:pointer; font-size:11px; font-weight:500; font-family:inherit; display:inline-flex; align-items:center; gap:3px;" title="為夥伴更名"><i class="fas fa-pen" style="font-size:9px;"></i> 改名</button></span>`;
+                } else {
+                    heroTitle.textContent = `凝聚中 (${count}/${HATCH_COST})`;
+                }
             }
             const heroSub = byId('partnerHeroSub');
             if (heroSub) {
