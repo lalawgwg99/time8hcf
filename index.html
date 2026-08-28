@@ -452,7 +452,7 @@
 
         /* =============================================
            APPLE UNIFIED TOP GLANCE & ACTION BAR
-           (頂部一體化多功能膠囊列：氣象 + 最近下班 + 待辦/木魚圖標)
+           (頂部一體化多功能膠囊列：氣象 + 最近下班 + 待辦文字圖標)
            ============================================= */
         .today-glance-bar {
             display: inline-flex;
@@ -516,30 +516,28 @@
             flex-shrink: 0;
         }
 
-        .glance-actions {
-            display: flex;
+        /* 待辦按鈕（圖標 + 文字） */
+        .glance-notes-btn {
+            display: inline-flex;
             align-items: center;
             gap: 5px;
-        }
-
-        .glance-action-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
+            padding: 3.5px 10px;
+            border-radius: 999px;
             background: var(--fill);
             border: 0.5px solid var(--separator);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--label);
             cursor: pointer;
             position: relative;
-            padding: 0;
             outline: none;
             transition: transform 0.15s ease, background 0.15s ease;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            white-space: nowrap;
         }
 
-        .glance-action-btn:active {
-            transform: scale(0.9);
+        .glance-notes-btn:active {
+            transform: scale(0.95);
             background: var(--fill-secondary);
         }
 
@@ -552,26 +550,6 @@
             border-radius: 50%;
             background: #FF3B30;
             box-shadow: 0 0 4px rgba(255, 59, 48, 0.8);
-        }
-
-        /* 今日靈籤專屬標籤 */
-        .life-fortune-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 8px;
-            border-radius: 999px;
-            background: rgba(184, 139, 74, 0.12);
-            border: 0.5px solid rgba(184, 139, 74, 0.3);
-            color: #9C7747;
-            font-size: 10.5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.15s ease;
-            outline: none;
-        }
-        .life-fortune-tag:active {
-            transform: scale(0.94);
         }
 
         /* Apple Weather Modal & Inset Cards */
@@ -2489,37 +2467,43 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
         }
 
-        /* --- Zen Rest Toolbar (In-place Rest & Soundscape) --- */
+        /* --- Zen Rest Toolbar (In-place Actions: 深呼吸 · 今日靈籤 · 功德) --- */
         .zen-rest-bar {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             margin-top: 14px;
             transition: opacity 0.3s ease;
+            width: 100%;
         }
 
         .zen-tool-btn {
+            flex: 1;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px 6px;
             border-radius: 999px;
             background: var(--fill);
             border: 0.5px solid var(--separator);
-            color: var(--label-secondary);
-            font-size: 12.5px;
+            color: var(--label);
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            -webkit-user-select: none;
             transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
+            white-space: nowrap;
+            outline: none;
         }
 
         .zen-tool-btn:active {
-            transform: scale(0.96);
+            transform: scale(0.95);
             background: var(--fill-secondary);
         }
 
@@ -2533,6 +2517,21 @@
             font-size: 12px;
             color: var(--blue);
             transition: color 0.2s ease;
+            line-height: 1;
+        }
+
+        .zen-tool-btn.active .zen-tool-icon {
+            color: #5B8A60;
+        }
+
+        .zen-tool-badge {
+            font-size: 9.5px;
+            color: var(--label-tertiary);
+            padding: 1px 4px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.04);
+            letter-spacing: 0.02em;
+            line-height: 1;
         }
 
         .zen-tool-btn.active .zen-tool-icon {
@@ -3862,7 +3861,7 @@
 
                 <!-- Hero: Circular Ring with Time Inside (Apple Native Masterpiece - 226px) -->
                 <div class="hero-section">
-                    <!-- Top: Unified Dynamic Glance & Quick Actions Bar -->
+                    <!-- Top: Unified Dynamic Glance Bar (Weather + Past Punch-out + Todo with Icon & Text) -->
                     <div class="today-glance-bar">
                         <!-- Left: Weather -->
                         <div id="ringWeatherBadge" class="glance-item active-scale" onclick="openWeatherModal(event)" title="即時天氣 · 點擊查看預報">
@@ -3881,19 +3880,12 @@
 
                         <div class="glance-divider"></div>
 
-                        <!-- Right: Icon Quick Actions (Todo + Muyu) -->
-                        <div class="glance-actions">
-                            <button type="button" id="ringNotesBtn" onclick="openNotesModal(event)" class="glance-action-btn active-scale" title="今日待辦與專注筆記" aria-label="待辦筆記">
-                                <i class="fas fa-list-check" style="color:var(--purple); font-size:12px; pointer-events:none;"></i>
-                                <span id="notesBadgeDot" class="notes-dot hidden"></span>
-                            </button>
-                            <button type="button" id="ringMuyuBadge" onclick="tapOfficeMuyu(event)" ondblclick="openMuyuModal()" oncontextmenu="openMuyuModal(); return false;" class="glance-action-btn active-scale" title="辦公室電子木魚 · 點擊積功德，雙擊進入功德堂" aria-label="電子木魚">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#B88B4A; pointer-events:none;">
-                                    <path d="M12 4.5C7.5 4.5 4 8 4 12.5c0 3.8 2.6 6.8 6.2 7.5L12 20.2l1.8-.2c3.6-.7 6.2-3.7 6.2-7.5 0-4.5-3.5-8-8-8z" fill="rgba(196,168,122,0.25)" stroke="#B88B4A" />
-                                    <circle cx="9.5" cy="12" r="1.2" fill="#B88B4A" />
-                                </svg>
-                            </button>
-                        </div>
+                        <!-- Right: Todo with Icon + Text -->
+                        <button type="button" id="ringNotesBtn" onclick="openNotesModal(event)" class="glance-notes-btn active-scale" title="今日待辦與專注筆記" aria-label="待辦清單">
+                            <i class="fas fa-list-check" style="color:var(--purple); font-size:11.5px; pointer-events:none;"></i>
+                            <span>待辦</span>
+                            <span id="notesBadgeDot" class="notes-dot hidden"></span>
+                        </button>
                     </div>
 
                     <!-- Center: 100% Clean, Sacred 226px Apple Progress Ring -->
@@ -3942,19 +3934,13 @@
                     <div id="progressText" class="ring-target-info">目標 8 小時</div>
                 </div>
 
-                <!-- Interactive Life Quotes & Daily Fortune Slip Pill -->
+                <!-- Interactive Life Quotes & Mindset Pill -->
                 <div id="lifeSuggestion" class="life-pill" onclick="rotateLifeQuote(true)" title="點擊換一句心靈哲思">
                     <div class="life-pill-content">
                         <i class="fas fa-quote-left life-pill-icon"></i>
                         <span id="lifeSuggestionText" class="life-pill-text">心若澄澈，萬物皆明；步履從容，行則必至。</span>
                     </div>
-                    <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-                        <button type="button" id="dailyFortuneBtn" onclick="openTodayFortune(event)" class="life-fortune-tag hidden" title="點擊回顧今日晨曦靈籤">
-                            <span>📜</span>
-                            <span>今日靈籤</span>
-                        </button>
-                        <i class="fas fa-arrow-rotate-right life-pill-refresh"></i>
-                    </div>
+                    <i class="fas fa-arrow-rotate-right life-pill-refresh"></i>
                 </div>
 
                 <!-- Salary Ticker -->
@@ -4007,12 +3993,28 @@
                         </div>
                     </div>
 
-                    <!-- Rest Toolbar: In-place Deep Breathe -->
+                    <!-- Under-Punch 3 Actions: 深呼吸 · 今日靈籤 · 功德 (文字 + 圖標) -->
                     <div id="zenRestBar" class="zen-rest-bar">
-                        <button class="zen-tool-btn" id="breatheToolBtn" onclick="toggleZenBreathe()" title="開啟 1 分鐘深呼吸放鬆">
-                            <i class="fas fa-wind zen-tool-icon"></i>
+                        <!-- 1. 深呼吸 -->
+                        <button type="button" class="zen-tool-btn active-scale" id="breatheToolBtn" onclick="toggleZenBreathe()" title="開啟 1 分鐘深呼吸放鬆">
+                            <i class="fas fa-wind zen-tool-icon" style="color:var(--blue); font-size:12px;"></i>
                             <span>深呼吸</span>
-                            <span class="zen-tool-badge">1 min</span>
+                            <span class="zen-tool-badge">1m</span>
+                        </button>
+
+                        <!-- 2. 今日靈籤 -->
+                        <button type="button" class="zen-tool-btn active-scale" id="dailyFortuneActionBtn" onclick="openTodayFortune(event)" title="晨曦靈籤 · 查看今日專注指引">
+                            <span style="font-size:13px; line-height:1;">📜</span>
+                            <span>今日靈籤</span>
+                        </button>
+
+                        <!-- 3. 功德 (電子木魚) -->
+                        <button type="button" class="zen-tool-btn active-scale" id="ringMuyuBadge" onclick="tapOfficeMuyu(event)" ondblclick="openMuyuModal()" oncontextmenu="openMuyuModal(); return false;" title="辦公室電子木魚 · 點擊積功德，雙擊進入功德堂" aria-label="電子木魚">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#B88B4A; pointer-events:none; flex-shrink:0;">
+                                <path d="M12 4.5C7.5 4.5 4 8 4 12.5c0 3.8 2.6 6.8 6.2 7.5L12 20.2l1.8-.2c3.6-.7 6.2-3.7 6.2-7.5 0-4.5-3.5-8-8-8z" fill="rgba(196,168,122,0.25)" stroke="#B88B4A" />
+                                <circle cx="9.5" cy="12" r="1.2" fill="#B88B4A" />
+                            </svg>
+                            <span>功德</span>
                         </button>
                     </div>
                 </div>
@@ -11849,8 +11851,7 @@
                 } catch (err) {}
             }
 
-            const fortuneBtn = document.getElementById('dailyFortuneBtn');
-            if (fortuneBtn) fortuneBtn.classList.remove('hidden');
+
 
             // 觸覺微震 + 竹籤碰撞聲
             if ('vibrate' in navigator) navigator.vibrate([20, 40, 20, 50, 30]);
@@ -12312,16 +12313,7 @@
             if (typeof renderWeeklySummary === 'function') renderWeeklySummary();
             if (typeof updateNotesBadge === 'function') updateNotesBadge();
 
-            // --- 今日靈籤標籤狀態同步 ---
-            const todaySlipStored = localStorage.getItem('dailyFortuneSlip_' + getTodayKey());
-            const fortuneBtn = document.getElementById('dailyFortuneBtn');
-            if (fortuneBtn) {
-                if (todaySlipStored) {
-                    fortuneBtn.classList.remove('hidden');
-                } else {
-                    fortuneBtn.classList.add('hidden');
-                }
-            }
+
 
             // --- 勞基法 §35: 連續工作滿 230 分鐘（提前 10 分鐘）未打卡休息預警 ---
             if (result.isOngoing && lastRecord) {
