@@ -3950,7 +3950,180 @@
         .rarity-epic { background: rgba(122, 90, 138, 0.14); color: var(--purple); border: 0.5px solid rgba(122, 90, 138, 0.25); }
         .rarity-hidden { background: rgba(212, 163, 62, 0.16); color: #9E7412; border: 0.5px solid rgba(212, 163, 62, 0.35); }
 
-        /* --- Notice Banners & Apple Toast --- */
+        /* --- Ambient Focus Radio (Apple Native Inset Glassmorphism Player) --- */
+        .partner-radio-card {
+            background: var(--card);
+            border: 0.5px solid var(--separator);
+            border-radius: var(--radius);
+            padding: 16px 18px 14px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s var(--spring);
+        }
+
+        .partner-radio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .radio-live-dot-container {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(122, 90, 138, 0.10);
+            border: 0.5px solid rgba(122, 90, 138, 0.20);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .radio-live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--purple);
+            box-shadow: 0 0 8px rgba(122, 90, 138, 0.6);
+            animation: radioDotPulse 1.8s infinite;
+        }
+
+        @keyframes radioDotPulse {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 12px rgba(122, 90, 138, 0.9); }
+            100% { transform: scale(0.9); opacity: 0.7; }
+        }
+
+        .partner-radio-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--label);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .partner-radio-status {
+            font-size: 11px;
+            color: var(--label-tertiary);
+            letter-spacing: 0.02em;
+            margin-top: 1px;
+        }
+
+        /* Apple Sound Wave Bars Animation */
+        .sound-wave-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2.5px;
+            height: 14px;
+            padding: 0 4px;
+        }
+
+        .sound-wave-bars .bar {
+            width: 2.5px;
+            background: var(--purple);
+            border-radius: 999px;
+            animation: waveBounce 1.2s ease-in-out infinite alternate;
+        }
+
+        .sound-wave-bars .bar1 { height: 6px; animation-delay: 0.1s; }
+        .sound-wave-bars .bar2 { height: 13px; animation-delay: 0.35s; }
+        .sound-wave-bars .bar3 { height: 8px; animation-delay: 0.2s; }
+        .sound-wave-bars .bar4 { height: 11px; animation-delay: 0.45s; }
+
+        @keyframes waveBounce {
+            0% { height: 4px; opacity: 0.4; }
+            100% { height: 14px; opacity: 1; }
+        }
+
+        .partner-radio-btn {
+            background: var(--fill);
+            border: 0.5px solid var(--separator);
+            color: var(--label);
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 5px 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            transition: all 0.25s ease;
+        }
+
+        .partner-radio-btn.playing {
+            background: rgba(122, 90, 138, 0.14);
+            border-color: rgba(122, 90, 138, 0.3);
+            color: var(--purple);
+        }
+
+        /* Station Track (Horizontal Apple Segmented Chips) */
+        .partner-station-track {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 4px 2px 8px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .partner-station-track::-webkit-scrollbar { display: none; }
+
+        .station-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 11px;
+            border-radius: 999px;
+            background: var(--fill);
+            border: 0.5px solid var(--separator);
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--label-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .station-chip.active {
+            background: rgba(122, 90, 138, 0.12);
+            color: var(--purple);
+            border-color: rgba(122, 90, 138, 0.3);
+            font-weight: 600;
+        }
+
+        .partner-radio-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            padding-top: 8px;
+            border-top: 0.5px solid var(--separator-light, rgba(0,0,0,0.05));
+        }
+
+        .partner-radio-sub-btn {
+            background: none;
+            border: none;
+            color: var(--label-tertiary);
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-family: inherit;
+            transition: color 0.2s ease;
+        }
+        .partner-radio-sub-btn:active {
+            color: var(--label);
+        }
         .partner-notice {
             display: none;
             margin: 12px 0 0;
@@ -4293,6 +4466,75 @@
                         <!-- Action / Guidance Area -->
                         <div id="partnerActionArea"></div>
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
+                    </div>
+
+                    <!-- Ambient Focus Radio (Apple Native Inset Glassmorphism Player) -->
+                    <div class="partner-radio-card" id="partnerRadioCard">
+                        <div class="partner-radio-header">
+                            <div style="display:flex; align-items:center; gap:9px;">
+                                <div class="radio-live-dot-container">
+                                    <span class="radio-live-dot"></span>
+                                </div>
+                                <div>
+                                    <div class="partner-radio-title">
+                                        <span id="partnerRadioStationTitle">☕ Lofi Girl · 24H 專注自習</span>
+                                    </div>
+                                    <div class="partner-radio-status" id="partnerRadioStatus">
+                                        <span>24H 全球沉浸陪伴中</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <!-- Apple Sound Wave Animation (When Playing) -->
+                                <div class="sound-wave-bars hidden" id="partnerRadioWave">
+                                    <span class="bar bar1"></span>
+                                    <span class="bar bar2"></span>
+                                    <span class="bar bar3"></span>
+                                    <span class="bar bar4"></span>
+                                </div>
+                                <!-- Play / Pause Glassmorphism Pill Button -->
+                                <button type="button" onclick="togglePartnerRadio()" id="partnerRadioPlayBtn" class="active-scale partner-radio-btn" title="播放 / 暫停">
+                                    <i class="fas fa-play" id="partnerRadioPlayIcon" style="font-size:11px;"></i>
+                                    <span id="partnerRadioPlayText">播放</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Invisible Background Audio Host -->
+                        <div id="partnerRadioIframeHost" style="width:1px; height:1px; opacity:0.01; position:absolute; pointer-events:none; overflow:hidden;"></div>
+
+                        <!-- Station Selection Capsules Track (Apple Segments) -->
+                        <div class="partner-station-track" id="partnerStationTrack">
+                            <button type="button" class="station-chip active" onclick="switchPartnerStation('lofi')" id="stationChip_lofi">
+                                <span>☕</span><span>Lofi 專注</span>
+                            </button>
+                            <button type="button" class="station-chip" onclick="switchPartnerStation('piano')" id="stationChip_piano">
+                                <span>🎹</span><span>治癒鋼琴</span>
+                            </button>
+                            <button type="button" class="station-chip" onclick="switchPartnerStation('nature')" id="stationChip_nature">
+                                <span>🍃</span><span>自然白噪</span>
+                            </button>
+                            <button type="button" class="station-chip" onclick="switchPartnerStation('zen')" id="stationChip_zen">
+                                <span>🌙</span><span>深度靜心</span>
+                            </button>
+                            <button type="button" class="station-chip" onclick="openCustomStationModal()" id="stationChip_custom">
+                                <span>⚙️</span><span>自訂</span>
+                            </button>
+                        </div>
+
+                        <!-- Auto-Failover & Channel Switching Controls -->
+                        <div class="partner-radio-footer">
+                            <div style="display:flex; align-items:center; gap:5px; font-size:10.5px; color:var(--label-tertiary);">
+                                <i class="fas fa-shield-halved" style="color:var(--purple); font-size:10px;"></i>
+                                <span id="partnerRadioResilienceBadge">多重備援自動容災</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <button type="button" onclick="switchNextBackupStream()" class="partner-radio-sub-btn" title="手動切換此分類備援直播台">
+                                    <i class="fas fa-shuffle" style="font-size:9.5px;"></i>
+                                    <span>換台備援</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Companion Codex Badge Wall -->
@@ -4686,6 +4928,53 @@
                     <div style="font-size:11px; margin-top:3px; color:var(--label-tertiary);">系統將自動比對全台 83 間門市與 59 家跨區外送運費矩陣</div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Custom Partner Music Station Modal (自訂夥伴電台 - Apple Inset Sheet) -->
+    <div id="customStationModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeCustomStationModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:16px 20px 32px; max-height:85vh; overflow-y:auto;">
+            <div class="sheet-handle" style="margin-bottom:14px;"></div>
+            
+            <!-- Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding:0 4px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:50%; background:rgba(122, 90, 138, 0.12); color:var(--purple); display:flex; align-items:center; justify-content:center; font-size:12px;">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size:16px; font-weight:700; color:var(--label); margin:0;">自訂專注音樂電台</h3>
+                        <div style="font-size:11.5px; color:var(--label-tertiary);">貼上 YouTube 直播或音樂連結</div>
+                    </div>
+                </div>
+                <button onclick="closeCustomStationModal()" aria-label="關閉"
+                    style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:11px;"></i>
+                </button>
+            </div>
+
+            <!-- Input Box -->
+            <div class="rounded-2xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                <label style="display:block; font-size:11.5px; font-weight:600; color:var(--label-tertiary); margin-bottom:6px;">
+                    YouTube 直播／影片網址或 ID
+                </label>
+                <div style="position:relative;">
+                    <input type="text" id="customStationInput" placeholder="例：https://www.youtube.com/watch?v=2UUWWRuVMco 或 2UUWWRuVMco"
+                        style="width:100%; padding:10px 12px; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:12px; font-size:13px; color:var(--label); outline:none; font-family:inherit;" />
+                </div>
+                <div style="margin-top:8px; font-size:11px; color:var(--label-tertiary); line-height:1.45;">
+                    💡 提示：支援 YouTube 完整網址、手機分享短網址（youtu.be）或 11 碼影片 ID。
+                </div>
+            </div>
+
+            <!-- Save Action Button -->
+            <button type="button" onclick="saveCustomStation()" class="active-scale"
+                style="width:100%; padding:12px; border-radius:14px; background:var(--purple); color:#FFFFFF; border:none; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; box-shadow:0 4px 14px rgba(122, 90, 138, 0.3);">
+                確認並立即起播
+            </button>
         </div>
     </div>
 
@@ -6964,6 +7253,246 @@
                 setTimeout(triggerRandomIdleBehavior, delay);
             }, 6000);
         }
+
+        // ==========================================
+        // ===== 24H 夥伴陪伴療癒電台 (Ambient Focus Radio Engine) =====
+        // ==========================================
+        const PARTNER_STATIONS = {
+            lofi: {
+                name: '☕ Lofi Girl · 24H 專注自習',
+                desc: '24H 全球沉浸陪伴中',
+                streams: [
+                    '2UUWWRuVMco', // Lofi Girl 24/7 (User specified)
+                    'jfKfPfyJRdk', // Lofi Girl - beats to study/relax to
+                    '5qap5aO4i9A', // Lofi Hip Hop Radio
+                    'DWcJFNfaw90'  // Chillhop Radio 24/7
+                ],
+                currentIndex: 0
+            },
+            piano: {
+                name: '🎹 治癒鋼琴 · 溫柔午後',
+                desc: '吉卜力與舒緩鋼琴現場',
+                streams: [
+                    '4xDzrJKXOOY', // Relaxing Piano Music 24/7
+                    '7NOSDKb0HlU', // Studio Ghibli Piano Live
+                    'WJ3-F02-U_g'  // Peaceful Relaxing Piano
+                ],
+                currentIndex: 0
+            },
+            nature: {
+                name: '🍃 大自然白噪音 · 森林微雨',
+                desc: '天然雨聲與深林微風',
+                streams: [
+                    'mPZkdNFkNps', // Rain Sound 24/7
+                    'y7e-CuxQuTQ', // Forest Birds & River
+                    'eKFTSSKCzWA'  // Gentle Ocean Waves 24/7
+                ],
+                currentIndex: 0
+            },
+            zen: {
+                name: '🌙 深度靜心 · 禪意氛圍',
+                desc: '頌缽與冥想頻率',
+                streams: [
+                    '1ZYbU82GVz4', // Tibetan Singing Bowls 24/7
+                    'WPni755-Krg', // Deep Sleep Ambient
+                    '2OEL4P1Rz04'  // Meditation Zen Music
+                ],
+                currentIndex: 0
+            }
+        };
+
+        let _currentStationKey = 'lofi';
+        let _isPartnerRadioPlaying = false;
+        let _customStreamId = localStorage.getItem('t8_custom_partner_stream') || '';
+
+        function initPartnerRadioEngine() {
+            updatePartnerRadioUI();
+        }
+
+        function getActiveStationStreamId() {
+            if (_currentStationKey === 'custom') {
+                return _customStreamId || '2UUWWRuVMco';
+            }
+            const station = PARTNER_STATIONS[_currentStationKey];
+            if (!station || !station.streams || station.streams.length === 0) return '2UUWWRuVMco';
+            return station.streams[station.currentIndex % station.streams.length];
+        }
+
+        function togglePartnerRadio() {
+            _isPartnerRadioPlaying = !_isPartnerRadioPlaying;
+            if ('vibrate' in navigator) navigator.vibrate(10);
+
+            const host = document.getElementById('partnerRadioIframeHost');
+            if (_isPartnerRadioPlaying) {
+                const streamId = getActiveStationStreamId();
+                if (host) {
+                    host.innerHTML = `
+                        <iframe 
+                            id="partnerRadioIframe" 
+                            src="https://www.youtube-nocookie.com/embed/${streamId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1" 
+                            title="Partner Radio" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            style="width:1px; height:1px; border:none;">
+                        </iframe>
+                    `;
+                }
+            } else {
+                if (host) host.innerHTML = '';
+            }
+            updatePartnerRadioUI();
+        }
+
+        function switchPartnerStation(stationKey) {
+            if ('vibrate' in navigator) navigator.vibrate(8);
+            _currentStationKey = stationKey;
+
+            // Highlight chip
+            document.querySelectorAll('.station-chip').forEach(c => c.classList.remove('active'));
+            const activeChip = document.getElementById('stationChip_' + stationKey);
+            if (activeChip) activeChip.classList.add('active');
+
+            if (_isPartnerRadioPlaying) {
+                // Reload with new station
+                const host = document.getElementById('partnerRadioIframeHost');
+                const streamId = getActiveStationStreamId();
+                if (host) {
+                    host.innerHTML = `
+                        <iframe 
+                            id="partnerRadioIframe" 
+                            src="https://www.youtube-nocookie.com/embed/${streamId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1" 
+                            title="Partner Radio" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            style="width:1px; height:1px; border:none;">
+                        </iframe>
+                    `;
+                }
+            }
+            updatePartnerRadioUI();
+        }
+
+        function switchNextBackupStream() {
+            if (_currentStationKey === 'custom') {
+                openCustomStationModal();
+                return;
+            }
+            const station = PARTNER_STATIONS[_currentStationKey];
+            if (!station) return;
+            station.currentIndex = (station.currentIndex + 1) % station.streams.length;
+            const cur = station.currentIndex + 1;
+            const total = station.streams.length;
+
+            if ('vibrate' in navigator) navigator.vibrate(12);
+
+            const badge = document.getElementById('partnerRadioResilienceBadge');
+            if (badge) {
+                badge.textContent = `已切換備援串流 (${cur}/${total})`;
+                badge.style.color = 'var(--blue)';
+                setTimeout(() => {
+                    if (badge) {
+                        badge.textContent = '多重備援自動容災';
+                        badge.style.color = 'var(--purple)';
+                    }
+                }, 3000);
+            }
+
+            if (_isPartnerRadioPlaying) {
+                const host = document.getElementById('partnerRadioIframeHost');
+                const streamId = getActiveStationStreamId();
+                if (host) {
+                    host.innerHTML = `
+                        <iframe 
+                            id="partnerRadioIframe" 
+                            src="https://www.youtube-nocookie.com/embed/${streamId}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1" 
+                            title="Partner Radio" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            style="width:1px; height:1px; border:none;">
+                        </iframe>
+                    `;
+                }
+            }
+        }
+
+        function updatePartnerRadioUI() {
+            const titleEl = document.getElementById('partnerRadioStationTitle');
+            const statusEl = document.getElementById('partnerRadioStatus');
+            const playBtn = document.getElementById('partnerRadioPlayBtn');
+            const playText = document.getElementById('partnerRadioPlayText');
+            const playIcon = document.getElementById('partnerRadioPlayIcon');
+            const waveEl = document.getElementById('partnerRadioWave');
+
+            if (_currentStationKey === 'custom') {
+                if (titleEl) titleEl.textContent = '⚙️ 自訂專注電台';
+                if (statusEl) statusEl.textContent = _customStreamId ? `自訂串流 ID: ${_customStreamId}` : '尚未設定自訂頻道';
+            } else {
+                const station = PARTNER_STATIONS[_currentStationKey];
+                if (station) {
+                    if (titleEl) titleEl.textContent = station.name;
+                    if (statusEl) statusEl.textContent = station.desc;
+                }
+            }
+
+            if (_isPartnerRadioPlaying) {
+                if (playBtn) playBtn.classList.add('playing');
+                if (playText) playText.textContent = '暫停';
+                if (playIcon) playIcon.className = 'fas fa-pause';
+                if (waveEl) waveEl.classList.remove('hidden');
+            } else {
+                if (playBtn) playBtn.classList.remove('playing');
+                if (playText) playText.textContent = '播放';
+                if (playIcon) playIcon.className = 'fas fa-play';
+                if (waveEl) waveEl.classList.add('hidden');
+            }
+        }
+
+        // --- Custom Station Modal Handlers ---
+        function openCustomStationModal() {
+            const modal = document.getElementById('customStationModal');
+            const input = document.getElementById('customStationInput');
+            if (input && _customStreamId) input.value = _customStreamId;
+            if (modal) modal.classList.remove('hidden');
+            if ('vibrate' in navigator) navigator.vibrate(8);
+        }
+
+        function closeCustomStationModal() {
+            const modal = document.getElementById('customStationModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function extractYouTubeVideoId(input) {
+            if (!input) return '';
+            input = input.trim();
+            if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+            const match = input.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|live\/|shorts\/|watch\?.+&v=))([\w-]{11})/);
+            return match ? match[1] : '';
+        }
+
+        function saveCustomStation() {
+            const input = document.getElementById('customStationInput');
+            if (!input) return;
+            const val = input.value.trim();
+            const videoId = extractYouTubeVideoId(val);
+
+            if (!videoId) {
+                alert('請輸入有效的 YouTube 影片網址或 11 碼 Video ID');
+                return;
+            }
+
+            _customStreamId = videoId;
+            localStorage.setItem('t8_custom_partner_stream', videoId);
+            closeCustomStationModal();
+            switchPartnerStation('custom');
+            if (!_isPartnerRadioPlaying) togglePartnerRadio();
+        }
+
+        window.togglePartnerRadio = togglePartnerRadio;
+        window.switchPartnerStation = switchPartnerStation;
+        window.switchNextBackupStream = switchNextBackupStream;
+        window.openCustomStationModal = openCustomStationModal;
+        window.closeCustomStationModal = closeCustomStationModal;
+        window.saveCustomStation = saveCustomStation;
 
         // === Tab Switching & Floating Nav Controller ===
         function switchTab(tabName) {
@@ -13276,6 +13805,7 @@
         initBrushstroke();
         initWeatherEngine();
         initOfficeMuyu();
+        initPartnerRadioEngine();
 
         // --- 本週總覽 (安全相容) ---
         function renderWeeklySummary() {
