@@ -4421,7 +4421,7 @@
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
-                            <input type="text" id="storeSearchInput" placeholder="搜尋地址 (如: 高雄楠梓藍昌路)、店名、店碼..."
+                            <input type="text" id="storeSearchInput" placeholder="搜尋地址 (如: 高雄五甲)、店名、店碼..."
                                 oninput="onStoreSearchInput(event)"
                                 style="width:100%; padding:10px 34px 10px 34px; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:12px; font-size:13px; color:var(--label); outline:none; font-family:inherit;" />
                             <button type="button" id="storeSearchClearBtn" onclick="clearStoreSearch()" class="hidden"
@@ -4645,7 +4645,7 @@
                     輸入客戶送達地址或行政區
                 </label>
                 <div style="position:relative;">
-                    <input type="text" id="smartAddressInput" placeholder="例：高雄市楠梓區藍昌路300號 或 屏東市..."
+                    <input type="text" id="smartAddressInput" placeholder="例：高雄市鳳山區五甲二路 或 屏東市..."
                         oninput="onSmartAddressInput(event)"
                         style="width:100%; padding:10px 34px 10px 12px; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:12px; font-size:13.5px; color:var(--label); outline:none; font-family:inherit;" />
                     <button type="button" id="smartAddressClearBtn" onclick="clearSmartAddressInput()" class="hidden"
@@ -4658,11 +4658,11 @@
                 <div style="margin-top:10px;">
                     <span style="font-size:10.5px; color:var(--label-tertiary); margin-right:6px;">常用熱門區域：</span>
                     <div style="display:inline-flex; flex-wrap:wrap; gap:5px; margin-top:4px;">
-                        <button type="button" onclick="setSmartQuickArea('高雄市楠梓區')" class="task-chip" style="font-size:11px; padding:3px 8px;">高雄楠梓</button>
+                        <button type="button" onclick="setSmartQuickArea('高雄市鳳山區五甲')" class="task-chip" style="font-size:11px; padding:3px 8px; font-weight:600; color:var(--blue);">高雄五甲</button>
                         <button type="button" onclick="setSmartQuickArea('高雄市鳳山區')" class="task-chip" style="font-size:11px; padding:3px 8px;">高雄鳳山</button>
+                        <button type="button" onclick="setSmartQuickArea('高雄市楠梓區')" class="task-chip" style="font-size:11px; padding:3px 8px;">高雄楠梓</button>
                         <button type="button" onclick="setSmartQuickArea('屏東市')" class="task-chip" style="font-size:11px; padding:3px 8px;">屏東市</button>
                         <button type="button" onclick="setSmartQuickArea('新北市汐止區')" class="task-chip" style="font-size:11px; padding:3px 8px;">新北汐止</button>
-                        <button type="button" onclick="setSmartQuickArea('新北市淡水區')" class="task-chip" style="font-size:11px; padding:3px 8px;">新北淡水</button>
                         <button type="button" onclick="setSmartQuickArea('台南市永康區')" class="task-chip" style="font-size:11px; padding:3px 8px;">台南永康</button>
                     </div>
                 </div>
