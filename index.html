@@ -4468,7 +4468,7 @@
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
                     </div>
 
-                    <!-- 4K Leaf Music Player Card (Apple Inset Cinema Player) -->
+                    <!-- Partner Focus Music Player Card (Apple Inset Cinema Player) -->
                     <div class="partner-radio-card" id="partnerRadioCard">
                         <div class="partner-radio-header">
                             <div style="display:flex; align-items:center; gap:9px;">
@@ -4477,19 +4477,12 @@
                                 </div>
                                 <div>
                                     <div class="partner-radio-title">
-                                        <span id="partnerRadioStationTitle">🍁 4K Leaf Music · 華語流行專注電台</span>
+                                        <span id="partnerRadioStationTitle">🎵 華語流行專注電台</span>
                                     </div>
                                     <div class="partner-radio-status" id="partnerRadioStatus">
-                                        <span>@4KLeafMusic 官方精選歌單</span>
+                                        <span>沉浸音樂陪伴中</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <a href="https://www.youtube.com/@4KLeafMusic" target="_blank" rel="noopener noreferrer"
-                                    class="active-scale" title="前往 YouTube 頻道"
-                                    style="font-size:11px; color:var(--label-tertiary); text-decoration:none; display:flex; align-items:center; gap:3px; padding:3px 8px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator);">
-                                    <span>頻道</span><i class="fas fa-arrow-up-right-from-square" style="font-size:8.5px;"></i>
-                                </a>
                             </div>
                         </div>
 
@@ -7250,26 +7243,26 @@
         }
 
         // ==========================================
-        // ===== 4K Leaf Music 專屬華語音樂電台 (@4KLeafMusic) =====
+        // ===== 夥伴專屬華語流行音樂電台 =====
         // ==========================================
         const LEAF_STATIONS = {
             leaf_hits: {
-                name: '🍁 4K Leaf · 2026 華語熱門新歌精選',
+                name: '🎵 2026 華語熱門新歌精選',
                 desc: '愛就一個字 · 總會有人 · 花海 · 周杰倫/林俊傑/鄧紫棋',
                 videoId: '2UUWWRuVMco'
             },
             leaf_kkbox: {
-                name: '📈 4K Leaf · KKBOX 華語單曲排行週榜',
+                name: '📈 KKBOX 華語單曲排行週榜',
                 desc: '2026 年輕族群最愛 · 40 首超好聽流行歌曲',
                 videoId: 'crjBd2c8lq8'
             },
             leaf_love: {
-                name: '💔 4K Leaf · 最感動華語愛情歌精選',
+                name: '💔 最感動華語愛情歌精選',
                 desc: '如果可以 · 孤勇者 · 跳樓機 · 治癒情歌動態歌詞',
                 videoId: 'eiCjFq1fgtc'
             },
             leaf_tiktok: {
-                name: '⚡ 4K Leaf · 2026 抖音最火爆新歌',
+                name: '⚡ 2026 抖音最火爆新歌',
                 desc: '若月亮沒來 · 最偉大的作品 · 抖音熱搜榜',
                 videoId: 'hMDfBaNfLt4'
             }
@@ -7357,7 +7350,7 @@
             const statusEl = document.getElementById('partnerRadioStatus');
 
             if (_currentLeafKey === 'custom') {
-                if (titleEl) titleEl.textContent = '⚙️ 自訂 4K Leaf 音樂頻道';
+                if (titleEl) titleEl.textContent = '⚙️ 自訂專注音樂頻道';
                 if (statusEl) statusEl.textContent = _customLeafStreamId ? `已載入串流: ${_customLeafStreamId}` : '點擊設定自訂 YouTube 連結';
             } else {
                 const station = LEAF_STATIONS[_currentLeafKey];
