@@ -6864,17 +6864,63 @@
         const targetMin = typeof getTargetMinutes === 'function' ? getTargetMinutes() : 480;
         const isTargetMet = todayMins >= targetMin;
 
-        const statusText = isTargetMet ? `👑 今日工時已達標 ${hours} 小時！` : `⏳ 今日已專注累積 ${hours} 小時`;
+        // Current punch status
+        const isWorking = (typeof punchRecords !== 'undefined' && punchRecords.length > 0 && punchRecords.length % 2 === 1);
+        let currentStatusText = '尚未打卡上班';
+        if (isWorking) {
+            const lastIn = punchRecords[punchRecords.length - 1];
+            const curSessionMins = Math.floor((new Date() - new Date(lastIn.time)) / 60000);
+            const curH = (curSessionMins / 60).toFixed(1);
+            currentStatusText = `上班專注中 (本段已專注 ${curH}h)`;
+        } else if (typeof punchRecords !== 'undefined' && punchRecords.length > 0) {
+            currentStatusText = isTargetMet ? '已下班 (今日達標 8h ✅)' : '休息中';
+        }
 
-        const shareText = `🌟 【T8 工時夥伴 · 今日福氣靈感】\n` +
-            `━━━━━━━━━━━━━━━\n` +
-            `${fortune.title}\n` +
-            `🌿 每日金句：「${fortune.text}」\n` +
-            `🎯 幸運物件：${fortune.luckyItem}\n` +
-            `🐾 夥伴羈絆：Lv.${affinity.level} (${affinity.points} 點)\n` +
-            `${statusText}\n` +
-            `━━━━━━━━━━━━━━━\n` +
-            `—— 來自 T8 智能工時與專注陪伴系統 ✨`;
+        // Format punch interval details
+        function formatHHMM(isoStr) {
+            if (!isoStr) return '';
+            const d = new Date(isoStr);
+            return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        }
+
+        let punchLines = [];
+        if (typeof punchRecords !== 'undefined' && Array.isArray(punchRecords) && punchRecords.length > 0) {
+            for (let i = 0; i < punchRecords.length; i += 2) {
+                const rIn = punchRecords[i];
+                const rOut = punchRecords[i + 1];
+                const inTime = formatHHMM(rIn.time);
+                if (rOut) {
+                    const outTime = formatHHMM(rOut.time);
+                    const durMins = Math.round((new Date(rOut.time) - new Date(rIn.time)) / 60000);
+                    const durH = (durMins / 60).toFixed(1);
+                    const taskLabel = rIn.task ? ` [${rIn.task}]` : '';
+                    punchLines.push(`• ${inTime} ～ ${outTime} (${durH}h)${taskLabel}`);
+                } else {
+                    const curMins = Math.round((new Date() - new Date(rIn.time)) / 60000);
+                    const curH = (curMins / 60).toFixed(1);
+                    const taskLabel = rIn.task ? ` [${rIn.task}]` : '';
+                    punchLines.push(`• ${inTime} ～ 進行中 (${curH}h)${taskLabel}`);
+                }
+            }
+        }
+
+        const now = new Date();
+        const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+        const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} (${dayNames[now.getDay()]})`;
+
+        // Build concise, structured LINE message without fluff
+        let shareText = `📋【T8 工時與打卡回報】\n` +
+            `📅 日期：${dateStr}\n` +
+            `⏱️ 今日累計：${hours} 小時 (${isTargetMet ? '已達標 8h 👑' : '目標 8h'})\n` +
+            `📍 當前狀態：${currentStatusText}\n\n`;
+
+        if (punchLines.length > 0) {
+            shareText += `🕒 打卡階段：\n${punchLines.join('\n')}\n\n`;
+        }
+
+        shareText += `✨ 今日福氣：${fortune.title}\n` +
+            `🌿「${fortune.text}」\n` +
+            `☕ 幸運物：${fortune.luckyItem} · 夥伴 Lv.${affinity.level}`;
 
         const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(shareText)}`;
         window.open(lineUrl, '_blank');
