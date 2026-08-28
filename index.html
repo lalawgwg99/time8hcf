@@ -4584,44 +4584,31 @@
                             </div>
                         </div>
 
-                        <!-- Hero Information Hierarchy -->
+                        <!-- Hero Information Hierarchy (極簡層次) -->
                         <div class="partner-hero-meta">
                             <div id="partnerHeroTitle" class="partner-hero-title">0 / 7 工時結晶</div>
-                            <div id="partnerHeroSub" class="partner-hero-sub">完成今日標準工時，即可凝聚工時結晶</div>
+                            <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-top:4px; flex-wrap:wrap;">
+                                <span id="bondLevelText" style="font-size:11.5px; font-weight:600; color:var(--purple); background:rgba(122,90,138,0.1); padding:2px 8px; border-radius:999px;">Lv.1 初識夥伴</span>
+                                <span id="partnerHeroSub" style="font-size:12px; color:var(--label-secondary);">完成今日標準工時，即可凝聚結晶</span>
+                            </div>
                         </div>
 
-                        <!-- Bond & Fortune Capsule (極簡純粹 Apple Inset) -->
-                        <div id="partnerFortuneBondPill" class="partner-fortune-bond-card">
-                            <!-- Top: Bond Level & Fast Actions -->
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span style="font-size:12.5px;" id="fortuneMoodIcon">💖</span>
-                                    <span id="bondLevelText" style="font-size:12px; font-weight:700; color:var(--purple);">Lv.1 初識夥伴</span>
-                                    <span id="bondProgressText" style="font-size:10.5px; color:var(--label-tertiary);">(0/30)</span>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <button type="button" onclick="petCompanionWithAnimation(event)" class="active-scale" 
-                                        style="padding:4px 10px; border-radius:999px; background:rgba(122,90,138,0.1); border:0.5px solid rgba(122,90,138,0.2); color:var(--purple); font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:inherit;">
-                                        <span>💖 撫摸</span>
-                                        <span id="todayPetCountBadge" style="font-size:9.5px; opacity:0.8;">(+1)</span>
-                                    </button>
-                                    <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
-                                        style="padding:4px 11px; border-radius:999px; background:#06C755; border:none; color:#FFFFFF; font-size:11px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:inherit; box-shadow:0 2px 6px rgba(6,199,85,0.2);">
-                                        <i class="fab fa-line" style="font-size:11.5px;"></i>
-                                        <span>LINE</span>
-                                    </button>
-                                </div>
+                        <!-- Minimal Daily Fortune & Bond Card (單一純粹 Apple Inset 卡片) -->
+                        <div id="partnerFortuneBondPill" class="partner-fortune-bond-card" style="background:var(--fill); border-radius:14px; padding:12px 14px; margin-top:12px; border:0.5px solid var(--separator);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                <span id="fortuneTitle" style="font-size:11.5px; font-weight:700; color:var(--orange);">✨ 今日福氣 · 靈感湧現</span>
+                                <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
+                                    style="border:none; background:rgba(6,199,85,0.12); color:#06C755; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; padding:3px 9px; border-radius:999px; font-family:inherit;">
+                                    <i class="fab fa-line" style="font-size:12.5px;"></i>
+                                    <span>LINE 分享</span>
+                                </button>
                             </div>
-                            
-                            <!-- Bottom: Fortune Quote & Lucky Item -->
-                            <div style="background:var(--fill-secondary); border-radius:10px; padding:8px 12px; border:0.5px solid var(--separator);">
-                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">
-                                    <span id="fortuneTitle" style="font-size:11px; font-weight:700; color:var(--orange);">✨ 今日福氣 · 靈感湧現</span>
-                                    <span id="fortuneLuckyItem" style="font-size:10px; color:var(--label-tertiary);">☕ 美式咖啡</span>
-                                </div>
-                                <div id="fortuneQuoteText" style="font-size:12px; color:var(--label-secondary); line-height:1.4;">
-                                    「心若從容，步步生花；今日所遇，皆為坦途。」
-                                </div>
+                            <div id="fortuneQuoteText" style="font-size:12.5px; color:var(--label); line-height:1.5; font-weight:500; margin-bottom:8px;">
+                                「心若從容，步步生花；今日所遇，皆為坦途。」
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding-top:7px; border-top:0.5px solid var(--separator); font-size:11px; color:var(--label-tertiary);">
+                                <span id="fortuneLuckyItem">☕ 美式咖啡</span>
+                                <span id="bondProgressText" onclick="petCompanionWithAnimation(event)" style="cursor:pointer; color:var(--purple); font-weight:600;">💖 輕觸晶靈互動 (+1)</span>
                             </div>
                         </div>
 
@@ -6918,17 +6905,13 @@
 
         if (bondLevelText) bondLevelText.textContent = `Lv.${data.level} ${lvlInfo.name}`;
         if (bondProgressText) {
-            bondProgressText.textContent = nextLvl ? `(${data.points}/${nextLvl.maxPts} 點)` : `(${data.points} 點 · 已達頂級)`;
+            bondProgressText.textContent = nextLvl ? `💖 羈絆 ${data.points}/${nextLvl.maxPts} 點` : `💖 羈絆頂級 (${data.points} 點)`;
         }
 
         if (data.todayFortune) {
             if (fortuneTitle) fortuneTitle.textContent = data.todayFortune.title;
-            if (fortuneLuckyItem) fortuneLuckyItem.textContent = data.todayFortune.luckyItem;
+            if (fortuneLuckyItem) fortuneLuckyItem.textContent = `☕ ${data.todayFortune.luckyItem}`;
             if (fortuneQuoteText) fortuneQuoteText.textContent = `「${data.todayFortune.text}」`;
-        }
-
-        if (todayPetCountBadge) {
-            todayPetCountBadge.textContent = data.todayPets > 0 ? `(今日已互動 ${data.todayPets} 次)` : '(+1 羈絆)';
         }
     }
 
