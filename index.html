@@ -854,23 +854,40 @@
             position: absolute;
             inset: 0;
             pointer-events: none;
-            overflow: hidden;
+            overflow: visible;
+            z-index: 50; /* 確保浮動文字絕對在木魚與舞台最頂層 */
         }
         .muyu-hall-float-item {
             position: absolute;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            font-size: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+            font-size: 16px;
             font-weight: 700;
-            color: var(--label);
-            text-shadow: 0 0 10px rgba(212, 182, 136, 0.5);
+            color: #A37C28;
+            background: rgba(255, 255, 255, 0.94);
+            border: 0.5px solid rgba(194, 155, 56, 0.35);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08), 0 0 14px rgba(212, 182, 136, 0.35);
+            padding: 4px 13px;
+            border-radius: 999px;
             white-space: nowrap;
-            animation: muyuHallFloat 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            letter-spacing: 0.02em;
+            pointer-events: none;
+            z-index: 60;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            animation: muyuHallFloat 1.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes muyuHallFloat {
-            0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
-            20% { opacity: 1; transform: translate(-50%, -16px) scale(1.1); }
-            80% { opacity: 1; transform: translate(-50%, -46px) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -70px) scale(0.9); }
+            0% { opacity: 0; transform: translate(-50%, 12px) scale(0.65); }
+            15% { opacity: 1; transform: translate(-50%, -10px) scale(1.08); }
+            30% { opacity: 1; transform: translate(-50%, -22px) scale(1.0); }
+            75% { opacity: 1; transform: translate(-50%, -58px) scale(0.98); }
+            100% { opacity: 0; transform: translate(-50%, -85px) scale(0.9); }
+        }
+        [data-zen-theme="obsidian"] .muyu-hall-float-item {
+            background: rgba(36, 36, 40, 0.94);
+            color: #E5C365;
+            border-color: rgba(229, 195, 101, 0.4);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 16px rgba(229, 195, 101, 0.35);
         }
         .muyu-combo-banner {
             display: flex;
@@ -4009,7 +4026,7 @@
                         </button>
 
                         <!-- 3. 功德 (電子木魚) -->
-                        <button type="button" class="zen-tool-btn active-scale" id="ringMuyuBadge" onclick="tapOfficeMuyu(event)" ondblclick="openMuyuModal()" oncontextmenu="openMuyuModal(); return false;" title="辦公室電子木魚 · 點擊積功德，雙擊進入功德堂" aria-label="電子木魚">
+                        <button type="button" class="zen-tool-btn active-scale" id="ringMuyuBadge" onclick="openMuyuModal()" title="進入辦公室功德堂 · 靜心敲木魚" aria-label="功德堂">
                             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#B88B4A; pointer-events:none; flex-shrink:0;">
                                 <path d="M12 4.5C7.5 4.5 4 8 4 12.5c0 3.8 2.6 6.8 6.2 7.5L12 20.2l1.8-.2c3.6-.7 6.2-3.7 6.2-7.5 0-4.5-3.5-8-8-8z" fill="rgba(196,168,122,0.25)" stroke="#B88B4A" />
                                 <circle cx="9.5" cy="12" r="1.2" fill="#B88B4A" />
@@ -5144,15 +5161,15 @@
                 <div class="muyu-stage-card" id="muyuStageCard" onclick="tapHallMuyu(event)">
                     <div class="muyu-stage-ambient" id="muyuStageAmbient"></div>
                     <div class="muyu-ripple-container" id="muyuRippleContainer"></div>
-                    
-                    <!-- 浮動文字生成區 -->
-                    <div class="muyu-hall-float-zone" id="muyuHallFloatZone"></div>
 
                     <!-- 3D 質感向量木魚 -->
                     <div class="muyu-woodfish-container" id="muyuWoodfishContainer">
                         <div id="muyuVectorFish" style="width:160px; height:125px;">
                         </div>
                     </div>
+
+                    <!-- 浮動文字生成區 (置於頂層 z-index 確保清晰浮現) -->
+                    <div class="muyu-hall-float-zone" id="muyuHallFloatZone"></div>
 
                     <!-- 敲擊引導文字 -->
                     <div style="margin-top:12px; font-size:12px; font-weight:500; color:var(--label-tertiary); text-align:center; pointer-events:none;">
@@ -11421,12 +11438,12 @@
             const item = document.createElement('div');
             item.className = 'muyu-hall-float-item';
             item.textContent = text;
-            const randomX = 50 + (Math.random() * 24 - 12);
-            const randomY = 65 + (Math.random() * 10 - 5);
+            const randomX = 50 + (Math.random() * 20 - 10);
+            const randomY = 46 + (Math.random() * 8 - 4);
             item.style.left = `${randomX}%`;
             item.style.top = `${randomY}%`;
             zone.appendChild(item);
-            setTimeout(() => item.remove(), 1100);
+            setTimeout(() => item.remove(), 1250);
         }
 
         function triggerFishBounce() {
