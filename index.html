@@ -11049,9 +11049,17 @@
                 const dotColor = 'var(--green)';
                 statusBadge.innerHTML = '<span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:' + dotColor + ';"></span><span>' + (ds.lastSyncTime ? '已同步 (' + new Date(ds.lastSyncTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ')' : '資料庫已就緒') + '</span></span>';
             }
+
+            // 未輸入搜尋文字時，保持空白不呈現全部資料
+            if (!q) {
+                if (countBadge) countBadge.textContent = '等待搜尋輸入';
+                container.innerHTML = '';
+                return;
+            }
+
             if (countBadge) {
                 const totalResultCount = matchedStores.length + matchedMDs.length;
-                countBadge.textContent = q ? '搜尋到 ' + totalResultCount + ' 筆' : totalStoreCount + ' 間門市 · ' + Object.keys(storesMap).length + ' 家運費表';
+                countBadge.textContent = '搜尋到 ' + totalResultCount + ' 筆';
             }
 
             let html = '';
