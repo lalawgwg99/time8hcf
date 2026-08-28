@@ -3922,6 +3922,19 @@
                                     <stop offset="0%" stop-color="#A584BE" />
                                     <stop offset="100%" stop-color="#7B578F" />
                                 </linearGradient>
+                                <!-- 珍稀夥伴特權：星辰紫曜 (Epic) -->
+                                <linearGradient id="ringGradientEpic" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#D6B4F8" />
+                                    <stop offset="50%" stop-color="#9C6DD8" />
+                                    <stop offset="100%" stop-color="#673AB7" />
+                                </linearGradient>
+                                <!-- 隱藏夥伴特權：純金星曜尊榮流光 (Hidden Crown 👑) -->
+                                <linearGradient id="ringGradientGold" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#FFF3B0" />
+                                    <stop offset="35%" stop-color="#FFD54F" />
+                                    <stop offset="70%" stop-color="#FFA000" />
+                                    <stop offset="100%" stop-color="#E65100" />
+                                </linearGradient>
                                 <filter id="beadShadow" x="-40%" y="-40%" width="180%" height="180%">
                                     <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(40,20,10,0.35)" />
                                 </filter>
@@ -5358,9 +5371,9 @@
                 <button onclick="saveSettings()" class="active-scale"
                     style="width:100%; padding:15px; border-radius:var(--radius); font-size:15px; font-weight:500; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">儲存設定</button>
 
-                <!-- Designer Badge: Design 德 -->
+                <!-- Designer Badge: Design 德 (開發者隱藏特權通道) -->
                 <div style="margin-top:24px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
-                    <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator);">
+                    <div id="designerSecretBtn" onclick="triggerDeveloperSecret()" class="active-scale" style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator); cursor:pointer; user-select:none; -webkit-user-select:none;" title="TIME 8 設計師">
                         <span style="font-size:10px; color:var(--label-tertiary); letter-spacing:0.12em; text-transform:uppercase; font-weight:500;">Design</span>
                         <span style="width:3px; height:3px; border-radius:50%; background:var(--label-quaternary);"></span>
                         <span style="font-size:11.5px; color:var(--label); font-weight:600; letter-spacing:0.04em;">德</span>
@@ -6188,8 +6201,8 @@
             { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare', icon: '🌙', color: '#5572B2', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。體態呈現銀月靛藍，安靜柔和。', trait: '✦ 夜幕月光陪伴 · 靜心無擾守候' },
             { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare', icon: '🍃', color: '#438155', desc: '藤蔓綿延不息，代表持之以恆的工作節奏。青翠石體纏繞著生命之藤。', trait: '✦ 持之以恆律動 · 穩健工作節奏' },
             { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare', icon: '⚡', color: '#D45B36', desc: '敏捷靈動，激發源源不絕的靈感與熱情。雙耳如靈動火苗，富有靈性。', trait: '✦ 靈感火花迸發 · 敏捷思考同行' },
-            { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✨', color: '#80659B', desc: '珍稀晶靈，體內流動著純粹的星辰結晶。散發著深邃高貴的星軌光輝。', trait: '✦ 星軌極致晶芒 · 卓越成就象徵' },
-            { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden', icon: '👑', color: '#E6A820', desc: '傳說級隱藏靈獸，唯有極致專注方能召喚。頭戴純金星辰皇冠，尊榮非凡。', trait: '✦ 傳說金冠加冕 · 極致專注榮光' },
+            { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✨', color: '#80659B', desc: '珍稀晶靈，體內流動著純粹的星辰結晶。散發著深邃高貴的星軌光輝。', trait: '💎 珍稀特權：解鎖星辰紫曜琉璃光環 ✦ 水晶微音打卡 ✦ 功德三倍加持' },
+            { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden', icon: '👑', color: '#E6A820', desc: '傳說級隱藏靈獸，唯有極致專注方能召喚。頭戴純金星辰皇冠，尊榮非凡。', trait: '👑 隱藏特權：解鎖純金星曜尊榮光環 ✦ 頌缽天籟打卡 ✦ 功德十倍暴擊' },
         ];
         let hatchLocked = false;
         let toastTimer = null;
@@ -6404,7 +6417,7 @@
             if (traitEl) traitEl.textContent = spec.trait || '✦ 陪伴日常專注工作';
 
             const state = typeof readPetSystem === 'function' ? readPetSystem() : { pets: [] };
-            const matchingPet = state.pets && state.pets.find(p => p.series === spec.series && (p.rarity === spec.rarity || spec.rarity === 'common'));
+            const matchingPet = state.pets && state.pets.find(p => p.specId === spec.id || (p.series === spec.series && p.rarity === spec.rarity));
             const isUnlocked = !!matchingPet;
             const isCurrentlyActive = matchingPet && state.activePetId === matchingPet.petId;
             const unlockEl = byId('previewPetUnlock');
@@ -6427,6 +6440,82 @@
             renderPartnerRoom();
             switchPetPreview(_currentPreviewIndex);
         }
+        function triggerDeveloperSecret() {
+            if ('vibrate' in navigator) navigator.vibrate(12);
+            playSingleClickSound("G4");
+
+            const code = window.prompt("✦ TIME 8 開發者授權通道\n請輸入通行代碼：", "");
+            if (!code) return;
+
+            const cleaned = code.trim().toLowerCase();
+            if (cleaned === 'laladoo99' || cleaned === 'ru.4s/6cjo42k6' || cleaned === 'developer') {
+                // 1. 注入全圖鑑 8 隻完整夥伴
+                const allSpecies = [
+                    { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common' },
+                    { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common' },
+                    { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common' },
+                    { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare' },
+                    { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare' },
+                    { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare' },
+                    { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic' },
+                    { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden' }
+                ];
+
+                let state = typeof readPetSystem === 'function' ? readPetSystem() : { resources: {}, pets: [], hatchState: {} };
+                state.resources = state.resources || {};
+                state.resources.eggFragments = 9999;
+                state.resources.crystalDust = 9999;
+                state.hatchState = state.hatchState || {};
+                state.hatchState.firstHatchCompleted = true;
+
+                state.pets = allSpecies.map((spec) => ({
+                    schemaVersion: 1,
+                    petId: `dev_pet_${spec.id}`,
+                    name: spec.name,
+                    series: spec.series,
+                    rarity: spec.rarity,
+                    specId: spec.id,
+                    parts: {},
+                    obtainedFrom: 'developer_passcode',
+                    generatedAt: new Date().toISOString(),
+                    isFavorite: true
+                }));
+
+                // 預設喚醒並裝備傳說隱藏版 👑 熾皇晶魄
+                state.activePetId = 'dev_pet_ember_crown';
+                writePetSystem(state);
+
+                // 2. 功德堂全木魚皮膚全數解鎖
+                _muyuState = readMuyuState();
+                _muyuState.totalMerit = Math.max(_muyuState.totalMerit, 99999);
+                _muyuState.activeSkin = 'aurora';
+                writeMuyuState(_muyuState);
+
+                // 3. 聲光慶祝與即時同步更新
+                playZenSingingBowl();
+                if ('vibrate' in navigator) navigator.vibrate([40, 60, 40, 80, 50]);
+                if (typeof renderPartnerRoom === 'function') renderPartnerRoom();
+                if (typeof updateMuyuModalUI === 'function') updateMuyuModalUI();
+                if (typeof updateDisplay === 'function') updateDisplay();
+
+                if (typeof showZenCapsuleNotification === 'function') {
+                    showZenCapsuleNotification({
+                        title: '👑 開發者特權已完全啟用',
+                        message: '已解鎖全 8 隻夥伴（含珍稀/隱藏版）、純金星曜光環與功德堂全皮膚！',
+                        emoji: '👑',
+                        duration: 4500
+                    });
+                } else {
+                    showToast('👑 開發者特權已啟用：已解鎖全圖鑑夥伴與木魚全皮膚！');
+                }
+            } else {
+                if ('vibrate' in navigator) navigator.vibrate([80, 40, 80]);
+                showToast('❌ 通行代碼不正確');
+            }
+        }
+        root.triggerDeveloperSecret = triggerDeveloperSecret;
+        window.triggerDeveloperSecret = triggerDeveloperSecret;
+
         root.selectAsActivePet = selectAsActivePet;
         root.openPetPreviewModal = openPetPreviewModal;
         root.closePetPreviewModal = closePetPreviewModal;
@@ -6722,12 +6811,28 @@
             const offset = circumference - (clampedPct / 100) * circumference;
             ring.style.strokeDashoffset = offset;
 
+            // 夥伴特權光環檢測 (Epic / Hidden Privilege)
+            const petState = typeof readPetSystem === 'function' ? readPetSystem() : null;
+            const currentPet = petState && typeof activePet === 'function' ? activePet(petState) : null;
+            const petRarity = currentPet ? currentPet.rarity : 'common';
+            const ambientCore = document.getElementById('ringAmbientCore');
+
             if (isComplete) {
                 ring.style.stroke = 'url(#ringGradientPurple)';
+            } else if (petRarity === 'hidden') {
+                // 隱藏夥伴特權：常駐尊榮純金星曜光環
+                ring.style.stroke = 'url(#ringGradientGold)';
+                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(255, 193, 7, 0.22) 0%, rgba(255, 111, 0, 0.08) 50%, transparent 75%)';
+            } else if (petRarity === 'epic') {
+                // 珍稀夥伴特權：常駐星辰紫曜琉璃光環
+                ring.style.stroke = 'url(#ringGradientEpic)';
+                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(165, 107, 212, 0.20) 0%, rgba(100, 58, 154, 0.06) 50%, transparent 75%)';
             } else if (pct >= 85) {
                 ring.style.stroke = 'url(#ringGradientGreen)';
+                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(114, 169, 121, 0.14) 0%, transparent 70%)';
             } else {
                 ring.style.stroke = 'url(#ringGradientWarm)';
+                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(196, 168, 122, 0.09) 0%, transparent 70%)';
             }
 
             // Leading Light Bead
@@ -6741,6 +6846,13 @@
                     bead.setAttribute('cx', cx.toFixed(2));
                     bead.setAttribute('cy', cy.toFixed(2));
                     bead.style.opacity = '1';
+                    if (petRarity === 'hidden') {
+                        bead.setAttribute('fill', '#FFE082');
+                    } else if (petRarity === 'epic') {
+                        bead.setAttribute('fill', '#E1BEE7');
+                    } else {
+                        bead.setAttribute('fill', '#FFFFFF');
+                    }
                 } else {
                     bead.style.opacity = '0';
                 }
@@ -11485,8 +11597,26 @@
         }
 
         function processMuyuHit(isHall = false) {
-            _muyuState.totalMerit++;
-            _muyuState.todayMerit++;
+            let meritGain = 1;
+            let critText = null;
+
+            // 夥伴特權暴擊加成檢測 (Epic / Hidden Privilege)
+            const petState = typeof readPetSystem === 'function' ? readPetSystem() : null;
+            const currentPet = petState && typeof activePet === 'function' ? activePet(petState) : null;
+            const petRarity = currentPet ? currentPet.rarity : 'common';
+
+            if (petRarity === 'hidden' && Math.random() < 0.20) {
+                // 20% 機率觸發 10倍功德暴擊 (👑 熾皇晶魄)
+                meritGain = 10;
+                critText = "👑 熾皇金曜 · 功德 +10 暴擊！";
+            } else if (petRarity === 'epic' && Math.random() < 0.25) {
+                // 25% 機率觸發 3倍功德加持 (💎 紫耀天晶)
+                meritGain = 3;
+                critText = "💎 星辰紫耀 · 功德 +3 加持！";
+            }
+
+            _muyuState.totalMerit += meritGain;
+            _muyuState.todayMerit += meritGain;
             writeMuyuState(_muyuState);
 
             _muyuCombo++;
@@ -11498,9 +11628,9 @@
 
             const pitchMultiplier = 1.0 + Math.min(_muyuCombo * 0.008, 0.25);
             playWoodenFishSound(_muyuState.activeSkin, pitchMultiplier);
-            if ('vibrate' in navigator) navigator.vibrate(12);
+            if ('vibrate' in navigator) navigator.vibrate(critText ? [20, 40, 30, 50] : 12);
 
-            const word = getCurrentBlessingWord();
+            const word = critText || getCurrentBlessingWord();
 
             if (isHall) {
                 spawnHallFloatingText(word);
@@ -11932,10 +12062,51 @@
             }
         }
 
+        function playCrystalChime() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                if (!window._muyuAudioCtx) window._muyuAudioCtx = new AudioCtx();
+                const ctx = window._muyuAudioCtx;
+                if (ctx.state === 'suspended') ctx.resume();
+
+                const now = ctx.currentTime;
+                // High resonant crystal harmonic chord [E5, B5, G#6]
+                [659.25, 987.77, 1661.22].forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.035);
+
+                    gain.gain.setValueAtTime(0.001, now + i * 0.035);
+                    gain.gain.linearRampToValueAtTime(0.18 / (i + 1), now + i * 0.035 + 0.015);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.035 + 0.65);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start(now + i * 0.035);
+                    osc.stop(now + i * 0.035 + 0.7);
+                });
+            } catch (e) {}
+        }
+
         function punch() {
             if (punchRecords.length >= 20) { showReminder("已達今日紀錄上限", 'work'); return; }
             haptic(getNextPunchType() === 'in' ? 'light' : 'medium');
-            playSingleClickSound("A4");
+
+            // 夥伴特權聲學反饋 (Epic Crystal Chime / Hidden Singing Bowl)
+            const petState = typeof readPetSystem === 'function' ? readPetSystem() : null;
+            const currentPet = petState && typeof activePet === 'function' ? activePet(petState) : null;
+            const petRarity = currentPet ? currentPet.rarity : 'common';
+
+            if (petRarity === 'hidden') {
+                playZenSingingBowl();
+            } else if (petRarity === 'epic') {
+                playCrystalChime();
+            } else {
+                playSingleClickSound("A4");
+            }
 
             const now = new Date();
             const type = getNextPunchType();
