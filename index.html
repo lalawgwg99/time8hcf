@@ -10785,6 +10785,469 @@
         window.closeWeatherModal = closeWeatherModal;
         window.requestAccurateGPSWeather = requestAccurateGPSWeather;
 
+
+    // ========================================================
+    // ===== 家電台獎計算機系統 (Appliance Incentive Calculator) =====
+    // ========================================================
+    (function (root) {
+        const STORAGE_CART_KEY = 't8_taijiang_cart_v1';
+        const STORAGE_CUSTOM_KEY = 't8_taijiang_custom_items_v1';
+
+        const PRESET_ITEMS = [{"date":"2026/8/26","code":"40002073","name":"三星RT22M4015S8TW冰箱","bonus":140,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40002084","name":"奇美UR-A218VB雙門變頻冰箱218L-冰鑽白","bonus":140,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40002085","name":"奇美UR-A298VB雙門變頻冰箱292L-冰鑽白","bonus":210,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40002087","name":"奇美UR-A198VB雙門變頻冰箱195L-冰鑽白","bonus":70,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40002088","name":"大同TR-B1198VWH變頻雙門冰箱198L","bonus":70,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40003031","name":"LG GN-L332BS 變頻雙門冰箱-335L","bonus":280,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40003047","name":"大同TR-B1330VHR變頻雙門冰箱330L","bonus":182,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40003062","name":"奇美UR-B330VB雙門變頻冰箱328L-冰鑽白","bonus":140,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40003063","name":"奇美UR-A340VB雙門變頻冰箱339L","bonus":245,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40004081","name":"聲寶SR-B46D變頻雙門冰箱460L","bonus":175,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40004103","name":"聲寶SR-C48D(S1)變頻AIE雙門冰箱480L","bonus":245,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40004128","name":"LG GN-HL460PS 變頻雙門冰箱461L","bonus":350,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40004129","name":"三星RT18DG6308S9TW變頻雙門冰箱498L","bonus":420,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40004138","name":"SHARP SJ-PX43-SS大冷凍雙門除菌冰箱430L","bonus":70,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40005914","name":"LG GN-HL567SVN 變頻雙門冰箱","bonus":420,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40005916","name":"LG GN-HL567GBN 變頻雙門冰箱","bonus":420,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40005919","name":"聲寶SR-F61D(S2)變頻Nano-Ti雙門冰箱610L","bonus":420,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40010052","name":"SHARP SJ-NP48C-SL三門冰箱475L","bonus":70,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40011033","name":"聲寶SR-B53DV變頻三門冰箱530L","bonus":245,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40011052","name":"聲寶SR-F61DV(Y7)變頻Nano-Ti三門冰箱605L","bonus":420,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40012049","name":"日立RHS49NJ五門日製變頻冰箱475L","bonus":980,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40012062","name":"SHARP SJ-PW46KT-W左右開五門除菌冰箱_白","bonus":70,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40012063","name":"SHARP SJ-PW46KT-H左右開五門除菌冰箱_灰","bonus":70,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40012065","name":"日立RS420WJ五門日製右開琉璃變頻冰箱407L","bonus":938,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40013001","name":"日立RHSF54YJ六門日製變頻冰箱537L","bonus":1176,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40013003","name":"日立RHW540YJ六門日製琉璃變頻冰箱537L","bonus":1393,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40013004","name":"日立RHW620YJ六門日製琉璃變頻冰箱614L","bonus":1652,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40013017","name":"日立RHS54TJ五門日製變頻冰箱537L","bonus":1050,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40013973","name":"TOSHIBA GR-ZP600TFW六門冰箱601L","bonus":210,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40013975","name":"TOSHIBA GR-ZP550TFW(UW)六門冰箱551L","bonus":210,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40013996","name":"LG GV-NB61BG智慧變頻四門冰箱619L","bonus":560,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40013997","name":"日立RTSF62WJ六門日製變頻冰箱615L","bonus":1505,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40030030","name":"惠而浦WUFZ656AS直立式冷凍櫃190L","bonus":67,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40030037","name":"聲寶SRF-325FD變頻直立冷凍櫃325L 黑鋼色","bonus":105,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40030038","name":"聲寶SRF-171FD變頻直立式冷凍櫃170L","bonus":70,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40030047","name":"聲寶SRF-220FD變頻直立式冷凍櫃216L","bonus":70,"cat":"冰箱/冷凍"},{"date":"2026/8/26","code":"40032010","name":"伊萊克斯40瓶雙溫酒櫃EWD820SCB-X TW","bonus":2100,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40101012","name":"聲寶ES-K10DF變頻洗衣機10kg","bonus":70,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40101986","name":"惠而浦WM10GN洗衣機","bonus":67,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40101994","name":"奇美WS-F108PW定頻洗衣機10kg","bonus":105,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40102036","name":"聲寶ES-H11F(G5)定頻11kg單槽洗衣機","bonus":70,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40102040","name":"大同TAW-A110GW定頻洗衣機11kg","bonus":70,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40102042","name":"奇美WS-F1288W定頻洗衣機12kg","bonus":105,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40103967","name":"SHARP ES-FKS125WT洗脫滾筒-12.5Kg","bonus":70,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40103983","name":"惠而浦VWED1501BS變頻洗衣機15kg","bonus":167,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40103988","name":"三星WA80F13S5BTW AI智控直立式洗衣機13kg","bonus":210,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40103989","name":"日立LTLH3MVW0TGG變頻直立式洗衣機13.5kg","bonus":322,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40103991","name":"奇美WS-V158PW變頻洗衣機15kg","bonus":175,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40103992","name":"奇美WS-V138PW變頻洗衣機13kg","bonus":140,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40103997","name":"大同TAW-A150GW定頻洗衣機15Kg","bonus":98,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104962","name":"SHARP ES-G17AT-S 17KG抗菌變頻洗衣機","bonus":70,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104971","name":"聲寶ES-P17DPS(S1)變頻PICOPURE洗衣機17Kg","bonus":350,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104974","name":"惠而浦VWHD1711BG變頻洗衣機17kg","bonus":267,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104975","name":"惠而浦VWED1711BS變頻洗衣機17kg","bonus":267,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104977","name":"聲寶ES-P16DV(P1)超震波變頻洗衣機16Kg","bonus":175,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104979","name":"三星WA80F16B9BTW AI智控直立式洗衣機16kg","bonus":280,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104981","name":"奇美WS-V179PW變頻洗衣機17kg","bonus":210,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104982","name":"大同TAW-A150DGS變頻洗衣機15kg","bonus":112,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104984","name":"日立SF170ZHVGG變頻溫水直立式洗衣機17KG","bonus":385,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104985","name":"大同TAW-A170DGS變頻洗衣機17Kg","bonus":140,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40104986","name":"大同TAW-A170GW定頻洗衣機17Kg","bonus":126,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40105942","name":"聲寶ES-P19DAS(S1)變頻智慧投入洗衣機19Kg","bonus":350,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40105946","name":"惠而浦VWHD20501BG變頻洗衣機20kg","bonus":167,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40105950","name":"三星WA80F19B9BTW AI智控直立式洗衣機19kg","bonus":420,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40105952","name":"日立SF200ZHVGG變頻溫水直立式洗衣機20kg","bonus":455,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40105953","name":"LG WT-TD20HG直立式變頻洗衣機20kg","bonus":350,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110152","name":"惠而浦8TWFW8620HW蒸氣洗滾筒洗衣機17kg","bonus":267,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110155","name":"惠而浦8TWFW5620HW洗脫滾筒洗衣機17kg","bonus":267,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110183","name":"惠而浦WWEB10701BW洗脫烘滾筒","bonus":200,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110203","name":"聲寶ES-ND12DH蒸洗脫烘滾筒洗衣機12kg","bonus":210,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110223","name":"LG WD-S1310B AI智控洗乾衣機","bonus":840,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110233","name":"LG WD-S15NDB 蒸氣洗脫烘滾筒洗衣機15kg","bonus":560,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110235","name":"LG WD-S22FW 洗脫滾筒洗衣機22kg","bonus":700,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110236","name":"LG WD-S18NDB蒸氣洗脫烘滾筒洗衣機 18kg","bonus":700,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110237","name":"LG WD-S18NW 蒸氣洗脫滾筒洗衣機18kg","bonus":420,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110238","name":"LG WD-S15NW 蒸氣洗脫滾筒洗衣機15kg","bonus":350,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110245","name":"東芝TWD-127XW4TA洗脫烘滾筒洗衣機12kg","bonus":210,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110247","name":"LG WD-S2220VM AI智控洗乾衣機","bonus":1400,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110248","name":"LG WD-S2220B AI智控洗乾衣機","bonus":1400,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110250","name":"日立BDSG120JJW變頻洗脫烘滾筒左開12kg","bonus":973,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110253","name":"日立BDSX150JJW變頻熱泵洗脫烘滾筒左開15kg","bonus":1505,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110256","name":"奇美WS-V139WD變頻洗脫烘滾筒13kg","bonus":245,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110259","name":"LG WD-S22FHDB熱泵滾筒洗衣機22kg","bonus":1400,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110262","name":"伊萊克斯EWW1143R7WC洗脫烘滾筒洗衣機11kg","bonus":700,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110263","name":"東芝TWD-T35BP160MWTA(MG洗脫烘洗衣機15Kg","bonus":210,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40110265","name":"LG WD-S1818PB AI智控洗乾衣機","bonus":1400,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40122017","name":"惠而浦8TWGD5620HW瓦斯型滾筒乾衣機16kg","bonus":267,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40122023","name":"惠而浦8TWED5620HW電力型滾筒乾衣機15kg","bonus":133,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40122024","name":"惠而浦8TWGD8620HW蒸氣瓦斯乾衣機16kg","bonus":267,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40122042","name":"惠而浦8TWGD5050PW瓦斯型乾衣機12kg","bonus":133,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40122046","name":"LG WR-20DW 免曬衣乾衣機20kg","bonus":700,"cat":"洗衣機/乾衣"},{"date":"2026/8/26","code":"40122049","name":"LG Styler R723MG 蒸氣電子衣櫥","bonus":1400,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40122050","name":"LG-Styler R723MB 蒸氣電子衣櫥","bonus":1400,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40122051","name":"LG Styler R723WG 電子衣櫥","bonus":1400,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40200001","name":"伊萊克斯300系列洗碗機EFF3360VWB","bonus":2100,"cat":"洗碗機/廚電"},{"date":"2026/8/26","code":"40200006","name":"Bosch SMS6HAW10X 13人份洗碗機","bonus":350,"cat":"洗碗機/廚電"},{"date":"2026/8/26","code":"40200007","name":"Bosch SPS2IKI06X 9人份洗碗機","bonus":350,"cat":"洗碗機/廚電"},{"date":"2026/8/26","code":"40200008","name":"Bosch SMS2ITI06X 12人份洗碗機","bonus":350,"cat":"洗碗機/廚電"},{"date":"2026/8/26","code":"40200011","name":"Bosch SMS8ZCI00X 洗碗機-14人份","bonus":350,"cat":"洗碗機/廚電"},{"date":"2026/8/26","code":"40200015","name":"BOSCH SMS6ZCW00X 獨立式洗碗機-14人份","bonus":350,"cat":"洗碗機/廚電"},{"date":"2026/8/26","code":"40411043","name":"日立MROS800AT烘烤微波爐31L","bonus":350,"cat":"洗碗機/廚電"},{"date":"2026/8/26","code":"40604003","name":"聲寶AW-RH36DC R32變頻窗型-冷暖","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604006","name":"聲寶AW-LH22DC R32變頻窗型-冷暖(左吹)","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604007","name":"聲寶AW-LH50DC R32變頻窗型-冷暖(左吹)","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604008","name":"聲寶AW-RH41DC R32變頻窗型-冷暖","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604029","name":"聲寶AW-RH63DC R32變頻窗型-冷暖","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604031","name":"聲寶AW-PF22D R32變頻窗型-冷專","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604032","name":"聲寶AW-PF28D R32變頻窗型-冷專","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604074","name":"夏普AF-G280CH 變頻R32冷專窗型典雅","bonus":70,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604077","name":"夏普AF-G360CH 變頻R32冷專窗型典雅","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604086","name":"聲寶AW-LH41DC R32變頻窗型-冷暖(左吹)","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604099","name":"聲寶AW-LH28DC R32變頻窗型-冷暖(左吹)","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604100","name":"聲寶AW-LH63DC R32變頻窗型-冷暖(左吹)","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604101","name":"聲寶AW-RH28DC R32變頻窗型-冷暖","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604102","name":"聲寶AW-LH36DC R32變頻窗型-冷暖(左吹)","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604103","name":"聲寶AW-LH72DC R32變頻窗型-冷暖(左吹)","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40604104","name":"聲寶AW-RH22DC R32變頻窗型-冷暖","bonus":105,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614003","name":"大同R/FT-28DHSB R32 1-1變頻冷暖空調","bonus":280,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614006","name":"LG LSU/N22DST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614007","name":"LG LSU/N22DDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614019","name":"夏普AH/AU-23BESH-W 1-1變頻R32冷專極致","bonus":70,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614021","name":"LG LSU/N28DDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614024","name":"三菱SRC/SRK22ZTNT-W變頻冷暖-旭山","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614025","name":"LG LSU/N28DST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614026","name":"LG LSU/N36DST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614026","name":"LG LSU/N36DST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614028","name":"夏普AY/AE-28ZAMH-W 1-1變頻R32冷暖頂級","bonus":350,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614034","name":"LG LSU/N36IDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614034","name":"LG LSU/N36IDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614035","name":"LG LSU/N22IDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614035","name":"LG LSU/N22IDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614039","name":"三菱DXC/DXK20ZST2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614042","name":"LG LSU/N28IDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614051","name":"三菱DXC/DXK25ZST2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614070","name":"三菱SRC/SRK28ZTNT-W變頻冷暖-旭山","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614072","name":"聲寶AM/AU-PH22DC 1-1 星幸福變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614074","name":"東元MA/MS22IC-GA5 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614075","name":"東元MA/MS22IH-GA5 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614078","name":"東元MA/MS28IC-GA5 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614079","name":"東元MA/MS28IH-GA5 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614080","name":"大金豪菁RHF/FTHF20ZVLT冷暖變頻分離式","bonus":1400,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614082","name":"聲寶AM/AU-NH22DC 1-1 時尚變頻冷暖","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614091","name":"聲寶AM/AU-NH28DC 1-1 時尚變頻冷暖","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614093","name":"東元MA/MS22IC-GAT6 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614094","name":"東元MA/MS28IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614094","name":"東元MA/MS28IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614095","name":"東元MA/MS22IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614100","name":"大金大關RXV/FTXV28ZVLT冷暖變頻分離式","bonus":532,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614101","name":"大金大關RXV/FTXV22ZVLT冷暖變頻分離式","bonus":462,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614107","name":"大金豪菁RHF/FTHF25ZVLT冷暖變頻分離式","bonus":462,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614115","name":"聲寶AM/AU-PF22DC1 1-1 R32變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40614119","name":"夏普 AY/AE-28DAMH-W 1-1變頻R32 冷暖尊爵","bonus":280,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614120","name":"三菱DXC/DXK25YVST-W 1-1變頻冷專-晴空","bonus":420,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614121","name":"夏普AY/AE-23BESH-W 1-1變頻R32冷暖極致","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614122","name":"夏普AY/AE-28BESH-W 1-1變頻R32冷暖極致","bonus":280,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614123","name":"夏普AH/AU-28BESH-W 1-1變頻R32冷專極致","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614124","name":"夏普 AY/AE-23DAMH-W 1-1變頻R32 冷暖尊爵","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614125","name":"東元MA/MS28IC-GAT6 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40614128","name":"聲寶AM/AU-PH28DC 1-1 星幸福變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615012","name":"LG LSU/N36DDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615013","name":"LG LSU/N50DDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615014","name":"LG LSU/N41DDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615016","name":"夏普AH/AU-41BESH-W 1-1變頻R32冷專極致","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615019","name":"LG LSU/N41DST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615022","name":"LG LSU/N50IDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615022","name":"LG LSU/N50IDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615024","name":"LG LSU/N41IDHST 1-1變頻冷暖","bonus":700,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615044","name":"聲寶AM/AU-PH50DC 1-1 星幸福變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615065","name":"聲寶AM/AU-NF41D 1-1 R32變頻冷專空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615066","name":"聲寶AM/AU-NF41DC 1-1 R32變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615071","name":"聲寶AM/AU-NF50DC 1-1 R32變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615082","name":"聲寶AM/AU-NH50DC 1-1 時尚變頻冷暖","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615083","name":"聲寶AM/AU-NH36DC 1-1 時尚變頻冷暖","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615084","name":"聲寶AM/AU-NH41DC 1-1 時尚變頻冷暖","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615090","name":"三菱SRC/SRK41ZTNT-W變頻冷暖-旭山","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615091","name":"三菱SRC/SRK36ZTNT-W變頻冷暖-旭山","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615093","name":"聲寶AM/AU-NF36DC 1-1 R32變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615094","name":"夏普 AY/AE-41DAMH-W 1-1變頻R32 冷暖尊爵","bonus":280,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615095","name":"夏普 AY/AE-36DAMH-W 1-1變頻R32 冷暖尊爵","bonus":280,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615100","name":"夏普AH/AU-36BESH-W 1-1變頻R32冷專極致","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615108","name":"三菱DXC/DXK50ZST2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615111","name":"三菱DXC/DXK41ZST2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615116","name":"夏普AY/AE-50BESH-W 1-1變頻R32冷暖極致","bonus":280,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615120","name":"大金豪菁RHF/FTHF30ZVLT冷暖變頻分離式","bonus":504,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615121","name":"夏普AH/AU-50BESH-W 1-1變頻R32冷專極致","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615122","name":"三菱DXC/DXK35ZST2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615128","name":"東元MA/MS40IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615131","name":"東元MA/MS50IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615132","name":"東元MA/MS36IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615134","name":"東元MA/MS40IC-GAT6 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615135","name":"東元MA/MS36IC-GA5 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615136","name":"東元MA/MS50IC-GAT6 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615137","name":"東元MA/MS40IC-GA5 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615140","name":"東元MA/MS36IH-GA5 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615142","name":"東元MA/MS36IC-GAT6 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615144","name":"東元MA/MS50IC-GA5 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615150","name":"東元MA/MS50IH-GA5 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615151","name":"東元MA/MS40IH-GA5 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615154","name":"夏普AY/AE-36BESH-W 1-1變頻R32冷暖極致","bonus":280,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615163","name":"三菱SRC/SRK50ZTNT-W變頻冷暖-旭山","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615168","name":"大金大關RXV/FTXV36ZVLT冷暖變頻分離式","bonus":574,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615169","name":"夏普AY/AE-50ZAMH-W 1-1變頻R32冷暖頂級","bonus":350,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615170","name":"夏普AY/AE-40ZAMH-W 1-1變頻R32冷暖頂級","bonus":350,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615171","name":"夏普AY/AE-36ZAMH-W 1-1變頻R32冷暖頂級","bonus":350,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615173","name":"大金大關RXV/FTXV41ZVLT冷暖變頻分離式","bonus":658,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615174","name":"大金豪菁RHF/FTHF40ZVLT冷暖變頻分離式","bonus":602,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615188","name":"大金豪菁RHF/FTHF50ZVLT冷暖變頻分離式","bonus":735,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615189","name":"聲寶AM/AU-PH36DC 1-1 星幸福變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615191","name":"聲寶AM/AU-PH41DC 1-1 星幸福變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615199","name":"三菱DXC/DXK35YVST-W 1-1變頻冷專-晴空","bonus":420,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615202","name":"大金大關RXV/FTXV50ZVLT冷暖變頻分離式","bonus":770,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615206","name":"夏普AY/AE-41BESH-W 1-1變頻R32冷暖極致","bonus":280,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40615221","name":"大同R/FT-36DHSB R32 1-1變頻冷暖空調","bonus":350,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615222","name":"大同R/FT-42DHSB R32 1-1變頻冷暖空調","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40615223","name":"大同R/FT-50DHSB R32 1-1變頻冷暖空調","bonus":490,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616004","name":"LG LSU/N63DDHST 1-1變頻冷暖","bonus":1050,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616005","name":"LG LSU/N72DDHST 1-1變頻冷暖","bonus":1050,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616006","name":"LG LSU/N83DHP 1-1旗艦變頻冷暖空調","bonus":1050,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616008","name":"夏普 AY/AE-63BEMB-W  1-1變頻R32冷暖極致","bonus":280,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616009","name":"夏普 AH/AU-63BEMB-W  1-1變頻R32冷專極致","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616010","name":"LG LSU/N63IDHST 1-1變頻冷暖","bonus":1050,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616011","name":"LG LSU/N93DHP 1-1旗艦變頻冷暖空調","bonus":1050,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616019","name":"LG LSU/N72IDHST 1-1變頻冷暖","bonus":1050,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616032","name":"三菱DXC/DXK80ZRT2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616035","name":"三菱DXC/DXK71ZRT2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616036","name":"三菱DXC/DXK63ZRT2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616041","name":"聲寶AM/AU-NH63DC 1-1 時尚變頻冷暖","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616042","name":"聲寶AM/AU-NH92DC 1-1 時尚變頻冷暖","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616043","name":"聲寶AM/AU-NH72DC 1-1 時尚變頻冷暖","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616047","name":"三菱DXC/DXK100ZRT2-W 1-1變頻冷暖-晴空","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616059","name":"東元MA/MS72IC-GAT6 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616060","name":"東元MA/MS63IC-GAT6 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616065","name":"東元MA/MS63IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616065","name":"東元MA/MS63IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616066","name":"東元MA/MS80IC-GAT6 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616072","name":"東元MA/MS72IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616077","name":"東元MA/MS72IH-GA5 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616081","name":"東元MA/MS80IC-GA5 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616082","name":"東元MA/MS63IH-GA5 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616083","name":"東元MA/MS72IC-GA5 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616090","name":"東元MA/MS80IH-GA5 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616091","name":"東元MA/MS63IC-GA5 1-1變頻R32冷專精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616096","name":"聲寶AM/AU-PH63DC 1-1 星幸福變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616108","name":"東元MA/MS80IH-GAT6 1-1變頻R32冷暖精品","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616112","name":"聲寶AM/AU-PH72DC 1-1 星幸福變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616170","name":"聲寶AM/AU-NF63DC 1-1 R32變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616171","name":"三菱SRC/SRK63ZTNT-W變頻冷暖-旭山","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616172","name":"三菱SRC/SRK71ZTNT-W變頻冷暖-旭山","bonus":420,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616181","name":"聲寶AM/AU-NF72DC 1-1 R32變頻冷暖空調","bonus":210,"cat":"冷氣空調"},{"date":"2026/8/26","code":"40616190","name":"大金大關RXV/FTXV71ZVLT冷暖變頻分離","bonus":980,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616192","name":"三菱DXC/DXK50YXST-W 1-1變頻冷專-晴空","bonus":420,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616195","name":"三菱DXC/DXK71YXST-W 1-1變頻冷專-晴空","bonus":420,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616196","name":"大金豪菁RHF/FTHF71ZVLT冷暖變頻分離式","bonus":924,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616217","name":"大金大關RXV/FTXV60ZVLT冷暖變頻分離式","bonus":882,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40616218","name":"大金豪菁RHF/FTHF60ZVLT冷暖變頻分離式","bonus":826,"cat":"小家電/其他"},{"date":"2026/8/26","code":"40621916","name":"大同TWF-261YA移動式空調","bonus":70,"cat":"冷氣空調"},{"date":"2026/8/26","code":"41000004","name":"飛利浦 AC1711/80 奈米級抗敏空氣清淨機","bonus":175,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41214022","name":"飛利浦HR7320/12廚神料理機","bonus":70,"cat":"洗碗機/廚電"},{"date":"2026/8/26","code":"41215008","name":"飛利浦HR2038/30冷熱破壁豆漿機","bonus":56,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41242014","name":"飛利浦 全自動雙研磨美式咖啡機 HD7900/50","bonus":175,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41302929","name":"飛利浦 小香鍋 HD3073/50","bonus":56,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41313002","name":"飛利浦 NA221/00 星樂視透視海星氣炸鍋","bonus":77,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41313910","name":"飛利浦HD2136智慧萬用鍋","bonus":49,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41313999","name":"飛利浦NA231/00星樂視透視海星氣炸鍋","bonus":126,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41521113","name":"聲寶 SK-GA14VBD 14吋智能聲控DC立扇","bonus":70,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41522139","name":"聲寶16吋智能聲控DC立扇SK-GA16VBD","bonus":70,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41611149","name":"聲寶 AD-W520T 10.5L負離子智慧除濕機","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41611150","name":"禾聯 HDH-24DY03W(N) 12L抑菌除濕機","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"41611153","name":"HDH-12DYB30(N) 6L抑菌除濕機","bonus":140,"cat":"小家電/其他"},{"date":"2026/8/26","code":"43133130","name":"PHILIPS TAB5309/96 聲霸","bonus":112,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"43133131","name":"PHILIPS TAB5109/96 聲霸","bonus":70,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"43133138","name":"LG S70TR 聲霸","bonus":392,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"43133140","name":"LG S95TR 聲霸","bonus":665,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"43133143","name":"SAMSUNG HW-QS700F 聲霸","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"43133146","name":"SAMSUNG HW-Q990F 聲霸","bonus":1022,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"43133147","name":"SAMSUNG HW-S60D 聲霸","bonus":119,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044003","name":"CHIMEI TL-65G300 UHD顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044004","name":"CHIMEI TL-50G300 UHD顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044007","name":"CHIMEI TL-75UM20 Mini LED顯示器","bonus":630,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044008","name":"CHIMEI TL-50UM20 QLED顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044009","name":"CHIMEI TL-55UM20 Mini LED顯示器","bonus":420,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044010","name":"PANASONIC TN-75W80BGT UHD顯示器","bonus":543,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044012","name":"LG OLED55C6PTA OLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044014","name":"PHILIPS 65PML9109 Mini LED顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044015","name":"TOSHIBA 65M450NT QLED 顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044016","name":"SAMSUNG QA100QN80H QLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044017","name":"LG 65QNED86BTA 一奈米UHD顯示器","bonus":560,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044018","name":"CHIMEI TL-86UM20 Mini LED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044023","name":"SAMSUNG UA50U8500F UHD顯示器","bonus":217,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044026","name":"CHIMEI TL-65UM20 Mini LED顯示器","bonus":420,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044028","name":"SONY Y-50S30 UHD顯示器","bonus":249,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044029","name":"TOSHIBA 65Z870NP Mini LED顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044030","name":"CHIMEI TL-55G300 UHD顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044032","name":"SAMSUNG 115MR95F Micro RGB顯示器","bonus":8400,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044034","name":"LG OLED65C6PTA OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044036","name":"SONY Y-65S30 UHD顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044043","name":"SONY Y-55S30 UHD顯示器","bonus":490,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044047","name":"PANASONIC TN-55W79BGT UHD顯示器","bonus":207,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044055","name":"SONY Y-55XR70 UHD顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044057","name":"LG 55QNED80BTA 一奈米UHD顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044058","name":"LG 65QNED80BTA 一奈米UHD顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044059","name":"LG 75QNED80BTA 一奈米UHD顯示器","bonus":560,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044061","name":"SONY Y-55XR80 OLED顯示器","bonus":553,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044062","name":"LG 55QNED86BTA 一奈米UHD顯示器","bonus":420,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044066","name":"CHIMEI TL-43G300 UHD顯示器","bonus":140,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044075","name":"PHILIPS 50PUH8528 UHD顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044080","name":"SAMSUNG 100R85H Micro RGB顯示器","bonus":4200,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044085","name":"PANASONIC TV-65W95BGT Mini LED顯示器","bonus":385,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044086","name":"SONY Y-43S30 UHD顯示器","bonus":221,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044096","name":"SAMSUNG 75R85H Micro RGB顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044098","name":"SONY Y-65XR70 UHD顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044099","name":"SAMSUNG UA43M70H Mini LED顯示器","bonus":140,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044100","name":"SAMSUNG UA75M80H Mini LED顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044101","name":"SAMSUNG 55R85H Micro RGB顯示器","bonus":1750,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044102","name":"SAMSUNG 85R85H Micro RGB顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044103","name":"SAMSUNG UA55M80H Mini LED顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044109","name":"SAMSUNG UA85M80H Mini LED顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044112","name":"PHILIPS 65PUH8528 UHD顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044116","name":"SAMSUNG 65R85H Micro RGB顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044117","name":"SAMSUNG UA50M70H Mini LED顯示器","bonus":140,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044118","name":"SAMSUNG QA75QN1EF QLED顯示器","bonus":658,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044119","name":"SAMSUNG UA65M80H Mini LED顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044120","name":"PHILIPS 65PUH8808 UHD顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044125","name":"PANASONIC TN-55W80CGT UHD顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044127","name":"PANASONIC TN-65W83CGT QLED顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044133","name":"SAMSUNG QA65QN80H QLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044134","name":"SONY Y-75S30 UHD顯示器","bonus":581,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044135","name":"SAMSUNG 85R95H Micro RGB顯示器","bonus":1750,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044136","name":"PHILIPS 55PUH8528 UHD顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044137","name":"SAMSUNG QA55S90H OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044139","name":"SAMSUNG QA55QN80H QLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044140","name":"SAMSUNG 65R95H Micro RGB顯示器","bonus":1750,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044141","name":"PHILIPS 55PUH8808 UHD顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044142","name":"SAMSUNG QA65S95H OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044144","name":"SAMSUNG QA83S90H OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044145","name":"SAMSUNG QA77S90H OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044146","name":"SAMSUNG QA83S95H OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044149","name":"SAMSUNG QA75QN80H QLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044151","name":"SAMSUNG QA55S95H OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044153","name":"SAMSUNG QA65S90H OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044155","name":"SAMSUNG QA77S95H OLED顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044156","name":"SAMSUNG QA85QN80H QLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044157","name":"SAMSUNG QA50QN80H QLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044158","name":"SAMSUNG 75R95H Micro RGB顯示器","bonus":1750,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044163","name":"SAMSUNG UA43CU8000 UHD顯示器","bonus":105,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044195","name":"PHILIPS 55PML9109 Mini LED顯示器","bonus":210,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044205","name":"SONY XRM-55X90L UHD顯示器","bonus":1050,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044241","name":"SAMSUNG QA65Q80D QLED顯示器","bonus":291,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044245","name":"SONY XRM-75X90L UHD顯示器","bonus":508,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044252","name":"SAMSUNG QA55S90D OLED顯示器","bonus":343,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044253","name":"SAMSUNG QA65S90D OLED顯示器","bonus":480,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044254","name":"PANASONIC TV-55W95AGT Mini LED顯示器","bonus":368,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044258","name":"SAMSUNG QA55Q60D QLED顯示器","bonus":193,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044267","name":"PANASONIC TN-65W80AGT UHD顯示器","bonus":270,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044287","name":"SAMSUNG QA65Q60D QLED顯示器","bonus":270,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044296","name":"PANASONIC TN-55W70AGT UHD顯示器","bonus":175,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044299","name":"LG 65QNED81SQA QNED電視","bonus":88,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044305","name":"SAMSUNG UA43DU8000 UHD顯示器","bonus":116,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044306","name":"SAMSUNG UA55DU8000 UHD顯示器","bonus":147,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044325","name":"PANASONIC TV-65Z85AGT OLED顯示器","bonus":585,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044331","name":"PANASONIC TV-55Z85AGT OLED顯示器","bonus":396,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044332","name":"PANASONIC TN-55W80AGT UHD顯示器","bonus":193,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044333","name":"PANASONIC TN-65W85AGT QLED顯示器","bonus":364,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044903","name":"LG 55QNED82ATA 一奈米UHD顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044905","name":"LG 55QNED86ATA 一奈米UHD顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044906","name":"LG 75QNED82ATA 一奈米UHD顯示器","bonus":434,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044907","name":"LG 65QNED86ATA 一奈米UHD顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044912","name":"LG OLED55C5PTA OLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044914","name":"LG OLED65C5PTA OLED顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044917","name":"LG 65QNED82ATA 一奈米UHD顯示器","bonus":350,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044918","name":"LG 75QNED86ATA 一奈米UHD顯示器","bonus":420,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044925","name":"SAMSUNG QA65Q7F QLED顯示器","bonus":319,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044927","name":"SAMSUNG QA55Q7F QLED顯示器","bonus":217,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044935","name":"SAMSUNG QA43Q7F QLED顯示器","bonus":203,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044936","name":"SAMSUNG QA75QN70F QLED顯示器","bonus":658,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044937","name":"SAMSUNG QA65QN87D QLED顯示器","bonus":354,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044947","name":"SAMSUNG QA50Q7F QLED顯示器","bonus":203,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044948","name":"SAMSUNG QA55QN70F QLED顯示器","bonus":347,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044964","name":"SONY Y-55XR50 UHD顯示器","bonus":490,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044976","name":"SONY Y-65XR50 UHD顯示器","bonus":700,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044994","name":"PANASONIC TN-50W80BGT UHD顯示器","bonus":263,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044996","name":"PANASONIC TN-55W70BGT UHD顯示器","bonus":221,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044997","name":"PANASONIC TN-43W80BGT UHD顯示器","bonus":221,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044998","name":"PANASONIC TN-43W70BGT UHD顯示器","bonus":214,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44044999","name":"PANASONIC TN-55W80BGT UHD顯示器","bonus":263,"cat":"電視/聲霸"},{"date":"2026/8/26","code":"44135011","name":"SHARP Poketomo 陪伴機器人SR-C01TW-W","bonus":210,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45000025","name":"華碩 H-V500MV-31315U042W  桌上型電腦","bonus":35,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45000026","name":"華碩H-V500MV-13420H138W桌上型電腦","bonus":35,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45001007","name":"華碩X1500KA筆電(N6000/8GB/512G)","bonus":35,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45001008","name":"華碩 X1504VA 筆電(C5-120U/8GB/512G)","bonus":70,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45001021","name":"華碩K1404VA 筆電(C5-120U/16GB/512GB)","bonus":35,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45001030","name":"宏碁 ANV15-52電競筆電(C5-210U/RTX5060)","bonus":70,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45001035","name":"宏碁AL15-44P筆電(AMD Ryzen5/16GB/512GB)","bonus":70,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45001042","name":"宏碁SFG14 AI筆電(C5/16GB/512GB)","bonus":70,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45002098","name":"宏碁 TabA11 11吋平板(4G/128G)","bonus":35,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45031269","name":"三星S27CG552EC曲面電競螢幕(黑)","bonus":35,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45031280","name":"三星 S32CG552EC曲面電競螢幕","bonus":35,"cat":"小家電/其他"},{"date":"2026/8/26","code":"45031307","name":"三星 S32FM703UC AI智慧聯網螢幕(白)","bonus":35,"cat":"小家電/其他"}];
+
+        function normalizeStr(str) {
+            if (!str) return '';
+            return String(str).toLowerCase().replace(/[\s\-_()（）\[\]【】\/]/g, '');
+        }
+
+        // Pre-index preset items for 0ms instant fuzzy searching
+        PRESET_ITEMS.forEach((item, idx) => {
+            item.id = item.id || ('preset_' + item.code + '_' + idx);
+            item._searchIndex = normalizeStr(item.name + ' ' + (item.code || '') + ' ' + item.bonus + ' ' + (item.cat || ''));
+        });
+
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let searchDebounceTimer = null;
+        let visibleLimit = 40;
+
+        function getCustomItems() {
+            try {
+                const raw = localStorage.getItem(STORAGE_CUSTOM_KEY);
+                const list = raw ? JSON.parse(raw) : [];
+                list.forEach(item => {
+                    item._searchIndex = normalizeStr(item.name + ' ' + (item.code || '') + ' ' + item.bonus + ' 自訂加碼');
+                });
+                return list;
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveCustomItems(list) {
+            try {
+                localStorage.setItem(STORAGE_CUSTOM_KEY, JSON.stringify(list));
+            } catch (e) {}
+        }
+
+        function getAllItems() {
+            const customs = getCustomItems();
+            return [...customs, ...PRESET_ITEMS];
+        }
+
+        function getCart() {
+            try {
+                const raw = localStorage.getItem(STORAGE_CART_KEY);
+                return raw ? JSON.parse(raw) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveCart(cart) {
+            try {
+                localStorage.setItem(STORAGE_CART_KEY, JSON.stringify(cart));
+            } catch (e) {}
+        }
+
+        function getItemKey(item) {
+            return item.id || (item.code + '_' + item.name);
+        }
+
+        function updateItemQty(itemKey, delta) {
+            const cart = getCart();
+            const currentQty = cart[itemKey] || 0;
+            const newQty = Math.max(0, currentQty + delta);
+            if (newQty === 0) {
+                delete cart[itemKey];
+            } else {
+                cart[itemKey] = newQty;
+            }
+            saveCart(cart);
+            renderTaiJiangUI();
+            if (typeof renderTaiJiangDetailSheet === 'function') renderTaiJiangDetailSheet();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            if (typeof playSingleClickSound === 'function') playSingleClickSound("C5");
+        }
+
+        function clearCart() {
+            if (confirm('確定要清空所有售出品項與台獎計算嗎？')) {
+                localStorage.removeItem(STORAGE_CART_KEY);
+                renderTaiJiangUI();
+                if (typeof renderTaiJiangDetailSheet === 'function') renderTaiJiangDetailSheet();
+                if (typeof showToast === 'function') showToast('🧹 已清空台獎計算紀錄');
+            }
+        }
+
+        function renderTaiJiangUI() {
+            const allItems = getAllItems();
+            const cart = getCart();
+
+            let totalAmount = 0;
+            let totalCount = 0;
+
+            allItems.forEach(item => {
+                const k = getItemKey(item);
+                const qty = cart[k] || 0;
+                if (qty > 0) {
+                    totalAmount += qty * item.bonus;
+                    totalCount += qty;
+                }
+            });
+
+            const totalAmountEl = document.getElementById('taiJiangTotalAmount');
+            if (totalAmountEl) totalAmountEl.textContent = totalAmount.toLocaleString();
+
+            const badgeCountEl = document.getElementById('taiJiangCartCountBadge');
+            if (badgeCountEl) badgeCountEl.textContent = totalCount;
+
+            const summaryTextEl = document.getElementById('taiJiangCartSummaryText');
+            if (summaryTextEl) {
+                if (totalCount === 0) {
+                    summaryTextEl.textContent = '目前無銷售紀錄，請下方點擊「+」新增';
+                } else {
+                    summaryTextEl.innerHTML = '<span style="color:var(--label); font-weight:600;">已選購 ' + totalCount + ' 件商品</span> · 累積獎金 <span style="color:var(--purple); font-weight:700;">$' + totalAmount.toLocaleString() + '</span>';
+                }
+            }
+
+            const clearBtn = document.getElementById('taiJiangClearBtn');
+            if (clearBtn) {
+                if (totalCount > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+
+            // Fast Searching Logic
+            const cleanQuery = normalizeStr(searchQuery);
+            let filtered = allItems;
+
+            if (cleanQuery) {
+                filtered = filtered.filter(item => {
+                    const idx = item._searchIndex || normalizeStr(item.name + ' ' + (item.code || '') + ' ' + item.bonus);
+                    return idx.includes(cleanQuery);
+                });
+            } else {
+                if (currentCategory === 'custom') {
+                    filtered = filtered.filter(item => item.isCustom);
+                } else if (currentCategory !== 'all') {
+                    filtered = filtered.filter(item => item.cat === currentCategory);
+                }
+            }
+
+            const listZone = document.getElementById('taiJiangListZone');
+            if (!listZone) return;
+
+            if (filtered.length === 0) {
+                listZone.innerHTML = `
+                    <div style="text-align:center; padding:36px 16px; color:var(--label-tertiary);">
+                        <i class="fas fa-search" style="font-size:24px; opacity:0.3; margin-bottom:8px; display:block;"></i>
+                        <div style="font-size:13px; font-weight:600; color:var(--label-secondary);">未找到符合「` + escapeHtml(searchQuery) + `」的商品</div>
+                        <div style="font-size:11.5px; margin-top:4px;">可嘗試輸入型號數字 (如: 567、332) 或品牌名稱</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const displayItems = filtered.slice(0, visibleLimit);
+            const hasMore = filtered.length > visibleLimit;
+
+            let htmlStr = '';
+            if (cleanQuery) {
+                htmlStr += '<div style="font-size:11px; font-weight:600; color:var(--label-tertiary); padding:4px 6px 8px; display:flex; justify-content:space-between; align-items:center;">' +
+                    '<span>搜尋結果：共 ' + filtered.length + ' 筆符合</span>' +
+                    (currentCategory !== 'all' ? '<span style="color:var(--purple);">✦ 已搜尋全分類</span>' : '') +
+                    '</div>';
+            }
+
+            for (let i = 0; i < displayItems.length; i++) {
+                const item = displayItems[i];
+                const k = getItemKey(item);
+                const qty = cart[k] || 0;
+                const isSelected = qty > 0;
+
+                htmlStr += `
+                    <div class="active-scale" style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:0.5px solid var(--separator); background:` + (isSelected ? 'rgba(122,90,138,0.06)' : 'transparent') + `; border-radius:12px; margin-bottom:4px; transition:background 0.15s;">
+                        <div style="flex:1; padding-right:12px; min-width:0;">
+                            <div style="display:flex; align-items:center; gap:6px; margin-bottom:3px; flex-wrap:wrap;">
+                                <span style="font-size:10px; font-weight:700; color:var(--purple); background:rgba(122,90,138,0.1); padding:1px 6px; border-radius:999px;">
+                                    ` + escapeHtml(item.code || '加碼') + `
+                                </span>
+                                ` + (item.isCustom ? '<span style="font-size:10px; font-weight:700; color:var(--orange); background:rgba(217,138,22,0.12); padding:1px 6px; border-radius:999px;">廠商加碼</span>' : '') + `
+                                <span style="font-size:10.5px; color:var(--label-tertiary);">` + escapeHtml(item.date || '') + `</span>
+                                ` + (item.cat ? '<span style="font-size:9.5px; color:var(--label-tertiary); opacity:0.8;">· ' + escapeHtml(item.cat) + '</span>' : '') + `
+                            </div>
+                            <div style="font-size:13px; font-weight:600; color:var(--label); line-height:1.4; word-break:break-word;">
+                                ` + escapeHtml(item.name) + `
+                            </div>
+                            <div style="font-size:12px; font-weight:700; color:var(--green); margin-top:4px; display:flex; align-items:center; gap:4px;">
+                                <span>台獎 $` + item.bonus.toLocaleString() + `</span>
+                                ` + (isSelected ? '<span style="font-size:11px; color:var(--purple); font-weight:600;">(小計 $' + (qty * item.bonus).toLocaleString() + ')</span>' : '') + `
+                            </div>
+                        </div>
+
+                        <!-- Touch Incrementation Controls (超大好按按鈕) -->
+                        <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                            ` + (isSelected ? `
+                                <button type="button" onclick="window.updateTaiJiangQty('` + k + `', -1)" aria-label="減少數量"
+                                    style="width:36px; height:36px; border-radius:11px; background:var(--fill); border:0.5px solid var(--separator); color:var(--label); font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:inherit;">
+                                    <i class="fas fa-minus" style="font-size:11px;"></i>
+                                </button>
+                                <span style="font-size:16px; font-weight:800; color:var(--purple); min-width:22px; text-align:center;">
+                                    ` + qty + `
+                                </span>
+                            ` : '') + `
+                            <button type="button" onclick="window.updateTaiJiangQty('` + k + `', 1)" aria-label="增加數量"
+                                style="width:36px; height:36px; border-radius:11px; background:` + (isSelected ? 'var(--purple)' : 'var(--fill-secondary)') + `; border:` + (isSelected ? 'none' : '0.5px solid var(--separator)') + `; color:` + (isSelected ? '#FFFFFF' : 'var(--label)') + `; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:inherit; box-shadow:` + (isSelected ? '0 2px 8px rgba(122,90,138,0.3)' : 'none') + `;">
+                                <i class="fas fa-plus" style="font-size:12px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (hasMore) {
+                htmlStr += `
+                    <div style="text-align:center; padding:12px 0 6px;">
+                        <button type="button" onclick="window.loadMoreTaiJiangItems()" class="active-scale"
+                            style="padding:8px 20px; border-radius:999px; background:var(--fill-secondary); border:0.5px solid var(--separator); color:var(--label-secondary); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit;">
+                            載入更多品項 (還有 ` + (filtered.length - visibleLimit) + ` 筆) ↓
+                        </button>
+                    </div>
+                `;
+            }
+
+            listZone.innerHTML = htmlStr;
+        }
+
+        function loadMoreTaiJiangItems() {
+            visibleLimit += 50;
+            renderTaiJiangUI();
+        }
+
+        function setTaiJiangCategory(cat) {
+            currentCategory = cat;
+            visibleLimit = 40;
+            const pills = document.querySelectorAll('#taiJiangCategoryTrack .news-cat-pill');
+            pills.forEach(p => p.classList.remove('active'));
+            const catId = cat === '冰箱/冷凍' ? 'fridge' : cat === '洗衣機/乾衣' ? 'washer' : cat === '冷氣空調' ? 'hvac' : cat === '電視/聲霸' ? 'tv' : cat === '洗碗機/廚電' ? 'kitchen' : cat === '小家電/其他' ? 'other' : cat;
+            const activeBtn = document.getElementById('tjCat_' + catId);
+            if (activeBtn) activeBtn.classList.add('active');
+            renderTaiJiangUI();
+        }
+
+        function onTaiJiangSearchInput(e) {
+            searchQuery = e ? e.target.value : '';
+            visibleLimit = 40;
+            const clearBtn = document.getElementById('taiJiangSearchClearBtn');
+            if (clearBtn) {
+                if (searchQuery.trim()) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+            if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                renderTaiJiangUI();
+            }, 60);
+        }
+
+        function clearTaiJiangSearch() {
+            searchQuery = '';
+            visibleLimit = 40;
+            const input = document.getElementById('taiJiangSearchInput');
+            if (input) input.value = '';
+            const clearBtn = document.getElementById('taiJiangSearchClearBtn');
+            if (clearBtn) clearBtn.classList.add('hidden');
+            renderTaiJiangUI();
+        }
+
+        function openTaiJiangDetailSheet() {
+            const modal = document.getElementById('taiJiangDetailSheetModal');
+            if (modal) modal.classList.remove('hidden');
+            renderTaiJiangDetailSheet();
+        }
+
+        function closeTaiJiangDetailSheet() {
+            const modal = document.getElementById('taiJiangDetailSheetModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function renderTaiJiangDetailSheet() {
+            const container = document.getElementById('taiJiangDetailSheetContainer');
+            if (!container) return;
+
+            const allItems = getAllItems();
+            const cart = getCart();
+
+            let totalAmount = 0;
+            let totalCount = 0;
+            let list = [];
+
+            allItems.forEach(item => {
+                const k = getItemKey(item);
+                const qty = cart[k] || 0;
+                if (qty > 0) {
+                    const subtotal = qty * item.bonus;
+                    totalAmount += subtotal;
+                    totalCount += qty;
+                    list.push({ ...item, key: k, qty, subtotal });
+                }
+            });
+
+            const sheetAmountEl = document.getElementById('sheetTaiJiangTotalAmount');
+            if (sheetAmountEl) sheetAmountEl.textContent = '$' + totalAmount.toLocaleString();
+
+            const sheetCountEl = document.getElementById('sheetTaiJiangTotalCount');
+            if (sheetCountEl) sheetCountEl.textContent = totalCount + ' 件';
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:32px 16px; color:var(--label-tertiary);">
+                        <div style="font-size:13px; font-weight:500;">目前沒有選擇任何台獎商品</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let htmlStr = '';
+            list.forEach((item, idx) => {
+                htmlStr += `
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border-bottom:0.5px solid var(--separator); background:var(--card); border-radius:12px; margin-bottom:8px;">
+                        <div style="flex:1; padding-right:10px;">
+                            <div style="font-size:11px; color:var(--label-tertiary); margin-bottom:2px;">#` + (idx+1) + ` · ` + escapeHtml(item.code || '加碼') + `</div>
+                            <div style="font-size:13px; font-weight:600; color:var(--label); line-height:1.4;">` + escapeHtml(item.name) + `</div>
+                            <div style="font-size:12px; font-weight:700; color:var(--purple); margin-top:3px;">
+                                $` + item.bonus.toLocaleString() + ` x ` + item.qty + ` = $` + item.subtotal.toLocaleString() + `
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <button type="button" onclick="window.updateTaiJiangQty('` + item.key + `', -1)"
+                                style="width:32px; height:32px; border-radius:9px; background:var(--fill); border:0.5px solid var(--separator); color:var(--label); font-weight:700; cursor:pointer;">-</button>
+                            <span style="font-size:14px; font-weight:700; color:var(--label); min-width:18px; text-align:center;">` + item.qty + `</span>
+                            <button type="button" onclick="window.updateTaiJiangQty('` + item.key + `', 1)"
+                                style="width:32px; height:32px; border-radius:9px; background:var(--fill); border:0.5px solid var(--separator); color:var(--label); font-weight:700; cursor:pointer;">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = htmlStr;
+        }
+
+        function shareTaiJiangToLine() {
+            const allItems = getAllItems();
+            const cart = getCart();
+
+            let totalAmount = 0;
+            let totalCount = 0;
+            let lines = [];
+
+            allItems.forEach(item => {
+                const k = getItemKey(item);
+                const qty = cart[k] || 0;
+                if (qty > 0) {
+                    const subtotal = qty * item.bonus;
+                    totalAmount += subtotal;
+                    totalCount += qty;
+                    lines.push('• ' + item.name + '\n   └ [' + (item.code || '加碼') + '] ' + qty + ' 件 ｜ 台獎 $' + subtotal.toLocaleString() + ' ($' + item.bonus + '/件)');
+                }
+            });
+
+            if (lines.length === 0) {
+                if (typeof showToast === 'function') showToast('目前尚無已選購台獎品項');
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0');
+
+            let text = '【T8 家電台獎銷售回報】\n' +
+                '日期：' + dateStr + '\n' +
+                '售出數量：共 ' + totalCount + ' 件\n' +
+                '台獎總額：$ ' + totalAmount.toLocaleString() + ' 元\n' +
+                '------------------------------\n' +
+                lines.join('\n') +
+                '\n------------------------------\n' +
+                '匯出時間：' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+
+            const lineUrl = 'https://line.me/R/msg/text/?' + encodeURIComponent(text);
+            window.open(lineUrl, '_blank');
+        }
+
+        function openTaiJiangCustomModal() {
+            const modal = document.getElementById('taiJiangCustomModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeTaiJiangCustomModal() {
+            const modal = document.getElementById('taiJiangCustomModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function saveTaiJiangCustomItem() {
+            const nameInput = document.getElementById('customTjNameInput');
+            const codeInput = document.getElementById('customTjCodeInput');
+            const bonusInput = document.getElementById('customTjBonusInput');
+
+            const name = nameInput ? nameInput.value.trim() : '';
+            const code = codeInput ? codeInput.value.trim() : '廠商加碼';
+            const bonus = bonusInput ? parseInt(bonusInput.value, 10) : 0;
+
+            if (!name) {
+                if (typeof showToast === 'function') showToast('請輸入加碼品項名稱');
+                return;
+            }
+            if (isNaN(bonus) || bonus <= 0) {
+                if (typeof showToast === 'function') showToast('請輸入有效的台獎金額');
+                return;
+            }
+
+            const customs = getCustomItems();
+            const newItem = {
+                id: 'custom_' + Date.now(),
+                date: new Date().toISOString().slice(0, 10).replace(/-/g, '/'),
+                code: code || '廠商加碼',
+                name: name,
+                bonus: bonus,
+                cat: 'custom',
+                isCustom: true
+            };
+
+            customs.unshift(newItem);
+            saveCustomItems(customs);
+
+            // Auto increment 1 in cart
+            updateItemQty(newItem.id, 1);
+
+            if (nameInput) nameInput.value = '';
+            if (codeInput) codeInput.value = '';
+            if (bonusInput) bonusInput.value = '';
+
+            closeTaiJiangCustomModal();
+            if (typeof showToast === 'function') showToast('✦ 已新增自訂加碼品項「' + name + '」！');
+        }
+
+        // Exports to window
+        root.updateTaiJiangQty = updateItemQty;
+        root.loadMoreTaiJiangItems = loadMoreTaiJiangItems;
+        root.setTaiJiangCategory = setTaiJiangCategory;
+        root.onTaiJiangSearchInput = onTaiJiangSearchInput;
+        root.clearTaiJiangSearch = clearTaiJiangSearch;
+        root.clearTaiJiangCart = clearCart;
+        root.openTaiJiangDetailSheet = openTaiJiangDetailSheet;
+        root.closeTaiJiangDetailSheet = closeTaiJiangDetailSheet;
+        root.renderTaiJiangDetailSheet = renderTaiJiangDetailSheet;
+        root.shareTaiJiangToLine = shareTaiJiangToLine;
+        root.openTaiJiangCustomModal = openTaiJiangCustomModal;
+        root.closeTaiJiangCustomModal = closeTaiJiangCustomModal;
+        root.saveTaiJiangCustomItem = saveTaiJiangCustomItem;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTaiJiangUI();
+        });
+        // Also call immediately in case DOM is already ready
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            renderTaiJiangUI();
+        }
+    })(window);
+
+
         // =============================================
         // STORE DIRECTORY & FREIGHT ENGINE (門市聯絡與跨店運費引擎)
         // =============================================
