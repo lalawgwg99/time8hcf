@@ -8518,7 +8518,10 @@
 
             if (actualTab === 'Partner' && typeof renderPartnerRoom === 'function') renderPartnerRoom();
             if (actualTab === 'News' && typeof fetchNews === 'function') fetchNews(false);
-            if (actualTab === 'Appliance' && typeof initStoreDirectoryEngine === 'function') initStoreDirectoryEngine();
+            if (actualTab === 'Appliance') {
+                if (typeof renderTaiJiangUI === 'function') renderTaiJiangUI();
+                if (typeof initStoreDirectoryEngine === 'function') initStoreDirectoryEngine();
+            }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if ('vibrate' in navigator) navigator.vibrate(8);
@@ -11263,12 +11266,15 @@
         root.saveTaiJiangCustomItem = saveTaiJiangCustomItem;
         root.deleteTaiJiangCustomItem = deleteTaiJiangCustomItem;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderTaiJiangUI();
-        });
-        // Also call immediately in case DOM is already ready
-        if (document.readyState === 'interactive' || document.readyState === 'complete') {
-            renderTaiJiangUI();
+        root.renderTaiJiangUI = renderTaiJiangUI;
+
+        // Lazy initialization: defer DOM construction to idle time so home screen loads instantly
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => {
+                renderTaiJiangUI();
+            }, { timeout: 1500 });
+        } else {
+            setTimeout(renderTaiJiangUI, 200);
         }
     })(window);
 
