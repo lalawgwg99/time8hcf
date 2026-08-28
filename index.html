@@ -4596,7 +4596,10 @@
                         <!-- Minimal Daily Fortune & Bond Card (單一純粹 Apple Inset 卡片) -->
                         <div id="partnerFortuneBondPill" class="partner-fortune-bond-card" style="background:var(--fill); border-radius:14px; padding:12px 14px; margin-top:12px; border:0.5px solid var(--separator);">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                                <span id="fortuneTitle" style="font-size:11.5px; font-weight:700; color:var(--orange);">✨ 今日福氣 · 靈感湧現</span>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <i class="fas fa-sparkles" style="font-size:11px; color:var(--orange);"></i>
+                                    <span id="fortuneTitle" style="font-size:12px; font-weight:600; color:var(--label);">今日福氣 · 靈感湧現</span>
+                                </div>
                                 <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
                                     style="border:none; background:rgba(6,199,85,0.12); color:#06C755; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; padding:3px 9px; border-radius:999px; font-family:inherit;">
                                     <i class="fab fa-line" style="font-size:12.5px;"></i>
@@ -4607,8 +4610,11 @@
                                 「心若從容，步步生花；今日所遇，皆為坦途。」
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; padding-top:7px; border-top:0.5px solid var(--separator); font-size:11px; color:var(--label-tertiary);">
-                                <span id="fortuneLuckyItem">☕ 美式咖啡</span>
-                                <span id="bondProgressText" onclick="petCompanionWithAnimation(event)" style="cursor:pointer; color:var(--purple); font-weight:600;">💖 輕觸晶靈互動 (+1)</span>
+                                <span id="fortuneLuckyItem">幸運物：美式咖啡</span>
+                                <span id="bondProgressText" onclick="petCompanionWithAnimation(event)" style="cursor:pointer; color:var(--purple); font-weight:600; display:flex; align-items:center; gap:3px;">
+                                    <i class="fas fa-heart" style="font-size:9.5px;"></i>
+                                    <span>輕觸晶靈互動 (+1)</span>
+                                </span>
                             </div>
                         </div>
 
@@ -4621,8 +4627,8 @@
                     <div class="partner-ai-card" id="partnerAiCard">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                             <div style="display:flex; align-items:center; gap:6px;">
-                                <span style="font-size:15px;">🔮</span>
-                                <span style="font-size:13px; font-weight:700; color:var(--label);" id="aiCompanionCardTitle">晶靈心靈智囊</span>
+                                <i class="fas fa-sparkles" style="color:var(--purple); font-size:12px;"></i>
+                                <span style="font-size:13px; font-weight:600; color:var(--label);" id="aiCompanionCardTitle">晶靈智囊</span>
                             </div>
                             <span style="font-size:10.5px; font-weight:600; color:var(--green); background:rgba(77,122,82,0.12); padding:2px 8px; border-radius:999px;">在線守護</span>
                         </div>
@@ -4631,27 +4637,34 @@
                         <div onclick="openAiChatSheet()" class="active-scale" 
                             style="background:var(--fill-secondary); border-radius:12px; padding:10px 12px; margin-bottom:10px; border:0.5px solid var(--separator); cursor:pointer;">
                             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
-                                <span style="font-size:11px; font-weight:600; color:var(--label-secondary);">🐾 晶靈在線</span>
+                                <div style="display:flex; align-items:center; gap:5px;">
+                                    <span style="width:5px; height:5px; border-radius:50%; background:var(--green); display:inline-block;"></span>
+                                    <span style="font-size:11px; font-weight:600; color:var(--label-secondary);">智囊在線</span>
+                                </div>
                                 <span style="font-size:10.5px; color:var(--blue); font-weight:600;">點擊對話 ↗</span>
                             </div>
                             <div id="aiPetBubblePreview" style="font-size:12px; color:var(--label); line-height:1.45;">
-                                「主人辛苦了！隨時跟我說，我來幫你整理工作重點、想調貨話術喔 🌿」
+                                「主人辛苦了！隨時跟我說，我來幫你整理工作重點、想調貨話術。」
                             </div>
                         </div>
 
                         <!-- 4 Quick Action Chips (Perfect Grid Fit) -->
                         <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
-                            <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知運費與預計抵達時間。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%;">
-                                📋 話術
+                            <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝話術，重點在委婉告知運費與預計抵達時間。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%; display:flex; align-items:center; justify-content:center; gap:4px;">
+                                <i class="fas fa-message" style="font-size:9.5px; opacity:0.7;"></i>
+                                <span>話術</span>
                             </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法幫我簡要說明：工作 4 小時休息 30 分鐘與跨日輪班間隔 11 小時的具體重點。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%;">
-                                ⚖️ 法規
+                            <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法幫我簡要說明：工作 4 小時休息 30 分鐘與跨日輪班間隔 11 小時的具體重點。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%; display:flex; align-items:center; justify-content:center; gap:4px;">
+                                <i class="fas fa-scale-balanced" style="font-size:9.5px; opacity:0.7;"></i>
+                                <span>法規</span>
                             </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請幫我將這段工作內容精簡整理成 3 點清晰重點，語氣專業俐落。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%;">
-                                📝 濃縮
+                            <button type="button" onclick="triggerAiQuickPrompt('請幫我將這段工作內容精簡整理成 3 點清晰重點，語氣專業俐落。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%; display:flex; align-items:center; justify-content:center; gap:4px;">
+                                <i class="fas fa-list-check" style="font-size:9.5px; opacity:0.7;"></i>
+                                <span>濃縮</span>
                             </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('我現在工作有點疲勞、肩頸緊繃，請給我 3 個一分鐘內能完成的放鬆深呼吸建議。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%;">
-                                🍵 打氣
+                            <button type="button" onclick="triggerAiQuickPrompt('我現在工作有點疲勞、肩頸緊繃，請給我 3 個一分鐘內能完成的放鬆深呼吸建議。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%; display:flex; align-items:center; justify-content:center; gap:4px;">
+                                <i class="fas fa-mug-hot" style="font-size:9.5px; opacity:0.7;"></i>
+                                <span>打氣</span>
                             </button>
                         </div>
                     </div>
@@ -4665,7 +4678,7 @@
                                 </div>
                                 <div>
                                     <div class="partner-radio-title">
-                                        <span id="partnerRadioStationTitle">🎵 華語流行專注電台</span>
+                                        <span id="partnerRadioStationTitle">華語流行專注電台</span>
                                     </div>
                                     <div class="partner-radio-status" id="partnerRadioStatus">
                                         <span>沉浸音樂陪伴中</span>
@@ -4696,19 +4709,19 @@
                         <!-- Station Selection Capsules Track (Apple Segments) -->
                         <div class="partner-station-track" id="partnerStationTrack">
                             <button type="button" class="station-chip active" onclick="switchPartnerStation('leaf_hits')" id="stationChip_leaf_hits">
-                                <span>🍁</span><span>熱門精選</span>
+                                <i class="fas fa-fire" style="font-size:10px; opacity:0.8;"></i><span>熱門精選</span>
                             </button>
                             <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_kkbox')" id="stationChip_leaf_kkbox">
-                                <span>📈</span><span>KKBOX 榜</span>
+                                <i class="fas fa-chart-line" style="font-size:10px; opacity:0.8;"></i><span>KKBOX 榜</span>
                             </button>
                             <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_love')" id="stationChip_leaf_love">
-                                <span>💔</span><span>傷感情歌</span>
+                                <i class="fas fa-heart-crack" style="font-size:10px; opacity:0.8;"></i><span>抒情流行</span>
                             </button>
                             <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_tiktok')" id="stationChip_leaf_tiktok">
-                                <span>⚡</span><span>抖音熱搜</span>
+                                <i class="fas fa-bolt" style="font-size:10px; opacity:0.8;"></i><span>發燒熱播</span>
                             </button>
                             <button type="button" class="station-chip" onclick="openCustomStationModal()" id="stationChip_custom">
-                                <span>⚙️</span><span>自訂</span>
+                                <i class="fas fa-sliders" style="font-size:10px; opacity:0.8;"></i><span>自訂</span>
                             </button>
                         </div>
                     </div>
@@ -4772,16 +4785,16 @@
                         <!-- Category Segmented Control Pills -->
                         <div class="news-category-track" id="newsCategoryTrack">
                             <button type="button" class="news-cat-pill active" onclick="switchNewsCategory('headline')" id="newsCat_headline">
-                                <span>💼</span><span>焦點</span>
+                                <i class="fas fa-newspaper" style="font-size:10px; opacity:0.8;"></i><span>焦點</span>
                             </button>
                             <button type="button" class="news-cat-pill" onclick="switchNewsCategory('finance')" id="newsCat_finance">
-                                <span>📈</span><span>財經</span>
+                                <i class="fas fa-chart-pie" style="font-size:10px; opacity:0.8;"></i><span>財經</span>
                             </button>
                             <button type="button" class="news-cat-pill" onclick="switchNewsCategory('tech')" id="newsCat_tech">
-                                <span>⚡</span><span>科技</span>
+                                <i class="fas fa-microchip" style="font-size:10px; opacity:0.8;"></i><span>科技</span>
                             </button>
                             <button type="button" class="news-cat-pill" onclick="switchNewsCategory('workplace')" id="newsCat_workplace">
-                                <span>☕</span><span>職場生活</span>
+                                <i class="fas fa-mug-saucer" style="font-size:10px; opacity:0.8;"></i><span>生活</span>
                             </button>
                         </div>
 
@@ -6787,16 +6800,16 @@
     // ===== 夥伴心靈羈絆、每日福氣籤與 LINE 一鍵分享系統 =====
     // ========================================================
     const COMPANION_FORTUNES = [
-        { title: '✨ 大吉 · 靈感湧現', text: '心若從容，步步生花；今日所遇，皆為坦途。', luckyItem: '美式咖啡 ☕' },
-        { title: '🍃 上吉 · 順風順水', text: '專注當下每一分耕耘，成果自會悄然綻放。', luckyItem: '深呼吸放鬆 🌿' },
-        { title: '🌟 吉祥 · 貴人相助', text: '與人為善，福氣自來；今天的工作會比想像中更順利。', luckyItem: '溫熱開水 🍵' },
-        { title: '💎 順遂 · 效率倍增', text: '步調穩健，雜念漸消；今日心流狀態極佳。', luckyItem: '整潔桌面 🗂️' },
-        { title: '👑 圓滿 · 步步高升', text: '你的每分堅持都在積累價值，今天也是發光的一天。', luckyItem: '笑容打氣 😊' },
-        { title: '🌸 安康 · 萬事順心', text: '不急不躁，從容不迫；今天的運氣藏在細節裡。', luckyItem: '舒展肩頸 🧘' },
-        { title: '⚡ 突破 · 捷報頻傳', text: '難題迎刃而解，你的專注力將帶來驚喜成果。', luckyItem: '活力堅果 🥜' },
-        { title: '🌙 治癒 · 心境澄明', text: '做完手邊事，好好犒賞自己；今天你做得非常棒。', luckyItem: '放鬆散步 🚶' },
-        { title: '🍀 幸運 · 漸入佳境', text: '每一刻微小的專注，都是日後耀眼的伏筆。', luckyItem: '綠色植栽 🌱' },
-        { title: '☕ 悠然 · 游刃有餘', text: '保持節奏，不疾不徐；今日事今日畢，輕鬆愜意。', luckyItem: '清新薄荷 🍃' }
+        { title: '大吉 · 靈感湧現', text: '心若從容，步步生花；今日所遇，皆為坦途。', luckyItem: '美式咖啡' },
+        { title: '上吉 · 順風順水', text: '專注當下每一分耕耘，成果自會悄然綻放。', luckyItem: '深呼吸放鬆' },
+        { title: '吉祥 · 貴人相助', text: '與人為善，福氣自來；今天的工作會比想像中更順利。', luckyItem: '溫熱開水' },
+        { title: '順遂 · 效率倍增', text: '步調穩健，雜念漸消；今日心流狀態極佳。', luckyItem: '整潔桌面' },
+        { title: '圓滿 · 步步高升', text: '你的每分堅持都在積累價值，今天也是發光的一天。', luckyItem: '自我肯定' },
+        { title: '安康 · 萬事順心', text: '不急不躁，從容不迫；今天的運氣藏在細節裡。', luckyItem: '舒展肩頸' },
+        { title: '突破 · 捷報頻傳', text: '難題迎刃而解，你的專注力將帶來驚喜成果。', luckyItem: '活力堅果' },
+        { title: '治癒 · 心境澄明', text: '做完手邊事，好好犒賞自己；今天你做得非常棒。', luckyItem: '放鬆散步' },
+        { title: '幸運 · 漸入佳境', text: '每一刻微小的專注，都是日後耀眼的伏筆。', luckyItem: '綠色植栽' },
+        { title: '悠然 · 游刃有餘', text: '保持節奏，不疾不徐；今日事今日畢，輕鬆愜意。', luckyItem: '清新薄荷' }
     ];
 
     const BOND_LEVELS = [
@@ -6905,12 +6918,12 @@
 
         if (bondLevelText) bondLevelText.textContent = `Lv.${data.level} ${lvlInfo.name}`;
         if (bondProgressText) {
-            bondProgressText.textContent = nextLvl ? `💖 羈絆 ${data.points}/${nextLvl.maxPts} 點` : `💖 羈絆頂級 (${data.points} 點)`;
+            bondProgressText.innerHTML = nextLvl ? `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>輕觸晶靈互動 (+1)` : `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>羈絆滿級 (${data.points})`;
         }
 
         if (data.todayFortune) {
             if (fortuneTitle) fortuneTitle.textContent = data.todayFortune.title;
-            if (fortuneLuckyItem) fortuneLuckyItem.textContent = `☕ ${data.todayFortune.luckyItem}`;
+            if (fortuneLuckyItem) fortuneLuckyItem.textContent = `幸運物：${data.todayFortune.luckyItem}`;
             if (fortuneQuoteText) fortuneQuoteText.textContent = `「${data.todayFortune.text}」`;
         }
     }
@@ -6930,13 +6943,12 @@
             void petArt.offsetWidth;
             petArt.classList.add('pet-reacting-happy');
 
-            // Floating emotion heart icon
+            // Floating emotion heart icon (Clean Apple Vector Badge)
             const rect = petArt.getBoundingClientRect();
             const heart = document.createElement('div');
             heart.className = 'pet-float-heart';
-            const icons = ['💖', '✨', '⭐', '+1 羈絆', '🥰', '🌸'];
-            heart.textContent = icons[Math.floor(Math.random() * icons.length)];
-            heart.style.left = (rect.left + rect.width / 2 - 12) + 'px';
+            heart.innerHTML = `<span style="display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:var(--purple); background:var(--card); padding:3px 9px; border-radius:999px; border:0.5px solid var(--separator); box-shadow:0 2px 8px rgba(0,0,0,0.1);"><i class="fas fa-heart" style="font-size:9.5px; color:#E0567A;"></i> +1</span>`;
+            heart.style.left = (rect.left + rect.width / 2 - 20) + 'px';
             heart.style.top = (rect.top + 30) + 'px';
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 1000);
@@ -6953,17 +6965,17 @@
         let msgs = [];
         if (isWorking) {
             msgs = [
-                `💖 夥伴開心地蹭了蹭你：「專注辛苦了！已經累積 ${hours}h 囉」`,
-                "✨ 夥伴發出愉悅微光，心流能量已充飽！",
-                "🌸 夥伴為你打氣：「保持好節奏，我會一直在這陪你」",
-                "✦ 羈絆點數 +1！夥伴元氣滿滿，繼續加油！"
+                `夥伴開心地蹭了蹭你：「專注辛苦了！今日已累積 ${hours}h 囉」`,
+                "夥伴發出微光，心流能量已充飽。",
+                "保持好節奏，夥伴會一直在這陪你。",
+                "羈絆點數 +1！夥伴元氣滿滿，繼續加油！"
             ];
         } else {
             msgs = [
-                "💖 夥伴瞇起眼睛享受你的撫摸，好感度 +1",
-                "🍵 夥伴開心地搖晃著身體：「適度放鬆，喝口水休息一下吧」",
-                "✨ 夥伴眨了眨大眼，對你露出燦爛笑容 ✦",
-                "🌸 溫馨的陪伴時光，羈絆點數 +1！"
+                "夥伴瞇起眼睛享受你的撫摸，好感度 +1",
+                "適度放鬆，喝口水休息一下吧。",
+                "夥伴對你露出燦爛笑容，元氣滿滿。",
+                "溫馨的陪伴時光，羈絆點數 +1！"
             ];
         }
         const pick = msgs[Math.floor(Math.random() * msgs.length)];
@@ -7029,18 +7041,18 @@
         const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} (${dayNames[now.getDay()]})`;
 
         // Build concise, structured LINE message without fluff
-        let shareText = `📋【T8 工時與打卡回報】\n` +
-            `📅 日期：${dateStr}\n` +
-            `⏱️ 今日累計：${hours} 小時 (${isTargetMet ? '已達標 8h 👑' : '目標 8h'})\n` +
-            `📍 當前狀態：${currentStatusText}\n\n`;
+        let shareText = `【T8 工時與打卡回報】\n` +
+            `日期：${dateStr}\n` +
+            `今日累計：${hours} 小時 (${isTargetMet ? '已達標 8h' : '目標 8h'})\n` +
+            `當前狀態：${currentStatusText}\n\n`;
 
         if (punchLines.length > 0) {
-            shareText += `🕒 打卡階段：\n${punchLines.join('\n')}\n\n`;
+            shareText += `打卡階段：\n${punchLines.join('\n')}\n\n`;
         }
 
-        shareText += `✨ 今日福氣：${fortune.title}\n` +
-            `🌿「${fortune.text}」\n` +
-            `☕ 幸運物：${fortune.luckyItem} · 夥伴 Lv.${affinity.level}`;
+        shareText += `今日福氣：${fortune.title}\n` +
+            `「${fortune.text}」\n` +
+            `幸運物：${fortune.luckyItem} · 夥伴 Lv.${affinity.level}`;
 
         const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(shareText)}`;
         window.open(lineUrl, '_blank');
