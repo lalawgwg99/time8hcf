@@ -3850,6 +3850,44 @@
             display: none;
         }
 
+        .partner-fortune-bond-card {
+            background: var(--fill);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-top: 12px;
+            border: 0.5px solid var(--separator);
+            transition: all 0.25s var(--spring);
+        }
+
+        .pet-reacting-happy {
+            animation: petHappySquish 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        @keyframes petHappySquish {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.18, 0.85) translateY(4px); }
+            60% { transform: scale(0.90, 1.22) translateY(-16px); }
+            80% { transform: scale(1.06, 0.95) translateY(-2px); }
+            100% { transform: scale(1); }
+        }
+
+        .pet-float-heart {
+            position: fixed;
+            font-size: 17px;
+            font-weight: 700;
+            color: #E91E63;
+            pointer-events: none;
+            z-index: 9999;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            animation: floatHeartUp 1s ease-out forwards;
+        }
+
+        @keyframes floatHeartUp {
+            0% { opacity: 1; transform: translateY(0) scale(0.6); }
+            50% { transform: translateY(-32px) scale(1.2); opacity: 1; }
+            100% { opacity: 0; transform: translateY(-60px) scale(0.9); }
+        }
+
         .codex-header {
             display: flex;
             justify-content: space-between;
@@ -4500,6 +4538,43 @@
                         <div class="partner-hero-meta">
                             <div id="partnerHeroTitle" class="partner-hero-title">0 / 7 工時結晶</div>
                             <div id="partnerHeroSub" class="partner-hero-sub">完成今日標準工時，即可凝聚工時結晶</div>
+                        </div>
+
+                        <!-- Bond & Fortune Capsule (心靈羈絆與今日福氣籤) -->
+                        <div id="partnerFortuneBondPill" class="partner-fortune-bond-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span style="font-size:13px;" id="fortuneMoodIcon">💖</span>
+                                    <span id="bondLevelText" style="font-size:11.5px; font-weight:700; color:var(--purple);">Lv.1 初識夥伴</span>
+                                    <span id="bondProgressText" style="font-size:10px; color:var(--label-tertiary);">(0/30)</span>
+                                </div>
+                                <div id="petTouchHint" style="font-size:10.5px; color:var(--label-tertiary);">輕觸夥伴互動 ✦</div>
+                            </div>
+                            
+                            <!-- Daily Fortune Quote Box -->
+                            <div id="partnerFortuneQuoteBox" style="background:var(--fill-secondary); border-radius:10px; padding:9px 12px; margin-bottom:10px; border:0.5px solid var(--separator);">
+                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
+                                    <span id="fortuneTitle" style="font-size:10.5px; font-weight:700; color:var(--orange);">✨ 今日福氣 · 靈感湧現</span>
+                                    <span id="fortuneLuckyItem" style="font-size:10px; color:var(--label-tertiary);">☕ 幸運物：美式咖啡</span>
+                                </div>
+                                <div id="fortuneQuoteText" style="font-size:12px; color:var(--label-secondary); line-height:1.45;">
+                                    「心若從容，步步生花；今日所遇，皆為坦途。」
+                                </div>
+                            </div>
+
+                            <!-- Action Bar: Pet Button & LINE Share Button -->
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <button type="button" onclick="petCompanionWithAnimation(event)" class="active-scale" 
+                                    style="flex:1; padding:7px 10px; border-radius:999px; background:rgba(122,90,138,0.12); border:0.5px solid rgba(122,90,138,0.25); color:var(--purple); font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; font-family:inherit;">
+                                    <span>💖 撫摸夥伴</span>
+                                    <span id="todayPetCountBadge" style="font-size:9.5px; opacity:0.8;">(+1 羈絆)</span>
+                                </button>
+                                <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
+                                    style="padding:7px 14px; border-radius:999px; background:#06C755; border:none; color:#FFFFFF; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; font-family:inherit; box-shadow:0 2px 8px rgba(6,199,85,0.25);">
+                                    <i class="fab fa-line" style="font-size:13px;"></i>
+                                    <span>分享 LINE</span>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Action / Guidance Area -->
@@ -6584,69 +6659,234 @@
     }
     window.getWeeklyStreakData = getWeeklyStreakData;
 
-    // ===== PET TAP INTERACTION WITH STATE RESONANCE =====
-    function onPetClick(event) {
-        if (typeof playSingleClickSound === 'function') playSingleClickSound("E5");
-        const container = document.getElementById('partnerPetArt') || (event && event.currentTarget);
-        if (container) {
-            container.classList.remove('pet-bounce-interact');
-            void container.offsetWidth;
-            container.classList.add('pet-bounce-interact');
-            if (typeof spawnParticles === 'function') {
-                spawnParticles(container, ['✨', '💫', '💖', '⭐', '🌿']);
+    // ========================================================
+    // ===== 夥伴心靈羈絆、每日福氣籤與 LINE 一鍵分享系統 =====
+    // ========================================================
+    const COMPANION_FORTUNES = [
+        { title: '✨ 大吉 · 靈感湧現', text: '心若從容，步步生花；今日所遇，皆為坦途。', luckyItem: '美式咖啡 ☕' },
+        { title: '🍃 上吉 · 順風順水', text: '專注當下每一分耕耘，成果自會悄然綻放。', luckyItem: '深呼吸放鬆 🌿' },
+        { title: '🌟 吉祥 · 貴人相助', text: '與人為善，福氣自來；今天的工作會比想像中更順利。', luckyItem: '溫熱開水 🍵' },
+        { title: '💎 順遂 · 效率倍增', text: '步調穩健，雜念漸消；今日心流狀態極佳。', luckyItem: '整潔桌面 🗂️' },
+        { title: '👑 圓滿 · 步步高升', text: '你的每分堅持都在積累價值，今天也是發光的一天。', luckyItem: '笑容打氣 😊' },
+        { title: '🌸 安康 · 萬事順心', text: '不急不躁，從容不迫；今天的運氣藏在細節裡。', luckyItem: '舒展肩頸 🧘' },
+        { title: '⚡ 突破 · 捷報頻傳', text: '難題迎刃而解，你的專注力將帶來驚喜成果。', luckyItem: '活力堅果 🥜' },
+        { title: '🌙 治癒 · 心境澄明', text: '做完手邊事，好好犒賞自己；今天你做得非常棒。', luckyItem: '放鬆散步 🚶' },
+        { title: '🍀 幸運 · 漸入佳境', text: '每一刻微小的專注，都是日後耀眼的伏筆。', luckyItem: '綠色植栽 🌱' },
+        { title: '☕ 悠然 · 游刃有餘', text: '保持節奏，不疾不徐；今日事今日畢，輕鬆愜意。', luckyItem: '清新薄荷 🍃' }
+    ];
+
+    const BOND_LEVELS = [
+        { level: 1, name: '初識夥伴', maxPts: 30, perk: '解鎖每日撫摸互動與福氣籤' },
+        { level: 2, name: '默契同行', maxPts: 100, perk: '解鎖專屬工作打氣語錄與心心光環' },
+        { level: 3, name: '心流同頻', maxPts: 250, perk: '每日撫摸額外掉落 1 顆工時結晶碎片' },
+        { level: 4, name: '靈魂守護', maxPts: 9999, perk: '解鎖專屬尊榮金輝與守護稱號' }
+    ];
+
+    function getCompanionAffinityData() {
+        const raw = localStorage.getItem('t8_companion_affinity');
+        const todayStr = typeof getTodayKey === 'function' ? getTodayKey() : new Date().toISOString().slice(0, 10);
+        let data = {
+            points: 0,
+            level: 1,
+            lastPetDate: '',
+            todayPets: 0,
+            todayFortune: null
+        };
+        if (raw) {
+            try {
+                data = { ...data, ...JSON.parse(raw) };
+            } catch (e) {
+                console.error('Failed to parse companion affinity', e);
             }
         }
+
+        // Reset today's pets or fortune if new day
+        if (data.lastPetDate !== todayStr) {
+            data.lastPetDate = todayStr;
+            data.todayPets = 0;
+            // Pick a deterministic or fresh daily fortune based on date string hash
+            let hash = 0;
+            for (let i = 0; i < todayStr.length; i++) hash = (hash * 31 + todayStr.charCodeAt(i)) % COMPANION_FORTUNES.length;
+            data.todayFortune = COMPANION_FORTUNES[Math.abs(hash) % COMPANION_FORTUNES.length];
+            saveCompanionAffinityData(data);
+        }
+
+        if (!data.todayFortune) {
+            data.todayFortune = COMPANION_FORTUNES[0];
+        }
+
+        return data;
+    }
+
+    function saveCompanionAffinityData(data) {
+        localStorage.setItem('t8_companion_affinity', JSON.stringify(data));
+    }
+
+    function addCompanionAffinity(pts = 1) {
+        const data = getCompanionAffinityData();
+        data.points = (data.points || 0) + pts;
+        data.todayPets = (data.todayPets || 0) + 1;
+
+        // Check level upgrade
+        let currentLvl = 1;
+        for (let i = 0; i < BOND_LEVELS.length; i++) {
+            if (data.points >= BOND_LEVELS[i].maxPts && i < BOND_LEVELS.length - 1) {
+                currentLvl = BOND_LEVELS[i + 1].level;
+            } else if (data.points < BOND_LEVELS[i].maxPts) {
+                currentLvl = BOND_LEVELS[i].level;
+                break;
+            }
+        }
+        
+        const oldLvl = data.level || 1;
+        data.level = currentLvl;
+        saveCompanionAffinityData(data);
+
+        // Level up celebration!
+        if (currentLvl > oldLvl) {
+            showToast(`🎉 夥伴好感度升級為 Lv.${currentLvl} 【${BOND_LEVELS[currentLvl - 1].name}】！`);
+            if (typeof spawnParticles === 'function') {
+                const petArt = document.getElementById('partnerPetArt');
+                if (petArt) spawnParticles(petArt, ['👑', '⭐', '✨', '💖']);
+            }
+        }
+
+        // If Lv.3+, reward 1 egg fragment once per day
+        if (currentLvl >= 3 && data.todayPets === 1) {
+            if (typeof readPetSystem === 'function' && typeof writePetSystem === 'function') {
+                const state = readPetSystem();
+                if (state.resources) {
+                    state.resources.eggFragments = (state.resources.eggFragments || 0) + 1;
+                    writePetSystem(state);
+                    if (typeof renderPartnerRoom === 'function') renderPartnerRoom();
+                    showToast('🎁 【心流同頻】夥伴贈送您 1 顆工時結晶碎片！');
+                }
+            }
+        }
+
+        return data;
+    }
+
+    function updateCompanionAffinityUI(data) {
+        if (!data) data = getCompanionAffinityData();
+        const bondLevelText = document.getElementById('bondLevelText');
+        const bondProgressText = document.getElementById('bondProgressText');
+        const fortuneTitle = document.getElementById('fortuneTitle');
+        const fortuneLuckyItem = document.getElementById('fortuneLuckyItem');
+        const fortuneQuoteText = document.getElementById('fortuneQuoteText');
+        const todayPetCountBadge = document.getElementById('todayPetCountBadge');
+
+        const lvlInfo = BOND_LEVELS.find(l => l.level === data.level) || BOND_LEVELS[0];
+        const nextLvl = BOND_LEVELS.find(l => l.level === data.level + 1);
+
+        if (bondLevelText) bondLevelText.textContent = `Lv.${data.level} ${lvlInfo.name}`;
+        if (bondProgressText) {
+            bondProgressText.textContent = nextLvl ? `(${data.points}/${nextLvl.maxPts} 點)` : `(${data.points} 點 · 已達頂級)`;
+        }
+
+        if (data.todayFortune) {
+            if (fortuneTitle) fortuneTitle.textContent = data.todayFortune.title;
+            if (fortuneLuckyItem) fortuneLuckyItem.textContent = data.todayFortune.luckyItem;
+            if (fortuneQuoteText) fortuneQuoteText.textContent = `「${data.todayFortune.text}」`;
+        }
+
+        if (todayPetCountBadge) {
+            todayPetCountBadge.textContent = data.todayPets > 0 ? `(今日已互動 ${data.todayPets} 次)` : '(+1 羈絆)';
+        }
+    }
+
+    function petCompanionWithAnimation(event) {
+        if (event) {
+            if (typeof event.stopPropagation === 'function') event.stopPropagation();
+            if (typeof event.preventDefault === 'function') event.preventDefault();
+        }
+
+        if (typeof playSingleClickSound === 'function') playSingleClickSound("E5");
+        if ('vibrate' in navigator) navigator.vibrate([12, 40, 12]);
+
+        const petArt = document.getElementById('partnerPetArt') || document.querySelector('.partner-art') || document.getElementById('partnerStageContainer');
+        if (petArt) {
+            petArt.classList.remove('pet-reacting-happy');
+            void petArt.offsetWidth;
+            petArt.classList.add('pet-reacting-happy');
+
+            // Floating emotion heart icon
+            const rect = petArt.getBoundingClientRect();
+            const heart = document.createElement('div');
+            heart.className = 'pet-float-heart';
+            const icons = ['💖', '✨', '⭐', '+1 羈絆', '🥰', '🌸'];
+            heart.textContent = icons[Math.floor(Math.random() * icons.length)];
+            heart.style.left = (rect.left + rect.width / 2 - 12) + 'px';
+            heart.style.top = (rect.top + 30) + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+        }
+
+        const data = addCompanionAffinity(1);
+        updateCompanionAffinityUI(data);
+
+        // Friendly situational speech
         const isWorking = (typeof punchRecords !== 'undefined' && punchRecords.length > 0 && punchRecords.length % 2 === 1);
         const todayMins = typeof getDayTotalMinutes === 'function' ? getDayTotalMinutes(typeof getTodayKey === 'function' ? getTodayKey() : '') : 0;
         const hours = (todayMins / 60).toFixed(1);
 
         let msgs = [];
         if (isWorking) {
-            if (todayMins < 120) {
-                msgs = [
-                    "今日專注啟程，深呼吸維持好節奏 🌿",
-                    "保持穩定的工作步調，我會一直陪著你 ✦",
-                    "晨曦微光，今天也一起踏實前進 ✨"
-                ];
-            } else if (todayMins < 300) {
-                msgs = [
-                    `已經持續專注 ${hours} 小時囉！適度遠眺、喝口溫水 ☕`,
-                    "專注中的你最耀眼，記得轉動脖子放鬆肩頸 💫",
-                    "保持節奏，中段衝刺平穩前進 ✦"
-                ];
-            } else if (todayMins < 480) {
-                const remain = Math.max(1, Math.ceil(480 - todayMins));
-                msgs = [
-                    `今日工時已累積 ${hours}h！再 ${remain} 分鐘即可點亮今日星宿 ✨`,
-                    "堅持的結晶正在發光，即將達成 8 小時標準工時 ✦",
-                    "最後階段，深呼吸、穩穩收尾 🌿"
-                ];
-            } else {
-                msgs = [
-                    "🎉 今日 8 小時標準工時已圓滿達成！辛苦了，隨時可以準備下班 👑",
-                    "今日星宿結晶已成功點亮！好好享受屬於自己的下班時光 🍃",
-                    "太棒了！今日工時圓滿閉環，為你的專注喝采 ✦"
-                ];
-            }
+            msgs = [
+                `💖 夥伴開心地蹭了蹭你：「專注辛苦了！已經累積 ${hours}h 囉」`,
+                "✨ 夥伴發出愉悅微光，心流能量已充飽！",
+                "🌸 夥伴為你打氣：「保持好節奏，我會一直在這陪你」",
+                "✦ 羈絆點數 +1！夥伴元氣滿滿，繼續加油！"
+            ];
         } else {
-            if (todayMins >= 480) {
-                msgs = [
-                    "今日 8 小時任務已圓滿，好好放鬆休息 🍵",
-                    "享受愜意夜晚，明天也一起加油 ✨",
-                    "深呼吸，今晚給自己一個大大的肯定 🍃"
-                ];
-            } else {
-                msgs = [
-                    "隨時準備陪你開啟高效專注的一天 ✨",
-                    "喝口水，放鬆一下 🍵",
-                    "今天也一起加油！ ✦",
-                    "享受屬於自己的放鬆時光 🍃"
-                ];
-            }
+            msgs = [
+                "💖 夥伴瞇起眼睛享受你的撫摸，好感度 +1",
+                "🍵 夥伴開心地搖晃著身體：「適度放鬆，喝口水休息一下吧」",
+                "✨ 夥伴眨了眨大眼，對你露出燦爛笑容 ✦",
+                "🌸 溫馨的陪伴時光，羈絆點數 +1！"
+            ];
         }
         const pick = msgs[Math.floor(Math.random() * msgs.length)];
         showToast(pick);
     }
+
+    function shareCompanionFortuneToLine(event) {
+        if (event) {
+            if (typeof event.stopPropagation === 'function') event.stopPropagation();
+            if (typeof event.preventDefault === 'function') event.preventDefault();
+        }
+        if ('vibrate' in navigator) navigator.vibrate(10);
+
+        const affinity = getCompanionAffinityData();
+        const fortune = affinity.todayFortune || COMPANION_FORTUNES[0];
+        const todayMins = typeof getDayTotalMinutes === 'function' ? getDayTotalMinutes(typeof getTodayKey === 'function' ? getTodayKey() : '') : 0;
+        const hours = (todayMins / 60).toFixed(1);
+        const targetMin = typeof getTargetMinutes === 'function' ? getTargetMinutes() : 480;
+        const isTargetMet = todayMins >= targetMin;
+
+        const statusText = isTargetMet ? `👑 今日工時已達標 ${hours} 小時！` : `⏳ 今日已專注累積 ${hours} 小時`;
+
+        const shareText = `🌟 【T8 工時夥伴 · 今日福氣靈感】\n` +
+            `━━━━━━━━━━━━━━━\n` +
+            `${fortune.title}\n` +
+            `🌿 每日金句：「${fortune.text}」\n` +
+            `🎯 幸運物件：${fortune.luckyItem}\n` +
+            `🐾 夥伴羈絆：Lv.${affinity.level} (${affinity.points} 點)\n` +
+            `${statusText}\n` +
+            `━━━━━━━━━━━━━━━\n` +
+            `—— 來自 T8 智能工時與專注陪伴系統 ✨`;
+
+        const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(shareText)}`;
+        window.open(lineUrl, '_blank');
+    }
+
+    function onPetClick(event) {
+        petCompanionWithAnimation(event);
+    }
+
+    window.petCompanionWithAnimation = petCompanionWithAnimation;
+    window.shareCompanionFortuneToLine = shareCompanionFortuneToLine;
+    window.updateCompanionAffinityUI = updateCompanionAffinityUI;
     window.onPetClick = onPetClick;
 
     // ===== PET GENERATOR =====
@@ -7139,6 +7379,7 @@
                 actionArea.innerHTML = isReady ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()" style="margin-top:10px;">✨ 喚醒晶靈</button>` : '';
             }
             renderCodex(state.pets);
+            if (typeof updateCompanionAffinityUI === 'function') updateCompanionAffinityUI();
         }
         function hatchPartnerEgg() {
             if (hatchLocked) return;
