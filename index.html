@@ -4330,11 +4330,11 @@
                     </div>
 
                     <!-- 16:9 Apple Cinema Live Screen -->
-                    <div class="zen-card" style="padding:0; overflow:hidden; border-radius:16px; margin-bottom:18px; box-shadow:0 4px 16px rgba(0,0,0,0.06); border:0.5px solid var(--separator);">
+                    <div class="zen-card" style="padding:0; overflow:hidden; border-radius:16px; margin-bottom:18px; box-shadow:0 4px 16px rgba(0,0,0,0.06); border:0.5px solid var(--separator); position:relative;">
                         <div style="position:relative; width:100%; padding-top:56.25%; background:#000;">
                             <iframe 
                                 id="tvbsLiveIframe"
-                                src="https://www.youtube-nocookie.com/embed/m_dhMSvUCIc?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1" 
+                                src="https://www.youtube-nocookie.com/embed/m_dhMSvUCIc?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1" 
                                 title="TVBS 新聞台 24H 線上直播" 
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -4342,6 +4342,12 @@
                                 style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
                             </iframe>
                         </div>
+                        <!-- In-App Floating Apple Sound Control Button -->
+                        <button type="button" onclick="toggleTvbsAudio(event)" id="tvbsAudioToggleBtn" class="active-scale" title="點擊在 App 內切換聲音"
+                            style="position:absolute; bottom:12px; right:12px; z-index:10; background:rgba(20,20,20,0.78); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); color:#FFFFFF; border:0.5px solid rgba(255,255,255,0.25); border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(0,0,0,0.35); font-family:inherit; outline:none;">
+                            <i class="fas fa-volume-xmark" id="tvbsAudioIcon" style="color:#FFD60A; font-size:12px;"></i>
+                            <span id="tvbsAudioText">開啟聲音</span>
+                        </button>
                     </div>
                 </div>
 
@@ -13212,40 +13218,49 @@
                 expandBtn.classList.add('hidden');
             }
         }
-        // --- 24H 電視新聞直播 (TVBS 24H Live Stream) ---
-        let _isLiveStreamOpen = false;
-        const LIVE_STREAM_VIDEO_ID = 'm_dhMSvUCIc';
-
-        function toggleLiveNewsStream(forceState) {
-            _isLiveStreamOpen = (typeof forceState === 'boolean') ? forceState : !_isLiveStreamOpen;
-            const wrapper = document.getElementById('liveStreamWrapper');
-            const container = document.getElementById('liveIframeContainer');
-            const btn = document.getElementById('newsLiveStreamBtn');
+        // --- 24H 電視新聞直播音訊控制 (In-App TVBS Audio Controller) ---
+        let _isTvbsMuted = true;
+        function toggleTvbsAudio(e) {
+            if (e) {
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+            }
+            const iframe = document.getElementById('tvbsLiveIframe');
+            const icon = document.getElementById('tvbsAudioIcon');
+            const text = document.getElementById('tvbsAudioText');
+            const btn = document.getElementById('tvbsAudioToggleBtn');
 
             if ('vibrate' in navigator) navigator.vibrate(12);
 
-            if (_isLiveStreamOpen) {
-                if (wrapper) wrapper.classList.remove('hidden');
-                if (container) {
-                    container.innerHTML = `
-                        <iframe 
-                            src="https://www.youtube-nocookie.com/embed/${LIVE_STREAM_VIDEO_ID}?autoplay=1&playsinline=1&rel=0&modestbranding=1" 
-                            title="TVBS 新聞台 24H 線上直播" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            allowfullscreen
-                            style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
-                        </iframe>
-                    `;
+            if (_isTvbsMuted) {
+                // 解除靜音並調至清晰音量，100% 在 App 內進行，無需跳轉
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+                    iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[100]}', '*');
+                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 }
-                if (btn) btn.style.background = 'rgba(224,36,36,0.18)';
+                _isTvbsMuted = false;
+                if (icon) {
+                    icon.className = 'fas fa-volume-high';
+                    icon.style.color = '#34C759';
+                }
+                if (text) text.textContent = '靜音';
+                if (btn) btn.style.background = 'rgba(40,40,40,0.88)';
             } else {
-                if (wrapper) wrapper.classList.add('hidden');
-                if (container) container.innerHTML = ''; // 徹底銷毀 iframe，立刻靜音並釋放記憶體
-                if (btn) btn.style.background = 'rgba(224,36,36,0.08)';
+                // 靜音
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+                }
+                _isTvbsMuted = true;
+                if (icon) {
+                    icon.className = 'fas fa-volume-xmark';
+                    icon.style.color = '#FFD60A';
+                }
+                if (text) text.textContent = '開啟聲音';
+                if (btn) btn.style.background = 'rgba(20,20,20,0.78)';
             }
         }
-        window.toggleLiveNewsStream = toggleLiveNewsStream;
+        window.toggleTvbsAudio = toggleTvbsAudio;
 
         window.switchNewsCategory = switchNewsCategory;
         window.toggleNewsExpanded = toggleNewsExpanded;
