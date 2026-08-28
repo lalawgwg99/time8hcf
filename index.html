@@ -10978,7 +10978,7 @@
                                 <span style="font-size:10px; font-weight:700; color:var(--purple); background:rgba(122,90,138,0.1); padding:1px 6px; border-radius:999px;">
                                     ` + escapeHtml(item.code || '加碼') + `
                                 </span>
-                                ` + (item.isCustom ? '<span style="font-size:10px; font-weight:700; color:var(--orange); background:rgba(217,138,22,0.12); padding:1px 6px; border-radius:999px;">廠商加碼</span><button type="button" onclick="event.stopPropagation(); window.deleteTaiJiangCustomItem(\' + item.id + \')" title="刪除此廠商加碼品項" style="border:none; background:rgba(224,36,36,0.08); color:var(--red); font-size:10px; font-weight:600; padding:1px 8px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-family:inherit;"><i class="fas fa-trash-alt" style="font-size:8.5px;"></i> 刪除</button>' : '') + `
+                                ` + (item.isCustom ? '<span style="font-size:10px; font-weight:700; color:var(--orange); background:rgba(217,138,22,0.12); padding:1px 6px; border-radius:999px;">廠商加碼</span><button type="button" onclick="event.stopPropagation(); window.deleteTaiJiangCustomItem(\'' + item.id + '\')" title="刪除此廠商加碼品項" style="border:none; background:rgba(224,36,36,0.08); color:var(--red); font-size:10px; font-weight:600; padding:1px 8px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-family:inherit;"><i class="fas fa-trash-alt" style="font-size:8.5px;"></i> 刪除</button>' : '') + `
                                 <span style="font-size:10.5px; color:var(--label-tertiary);">` + escapeHtml(item.date || '') + `</span>
                                 ` + (item.cat ? '<span style="font-size:9.5px; color:var(--label-tertiary); opacity:0.8;">· ' + escapeHtml(item.cat) + '</span>' : '') + `
                             </div>
@@ -11120,7 +11120,7 @@
                         <div style="flex:1; padding-right:10px;">
                             <div style="font-size:11px; color:var(--label-tertiary); margin-bottom:2px; display:flex; align-items:center; gap:6px;">
                                 <span>#` + (idx+1) + ` · ` + escapeHtml(item.code || '加碼') + `</span>
-                                ` + (item.isCustom ? '<button type="button" onclick="event.stopPropagation(); window.deleteTaiJiangCustomItem(\' + item.id + \')" style="border:none; background:rgba(224,36,36,0.08); color:var(--red); font-size:10px; font-weight:600; padding:1px 6px; border-radius:999px; cursor:pointer; font-family:inherit;"><i class="fas fa-trash-alt" style="font-size:8px;"></i> 永久移除</button>' : '') + `
+                                ` + (item.isCustom ? '<button type="button" onclick="event.stopPropagation(); window.deleteTaiJiangCustomItem(\'' + item.id + '\')" style="border:none; background:rgba(224,36,36,0.08); color:var(--red); font-size:10px; font-weight:600; padding:1px 6px; border-radius:999px; cursor:pointer; font-family:inherit;"><i class="fas fa-trash-alt" style="font-size:8px;"></i> 永久移除</button>' : '') + `
                             </div>
                             <div style="font-size:13px; font-weight:600; color:var(--label); line-height:1.4;">` + escapeHtml(item.name) + `</div>
                             <div style="font-size:12px; font-weight:700; color:var(--purple); margin-top:3px;">
