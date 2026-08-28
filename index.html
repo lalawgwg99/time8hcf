@@ -10971,7 +10971,7 @@
                                 <span style="font-size:10px; font-weight:700; color:var(--purple); background:rgba(122,90,138,0.1); padding:1px 6px; border-radius:999px;">
                                     ` + escapeHtml(item.code || '加碼') + `
                                 </span>
-                                ` + (item.isCustom ? '<span style="font-size:10px; font-weight:700; color:var(--orange); background:rgba(217,138,22,0.12); padding:1px 6px; border-radius:999px;">廠商加碼</span>' : '') + `
+                                ` + (item.isCustom ? '<span style="font-size:10px; font-weight:700; color:var(--orange); background:rgba(217,138,22,0.12); padding:1px 6px; border-radius:999px;">廠商加碼</span><button type="button" onclick="event.stopPropagation(); window.deleteTaiJiangCustomItem('' + item.id + '')" title="刪除此廠商加碼品項" style="border:none; background:rgba(224,36,36,0.08); color:var(--red); font-size:10px; font-weight:600; padding:1px 8px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-family:inherit;"><i class="fas fa-trash-alt" style="font-size:8.5px;"></i> 刪除</button>' : '') + `
                                 <span style="font-size:10.5px; color:var(--label-tertiary);">` + escapeHtml(item.date || '') + `</span>
                                 ` + (item.cat ? '<span style="font-size:9.5px; color:var(--label-tertiary); opacity:0.8;">· ' + escapeHtml(item.cat) + '</span>' : '') + `
                             </div>
@@ -11111,7 +11111,10 @@
                 htmlStr += `
                     <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border-bottom:0.5px solid var(--separator); background:var(--card); border-radius:12px; margin-bottom:8px;">
                         <div style="flex:1; padding-right:10px;">
-                            <div style="font-size:11px; color:var(--label-tertiary); margin-bottom:2px;">#` + (idx+1) + ` · ` + escapeHtml(item.code || '加碼') + `</div>
+                            <div style="font-size:11px; color:var(--label-tertiary); margin-bottom:2px; display:flex; align-items:center; gap:6px;">
+                                <span>#` + (idx+1) + ` · ` + escapeHtml(item.code || '加碼') + `</span>
+                                ` + (item.isCustom ? '<button type="button" onclick="event.stopPropagation(); window.deleteTaiJiangCustomItem('' + item.id + '')" style="border:none; background:rgba(224,36,36,0.08); color:var(--red); font-size:10px; font-weight:600; padding:1px 6px; border-radius:999px; cursor:pointer; font-family:inherit;"><i class="fas fa-trash-alt" style="font-size:8px;"></i> 永久移除</button>' : '') + `
+                            </div>
                             <div style="font-size:13px; font-weight:600; color:var(--label); line-height:1.4;">` + escapeHtml(item.name) + `</div>
                             <div style="font-size:12px; font-weight:700; color:var(--purple); margin-top:3px;">
                                 $` + item.bonus.toLocaleString() + ` x ` + item.qty + ` = $` + item.subtotal.toLocaleString() + `
@@ -11223,6 +11226,27 @@
             if (typeof showToast === 'function') showToast('✦ 已新增自訂加碼品項「' + name + '」！');
         }
 
+        function deleteTaiJiangCustomItem(itemId) {
+            const customs = getCustomItems();
+            const target = customs.find(c => c.id === itemId);
+            const itemName = target ? target.name : '此加碼品項';
+
+            if (confirm('確定要刪除自訂加碼品項「' + itemName + '」嗎？')) {
+                const remaining = customs.filter(c => c.id !== itemId);
+                saveCustomItems(remaining);
+
+                const cart = getCart();
+                if (cart[itemId]) {
+                    delete cart[itemId];
+                    saveCart(cart);
+                }
+
+                renderTaiJiangUI();
+                if (typeof renderTaiJiangDetailSheet === 'function') renderTaiJiangDetailSheet();
+                if (typeof showToast === 'function') showToast('🗑️ 已移除加碼品項「' + itemName + '」');
+            }
+        }
+
         // Exports to window
         root.updateTaiJiangQty = updateItemQty;
         root.loadMoreTaiJiangItems = loadMoreTaiJiangItems;
@@ -11237,6 +11261,7 @@
         root.openTaiJiangCustomModal = openTaiJiangCustomModal;
         root.closeTaiJiangCustomModal = closeTaiJiangCustomModal;
         root.saveTaiJiangCustomItem = saveTaiJiangCustomItem;
+        root.deleteTaiJiangCustomItem = deleteTaiJiangCustomItem;
 
         document.addEventListener('DOMContentLoaded', () => {
             renderTaiJiangUI();
