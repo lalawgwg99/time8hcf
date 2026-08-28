@@ -4817,6 +4817,92 @@
             <!-- ===== TAB: 家電 (門市、跨店、運費、家電MD) ===== -->
             <section id="tabAppliance" class="tab-panel">
 
+                <!-- ===== 家電台獎計算機 (Apple Native Cinema Module) ===== -->
+                <div style="margin-bottom:24px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <div class="editorial-label" style="margin:0; letter-spacing:0.04em; display:flex; align-items:center; gap:6px;">
+                            <i class="fas fa-calculator" style="font-size:12px; color:var(--purple);"></i>
+                            <span>台獎計算機</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <button type="button" onclick="openTaiJiangCustomModal()" class="active-scale"
+                                style="font-size:11px; color:var(--purple); font-weight:600; background:rgba(122,90,138,0.1); border:0.5px solid rgba(122,90,138,0.2); border-radius:999px; padding:3px 10px; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:inherit;">
+                                <i class="fas fa-plus" style="font-size:9.5px;"></i>
+                                <span>新增加碼</span>
+                            </button>
+                            <button type="button" onclick="openTaiJiangDetailSheet()" class="active-scale"
+                                style="font-size:11px; color:var(--label); font-weight:600; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:999px; padding:3px 10px; cursor:pointer; display:flex; align-items:center; gap:4px; font-family:inherit;">
+                                <i class="fas fa-list" style="font-size:9.5px;"></i>
+                                <span>銷售明細 (<span id="taiJiangCartCountBadge">0</span>)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Apple Cinema Summary Dashboard -->
+                    <div class="zen-card" style="padding:18px 20px; background:linear-gradient(135deg, var(--card) 0%, var(--fill-secondary) 100%); margin-bottom:12px; border:0.5px solid var(--separator);">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                            <div>
+                                <div style="font-size:11.5px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-bottom:2px;">
+                                    售出獎金總額
+                                </div>
+                                <div style="display:flex; align-items:baseline; gap:4px;">
+                                    <span style="font-size:16px; font-weight:700; color:var(--purple);">$</span>
+                                    <span id="taiJiangTotalAmount" style="font-size:32px; font-weight:800; color:var(--label); letter-spacing:-0.03em; font-family:-apple-system, BlinkMacSystemFont, SF Pro Display, system-ui;">0</span>
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" onclick="shareTaiJiangToLine()" class="active-scale"
+                                    style="border:none; background:#06C755; color:#FFFFFF; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; padding:8px 14px; border-radius:999px; font-family:inherit; box-shadow:0 3px 10px rgba(6,199,85,0.25);">
+                                    <i class="fab fa-line" style="font-size:13px;"></i>
+                                    <span>LINE 匯出</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:0.5px solid var(--separator); font-size:11.5px; color:var(--label-secondary);">
+                            <div id="taiJiangCartSummaryText">目前無銷售紀錄，請下方點擊「+」新增</div>
+                            <button type="button" onclick="clearTaiJiangCart()" style="border:none; background:none; color:var(--red); font-size:11px; font-weight:600; cursor:pointer; opacity:0.8;" id="taiJiangClearBtn" class="hidden">
+                                清空試算
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Spotlight Search & Category Filter Card -->
+                    <div class="zen-card" style="padding:14px 16px;">
+                        <div style="position:relative; margin-bottom:10px;">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--label-tertiary); pointer-events:none;">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="taiJiangSearchInput" placeholder="搜尋品名 (如: 日立、變頻) 或料號 (如: 40013003)..."
+                                oninput="onTaiJiangSearchInput(event)"
+                                style="width:100%; padding:10px 34px 10px 34px; background:var(--fill-secondary); border:0.5px solid var(--separator); border-radius:12px; font-size:13px; color:var(--label); outline:none; font-family:inherit;" />
+                            <button type="button" id="taiJiangSearchClearBtn" onclick="clearTaiJiangSearch()" class="hidden"
+                                style="position:absolute; right:10px; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%; background:var(--fill); border:none; color:var(--label-tertiary); font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Category Segment Track -->
+                        <div class="news-category-track" id="taiJiangCategoryTrack" style="margin-bottom:10px; overflow-x:auto;">
+                            <button type="button" class="news-cat-pill active" onclick="setTaiJiangCategory('all')" id="tjCat_all">全部</button>
+                            <button type="button" class="news-cat-pill" onclick="setTaiJiangCategory('冰箱/冷凍')" id="tjCat_fridge">冰箱/冷凍</button>
+                            <button type="button" class="news-cat-pill" onclick="setTaiJiangCategory('洗衣機/乾衣')" id="tjCat_washer">洗衣機/乾衣</button>
+                            <button type="button" class="news-cat-pill" onclick="setTaiJiangCategory('冷氣空調')" id="tjCat_hvac">冷氣空調</button>
+                            <button type="button" class="news-cat-pill" onclick="setTaiJiangCategory('電視/聲霸')" id="tjCat_tv">電視/聲霸</button>
+                            <button type="button" class="news-cat-pill" onclick="setTaiJiangCategory('洗碗機/廚電')" id="tjCat_kitchen">洗碗機/廚電</button>
+                            <button type="button" class="news-cat-pill" onclick="setTaiJiangCategory('小家電/其他')" id="tjCat_other">小家電/其他</button>
+                            <button type="button" class="news-cat-pill" onclick="setTaiJiangCategory('custom')" id="tjCat_custom">自訂加碼</button>
+                        </div>
+
+                        <!-- Product List Zone -->
+                        <div id="taiJiangListZone" style="max-height:420px; overflow-y:auto; padding-right:2px; -webkit-overflow-scrolling:touch;">
+                            <!-- Injected by TaiJiangCalculatorEngine -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Store Directory & Cross-Store Freight (Apple Native Inset Module) -->
                 <div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -5051,6 +5137,94 @@
             <button type="button" onclick="saveAiKeySetting()" class="active-scale"
                 style="width:100%; padding:13px; border-radius:var(--radius); font-size:14.5px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); font-family:inherit;">
                 儲存金鑰
+            </button>
+        </div>
+    </div>
+
+    <!-- TaiJiang Sales Detail Modal (銷售明細清單) -->
+    <div id="taiJiangDetailSheetModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeTaiJiangDetailSheet()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:16px 20px 32px; max-height:85vh; display:flex; flex-direction:column;">
+            <div class="sheet-handle" style="margin-bottom:14px;"></div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <div>
+                    <h3 style="font-size:16px; font-weight:700; color:var(--label); margin:0;">售出商品台獎明細</h3>
+                    <div style="font-size:11.5px; color:var(--label-tertiary); margin-top:2px;">
+                        共 <span id="sheetTaiJiangTotalCount" style="color:var(--purple); font-weight:700;">0 件</span> · 累積台獎 <span id="sheetTaiJiangTotalAmount" style="color:var(--green); font-weight:700;">$0</span>
+                    </div>
+                </div>
+                <button type="button" onclick="closeTaiJiangDetailSheet()" aria-label="關閉"
+                    style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:11px;"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Detail Container -->
+            <div id="taiJiangDetailSheetContainer" style="flex:1; overflow-y:auto; padding-right:2px; margin-bottom:14px; -webkit-overflow-scrolling:touch;">
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button type="button" onclick="clearTaiJiangCart(); closeTaiJiangDetailSheet();" class="active-scale"
+                    style="flex:1; padding:12px; border-radius:var(--radius); font-size:13px; font-weight:600; background:rgba(224,36,36,0.1); color:var(--red); border:none; cursor:pointer; font-family:inherit;">
+                    清空明細
+                </button>
+                <button type="button" onclick="shareTaiJiangToLine(); closeTaiJiangDetailSheet();" class="active-scale"
+                    style="flex:2; padding:12px; border-radius:var(--radius); font-size:13.5px; font-weight:700; background:#06C755; color:#FFFFFF; border:none; cursor:pointer; font-family:inherit; box-shadow:0 3px 10px rgba(6,199,85,0.25); display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <i class="fab fa-line" style="font-size:14px;"></i>
+                    <span>LINE 一鍵匯出</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TaiJiang Custom Item Add Modal (廠商加碼自訂品項) -->
+    <div id="taiJiangCustomModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeTaiJiangCustomModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:16px 20px 32px;">
+            <div class="sheet-handle" style="margin-bottom:14px;"></div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="font-size:16px; font-weight:700; color:var(--label); margin:0;">新增廠商加碼品項</h3>
+                <button type="button" onclick="closeTaiJiangCustomModal()" aria-label="關閉"
+                    style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:11px;"></i>
+                </button>
+            </div>
+
+            <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:14px; display:flex; flex-direction:column; gap:10px;">
+                <div>
+                    <label style="font-size:11.5px; font-weight:600; color:var(--label-secondary); margin-bottom:4px; display:block;">
+                        加碼品項名稱 <span style="color:var(--red);">*</span>
+                    </label>
+                    <input type="text" id="customTjNameInput" placeholder="例: 三星65吋促銷加碼禮券"
+                        style="width:100%; padding:9px 11px; border-radius:10px; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); font-size:13.5px; outline:none;">
+                </div>
+
+                <div>
+                    <label style="font-size:11.5px; font-weight:600; color:var(--label-secondary); margin-bottom:4px; display:block;">
+                        台獎金額 ($) <span style="color:var(--red);">*</span>
+                    </label>
+                    <input type="number" id="customTjBonusInput" placeholder="例: 500"
+                        style="width:100%; padding:9px 11px; border-radius:10px; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); font-size:13.5px; font-weight:700; outline:none;">
+                </div>
+
+                <div>
+                    <label style="font-size:11.5px; font-weight:600; color:var(--label-secondary); margin-bottom:4px; display:block;">
+                        編號 / 備註 (選填)
+                    </label>
+                    <input type="text" id="customTjCodeInput" placeholder="例: CUST-01 或 8月促銷"
+                        style="width:100%; padding:9px 11px; border-radius:10px; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); font-size:13.5px; outline:none;">
+                </div>
+            </div>
+
+            <button type="button" onclick="saveTaiJiangCustomItem()" class="active-scale"
+                style="width:100%; padding:13px; border-radius:var(--radius); font-size:14px; font-weight:700; background:var(--label); color:var(--bg); border:none; cursor:pointer; font-family:inherit; box-shadow:var(--shadow-button);">
+                確認新增並加入試算
             </button>
         </div>
     </div>
