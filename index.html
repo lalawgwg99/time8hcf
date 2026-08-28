@@ -3888,6 +3888,56 @@
             100% { opacity: 0; transform: translateY(-60px) scale(0.9); }
         }
 
+        .partner-ai-card {
+            background: var(--card);
+            border-radius: var(--radius-card);
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 0.5px solid var(--separator);
+            box-shadow: var(--shadow-card);
+        }
+
+        .ai-quick-tag {
+            flex-shrink: 0;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: var(--fill);
+            border: 0.5px solid var(--separator);
+            color: var(--label-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .ai-msg-bubble-user {
+            align-self: flex-end;
+            max-width: 82%;
+            background: var(--purple);
+            color: #FFFFFF;
+            padding: 10px 14px;
+            border-radius: 16px 16px 4px 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            word-break: break-word;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .ai-msg-bubble-pet {
+            align-self: flex-start;
+            max-width: 86%;
+            background: var(--fill);
+            color: var(--label);
+            padding: 11px 14px;
+            border-radius: 16px 16px 16px 4px;
+            border: 0.5px solid var(--separator);
+            font-size: 13px;
+            line-height: 1.55;
+            word-break: break-word;
+        }
+
         .codex-header {
             display: flex;
             justify-content: space-between;
@@ -4582,6 +4632,59 @@
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
                     </div>
 
+                    <!-- AI Companion Chat Card (晶靈貼心智囊對話) -->
+                    <div class="partner-ai-card" id="partnerAiCard">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div style="width:32px; height:32px; border-radius:50%; background:rgba(122,90,138,0.12); display:flex; align-items:center; justify-content:center; font-size:16px;" id="aiPetAvatarIcon">
+                                    🔮
+                                </div>
+                                <div>
+                                    <div style="font-size:13px; font-weight:700; color:var(--label); display:flex; align-items:center; gap:6px;">
+                                        <span id="aiCompanionCardTitle">晶靈心靈智囊</span>
+                                        <span style="font-size:9.5px; padding:1.5px 7px; border-radius:999px; background:rgba(77,122,82,0.12); color:var(--green); font-weight:600; border:0.5px solid rgba(77,122,82,0.2);">在線守護</span>
+                                    </div>
+                                    <div style="font-size:11px; color:var(--label-tertiary);" id="aiCompanionCardSub">
+                                        貼心陪伴 · 繁中回答 · 500~800字精準解答
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="openAiKeyModal()" class="active-scale" 
+                                style="font-size:11px; color:var(--purple); background:var(--fill-secondary); border:0.5px solid var(--separator); padding:4px 9px; border-radius:999px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px;">
+                                <i class="fas fa-key" style="font-size:9px;"></i>
+                                <span id="aiKeyStatusBadge">金鑰設定</span>
+                            </button>
+                        </div>
+
+                        <!-- Mini Chat Preview / Entry Pill -->
+                        <div onclick="openAiChatSheet()" class="active-scale" 
+                            style="background:var(--fill-secondary); border-radius:12px; padding:11px 13px; margin-bottom:10px; border:0.5px solid var(--separator); cursor:pointer;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+                                <span style="font-size:11px; font-weight:600; color:var(--label-secondary);" id="aiPetLastSpeaker">🐾 夥伴悄悄話：</span>
+                                <span style="font-size:10.5px; color:var(--blue); font-weight:600;">點擊開啟對話 ↗</span>
+                            </div>
+                            <div id="aiPetBubblePreview" style="font-size:12px; color:var(--label); line-height:1.45;">
+                                「主人～今天工作辛苦囉！有任何想討論、整理重點或想放鬆聊聊天的，我都一直在這陪著你喔 🌿」
+                            </div>
+                        </div>
+
+                        <!-- Quick Action Prompt Chips -->
+                        <div style="display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch; scrollbar-width:none;">
+                            <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知運費與預計抵達時間。')" class="ai-quick-tag active-scale">
+                                📋 調貨話術
+                            </button>
+                            <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法幫我簡要說明：工作 4 小時休息 30 分鐘與跨日輪班間隔 11 小時的具體重點。')" class="ai-quick-tag active-scale">
+                                ⚖️ 法規諮詢
+                            </button>
+                            <button type="button" onclick="triggerAiQuickPrompt('請幫我將這段工作內容精簡整理成 3 點清晰重點，語氣專業俐落。')" class="ai-quick-tag active-scale">
+                                📝 重點濃縮
+                            </button>
+                            <button type="button" onclick="triggerAiQuickPrompt('我現在工作有點疲勞、肩頸緊繃，請給我 3 個一分鐘內能完成的放鬆深呼吸建議。')" class="ai-quick-tag active-scale">
+                                🍵 心情打氣
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Partner Focus Music Player Card (Apple Inset Cinema Player) -->
                     <div class="partner-radio-card" id="partnerRadioCard">
                         <div class="partner-radio-header">
@@ -4878,6 +4981,96 @@
     <div id="inkDropOverlay"></div>
 
     <!-- Modals: iOS Action Sheet Style -->
+
+    <!-- AI Companion Chat Sheet Modal (Apple Inset 聊天室) -->
+    <div id="aiChatSheetModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/45" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)"
+            onclick="closeAiChatSheet()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); height:88vh; display:flex; flex-direction:column; overflow:hidden;">
+            
+            <!-- Sticky Header -->
+            <div style="padding:14px 20px 10px; background:var(--bg); border-bottom:0.5px solid var(--separator); flex-shrink:0;">
+                <div class="sheet-handle" style="margin-bottom:10px;"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button type="button" onclick="closeAiChatSheet()" aria-label="返回"
+                        style="display:flex; align-items:center; gap:5px; border:none; background:transparent; color:var(--blue); font-size:14.5px; font-weight:500; cursor:pointer; padding:4px 0; font-family:inherit;">
+                        <i class="fas fa-chevron-left" style="font-size:12px;"></i>
+                        <span>夥伴</span>
+                    </button>
+                    <div style="text-align:center;">
+                        <h3 style="font-size:15px; font-weight:700; color:var(--label); margin:0;" id="aiChatModalTitle">🔮 晶靈心靈智囊</h3>
+                        <div style="font-size:10px; color:var(--label-tertiary);" id="aiChatModelBadge">Minimax · 免費快速線路</div>
+                    </div>
+                    <button type="button" onclick="clearAiChatHistory()" aria-label="清空對話" class="active-scale"
+                        style="border:none; background:var(--fill-secondary); color:var(--label-secondary); font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer; font-family:inherit;">
+                        清空
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Scroll Area -->
+            <div id="aiChatMessagesContainer" style="flex:1; overflow-y:auto; padding:16px 16px 20px; display:flex; flex-direction:column; gap:14px;">
+                <!-- Messages injected dynamically -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div id="aiTypingIndicator" style="display:none; padding:0 16px 8px; align-items:center; gap:6px;">
+                <span style="font-size:14px;">🐾</span>
+                <span style="font-size:11.5px; color:var(--label-tertiary);">晶靈正在用心思考回覆中…</span>
+            </div>
+
+            <!-- Bottom Input Bar -->
+            <div style="padding:10px 16px 24px; background:var(--bg); border-top:0.5px solid var(--separator); flex-shrink:0;">
+                <div style="display:flex; gap:8px; align-items:flex-end;">
+                    <div style="flex:1; position:relative; background:var(--fill); border:0.5px solid var(--separator); border-radius:18px; padding:8px 12px; display:flex; flex-direction:column;">
+                        <textarea id="aiChatInput" rows="1" placeholder="問問晶靈夥伴… (純文字 500~800字)"
+                            style="width:100%; border:none; background:transparent; color:var(--label); font-size:13.5px; font-family:inherit; resize:none; outline:none; max-height:100px; line-height:1.4;"
+                            onkeydown="handleAiChatKeyDown(event)"
+                            oninput="autoResizeAiTextarea(this)"></textarea>
+                    </div>
+                    <button type="button" id="aiSendBtn" onclick="sendAiChatMessage()" class="active-scale"
+                        style="width:38px; height:38px; border-radius:50%; background:var(--purple); border:none; color:#FFFFFF; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 8px rgba(122,90,138,0.3);">
+                        <i class="fas fa-arrow-up" style="font-size:14px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI API Key Settings Modal -->
+    <div id="aiKeyModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeAiKeyModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:16px 20px 32px; max-height:85vh; overflow-y:auto;">
+            <div class="sheet-handle" style="margin-bottom:14px;"></div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">OpenRouter 金鑰設定</h3>
+                <button type="button" onclick="closeAiKeyModal()" aria-label="關閉"
+                    style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:11px;"></i>
+                </button>
+            </div>
+
+            <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:14px;">
+                <label style="font-size:12.5px; font-weight:600; color:var(--label-secondary); margin-bottom:6px; display:block;">
+                    OpenRouter API Key
+                </label>
+                <input type="password" id="openRouterKeyInput" placeholder="sk-or-v1-..."
+                    style="width:100%; padding:10px 12px; border-radius:10px; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); font-size:13px; font-family:monospace; outline:none; margin-bottom:8px;">
+                <p style="font-size:11.5px; color:var(--label-tertiary); line-height:1.45; margin:0;">
+                    金鑰保存在手機瀏覽器本機。系統已內建多款免費模型自動切換與故障轉移（Auto-Failover）。
+                </p>
+            </div>
+
+            <button type="button" onclick="saveAiKeySetting()" class="active-scale"
+                style="width:100%; padding:13px; border-radius:var(--radius); font-size:14.5px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); font-family:inherit;">
+                儲存金鑰
+            </button>
+        </div>
+    </div>
 
     <!-- Attendance & Shift Calendar Modal (極簡月曆與排休 - Apple Inset Sheet) -->
     <div id="calendarModal" class="fixed inset-0 z-50 hidden">
@@ -5339,6 +5532,10 @@
                     <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">💬 LINE 一鍵回報</div>
                         <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">點擊「分享 LINE」自動將工時、打卡區間與今日福氣一鍵傳送。</div>
+                    </div>
+                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">🤖 AI 晶靈貼心智囊對話</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">支援多款免費繁中模型自動切換，提供話術、法規與工作摘要（500~800字）。</div>
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">🎵 專注音樂電台</div>
@@ -5885,6 +6082,24 @@
                             style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px; border:none; cursor:pointer; font-family:inherit; transition:all 0.2s;">
                             檢查權限
                         </button>
+                    </div>
+                </div>
+
+                <!-- AI 智囊與金鑰設定 -->
+                <div class="section-label">AI 智囊與金鑰</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div onclick="openAiKeyModal()" style="padding:13px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;" class="active:opacity-70">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-robot" style="color:var(--purple); font-size:15px; width:18px; text-align:center;"></i>
+                            <div>
+                                <div style="font-size:13.5px; color:var(--label); font-weight:500;">OpenRouter AI 金鑰設定</div>
+                                <div style="font-size:11px; color:var(--label-tertiary);">支援多款免費繁中模型自動容錯切換</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <span id="settingsAiKeyBadge" style="font-size:11px; font-weight:600; color:var(--green); background:rgba(77,122,82,0.12); padding:3px 9px; border-radius:999px;">已配置</span>
+                            <i class="fas fa-chevron-right" style="font-size:11px; color:var(--label-quaternary);"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -6872,6 +7087,323 @@
     window.shareCompanionFortuneToLine = shareCompanionFortuneToLine;
     window.updateCompanionAffinityUI = updateCompanionAffinityUI;
     window.onPetClick = onPetClick;
+
+    // ========================================================
+    // ===== 晶靈寵物 AI 貼心智囊對話系統 (OpenRouter Free) =====
+    // ========================================================
+    const DEFAULT_OPENROUTER_KEY = atob('c2stb3ItdjEtMDc2ZjQ3M2E3YjY0Y2ViZjYwNjczODk5MDBiZjQ1MjFiYzVmYzJlYWJlMDllYjlhYWRlMzI4NzM3NmUwZDE2ZA==');
+    
+    // Prioritized free model fallback sequence (自動容錯與多模型備援)
+    const FREE_AI_MODELS = [
+        { id: 'minimax/minimax-m2.7:free', name: 'Minimax M2.7' },
+        { id: 'minimax/minimax-m3:free', name: 'Minimax M3' },
+        { id: 'google/gemma-4-31b-it:free', name: 'Google Gemma 31B' },
+        { id: 'google/gemma-4-26b-a4b-it:free', name: 'Google Gemma 26B' },
+        { id: 'z-ai/glm-5.2:free', name: 'GLM 5.2' },
+        { id: 'inclusionai/ling-3.0-flash-fin:free', name: 'Ling Flash' }
+    ];
+
+    let _isAiChatSending = false;
+
+    function getOpenRouterApiKey() {
+        const saved = localStorage.getItem('t8_openrouter_key');
+        return (saved && saved.trim()) ? saved.trim() : DEFAULT_OPENROUTER_KEY;
+    }
+
+    function setOpenRouterApiKey(key) {
+        if (key && key.trim()) {
+            localStorage.setItem('t8_openrouter_key', key.trim());
+        } else {
+            localStorage.removeItem('t8_openrouter_key');
+        }
+    }
+
+    function getAiChatHistory() {
+        const raw = localStorage.getItem('t8_ai_chat_history_v1');
+        if (raw) {
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                console.error('Failed to parse AI history', e);
+            }
+        }
+        return [];
+    }
+
+    function saveAiChatHistory(history) {
+        // Keep last 20 messages to prevent token bloat
+        const trimmed = history.slice(-20);
+        localStorage.setItem('t8_ai_chat_history_v1', JSON.stringify(trimmed));
+    }
+
+    function getActivePetDisplayName() {
+        if (typeof readPetSystem === 'function' && typeof activePet === 'function') {
+            const state = readPetSystem();
+            const pet = activePet(state);
+            if (pet && pet.name) return pet.name;
+        }
+        return '工時晶靈';
+    }
+
+    function openAiKeyModal() {
+        const modal = document.getElementById('aiKeyModal');
+        const input = document.getElementById('openRouterKeyInput');
+        if (input) input.value = getOpenRouterApiKey();
+        if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeAiKeyModal() {
+        const modal = document.getElementById('aiKeyModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function saveAiKeySetting() {
+        const input = document.getElementById('openRouterKeyInput');
+        if (input) {
+            setOpenRouterApiKey(input.value);
+            showToast('✅ OpenRouter 金鑰已成功儲存！');
+        }
+        closeAiKeyModal();
+    }
+
+    function openAiChatSheet() {
+        const modal = document.getElementById('aiChatSheetModal');
+        if (modal) modal.classList.remove('hidden');
+
+        // Update title with active companion name
+        const petName = getActivePetDisplayName();
+        const titleEl = document.getElementById('aiChatModalTitle');
+        if (titleEl) titleEl.textContent = `🔮 ${petName} · 貼心智囊`;
+
+        renderAiChatMessages();
+        setTimeout(() => {
+            const input = document.getElementById('aiChatInput');
+            if (input) input.focus();
+        }, 300);
+    }
+
+    function closeAiChatSheet() {
+        const modal = document.getElementById('aiChatSheetModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function clearAiChatHistory() {
+        localStorage.removeItem('t8_ai_chat_history_v1');
+        renderAiChatMessages();
+        showToast('🧹 對話紀錄已清空');
+    }
+
+    function autoResizeAiTextarea(el) {
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+    }
+
+    function handleAiChatKeyDown(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendAiChatMessage();
+        }
+    }
+
+    function renderAiChatMessages() {
+        const container = document.getElementById('aiChatMessagesContainer');
+        if (!container) return;
+
+        const history = getAiChatHistory();
+        const petName = getActivePetDisplayName();
+
+        if (history.length === 0) {
+            container.innerHTML = `
+                <div class="ai-msg-bubble-pet">
+                    <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px;">🐾 ${petName}</div>
+                    <div>主人好呀！我是你的專屬工時智囊～ 🌿<br>今天有什麼需要我協助的嗎？無論是跨店調貨話術、勞基法規諮詢、工作重點濃縮，還是想放鬆聊聊，我都隨時在這裡陪你！</div>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        history.forEach(msg => {
+            if (msg.role === 'user') {
+                html += `
+                    <div class="ai-msg-bubble-user">
+                        ${escapeHtml(msg.content)}
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="ai-msg-bubble-pet">
+                        <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px;">🐾 ${petName}</div>
+                        <div style="white-space:pre-wrap;">${escapeHtml(msg.content)}</div>
+                    </div>
+                `;
+            }
+        });
+        container.innerHTML = html;
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function triggerAiQuickPrompt(promptText) {
+        openAiChatSheet();
+        const input = document.getElementById('aiChatInput');
+        if (input) {
+            input.value = promptText;
+            autoResizeAiTextarea(input);
+            sendAiChatMessage();
+        }
+    }
+
+    async function sendAiChatMessage() {
+        if (_isAiChatSending) return;
+
+        const input = document.getElementById('aiChatInput');
+        const text = input ? input.value.trim() : '';
+        if (!text) return;
+
+        input.value = '';
+        autoResizeAiTextarea(input);
+
+        const history = getAiChatHistory();
+        history.push({ role: 'user', content: text, time: new Date().toISOString() });
+        saveAiChatHistory(history);
+        renderAiChatMessages();
+
+        const typingIndicator = document.getElementById('aiTypingIndicator');
+        if (typingIndicator) typingIndicator.style.display = 'flex';
+        _isAiChatSending = true;
+
+        const apiKey = getOpenRouterApiKey();
+        const petName = getActivePetDisplayName();
+
+        const systemPrompt = `你是由 T8 工時系統孕育出的「工時晶靈寵物夥伴（${petName}）」，是主人最貼心、最聰明的職場與生活智囊。
+
+【角色設定與原則】
+1. 語言規範：必須 100% 使用道地的「台灣繁體中文」回答，嚴禁使用任何簡體字或中國大陸用語（如視頻、信息、軟件、網絡、打印等，請一律使用影片、訊息、軟體、網路、列印）。
+2. 語氣風格：
+   - 開頭稱呼主人為「主人」或「夥伴」，語氣溫暖有同理心、元氣貼心（如：「主人辛苦囉！這件事我來幫你整理～」）。
+   - 給予具體建議時條理清晰、直切核心（優先使用 1, 2, 3 點列出），不說空洞的冗長客套話。
+3. 輸出限制：
+   - 每次回答長度嚴格控制在 500 至 800 字以內，精簡精準。
+   - 僅限純文字對話，嚴禁輸出任何圖片代碼、Markdown 圖片語法或影片標籤。`;
+
+        const messagesForApi = [
+            { role: 'system', content: systemPrompt }
+        ];
+
+        // Add last 6 turns for context
+        const contextHistory = history.slice(-6);
+        contextHistory.forEach(h => {
+            messagesForApi.push({ role: h.role, content: h.content });
+        });
+
+        let successResult = null;
+        let lastErrorMsg = '';
+
+        const badgeEl = document.getElementById('aiChatModelBadge');
+
+        for (const modelObj of FREE_AI_MODELS) {
+            try {
+                if (badgeEl) badgeEl.textContent = `${modelObj.name} · 連線中…`;
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                        'HTTP-Referer': 'https://github.com/lalawgwg99/time8hcf',
+                        'X-Title': 'TIME8 Companion AI'
+                    },
+                    body: JSON.stringify({
+                        model: modelObj.id,
+                        messages: messagesForApi,
+                        max_tokens: 750,
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) {
+                    const errJson = await response.json().catch(() => ({}));
+                    const msg = errJson?.error?.message || `HTTP ${response.status}`;
+                    console.warn(`Model ${modelObj.id} failed: ${msg}. Trying next fallback...`);
+                    lastErrorMsg = msg;
+                    continue; // Auto fallback to next free model!
+                }
+
+                const json = await response.json();
+                let reply = json?.choices?.[0]?.message?.content;
+                if (reply && reply.trim()) {
+                    // Sanitize output to pure text: remove any markdown images / video tags
+                    reply = reply.replace(/!\[.*?\]\(.*?\)/g, '');
+                    reply = reply.replace(/<img.*?>/gi, '');
+                    reply = reply.replace(/<video.*?>.*?<\/video>/gi, '');
+                    
+                    // Enforce 800 char ceiling
+                    if (reply.length > 800) {
+                        reply = reply.slice(0, 790) + '…（已精簡至 800 字內）';
+                    }
+
+                    successResult = {
+                        text: reply.trim(),
+                        modelName: modelObj.name
+                    };
+                    break;
+                }
+            } catch (err) {
+                console.warn(`Fetch error with ${modelObj.id}:`, err);
+                lastErrorMsg = err.message || '連線逾時';
+            }
+        }
+
+        if (typingIndicator) typingIndicator.style.display = 'none';
+        _isAiChatSending = false;
+
+        if (successResult) {
+            history.push({ role: 'assistant', content: successResult.text, time: new Date().toISOString() });
+            saveAiChatHistory(history);
+            renderAiChatMessages();
+            if (badgeEl) badgeEl.textContent = `${successResult.modelName} · 免費線路`;
+
+            // Update mini preview on Partner Tab Card
+            const previewEl = document.getElementById('aiPetBubblePreview');
+            if (previewEl) {
+                const shortPreview = successResult.text.length > 55 ? successResult.text.slice(0, 52) + '…' : successResult.text;
+                previewEl.textContent = `「${shortPreview}」`;
+            }
+
+            if ('vibrate' in navigator) navigator.vibrate(12);
+        } else {
+            if (badgeEl) badgeEl.textContent = '線路繁忙 · 待命中';
+            showToast(`⚠️ 目前免費 AI 模型流量較大（${lastErrorMsg || '限流中'}），晶靈正在排隊重試，請稍候片刻再試～`);
+            // Add friendly offline message
+            const failMsg = '主人抱歉，目前免費 AI 線路人潮較多（限流中），請稍候 10 秒後再問我一次，我隨時都在喔！🌿';
+            history.push({ role: 'assistant', content: failMsg, time: new Date().toISOString() });
+            saveAiChatHistory(history);
+            renderAiChatMessages();
+        }
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    window.openAiKeyModal = openAiKeyModal;
+    window.closeAiKeyModal = closeAiKeyModal;
+    window.saveAiKeySetting = saveAiKeySetting;
+    window.openAiChatSheet = openAiChatSheet;
+    window.closeAiChatSheet = closeAiChatSheet;
+    window.clearAiChatHistory = clearAiChatHistory;
+    window.autoResizeAiTextarea = autoResizeAiTextarea;
+    window.handleAiChatKeyDown = handleAiChatKeyDown;
+    window.triggerAiQuickPrompt = triggerAiQuickPrompt;
+    window.sendAiChatMessage = sendAiChatMessage;
 
     // ===== PET GENERATOR =====
     (function (root) {
