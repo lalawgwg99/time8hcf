@@ -1222,21 +1222,3 @@
         .sprite-terrarium {
             border-radius: var(--radius);
         }
-/* TIME 8 unified line icon system: 24px grid, 1.7px rounded stroke. */
-.t8-icon {
-    width: 1em;
-    height: 1em;
-    display: inline-block;
-    vertical-align: -0.13em;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    vector-effect: non-scaling-stroke;
-    flex: 0 0 auto;
-}
-
-.t8-icon--sm { font-size: 12px; }
-.t8-icon--md { font-size: 16px; }
-.t8-icon--lg { font-size: 20px; }

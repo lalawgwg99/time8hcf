@@ -5,13 +5,12 @@
     Object.assign(root, api);
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
     const STORAGE_KEY = 'time8hcf_pet_system';
-    const SCHEMA_VERSION = 2;
+    const SCHEMA_VERSION = 1;
 
     function emptyState() {
         return {
             schemaVersion: SCHEMA_VERSION,
-            resources: { eggFragments: 0, crystalDust: 0, stardust: 0 },
-            inventory: ['focus_ribbon'],
+            resources: { eggFragments: 0, crystalDust: 0 },
             pets: [],
             activePetId: null,
             rewards: [],
@@ -28,7 +27,6 @@
                 ...emptyState(),
                 ...parsed,
                 resources: { ...emptyState().resources, ...(parsed.resources || {}) },
-                inventory: Array.isArray(parsed.inventory) ? [...new Set(['focus_ribbon', ...parsed.inventory])] : ['focus_ribbon'],
                 hatchState: { ...emptyState().hatchState, ...(parsed.hatchState || {}) },
                 pets: Array.isArray(parsed.pets) ? parsed.pets : [],
                 rewards: Array.isArray(parsed.rewards) ? parsed.rewards : [],

@@ -2342,68 +2342,6 @@
             transition: cx 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), cy 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
         }
 
-        .ring-timeline-arc {
-            fill: none;
-            stroke: var(--blue);
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            opacity: 0.72;
-            pointer-events: none;
-        }
-
-        .ring-timeline-tick {
-            stroke: var(--label-secondary);
-            stroke-width: 1.5;
-            stroke-linecap: round;
-        }
-
-        .ring-timeline-marker {
-            cursor: pointer;
-        }
-
-        .ring-timeline-marker--in circle {
-            fill: var(--blue);
-            stroke: var(--card);
-            stroke-width: 1.8;
-        }
-
-        .ring-timeline-marker--out circle {
-            fill: var(--card);
-            stroke: var(--blue);
-            stroke-width: 1.8;
-        }
-
-        .ring-timeline-now {
-            fill: var(--green);
-            stroke: var(--card);
-            stroke-width: 1.5;
-            filter: drop-shadow(0 0 3px rgba(77, 122, 82, .65));
-        }
-
-        .ring-timeline-tooltip {
-            position: absolute;
-            left: 50%;
-            bottom: -4px;
-            transform: translate(-50%, 8px);
-            opacity: 0;
-            pointer-events: none;
-            white-space: nowrap;
-            background: var(--label);
-            color: var(--bg);
-            border-radius: 999px;
-            padding: 4px 9px;
-            font-size: 10px;
-            font-weight: 650;
-            letter-spacing: .02em;
-            transition: opacity .18s ease, transform .18s ease;
-            z-index: 3;
-        }
-
-        .ring-timeline-tooltip.show {
-            opacity: 1;
-            transform: translate(-50%, 0);
-        }
-
         .ring-inner-content {
             position: absolute;
             inset: 0;
@@ -4329,67 +4267,10 @@
                 animation: none !important;
             }
         }
-
-        /* T8 icon system: a 24px grid with a single, rounded 1.7px stroke. */
-        .t8-icon {
-            width: 1em;
-            height: 1em;
-            display: inline-block;
-            vertical-align: -0.13em;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.7;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            vector-effect: non-scaling-stroke;
-            flex: 0 0 auto;
-        }
-        .t8-icon--sm { width: 14px; height: 14px; }
-        .t8-icon--md { width: 18px; height: 18px; }
-        .t8-icon--lg { width: 22px; height: 22px; }
     </style>
 </head>
 
 <body style="min-height:100vh; background:var(--bg); overflow-x:hidden;">
-    <!-- TIME 8 icon system: 24px grid, 1.7px rounded stroke, no filled glyphs. -->
-    <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
-        <defs>
-            <symbol id="t8i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
-            <symbol id="t8i-drop" viewBox="0 0 24 24"><path d="M12 3.5S6.5 10 6.5 14a5.5 5.5 0 0 0 11 0c0-4-5.5-10.5-5.5-10.5Z"/></symbol>
-            <symbol id="t8i-wind" viewBox="0 0 24 24"><path d="M4 8h10a2.5 2.5 0 1 0-2.4-3M4 12h14M4 16h8a2.5 2.5 0 1 1-2.4 3"/></symbol>
-            <symbol id="t8i-scroll" viewBox="0 0 24 24"><path d="M7 3h10v18H7a3 3 0 0 1 0-6h10"/><path d="M7 15h10M10 7h4M10 11h4"/></symbol>
-            <symbol id="t8i-spark" viewBox="0 0 24 24"><path d="m12 2 1.7 6.3L20 10l-6.3 1.7L12 18l-1.7-6.3L4 10l6.3-1.7L12 2ZM19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7L19 16Z"/></symbol>
-            <symbol id="t8i-heart" viewBox="0 0 24 24"><path d="M20 8.5C20 14 12 20 12 20S4 14 4 8.5A4.5 4.5 0 0 1 12 5.7 4.5 4.5 0 0 1 20 8.5Z"/></symbol>
-            <symbol id="t8i-message" viewBox="0 0 24 24"><path d="M5 5.5h14v10H9l-4 3v-13Z"/><path d="M8 9h8M8 12h5"/></symbol>
-            <symbol id="t8i-scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 8h14"/><path d="m7 8-3 5h6L7 8Zm10 0-3 5h6l-3-5Z"/></symbol>
-            <symbol id="t8i-list" viewBox="0 0 24 24"><path d="M9 6h10M9 12h10M9 18h10"/><path d="m4 6 1 1 2-2m-3 7 1 1 2-2m-3 7 1 1 2-2"/></symbol>
-            <symbol id="t8i-cup" viewBox="0 0 24 24"><path d="M5 8h11v7a5.5 5.5 0 0 1-11 0V8Z"/><path d="M16 10h1a2 2 0 0 1 0 4h-1M7 4c0 1 1 1 1 2m3-2c0 1 1 1 1 2"/></symbol>
-            <symbol id="t8i-volume" viewBox="0 0 24 24"><path d="M5 10h3l4-4v12l-4-4H5v-4Zm11 0a4 4 0 0 1 0 4m2-7a8 8 0 0 1 0 10"/></symbol>
-            <symbol id="t8i-flame" viewBox="0 0 24 24"><path d="M12 21c4 0 6-2.7 6-6.2 0-3-1.8-5.4-4.1-7.8.1 2.3-1 3.5-2.1 4.4.1-2.7-1.1-4.9-2.7-6.4C8 8.6 6 11.2 6 14.8 6 18.3 8 21 12 21Z"/></symbol>
-            <symbol id="t8i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-4 3 2 5-6"/></symbol>
-            <symbol id="t8i-bolt" viewBox="0 0 24 24"><path d="m13 2-8 12h6l-1 8 9-13h-6l1-7Z"/></symbol>
-            <symbol id="t8i-sliders" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
-            <symbol id="t8i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
-            <symbol id="t8i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
-            <symbol id="t8i-ribbon" viewBox="0 0 24 24"><path d="M8 4h8v8H8zM10 12l-2 8 4-2 4 2-2-8"/></symbol>
-            <symbol id="t8i-lamp" viewBox="0 0 24 24"><path d="M8 10h8l2 10H6l2-10ZM10 10V6h4v4M4 20h16"/></symbol>
-            <symbol id="t8i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></symbol>
-            <symbol id="t8i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
-            <symbol id="t8i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
-            <symbol id="t8i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
-            <symbol id="t8i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
-            <symbol id="t8i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
-            <symbol id="t8i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
-            <symbol id="t8i-chevron-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
-            <symbol id="t8i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0 1 4"/><path d="M20 4v7h-7"/></symbol>
-            <symbol id="t8i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></symbol>
-            <symbol id="t8i-pin" viewBox="0 0 24 24"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></symbol>
-            <symbol id="t8i-camera" viewBox="0 0 24 24"><path d="M4 8h4l1.5-2h5L16 8h4v11H4V8Z"/><circle cx="12" cy="13" r="3"/></symbol>
-            <symbol id="t8i-trash" viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></symbol>
-            <symbol id="t8i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 5 5"/></symbol>
-            <symbol id="t8i-alert" viewBox="0 0 24 24"><path d="M12 4 3.5 20h17L12 4Z"/><path d="M12 9v5M12 17h.01"/></symbol>
-        </defs>
-    </svg>
 
     <div style="max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;"
         id="app">
@@ -4425,9 +4306,9 @@
                     <div class="today-glance-bar">
                         <!-- Left: Weather -->
                         <div id="ringWeatherBadge" class="glance-item active-scale" onclick="openWeatherModal(event)" title="即時天氣 · 點擊查看預報">
-                            <span id="weatherIcon" aria-label="天氣"></span>
+                            <span id="weatherIcon">☀️</span>
                             <span id="weatherTemp" class="glance-text">--°</span>
-                            <span id="weatherPopSub" class="glance-sub hidden">0%</span>
+                            <span id="weatherPopSub" class="glance-sub hidden">💧 0%</span>
                         </div>
 
                         <div class="glance-divider"></div>
@@ -4490,10 +4371,7 @@
                                 stroke-dasharray="716.28" stroke-dashoffset="716.28" />
                             <!-- Leading Light Bead -->
                             <circle id="ringLeadBead" cx="246" cy="132" r="6" fill="#FFFFFF" filter="url(#beadShadow)" opacity="0" />
-                            <!-- Real punch-time markers, positioned on a 24-hour clock. -->
-                            <g id="ringTimelineMarkers" aria-label="打卡時間刻度"></g>
                         </svg>
-                        <div id="ringTimelineTooltip" class="ring-timeline-tooltip" role="status" aria-live="polite"></div>
                         <div class="ring-inner-content">
                             <div class="hero-eyebrow" id="heroEyebrow">今日工時</div>
                             <div id="totalHours">
@@ -4743,9 +4621,6 @@
                                 </span>
                             </div>
                         </div>
-
-                        <!-- Daily care loop: a small, stateful alternative to endlessly tapping for points. -->
-                        <div id="partnerDailyActions" style="background:var(--card); border-radius:14px; padding:12px 14px; margin-top:10px; border:0.5px solid var(--separator);"></div>
 
                         <!-- Action / Guidance Area -->
                         <div id="partnerActionArea"></div>
@@ -5245,7 +5120,7 @@
             <div class="sheet-handle" style="margin-bottom:14px;"></div>
             
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">個人 OpenRouter 金鑰（選填）</h3>
+                <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">OpenRouter 金鑰設定</h3>
                 <button type="button" onclick="closeAiKeyModal()" aria-label="關閉"
                     style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
                     <i class="fas fa-times" style="font-size:11px;"></i>
@@ -5259,7 +5134,7 @@
                 <input type="password" id="openRouterKeyInput" placeholder="sk-or-v1-..."
                     style="width:100%; padding:10px 12px; border-radius:10px; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); font-size:13px; font-family:monospace; outline:none; margin-bottom:8px;">
                 <p style="font-size:11.5px; color:var(--label-tertiary); line-height:1.45; margin:0;">
-                    留白時，對話會使用本站受控的安全代理；填入個人金鑰才會直接連線。個人金鑰只保存在此瀏覽器。
+                    金鑰保存在手機瀏覽器本機。系統已內建多款免費模型自動切換與故障轉移（Auto-Failover）。
                 </p>
             </div>
 
@@ -6387,7 +6262,7 @@
 
                 <!-- Designer Badge: Design 德 (開發者隱藏特權通道) -->
                 <div style="margin-top:24px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
-                    <div id="designerSecretBtn" style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator); user-select:none; -webkit-user-select:none;" title="TIME 8 設計師">
+                    <div id="designerSecretBtn" onclick="triggerDeveloperSecret()" class="active-scale" style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:var(--fill); border:0.5px solid var(--separator); cursor:pointer; user-select:none; -webkit-user-select:none;" title="TIME 8 設計師">
                         <span style="font-size:10px; color:var(--label-tertiary); letter-spacing:0.12em; text-transform:uppercase; font-weight:500;">Design</span>
                         <span style="width:3px; height:3px; border-radius:50%; background:var(--label-quaternary);"></span>
                         <span style="font-size:11.5px; color:var(--label); font-weight:600; letter-spacing:0.04em;">德</span>
@@ -7004,14 +6879,6 @@
             art.style.cursor = 'pointer';
             art.title = '輕觸夥伴互動';
             art.innerHTML = getPetSVG(specId, { isWorking, isTargetMet });
-            const equipped = typeof getEquippedCompanionItem === 'function' ? getEquippedCompanionItem(pet) : null;
-            if (equipped) {
-                const badge = document.createElement('span');
-                badge.className = `pet-equipment-badge ${equipped.className || ''}`;
-                badge.innerHTML = t8Icon(equipped.icon);
-                badge.title = equipped.name;
-                art.appendChild(badge);
-            }
             container.appendChild(art);
         }
         root.getPetSVG = getPetSVG;
@@ -7103,12 +6970,6 @@
         { level: 4, name: '靈魂守護', maxPts: 9999, perk: '解鎖專屬尊榮金輝與守護稱號' }
     ];
 
-    const COMPANION_EQUIPMENT = [
-        { id: 'focus_ribbon', icon: 'ribbon', name: '專注緞帶', slot: 'neck', unlock: 0, perk: '專注擊掌 +1', className: 'equip-ribbon' },
-        { id: 'moon_lamp', icon: 'lamp', name: '月光提燈', slot: 'hand', unlock: 3, perk: '夜班微光', className: 'equip-lamp' },
-        { id: 'tea_satchel', icon: 'bag', name: '茶香小包', slot: 'back', unlock: 7, perk: '收工散步 +1', className: 'equip-satchel' }
-    ];
-
     function getCompanionAffinityData() {
         const raw = localStorage.getItem('t8_companion_affinity');
         const todayStr = typeof getTodayKey === 'function' ? getTodayKey() : new Date().toISOString().slice(0, 10);
@@ -7117,10 +6978,7 @@
             level: 1,
             lastPetDate: '',
             todayPets: 0,
-            todayFortune: null,
-            dailyActions: { greet: false, focus: false, windDown: false },
-            careDays: 0,
-            lastCareCompleteDate: ''
+            todayFortune: null
         };
         if (raw) {
             try {
@@ -7134,7 +6992,6 @@
         if (data.lastPetDate !== todayStr) {
             data.lastPetDate = todayStr;
             data.todayPets = 0;
-            data.dailyActions = { greet: false, focus: false, windDown: false };
             // Pick a deterministic or fresh daily fortune based on date string hash
             let hash = 0;
             for (let i = 0; i < todayStr.length; i++) hash = (hash * 31 + todayStr.charCodeAt(i)) % COMPANION_FORTUNES.length;
@@ -7144,9 +7001,6 @@
 
         if (!data.todayFortune) {
             data.todayFortune = COMPANION_FORTUNES[0];
-        }
-        if (!data.dailyActions || typeof data.dailyActions !== 'object') {
-            data.dailyActions = { greet: false, focus: false, windDown: false };
         }
 
         return data;
@@ -7201,7 +7055,7 @@
         return data;
     }
 
-        function updateCompanionAffinityUI(data) {
+    function updateCompanionAffinityUI(data) {
         if (!data) data = getCompanionAffinityData();
         const bondLevelText = document.getElementById('bondLevelText');
         const bondProgressText = document.getElementById('bondProgressText');
@@ -7215,10 +7069,7 @@
 
         if (bondLevelText) bondLevelText.textContent = `Lv.${data.level} ${lvlInfo.name}`;
         if (bondProgressText) {
-            const completed = Object.values(data.dailyActions || {}).filter(Boolean).length;
-            bondProgressText.innerHTML = nextLvl ? `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>今日默契 ${completed}/3` : `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>羈絆滿級 (${data.points})`;
-            bondProgressText.removeAttribute('onclick');
-            bondProgressText.style.cursor = 'default';
+            bondProgressText.innerHTML = nextLvl ? `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>輕觸晶靈互動 (+1)` : `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>羈絆滿級 (${data.points})`;
         }
 
         if (data.todayFortune) {
@@ -7226,119 +7077,12 @@
             if (fortuneLuckyItem) fortuneLuckyItem.textContent = `幸運物：${data.todayFortune.luckyItem}`;
             if (fortuneQuoteText) fortuneQuoteText.textContent = `「${data.todayFortune.text}」`;
         }
-
-    function getCompanionDailyActionState() {
-        const data = getCompanionAffinityData();
-        const isWorking = typeof punchRecords !== 'undefined' && punchRecords.length % 2 === 1;
-        const lastIn = isWorking ? punchRecords[punchRecords.length - 1] : null;
-        const sessionMinutes = lastIn ? Math.max(0, (Date.now() - new Date(lastIn.time)) / 60000) : 0;
-        const hasFinishedSession = !isWorking && typeof punchRecords !== 'undefined' && punchRecords.some(r => r.type === 'out');
-        return {
-            data,
-            actions: [
-                { id: 'greet', icon: 'heart', label: '晨間問候', note: '輕觸夥伴', ready: true, reward: 1 },
-                { id: 'focus', icon: 'spark', label: '專注擊掌', note: isWorking ? (sessionMinutes >= 25 ? '可以互動' : `再專注 ${Math.ceil(25 - sessionMinutes)} 分`) : '上班後開啟', ready: isWorking && sessionMinutes >= 25, reward: 2 },
-                { id: 'windDown', icon: 'lamp', label: '收工散步', note: hasFinishedSession ? '可以互動' : '下班後開啟', ready: hasFinishedSession, reward: 2 }
-            ]
-        };
     }
 
-    function renderCompanionDailyActions() {
-        const container = document.getElementById('partnerDailyActions');
-        if (!container) return;
-        const { data, actions } = getCompanionDailyActionState();
-        const completed = actions.filter(action => data.dailyActions?.[action.id]).length;
-        container.innerHTML = `
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;">
-                <span style="font-size:12px;font-weight:700;color:var(--label);">今日默契</span>
-                <span style="font-size:10.5px;color:var(--purple);font-weight:700;">${completed}/3 · ${data.careDays || 0} 天紀錄</span>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">
-                ${actions.map(action => {
-                    const done = !!data.dailyActions?.[action.id];
-                    const available = action.ready && !done;
-                    return `<button type="button" onclick="window.performCompanionAction('${action.id}', event)" ${available ? '' : 'disabled'} style="border:0.5px solid ${done ? 'rgba(77,122,82,.32)' : 'var(--separator)'};background:${done ? 'rgba(77,122,82,.10)' : available ? 'var(--fill-secondary)' : 'var(--fill-tertiary)'};color:${available || done ? 'var(--label)' : 'var(--label-tertiary)'};border-radius:11px;padding:8px 5px;cursor:${available ? 'pointer' : 'default'};font-family:inherit;text-align:center;opacity:${available || done ? '1' : '.58'};">
-                        <span style="display:block;font-size:15px;margin-bottom:3px;">${done ? t8Icon('check') : t8Icon(action.icon)}</span>
-                        <span style="display:block;font-size:10.5px;font-weight:700;white-space:nowrap;">${action.label}</span>
-                        <span style="display:block;font-size:9.5px;margin-top:2px;color:var(--label-tertiary);">${done ? `默契 +${action.reward}` : action.note}</span>
-                    </button>`;
-                }).join('')}
-            </div>`;
-    }
-
-    function getEquippedCompanionItem(pet) {
-        const id = pet?.equippedItemId;
-        return COMPANION_EQUIPMENT.find(item => item.id === id) || null;
-    }
-
-    function renderCompanionEquipment() {
-        const container = document.getElementById('partnerEquipment');
-        if (!container || typeof readPetSystem !== 'function') return;
-        const state = readPetSystem();
-        const pet = typeof activePet === 'function' ? activePet(state) : null;
-        if (!pet) { container.innerHTML = ''; return; }
-        const inventory = state.inventory || [];
-        const careDays = getCompanionAffinityData().careDays || 0;
-        container.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;font-weight:700;color:var(--label);">夥伴小物</span><span style="font-size:10.5px;color:var(--label-tertiary);">每日默契解鎖</span></div><div style="display:flex;gap:7px;">${COMPANION_EQUIPMENT.map(item => {
-            const unlocked = inventory.includes(item.id) || careDays >= item.unlock;
-            const equipped = pet.equippedItemId === item.id;
-            return `<button type="button" onclick="window.equipCompanionItem('${item.id}')" ${unlocked ? '' : 'disabled'} style="flex:1;border:0.5px solid ${equipped ? 'rgba(122,90,138,.45)' : 'var(--separator)'};background:${equipped ? 'rgba(122,90,138,.11)' : 'var(--fill-tertiary)'};border-radius:11px;padding:7px 5px;font-family:inherit;cursor:${unlocked ? 'pointer' : 'default'};opacity:${unlocked ? '1' : '.48'};text-align:center;"><span style="font-size:16px;display:block">${unlocked ? t8Icon(item.icon) : t8Icon('lock')}</span><span style="display:block;font-size:10px;font-weight:700;color:var(--label);margin-top:2px">${item.name}</span><span style="display:block;font-size:9px;color:var(--label-tertiary);margin-top:2px">${unlocked ? (equipped ? '已裝備' : item.perk) : `${item.unlock} 天解鎖`}</span></button>`;
-        }).join('')}</div>`;
-    }
-
-    function equipCompanionItem(itemId) {
-        if (typeof readPetSystem !== 'function' || typeof writePetSystem !== 'function') return;
-        const state = readPetSystem();
-        const pet = typeof activePet === 'function' ? activePet(state) : null;
-        const item = COMPANION_EQUIPMENT.find(entry => entry.id === itemId);
-        const careDays = getCompanionAffinityData().careDays || 0;
-        if (!pet || !item || (!state.inventory?.includes(itemId) && careDays < item.unlock)) return;
-        state.inventory = [...new Set([...(state.inventory || []), itemId])];
-        pet.equippedItemId = pet.equippedItemId === itemId ? null : itemId;
-        writePetSystem(state);
-        renderPartnerRoom();
-        showToast(pet.equippedItemId ? `${item.name}已裝備` : '已卸下小物');
-    }
-
-    window.performCompanionAction = performCompanionAction;
-    window.equipCompanionItem = equipCompanionItem;
-
-    function performCompanionAction(actionId, event) {
-        if (event) { event.preventDefault(); event.stopPropagation(); }
-        const { data, actions } = getCompanionDailyActionState();
-        const action = actions.find(item => item.id === actionId);
-        if (!action || data.dailyActions?.[actionId] || !action.ready) return;
-        data.dailyActions[actionId] = true;
-        const isComplete = Object.values(data.dailyActions).every(Boolean);
-        const today = typeof getTodayKey === 'function' ? getTodayKey() : new Date().toISOString().slice(0, 10);
-        if (isComplete && data.lastCareCompleteDate !== today) {
-            data.careDays = (data.careDays || 0) + 1;
-            data.lastCareCompleteDate = today;
-        }
-        saveCompanionAffinityData(data);
-        const equipment = typeof activePet === 'function' && typeof readPetSystem === 'function' ? getEquippedCompanionItem(activePet(readPetSystem())) : null;
-        const bonus = equipment?.id === 'focus_ribbon' && actionId === 'focus' ? 1 : equipment?.id === 'tea_satchel' && actionId === 'windDown' ? 1 : 0;
-        const updated = addCompanionAffinity(action.reward + bonus);
-        updateCompanionAffinityUI(updated);
-        renderCompanionDailyActions();
-        renderCompanionEquipment();
-        petCompanionWithAnimation(null, true);
-        if (isComplete) showToast('今日默契完成 ✦');
-    }
-    }
-
-    function petCompanionWithAnimation(event, skipDailyAction = false) {
+    function petCompanionWithAnimation(event) {
         if (event) {
             if (typeof event.stopPropagation === 'function') event.stopPropagation();
             if (typeof event.preventDefault === 'function') event.preventDefault();
-        }
-
-        if (!skipDailyAction) {
-            const data = getCompanionAffinityData();
-            if (!data.dailyActions?.greet) {
-                performCompanionAction('greet', event);
-                return;
-            }
         }
 
         if (typeof playSingleClickSound === 'function') playSingleClickSound("E5");
@@ -7361,8 +7105,32 @@
             setTimeout(() => heart.remove(), 1000);
         }
 
-        // After the daily action is complete, taps remain expressive but do not
-        // become an endless point farm or create repeated notification spam.
+        const data = addCompanionAffinity(1);
+        updateCompanionAffinityUI(data);
+
+        // Friendly situational speech
+        const isWorking = (typeof punchRecords !== 'undefined' && punchRecords.length > 0 && punchRecords.length % 2 === 1);
+        const todayMins = typeof getDayTotalMinutes === 'function' ? getDayTotalMinutes(typeof getTodayKey === 'function' ? getTodayKey() : '') : 0;
+        const hours = (todayMins / 60).toFixed(1);
+
+        let msgs = [];
+        if (isWorking) {
+            msgs = [
+                `夥伴開心地蹭了蹭你：「專注辛苦了！今日已累積 ${hours}h 囉」`,
+                "夥伴發出微光，心流能量已充飽。",
+                "保持好節奏，夥伴會一直在這陪你。",
+                "羈絆點數 +1！夥伴元氣滿滿，繼續加油！"
+            ];
+        } else {
+            msgs = [
+                "夥伴瞇起眼睛享受你的撫摸，好感度 +1",
+                "適度放鬆，喝口水休息一下吧。",
+                "夥伴對你露出燦爛笑容，元氣滿滿。",
+                "溫馨的陪伴時光，羈絆點數 +1！"
+            ];
+        }
+        const pick = msgs[Math.floor(Math.random() * msgs.length)];
+        showToast(pick);
     }
 
     function shareCompanionFortuneToLine(event) {
@@ -7453,6 +7221,7 @@
     // ========================================================
     // ===== 晶靈寵物 AI 貼心智囊對話系統 (OpenRouter Free) =====
     // ========================================================
+    const DEFAULT_OPENROUTER_KEY = atob('c2stb3ItdjEtMDc2ZjQ3M2E3YjY0Y2ViZjYwNjczODk5MDBiZjQ1MjFiYzVmYzJlYWJlMDllYjlhYWRlMzI4NzM3NmUwZDE2ZA==');
     
     // Prioritized free model fallback sequence (自動容錯與多模型備援)
     const FREE_AI_MODELS = [
@@ -7468,7 +7237,7 @@
 
     function getOpenRouterApiKey() {
         const saved = localStorage.getItem('t8_openrouter_key');
-        return (saved && saved.trim()) ? saved.trim() : '';
+        return (saved && saved.trim()) ? saved.trim() : DEFAULT_OPENROUTER_KEY;
     }
 
     function setOpenRouterApiKey(key) {
@@ -7522,7 +7291,7 @@
         const input = document.getElementById('openRouterKeyInput');
         if (input) {
             setOpenRouterApiKey(input.value);
-            showToast('OpenRouter 金鑰已儲存');
+            showToast('✅ OpenRouter 金鑰已成功儲存！');
         }
         closeAiKeyModal();
     }
@@ -7739,24 +7508,19 @@
 
         const badgeEl = document.getElementById('aiChatModelBadge');
 
-        const modelsToTry = apiKey
-            ? FREE_AI_MODELS
-            : [{ id: 'server-managed', name: 'T8 安全代理' }];
-
-        for (const modelObj of modelsToTry) {
+        for (const modelObj of FREE_AI_MODELS) {
             try {
                 if (badgeEl) badgeEl.textContent = `${modelObj.name} · 連線中…`;
-                const usePersonalKey = Boolean(apiKey);
-                const response = await fetch(usePersonalKey ? 'https://openrouter.ai/api/v1/chat/completions' : '/api/ai', {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                     method: 'POST',
-                    headers: usePersonalKey ? {
+                    headers: {
                         'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json',
-                        'HTTP-Referer': window.location.origin,
+                        'HTTP-Referer': 'https://github.com/lalawgwg99/time8hcf',
                         'X-Title': 'TIME8 Companion AI'
-                    } : { 'Content-Type': 'application/json' },
+                    },
                     body: JSON.stringify({
-                        ...(usePersonalKey ? { model: modelObj.id } : {}),
+                        model: modelObj.id,
                         messages: messagesForApi,
                         max_tokens: 750,
                         temperature: 0.7
@@ -7931,16 +7695,8 @@
         ];
         let hatchLocked = false;
         let toastTimer = null;
-        let lastToastAt = 0;
-        let lastToastMessage = '';
         function byId(id) { return document.getElementById(id); }
         function showToast(message) {
-            const text = String(message || '').replace(/\s+/g, ' ').trim();
-            const now = Date.now();
-            // Repeated taps and chained success messages should not stack up.
-            if (now - lastToastAt < 1600 || (text === lastToastMessage && now - lastToastAt < 5000)) return;
-            lastToastAt = now;
-            lastToastMessage = text;
             let toast = byId('partnerToast');
             if (!toast) {
                 toast = document.createElement('div');
@@ -7948,10 +7704,10 @@
                 toast.className = 'partner-toast';
                 document.body.appendChild(toast);
             }
-            toast.textContent = text.length > 36 ? `${text.slice(0, 35)}…` : text;
+            toast.textContent = message;
             toast.classList.add('show');
             if (toastTimer) clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
         }
         function eggProgressStage(fragmentCount) {
             const p = Math.min(Math.max(Number(fragmentCount) || 0, 0), HATCH_COST);
@@ -8213,6 +7969,81 @@
             renderPartnerRoom();
             switchPetPreview(_currentPreviewIndex);
         }
+        function triggerDeveloperSecret() {
+            if ('vibrate' in navigator) navigator.vibrate(12);
+            playSingleClickSound("G4");
+
+            const code = window.prompt("✦ TIME 8 開發者授權通道\n請輸入通行代碼：", "");
+            if (!code) return;
+
+            const cleaned = code.trim().toLowerCase();
+            if (cleaned === 'laladoo99' || cleaned === 'ru.4s/6cjo42k6' || cleaned === 'developer') {
+                // 1. 注入全圖鑑 8 隻完整夥伴
+                const allSpecies = [
+                    { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common' },
+                    { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common' },
+                    { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common' },
+                    { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare' },
+                    { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare' },
+                    { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare' },
+                    { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic' },
+                    { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden' }
+                ];
+
+                let state = typeof readPetSystem === 'function' ? readPetSystem() : { resources: {}, pets: [], hatchState: {} };
+                state.resources = state.resources || {};
+                state.resources.eggFragments = 9999;
+                state.resources.crystalDust = 9999;
+                state.hatchState = state.hatchState || {};
+                state.hatchState.firstHatchCompleted = true;
+
+                state.pets = allSpecies.map((spec) => ({
+                    schemaVersion: 1,
+                    petId: `dev_pet_${spec.id}`,
+                    name: spec.name,
+                    series: spec.series,
+                    rarity: spec.rarity,
+                    specId: spec.id,
+                    parts: {},
+                    obtainedFrom: 'developer_passcode',
+                    generatedAt: new Date().toISOString(),
+                    isFavorite: true
+                }));
+
+                // 預設喚醒並裝備傳說隱藏版 👑 熾皇晶魄
+                state.activePetId = 'dev_pet_ember_crown';
+                writePetSystem(state);
+
+                // 2. 功德堂全木魚皮膚全數解鎖
+                _muyuState = readMuyuState();
+                _muyuState.totalMerit = Math.max(_muyuState.totalMerit, 99999);
+                _muyuState.activeSkin = 'aurora';
+                writeMuyuState(_muyuState);
+
+                // 3. 聲光慶祝與即時同步更新
+                playZenSingingBowl();
+                if ('vibrate' in navigator) navigator.vibrate([40, 60, 40, 80, 50]);
+                if (typeof renderPartnerRoom === 'function') renderPartnerRoom();
+                if (typeof updateMuyuModalUI === 'function') updateMuyuModalUI();
+                if (typeof updateDisplay === 'function') updateDisplay();
+
+                if (typeof showZenCapsuleNotification === 'function') {
+                    showZenCapsuleNotification({
+                        title: '👑 開發者特權已完全啟用',
+                        message: '已解鎖全 8 隻夥伴（含珍稀/隱藏版）、純金星曜光環與功德堂全皮膚！',
+                        emoji: '👑',
+                        duration: 4500
+                    });
+                } else {
+                    showToast('👑 開發者特權已啟用：已解鎖全圖鑑夥伴與木魚全皮膚！');
+                }
+            } else {
+                if ('vibrate' in navigator) navigator.vibrate([80, 40, 80]);
+                showToast('❌ 通行代碼不正確');
+            }
+        }
+        root.triggerDeveloperSecret = triggerDeveloperSecret;
+        window.triggerDeveloperSecret = triggerDeveloperSecret;
 
         root.selectAsActivePet = selectAsActivePet;
         root.openPetPreviewModal = openPetPreviewModal;
@@ -8284,17 +8115,8 @@
             if (actionArea) {
                 actionArea.innerHTML = (!pet && isReady) ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()" style="margin-top:10px;">✨ 喚醒晶靈</button>` : '';
             }
-            const equipmentArea = byId('partnerEquipment');
-            if (!equipmentArea && pet) {
-                const equipment = document.createElement('div');
-                equipment.id = 'partnerEquipment';
-                equipment.style.cssText = 'background:var(--card);border-radius:14px;padding:12px 14px;margin-top:10px;border:0.5px solid var(--separator);';
-                actionArea?.insertAdjacentElement('afterend', equipment);
-            }
             renderCodex(state.pets);
             if (typeof updateCompanionAffinityUI === 'function') updateCompanionAffinityUI();
-            if (typeof renderCompanionDailyActions === 'function') renderCompanionDailyActions();
-            if (typeof renderCompanionEquipment === 'function') renderCompanionEquipment();
         }
         function hatchPartnerEgg() {
             if (hatchLocked) return;
@@ -8304,7 +8126,8 @@
                 return;
             }
             hatchLocked = true;
-                try {
+            showToast('🌱 正在孵化晶靈中…');
+            try {
                 const pet = generateBestPet({ isFirstHatch: !before.hatchState.firstHatchCompleted }, 3);
                 const result = commitHatch(before, pet);
                 writePetSystem(result.state);
@@ -8323,8 +8146,7 @@
             const result = grantDailyFragment(before);
             if (result.granted) {
                 writePetSystem(result.state);
-                // The target-achieved reminder already confirms this event.
-                // Updating the companion UI is sufficient and avoids a second popup.
+                showToast('🌱 今日工時達成 · 獲得星軌碎片 ×1');
             }
         }
         root.eggProgressStage = eggProgressStage;
@@ -8335,87 +8157,7 @@
     </script>
     <script>
         // --- 邏輯部分 ---
-        // Unified icon adapter. Existing Font Awesome and standalone emoji are
-        // progressively rendered as the same 1.7px rounded-stroke SVG family.
-        const T8_ICON_MAP = {
-            'fa-calendar-days': 'scroll', 'fa-calendar-plus': 'scroll', 'fa-list-check': 'list',
-            'fa-quote-left': 'spark', 'fa-arrow-rotate-right': 'spark', 'fa-mug-hot': 'cup',
-            'fa-chevron-right': 'chevron-right', 'fa-chevron-left': 'chevron-left', 'fa-chevron-down': 'chevron-down', 'fa-chevron-up': 'chevron-up',
-            'fa-wind': 'wind', 'fa-download': 'scroll', 'fa-sparkles': 'spark', 'fa-heart': 'heart',
-            'fa-message': 'message', 'fa-scale-balanced': 'scale', 'fa-volume-high': 'volume',
-            'fa-volume-xmark': 'volume', 'fa-fire': 'flame', 'fa-chart-line': 'chart',
-            'fa-chart-pie': 'chart', 'fa-bolt': 'bolt', 'fa-sliders': 'sliders', 'fa-newspaper': 'scroll',
-            'fa-microchip': 'spark', 'fa-mug-saucer': 'cup', 'fa-calculator': 'list',
-            'fa-plus': 'plus', 'fa-minus': 'minus', 'fa-list': 'list', 'fa-times': 'close', 'fa-xmark': 'close',
-            'fa-compass': 'spark', 'fa-rotate': 'refresh', 'fa-location-crosshairs': 'pin',
-            'fa-map-location-dot': 'pin', 'fa-camera': 'camera', 'fa-check': 'check',
-            'fa-trash-can': 'trash', 'fa-trash-alt': 'trash', 'fa-search': 'search',
-            'fa-bed': 'spark', 'fa-tag': 'ribbon', 'fa-trophy': 'spark', 'fa-pen': 'ribbon',
-            'fa-briefcase': 'bag', 'fa-exclamation-triangle': 'alert', 'fa-glass-cheers': 'spark',
-            'fa-book-open': 'scroll', 'fa-mobile-screen': 'message', 'fa-building-user': 'bag',
-            'fa-robot': 'spark', 'fa-fingerprint': 'heart', 'fa-arrow-right': 'bolt',
-            'fa-arrow-up': 'bolt', 'fa-arrow-up-right-from-square': 'bolt', 'fa-circle-notch': 'spark',
-            'fa-bell': 'spark', 'fa-line': 'message'
-        };
-        const T8_EMOJI_MAP = {
-            '☀️': 'sun', '🌤️': 'sun', '🌦️': 'sun', '⛅': 'sun', '🌧️': 'drop', '💧': 'drop',
-            '📜': 'scroll', '🔒': 'lock', '✅': 'check', '✦': 'spark', '✨': 'spark',
-            '⭐': 'spark', '💡': 'spark', '🌙': 'lamp', '🎀': 'ribbon', '🏮': 'lamp',
-            '🫖': 'bag', '🌿': 'spark', '🐾': 'heart', '🟢': 'check', '🎉': 'spark'
-        };
-        function t8Icon(name, className = '') {
-            const safeName = T8_ICON_MAP[name] || T8_EMOJI_MAP[name] || name || 'spark';
-            return `<svg class="t8-icon ${className}" aria-hidden="true" focusable="false"><use href="#t8i-${safeName}"></use></svg>`;
-        }
-        function normalizeLegacyIcon(node) {
-            if (!(node instanceof Element) || !['I', 'SPAN'].includes(node.tagName) || node.querySelector('.t8-icon')) return;
-            const sourceClass = [...node.classList].find(name => T8_ICON_MAP[name]);
-            if (!sourceClass) return;
-            if (node.tagName === 'SPAN') {
-                node.className = [...node.classList].filter(name => !name.startsWith('fa')).join(' ');
-                node.innerHTML = t8Icon(T8_ICON_MAP[sourceClass]);
-                return;
-            }
-            const replacement = document.createElement('span');
-            [...node.attributes].forEach(attribute => {
-                if (attribute.name !== 'class') replacement.setAttribute(attribute.name, attribute.value);
-            });
-            replacement.className = [...node.classList].filter(name => !name.startsWith('fa')).join(' ');
-            replacement.innerHTML = t8Icon(T8_ICON_MAP[sourceClass]);
-            node.replaceWith(replacement);
-        }
-        function normalizeStandaloneEmoji(node) {
-            if (!(node instanceof Element) || node.closest('svg, script, style')) return;
-            const text = node.childElementCount === 0 ? node.textContent.trim() : '';
-            const icon = T8_EMOJI_MAP[text];
-            if (!icon) return;
-            node.textContent = '';
-            node.innerHTML = t8Icon(icon);
-        }
-        function normalizeLegacyIcons(root = document) {
-            if (root instanceof Element) {
-                normalizeLegacyIcon(root);
-                normalizeStandaloneEmoji(root);
-            }
-            root.querySelectorAll?.('i[class*="fa-"]').forEach(normalizeLegacyIcon);
-            root.querySelectorAll?.('span, button').forEach(normalizeStandaloneEmoji);
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            normalizeLegacyIcons();
-            new MutationObserver(mutations => mutations.forEach(mutation => {
-                if (mutation.type === 'attributes') normalizeLegacyIcon(mutation.target);
-                mutation.addedNodes.forEach(node => {
-                    normalizeLegacyIcons(node);
-                    if (node.nodeType === Node.TEXT_NODE) normalizeStandaloneEmoji(node.parentElement);
-                });
-                if (mutation.type === 'characterData') normalizeStandaloneEmoji(mutation.target.parentElement);
-            })).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['class'] });
-        });
-        // The currently displayed shift.  Its storage key is the date on which
-        // the shift started, rather than necessarily the calendar date now.
-        // This keeps a night shift intact after midnight and after a reload.
         let punchRecords = [];
-        let activeWorkDate = null;
         let reminderTimer = null;
         let alarmLoopTimer = null;
         let stretchCheckTimer = null;
@@ -8845,89 +8587,6 @@
             }
         }
 
-        let _ringTimelineTooltipTimer = null;
-
-        function ringClockPoint(date, radius) {
-            const minutes = date.getHours() * 60 + date.getMinutes() + date.getSeconds() / 60;
-            const angle = (minutes / 1440) * Math.PI * 2;
-            return {
-                x: 132 + radius * Math.cos(angle),
-                y: 132 + radius * Math.sin(angle),
-                minutes
-            };
-        }
-
-        function createRingSvgElement(name, attributes = {}) {
-            const node = document.createElementNS('http://www.w3.org/2000/svg', name);
-            Object.entries(attributes).forEach(([key, value]) => node.setAttribute(key, String(value)));
-            return node;
-        }
-
-        function showRingTimelineTooltip(record) {
-            const tooltip = document.getElementById('ringTimelineTooltip');
-            if (!tooltip || !record?.time) return;
-            tooltip.textContent = `${formatTime(record.time)} · ${record.type === 'in' ? '上班' : '下班'}`;
-            tooltip.classList.add('show');
-            if (_ringTimelineTooltipTimer) clearTimeout(_ringTimelineTooltipTimer);
-            _ringTimelineTooltipTimer = setTimeout(() => tooltip.classList.remove('show'), 2200);
-        }
-
-        function renderRingTimeline() {
-            const group = document.getElementById('ringTimelineMarkers');
-            if (!group) return;
-            group.replaceChildren();
-            const records = Array.isArray(punchRecords) ? punchRecords.filter(record => record?.time && ['in', 'out'].includes(record.type)) : [];
-            if (!records.length) return;
-
-            // A thin outer arc tells the story of each completed work segment.
-            for (let index = 0; index < records.length; index += 2) {
-                const startRecord = records[index];
-                const endRecord = records[index + 1];
-                if (!startRecord || startRecord.type !== 'in') continue;
-                const start = new Date(startRecord.time);
-                const end = endRecord?.type === 'out' ? new Date(endRecord.time) : new Date();
-                if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) continue;
-                const from = ringClockPoint(start, 123);
-                const to = ringClockPoint(end, 123);
-                const elapsedMinutes = Math.min((end - start) / 60000, 24 * 60);
-                const arc = createRingSvgElement('path', {
-                    d: `M ${from.x.toFixed(2)} ${from.y.toFixed(2)} A 123 123 0 ${elapsedMinutes > 720 ? 1 : 0} 1 ${to.x.toFixed(2)} ${to.y.toFixed(2)}`,
-                    class: 'ring-timeline-arc'
-                });
-                group.appendChild(arc);
-            }
-
-            records.forEach(record => {
-                const point = ringClockPoint(new Date(record.time), 123);
-                const outer = ringClockPoint(new Date(record.time), 130);
-                const marker = createRingSvgElement('g', {
-                    class: `ring-timeline-marker ring-timeline-marker--${record.type}`,
-                    tabindex: '0',
-                    role: 'button',
-                    'aria-label': `${formatTime(record.time)} ${record.type === 'in' ? '上班' : '下班'}刻度`
-                });
-                marker.appendChild(createRingSvgElement('line', {
-                    x1: point.x.toFixed(2), y1: point.y.toFixed(2),
-                    x2: outer.x.toFixed(2), y2: outer.y.toFixed(2),
-                    class: 'ring-timeline-tick'
-                }));
-                marker.appendChild(createRingSvgElement('circle', { cx: point.x.toFixed(2), cy: point.y.toFixed(2), r: 4.2 }));
-                marker.addEventListener('click', event => { event.stopPropagation(); showRingTimelineTooltip(record); });
-                marker.addEventListener('keydown', event => {
-                    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showRingTimelineTooltip(record); }
-                });
-                group.appendChild(marker);
-            });
-
-            if (records.length % 2 === 1 && records[records.length - 1].type === 'in') {
-                const nowPoint = ringClockPoint(new Date(), 123);
-                group.appendChild(createRingSvgElement('circle', {
-                    cx: nowPoint.x.toFixed(2), cy: nowPoint.y.toFixed(2), r: 3.2,
-                    class: 'ring-timeline-now', 'aria-label': '目前時間'
-                }));
-            }
-        }
-
         // === IPPITSU: Ink Drop Punch Animation ===
         function triggerInkDrop(clientX, clientY, isWorking) {
             const overlay = document.getElementById('inkDropOverlay');
@@ -9085,14 +8744,6 @@
         // === 通知人格化 ===
         // === Apple Dynamic Capsule Notification (頂部非侵入式禪意膠囊) ===
         let _zenCapsuleTimer = null;
-        let _zenCapsuleLastShownAt = 0;
-        let _zenCapsuleLastKey = '';
-        const ZEN_CAPSULE_COOLDOWN_MS = 30000;
-
-        function compactNotificationText(value, maxLength) {
-            const text = String(value || '').replace(/\s+/g, ' ').trim();
-            return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
-        }
 
         // ===== ROCK-SOLID RESILIENT AUDIO ENGINE =====
         let _sharedAudioCtx = null;
@@ -9200,21 +8851,7 @@
             } catch (e) { }
         }
 
-        function showZenCapsuleNotification({ title, message, emoji = '🌿', duration = 3500, pushToSystem = false, priority = 'normal' }) {
-            const shortTitle = compactNotificationText(title, 18);
-            const shortMessage = compactNotificationText(message, 34);
-            const now = Date.now();
-            const key = `${emoji}|${shortTitle}|${shortMessage}`;
-            const isHighPriority = priority === 'high' || pushToSystem;
-
-            // Routine feedback is intentionally quiet: one capsule at most every
-            // 30 seconds, and never repeat the same message within 10 minutes.
-            if (!isHighPriority && (
-                now - _zenCapsuleLastShownAt < ZEN_CAPSULE_COOLDOWN_MS ||
-                (key === _zenCapsuleLastKey && now - _zenCapsuleLastShownAt < 10 * 60 * 1000)
-            )) return false;
-            _zenCapsuleLastShownAt = now;
-            _zenCapsuleLastKey = key;
+        function showZenCapsuleNotification({ title, message, emoji = '🌿', duration = 3500, pushToSystem = false }) {
             const capsule = document.getElementById('zenDynamicCapsule');
             if (capsule) {
                 const emojiEl = document.getElementById('zenCapsuleEmoji');
@@ -9222,8 +8859,8 @@
                 const msgEl = document.getElementById('zenCapsuleMsg');
 
                 if (emojiEl) emojiEl.textContent = emoji;
-                if (titleEl) titleEl.textContent = shortTitle;
-                if (msgEl) msgEl.textContent = shortMessage;
+                if (titleEl) titleEl.textContent = title;
+                if (msgEl) msgEl.textContent = message;
 
                 capsule.classList.add('active');
 
@@ -9234,7 +8871,7 @@
                 if (_zenCapsuleTimer) clearTimeout(_zenCapsuleTimer);
                 _zenCapsuleTimer = setTimeout(() => {
                     dismissZenCapsule();
-                }, Math.min(duration, isHighPriority ? 3000 : 2200));
+                }, duration);
             }
 
             // 僅在明確需要系統推播（如背景超時鬧鐘/達標）且非純站內操作時，才發送至手機通知中心
@@ -9244,25 +8881,24 @@
                         if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                             navigator.serviceWorker.ready.then(reg => {
                                 reg.showNotification(`${emoji} ${title}`, {
-                                    body: shortMessage,
+                                    body: message,
                                     icon: './favicon.ico',
                                     badge: './favicon.ico',
                                     vibrate: [100, 50, 100],
                                     tag: 'time8-alarm',
-                                    renotify: false
+                                    renotify: true
                                 });
                             }).catch(() => {
-                                new Notification(`${emoji} ${shortTitle}`, { body: shortMessage, icon: './favicon.ico' });
+                                new Notification(`${emoji} ${title}`, { body: message, icon: './favicon.ico' });
                             });
                         } else {
-                            new Notification(`${emoji} ${shortTitle}`, { body: shortMessage, icon: './favicon.ico' });
+                            new Notification(`${emoji} ${title}`, { body: message, icon: './favicon.ico' });
                         }
                     }
                 } catch (e) {
                     console.log('System notification note:', e);
                 }
             }
-            return true;
         }
 
         function dismissZenCapsule() {
@@ -9274,14 +8910,13 @@
             }
         }
 
-        function triggerAlarm(title, body, emoji = '⏰', pushToSystem = false) {
+        function triggerAlarm(title, body, emoji = '⏰') {
             showZenCapsuleNotification({
                 emoji: emoji,
                 title: title,
                 message: body,
-                duration: 2600,
-                pushToSystem,
-                priority: pushToSystem ? 'high' : 'normal'
+                duration: 4000,
+                pushToSystem: true
             });
         }
 
@@ -10265,7 +9900,7 @@
                 title: '提示',
                 message: message,
                 emoji: type === 'work' ? '✨' : '🌿',
-                duration: 2200
+                duration: 3000
             });
         }
 
@@ -10958,11 +10593,11 @@
             const popEl = document.getElementById('weatherPopSub');
             const badgeEl = document.getElementById('ringWeatherBadge');
 
-            if (iconEl) iconEl.innerHTML = t8Icon(T8_EMOJI_MAP[_weatherData.icon] || 'sun');
+            if (iconEl) iconEl.textContent = _weatherData.icon || '☀️';
             if (tempEl) tempEl.textContent = `${_weatherData.temp || 28}°`;
             if (popEl) {
                 if (_weatherData.popMax !== undefined) {
-                    popEl.innerHTML = `${t8Icon('drop')} ${_weatherData.popMax}%`;
+                    popEl.textContent = `💧 ${_weatherData.popMax}%`;
                     popEl.classList.remove('hidden');
                 } else {
                     popEl.classList.add('hidden');
@@ -13637,9 +13272,7 @@
                 if (!Array.isArray(recs)) continue;
                 recs.forEach(r => {
                     if (r && r.time) {
-                        // V2 records retain the date their shift started.  Legacy
-                        // records have no workDate and keep the previous behaviour.
-                        const targetKey = r.workDate || getLocalDateStr(new Date(r.time));
+                        const targetKey = getLocalDateStr(new Date(r.time));
                         if (!normalizedHistory[targetKey]) normalizedHistory[targetKey] = [];
                         if (!normalizedHistory[targetKey].some(ex => ex.time === r.time && ex.type === r.type)) {
                             normalizedHistory[targetKey].push(r);
@@ -13655,6 +13288,17 @@
 
             const todayKey = getTodayKey();
 
+            // 3. 自動結算過去未打下班的班次
+            for (const dateKey in normalizedHistory) {
+                if (dateKey < todayKey) {
+                    const recs = normalizedHistory[dateKey];
+                    if (recs.length > 0 && recs.length % 2 !== 0) {
+                        const autoOut = dateKey + 'T23:59:59';
+                        recs.push({ time: autoOut, type: 'out', task: '（自動結算）' });
+                    }
+                }
+            }
+
             history = normalizedHistory;
             try {
                 localStorage.setItem('timecardHistory', JSON.stringify(history));
@@ -13662,18 +13306,8 @@
                 console.error("Failed to save normalized history:", e);
             }
 
-            // 4. Restore the newest open shift from any work date.  Do not
-            // auto-close a previous date at midnight: night shifts are valid.
-            const openShifts = Object.entries(history)
-                .filter(([, recs]) => Array.isArray(recs) && recs.length % 2 !== 0)
-                .sort(([, a], [, b]) => new Date(b[b.length - 1].time) - new Date(a[a.length - 1].time));
-            if (openShifts.length > 0) {
-                activeWorkDate = openShifts[0][0];
-                punchRecords = openShifts[0][1];
-            } else {
-                activeWorkDate = todayKey;
-                punchRecords = history[todayKey] || [];
-            }
+            // 4. 載入今日紀錄 (若無則預設空陣列)
+            punchRecords = history[todayKey] || [];
 
             const savedOffDays = localStorage.getItem('offDays');
             if (savedOffDays) {
@@ -13687,8 +13321,7 @@
         function saveData() {
             try {
                 const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-                const workDate = activeWorkDate || getTodayKey();
-                history[workDate] = punchRecords;
+                history[getTodayKey()] = punchRecords;
                 localStorage.setItem('timecardHistory', JSON.stringify(history));
             } catch (e) {
                 console.error("Failed to save punch records:", e);
@@ -13709,8 +13342,8 @@
                     let end;
                     if (records[i + 1] && records[i + 1].type === 'out') {
                         end = new Date(records[i + 1].time);
-                    } else if (dateKey === activeWorkDate && punchRecords.length % 2 !== 0) {
-                        end = new Date(); // ongoing shift, including a night shift
+                    } else if (dateKey === getTodayKey()) {
+                        end = new Date(); // ongoing session today
                     } else {
                         // Past day unclosed — count until end of that day
                         end = new Date(dateKey + 'T23:59:59');
@@ -13775,17 +13408,20 @@
 
         function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
 
-        // Find the most recent real punch-out, regardless of its calendar date.
-        // A night shift may end after midnight, so date-key comparisons are not
-        // sufficient for the 11-hour rest calculation.
+        // 回溯尋找「前一個工作日 (跨日)」的最後一次下班 (out) 紀錄，供 11 小時跨日班次間隔檢測
         function getLastPreviousDayPunchOut() {
             try {
                 const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-                const now = Date.now();
-                return Object.values(history)
-                    .flat()
-                    .filter(r => r && r.type === 'out' && r.time && new Date(r.time).getTime() < now)
-                    .sort((a, b) => new Date(b.time) - new Date(a.time))[0] || null;
+                const todayKey = getTodayKey();
+                const pastDates = Object.keys(history).filter(d => d < todayKey).sort().reverse();
+                for (const dateKey of pastDates) {
+                    const recs = history[dateKey] || [];
+                    for (let i = recs.length - 1; i >= 0; i--) {
+                        if (recs[i] && recs[i].type === 'out' && recs[i].time) {
+                            return recs[i];
+                        }
+                    }
+                }
             } catch (e) {
                 console.error("Failed to lookup past out records:", e);
             }
@@ -14880,19 +14516,6 @@
 
             const now = new Date();
             const type = getNextPunchType();
-            const todayKey = getLocalDateStr(now);
-
-            // A completed night shift belongs to its start date.  Starting a
-            // fresh shift after midnight must not append to that old shift.
-            if (type === 'in' && punchRecords.length % 2 === 0 && activeWorkDate && activeWorkDate !== todayKey) {
-                try {
-                    const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-                    punchRecords = history[todayKey] || [];
-                } catch (e) {
-                    punchRecords = [];
-                }
-                activeWorkDate = todayKey;
-            }
             const taskInput = document.getElementById('taskInput');
             let taskName = "";
             let restIntervalMins = null;
@@ -14985,15 +14608,8 @@
             }
 
             const isFirstPunchInToday = (type === 'in' && punchRecords.length === 0);
-            if (isFirstPunchInToday) activeWorkDate = todayKey;
 
-            punchRecords.push({
-                time: now.toISOString(),
-                type: type,
-                task: taskName,
-                restIntervalMins: restIntervalMins,
-                workDate: activeWorkDate || getLocalDateStr(now)
-            });
+            punchRecords.push({ time: now.toISOString(), type: type, task: taskName, restIntervalMins: restIntervalMins });
             saveData();
             updateDisplay();
 
@@ -15033,14 +14649,7 @@
             if (btn.dataset.confirm === 'true') {
                 playSingleClickSound("D4");
                 punchRecords = [];
-                try {
-                    const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-                    delete history[activeWorkDate || getTodayKey()];
-                    localStorage.setItem('timecardHistory', JSON.stringify(history));
-                } catch (e) {
-                    console.error("Failed to clear punch records:", e);
-                }
-                activeWorkDate = getTodayKey();
+                saveData();
                 updateDisplay();
                 // Reset UI
                 btn.dataset.confirm = 'false';
@@ -15108,8 +14717,7 @@
             if (nextType === 'in') {
                 // 狀態：休息中/準備上班
                 statusIconBg.style.background = 'var(--fill)';
-                statusIcon.className = '';
-                statusIcon.innerHTML = t8Icon('cup');
+                statusIcon.className = "fas fa-mug-hot";
                 statusIcon.style.color = 'var(--label-tertiary)';
                 nextActionText.textContent = "休息中";
                 // Punch button: hollow circle
@@ -15136,8 +14744,7 @@
             } else {
                 // 狀態：工作中/準備下班
                 statusIconBg.style.background = 'rgba(110,125,106,0.12)';
-                statusIcon.className = '';
-                statusIcon.innerHTML = t8Icon('bag');
+                statusIcon.className = "fas fa-briefcase";
                 statusIcon.style.color = 'var(--blue)';
                 // Punch button: filled circle (working)
                 const glyph2 = document.getElementById('punchGlyph');
@@ -15152,8 +14759,7 @@
                 // 4小時休息提醒邏輯
                 if (Date.now() > targetTime) {
                     statusIconBg.style.background = 'rgba(154,64,64,0.10)';
-                    statusIcon.className = '';
-                    statusIcon.innerHTML = t8Icon('alert');
+                    statusIcon.className = "fas fa-exclamation-triangle";
                     statusIcon.style.color = 'var(--red)';
                     nextActionText.innerHTML = `<span style="color:var(--red);font-weight:700">工作過久！請立即休息</span>`;
                 } else {
@@ -15204,7 +14810,6 @@
 
                 // Update ring progress & leading bead
                 updateBrushstroke(pct, result.total >= targetMin);
-                renderRingTimeline();
             }
 
             // 預計下班時間與 8小時提醒邏輯
@@ -15309,17 +14914,13 @@
                 const lastInTime = new Date(lastRecord.time).getTime();
                 const sessionMins = (Date.now() - lastInTime) / 60000;
                 if (sessionMins >= 230) {
-                    // One automatic work reminder per continuous session is
-                    // enough. Do not add a second alert after the configured
-                    // work-break reminder has already been shown.
-                    if (!window._fourHourAlarmTriggered && !window._alarmTriggered) {
+                    if (!window._fourHourAlarmTriggered) {
                         window._fourHourAlarmTriggered = true;
                         showZenCapsuleNotification({
                             emoji: '⏰',
-                            title: '該休息了',
-                            message: '連續工作接近 4 小時',
-                            duration: 2600,
-                            priority: 'high'
+                            title: '連續工作 230 分鐘',
+                            message: '即將滿 4 小時上限，建議適度休息',
+                            duration: 4000
                         });
                     }
                 } else {
@@ -15336,7 +14937,7 @@
                 if (Date.now() > targetTime) {
                     if (!window._alarmTriggered) {
                         window._alarmTriggered = true;
-                        triggerAlarm('休息提醒', '記得休息一下', '☕');
+                        triggerAlarm(`已工作滿 ${appSettings.workReminderMinutes || 120} 分鐘`, '記得休息一下', '☕');
                     }
                 }
             } else {
@@ -15352,7 +14953,7 @@
                     if (restMins >= (appSettings.restReminderMinutes || 20)) {
                         if (!window._restAlarmTriggered) {
                             window._restAlarmTriggered = true;
-                        triggerAlarm('休息結束', '準備繼續工作', '🌱');
+                            triggerAlarm(`已休息滿 ${appSettings.restReminderMinutes || 20} 分鐘`, '準備繼續工作', '🌱');
                         }
                     }
                 }
@@ -15364,7 +14965,7 @@
             if (result.total >= targetMin && punchRecords.length > 0) {
                 if (!window._targetGoalAlarmTriggered) {
                     window._targetGoalAlarmTriggered = true;
-                    triggerAlarm('今日達標', `已滿 ${appSettings.targetHours || 8} 小時`, '🎉', true);
+                    triggerAlarm('今日工時已達標', `已滿 ${appSettings.targetHours || 8} 小時`, '🎉');
                 }
             } else if (result.total < targetMin) {
                 window._targetGoalAlarmTriggered = false;
@@ -15402,7 +15003,6 @@
                     if (s.out) {
                         const outTime = new Date(s.out.time);
                         outStr = outTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-                        if (getLocalDateStr(outTime) !== getLocalDateStr(inTime)) outStr += ' <small style="color:var(--purple);font-weight:600">次日</small>';
                         const diffMins = (outTime - inTime) / 60000;
                         const dur = formatDurationFancy(diffMins);
                         durLabel = `${dur.h}h ${Math.round(dur.m)}m`;
