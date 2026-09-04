@@ -2344,16 +2344,16 @@
 
         .ring-timeline-arc {
             fill: none;
-            stroke: var(--green);
-            stroke-width: 5;
+            stroke: var(--label-quaternary);
+            stroke-width: 2.5;
             stroke-linecap: round;
-            opacity: .88;
+            opacity: .38;
             pointer-events: none;
         }
 
-        .ring-timeline-arc--active { stroke: var(--blue); }
-        .ring-timeline-arc--session-1 { stroke: var(--purple); }
-        .ring-timeline-arc--session-2 { stroke: var(--orange); }
+        .ring-timeline-arc--active { stroke: var(--blue); opacity: .58; }
+        .ring-timeline-arc--in { stroke: var(--green); stroke-width: 3.5; opacity: .95; }
+        .ring-timeline-arc--out { stroke: var(--red); stroke-width: 3.5; opacity: .9; }
 
         .ring-timeline-summary {
             display: none;
@@ -8856,13 +8856,14 @@
                     }));
                 };
 
-                const sessionColor = index / 2 % 3;
-                appendArc(
-                    start,
-                    end,
-                    elapsedMinutes,
-                    `ring-timeline-arc${endRecord?.type === 'out' ? ` ring-timeline-arc--session-${sessionColor}` : ' ring-timeline-arc--active'}`
-                );
+                appendArc(start, end, elapsedMinutes, `ring-timeline-arc${endRecord?.type === 'out' ? '' : ' ring-timeline-arc--active'}`);
+                const accentMinutes = Math.min(10, Math.max(2, elapsedMinutes / 3));
+                const inAccentEnd = new Date(start.getTime() + accentMinutes * 60000);
+                appendArc(start, inAccentEnd, accentMinutes, 'ring-timeline-arc ring-timeline-arc--in');
+                if (endRecord?.type === 'out') {
+                    const outAccentStart = new Date(end.getTime() - accentMinutes * 60000);
+                    appendArc(outAccentStart, end, accentMinutes, 'ring-timeline-arc ring-timeline-arc--out');
+                }
             }
         }
 
