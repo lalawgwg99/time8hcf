@@ -73,7 +73,10 @@ export async function onRequestPost({ request, env }) {
         'X-Title': 'TIME8 Companion AI',
       },
       body: JSON.stringify({
-        model: 'arcee-ai/trinity-mini:free',
+        // OpenRouter maintains this route as a live free-model fallback. A
+        // named free model can disappear without notice, which previously
+        // made the production companion unavailable.
+        model: 'openrouter/free',
         messages: body.messages,
         max_tokens: 750,
         temperature: 0.7,
