@@ -2338,10 +2338,6 @@
             transition: stroke-dashoffset 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), stroke 0.6s ease;
         }
 
-        #ringLeadBead {
-            transition: cx 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), cy 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
-        }
-
         .ring-timeline-arc {
             fill: none;
             stroke: var(--green);
@@ -2354,18 +2350,6 @@
         .ring-timeline-arc--active { stroke: var(--blue); }
         .ring-timeline-arc--session-1 { stroke: var(--purple); }
         .ring-timeline-arc--session-2 { stroke: var(--orange); }
-
-        .ring-timeline-summary {
-            display: none;
-            margin-top: 1px;
-            color: var(--label-tertiary);
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: .02em;
-        }
-        .ring-timeline-summary.show {
-            display: block;
-        }
 
         .ring-inner-content {
             position: absolute;
@@ -4451,8 +4435,6 @@
                             <circle id="progressRing" cx="132" cy="132" r="114" fill="none"
                                 stroke="url(#ringGradientWarm)" stroke-width="12" stroke-linecap="round"
                                 stroke-dasharray="716.28" stroke-dashoffset="716.28" />
-                            <!-- Leading Light Bead -->
-                            <circle id="ringLeadBead" cx="246" cy="132" r="6" fill="#FFFFFF" filter="url(#beadShadow)" opacity="0" />
                             <!-- Real punch-time markers, positioned on a 24-hour clock. -->
                             <g id="ringTimelineMarkers" aria-label="打卡時間刻度"></g>
                         </svg>
@@ -4465,7 +4447,6 @@
                                 <span class="live-pulse-dot" id="liveStatusDot"></span>
                                 <span id="liveStatusText">靜待啟程</span>
                             </div>
-                            <div id="ringTimelineSummary" class="ring-timeline-summary" aria-live="polite"></div>
                             <span id="strokePct" class="ring-pct-badge">0%</span>
                         </div>
                     </div>
@@ -8628,29 +8609,6 @@
                 if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(196, 168, 122, 0.09) 0%, transparent 70%)';
             }
 
-            // Leading Light Bead
-            const bead = document.getElementById('ringLeadBead');
-            if (bead) {
-                if (clampedPct >= 1.5) {
-                    const angle = (clampedPct / 100) * 360;
-                    const rad = (angle * Math.PI) / 180;
-                    const cx = 132 + 114 * Math.cos(rad);
-                    const cy = 132 + 114 * Math.sin(rad);
-                    bead.setAttribute('cx', cx.toFixed(2));
-                    bead.setAttribute('cy', cy.toFixed(2));
-                    bead.style.opacity = '1';
-                    if (petRarity === 'hidden') {
-                        bead.setAttribute('fill', '#FFE082');
-                    } else if (petRarity === 'epic') {
-                        bead.setAttribute('fill', '#E1BEE7');
-                    } else {
-                        bead.setAttribute('fill', '#FFFFFF');
-                    }
-                } else {
-                    bead.style.opacity = '0';
-                }
-            }
-
             const pctEl = document.getElementById('strokePct');
             if (pctEl) {
                 pctEl.textContent = isComplete ? '100% 達成' : Math.round(clampedPct) + '%';
@@ -8686,17 +8644,6 @@
 
         function renderRingTimeline() {
             const group = document.getElementById('ringTimelineMarkers');
-            const summary = document.getElementById('ringTimelineSummary');
-            if (!group) return;
-            group.replaceChildren();
-            const records = Array.isArray(punchRecords) ? punchRecords.filter(record => record?.time && ['in', 'out'].includes(record.type)) : [];
-            if (summary) {
-                const latestIn = [...records].reverse().find(record => record.type === 'in');
-                const latestOut = records[records.length - 1]?.type === 'out' ? records[records.length - 1] : null;
-                summary.textContent = latestIn ? `${formatTime(latestIn.time)} 上班 · ${latestOut ? `${formatTime(latestOut.time)} 下班` : '進行中'}` : '';
-                summary.classList.toggle('show', Boolean(latestIn));
-            }
-
             // A single restrained trace shows real elapsed clock time without
             // turning the primary work-progress ring into a busy clock face.
             for (let index = 0; index < records.length; index += 2) {
