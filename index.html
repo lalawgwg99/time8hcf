@@ -2342,29 +2342,98 @@
             transition: cx 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), cy 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
         }
 
-        .ring-timeline-arc {
+        .ring-dial-outline {
             fill: none;
+            stroke: var(--separator);
+            stroke-width: 1;
+        }
+
+        .ring-dial-minor,
+        .ring-dial-major {
             stroke: var(--label-quaternary);
-            stroke-width: 2.5;
             stroke-linecap: round;
-            opacity: .38;
+            opacity: .7;
             pointer-events: none;
         }
 
-        .ring-timeline-arc--active { stroke: var(--blue); opacity: .58; }
-        .ring-timeline-arc--in { stroke: var(--green); stroke-width: 3.5; opacity: .95; }
-        .ring-timeline-arc--out { stroke: var(--red); stroke-width: 3.5; opacity: .9; }
+        .ring-dial-minor { stroke-width: .8; }
+        .ring-dial-major { stroke: var(--label-secondary); stroke-width: 1.35; opacity: .82; }
 
-        .ring-timeline-summary {
-            display: none;
-            margin-top: 1px;
-            color: var(--label-tertiary);
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: .02em;
+        .ring-dial-label {
+            fill: var(--label-tertiary);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            font-size: 8px;
+            font-weight: 650;
+            letter-spacing: .04em;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
         }
-        .ring-timeline-summary.show {
-            display: block;
+
+        .ring-timeline-arc {
+            fill: none;
+            stroke: var(--green);
+            stroke-width: 5.5;
+            stroke-linecap: round;
+            opacity: .9;
+            pointer-events: none;
+            filter: drop-shadow(0 1px 1px rgba(77, 122, 82, .18));
+        }
+
+        .ring-timeline-arc--active { stroke: var(--blue); stroke-dasharray: 2 3.5; }
+
+        .ring-timeline-tick {
+            stroke: var(--label-secondary);
+            stroke-width: 1.35;
+            stroke-linecap: round;
+        }
+
+        .ring-timeline-marker {
+            cursor: pointer;
+        }
+
+        .ring-timeline-marker--in circle {
+            fill: var(--blue);
+            stroke: var(--card);
+            stroke-width: 2;
+            filter: drop-shadow(0 1px 2px rgba(110, 125, 106, .38));
+        }
+
+        .ring-timeline-marker--out circle {
+            fill: var(--card);
+            stroke: var(--blue);
+            stroke-width: 2;
+        }
+
+        .ring-timeline-now {
+            fill: var(--green);
+            stroke: var(--card);
+            stroke-width: 1.5;
+            filter: drop-shadow(0 0 3px rgba(77, 122, 82, .65));
+        }
+
+        .ring-timeline-tooltip {
+            position: absolute;
+            left: 50%;
+            bottom: -4px;
+            transform: translate(-50%, 8px);
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+            background: var(--label);
+            color: var(--bg);
+            border-radius: 999px;
+            padding: 4px 9px;
+            font-size: 10px;
+            font-weight: 650;
+            letter-spacing: .02em;
+            transition: opacity .18s ease, transform .18s ease;
+            z-index: 3;
+        }
+
+        .ring-timeline-tooltip.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
         }
 
         .ring-inner-content {
@@ -4456,6 +4525,7 @@
                             <!-- Real punch-time markers, positioned on a 24-hour clock. -->
                             <g id="ringTimelineMarkers" aria-label="打卡時間刻度"></g>
                         </svg>
+                        <div id="ringTimelineTooltip" class="ring-timeline-tooltip" role="status" aria-live="polite"></div>
                         <div class="ring-inner-content">
                             <div class="hero-eyebrow" id="heroEyebrow">今日工時</div>
                             <div id="totalHours">
@@ -4465,7 +4535,6 @@
                                 <span class="live-pulse-dot" id="liveStatusDot"></span>
                                 <span id="liveStatusText">靜待啟程</span>
                             </div>
-                            <div id="ringTimelineSummary" class="ring-timeline-summary" aria-live="polite"></div>
                             <span id="strokePct" class="ring-pct-badge">0%</span>
                         </div>
                     </div>
@@ -8808,6 +8877,8 @@
             }
         }
 
+        let _ringTimelineTooltipTimer = null;
+
         function ringClockPoint(date, radius) {
             const minutes = date.getHours() * 60 + date.getMinutes() + date.getSeconds() / 60;
             const angle = (minutes / 1440) * Math.PI * 2;
@@ -8824,21 +8895,46 @@
             return node;
         }
 
+        function showRingTimelineTooltip(record) {
+            const tooltip = document.getElementById('ringTimelineTooltip');
+            if (!tooltip || !record?.time) return;
+            tooltip.textContent = `${formatTime(record.time)} · ${record.type === 'in' ? '上班' : '下班'}`;
+            tooltip.classList.add('show');
+            if (_ringTimelineTooltipTimer) clearTimeout(_ringTimelineTooltipTimer);
+            _ringTimelineTooltipTimer = setTimeout(() => tooltip.classList.remove('show'), 2200);
+        }
+
         function renderRingTimeline() {
             const group = document.getElementById('ringTimelineMarkers');
-            const summary = document.getElementById('ringTimelineSummary');
             if (!group) return;
             group.replaceChildren();
             const records = Array.isArray(punchRecords) ? punchRecords.filter(record => record?.time && ['in', 'out'].includes(record.type)) : [];
-            if (summary) {
-                const latestIn = [...records].reverse().find(record => record.type === 'in');
-                const latestOut = records[records.length - 1]?.type === 'out' ? records[records.length - 1] : null;
-                summary.textContent = latestIn ? `${formatTime(latestIn.time)} 上班 · ${latestOut ? `${formatTime(latestOut.time)} 下班` : '進行中'}` : '';
-                summary.classList.toggle('show', Boolean(latestIn));
+
+            // The dial remains visible before the first punch. Its quiet hourly
+            // rhythm provides context; records only light up the lived segment.
+            group.appendChild(createRingSvgElement('circle', { cx: 132, cy: 132, r: 124, class: 'ring-dial-outline' }));
+            for (let hour = 0; hour < 24; hour += 1) {
+                const major = hour % 3 === 0;
+                const inner = ringClockPoint(new Date(2000, 0, 1, hour), major ? 120 : 122);
+                const outer = ringClockPoint(new Date(2000, 0, 1, hour), 126);
+                group.appendChild(createRingSvgElement('line', {
+                    x1: inner.x.toFixed(2), y1: inner.y.toFixed(2),
+                    x2: outer.x.toFixed(2), y2: outer.y.toFixed(2),
+                    class: major ? 'ring-dial-major' : 'ring-dial-minor'
+                }));
+                if (hour % 6 === 0) {
+                    const labelPoint = ringClockPoint(new Date(2000, 0, 1, hour), 136);
+                    const label = createRingSvgElement('text', {
+                        x: labelPoint.x.toFixed(2), y: labelPoint.y.toFixed(2),
+                        class: 'ring-dial-label', transform: `rotate(90 ${labelPoint.x.toFixed(2)} ${labelPoint.y.toFixed(2)})`
+                    });
+                    label.textContent = String(hour).padStart(2, '0');
+                    group.appendChild(label);
+                }
             }
 
-            // A single restrained trace shows real elapsed clock time without
-            // turning the primary work-progress ring into a busy clock face.
+            // Each recorded shift is a discrete 24-hour arc, so cross-midnight
+            // work reads continuously instead of becoming a fake fixed marker.
             for (let index = 0; index < records.length; index += 2) {
                 const startRecord = records[index];
                 const endRecord = records[index + 1];
@@ -8846,24 +8942,44 @@
                 const start = new Date(startRecord.time);
                 const end = endRecord?.type === 'out' ? new Date(endRecord.time) : new Date();
                 if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) continue;
+                const from = ringClockPoint(start, 118);
+                const to = ringClockPoint(end, 118);
                 const elapsedMinutes = Math.min((end - start) / 60000, 24 * 60);
-                const appendArc = (arcStart, arcEnd, minutes, className) => {
-                    const arcFrom = ringClockPoint(arcStart, 122);
-                    const arcTo = ringClockPoint(arcEnd, 122);
-                    group.appendChild(createRingSvgElement('path', {
-                        d: `M ${arcFrom.x.toFixed(2)} ${arcFrom.y.toFixed(2)} A 122 122 0 ${minutes > 720 ? 1 : 0} 1 ${arcTo.x.toFixed(2)} ${arcTo.y.toFixed(2)}`,
-                        class: className
-                    }));
-                };
+                const arc = createRingSvgElement('path', {
+                    d: `M ${from.x.toFixed(2)} ${from.y.toFixed(2)} A 123 123 0 ${elapsedMinutes > 720 ? 1 : 0} 1 ${to.x.toFixed(2)} ${to.y.toFixed(2)}`,
+                    class: `ring-timeline-arc${endRecord?.type === 'out' ? '' : ' ring-timeline-arc--active'}`
+                });
+                group.appendChild(arc);
+            }
 
-                appendArc(start, end, elapsedMinutes, `ring-timeline-arc${endRecord?.type === 'out' ? '' : ' ring-timeline-arc--active'}`);
-                const accentMinutes = Math.min(10, Math.max(2, elapsedMinutes / 3));
-                const inAccentEnd = new Date(start.getTime() + accentMinutes * 60000);
-                appendArc(start, inAccentEnd, accentMinutes, 'ring-timeline-arc ring-timeline-arc--in');
-                if (endRecord?.type === 'out') {
-                    const outAccentStart = new Date(end.getTime() - accentMinutes * 60000);
-                    appendArc(outAccentStart, end, accentMinutes, 'ring-timeline-arc ring-timeline-arc--out');
-                }
+            records.forEach(record => {
+                const point = ringClockPoint(new Date(record.time), 124);
+                const outer = ringClockPoint(new Date(record.time), 131);
+                const marker = createRingSvgElement('g', {
+                    class: `ring-timeline-marker ring-timeline-marker--${record.type}`,
+                    tabindex: '0',
+                    role: 'button',
+                    'aria-label': `${formatTime(record.time)} ${record.type === 'in' ? '上班' : '下班'}刻度`
+                });
+                marker.appendChild(createRingSvgElement('line', {
+                    x1: point.x.toFixed(2), y1: point.y.toFixed(2),
+                    x2: outer.x.toFixed(2), y2: outer.y.toFixed(2),
+                    class: 'ring-timeline-tick'
+                }));
+                marker.appendChild(createRingSvgElement('circle', { cx: point.x.toFixed(2), cy: point.y.toFixed(2), r: 3.8 }));
+                marker.addEventListener('click', event => { event.stopPropagation(); showRingTimelineTooltip(record); });
+                marker.addEventListener('keydown', event => {
+                    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showRingTimelineTooltip(record); }
+                });
+                group.appendChild(marker);
+            });
+
+            if (records.length % 2 === 1 && records[records.length - 1].type === 'in') {
+                const nowPoint = ringClockPoint(new Date(), 118);
+                group.appendChild(createRingSvgElement('circle', {
+                    cx: nowPoint.x.toFixed(2), cy: nowPoint.y.toFixed(2), r: 3.2,
+                    class: 'ring-timeline-now', 'aria-label': '目前時間'
+                }));
             }
         }
 
