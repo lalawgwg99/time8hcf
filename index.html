@@ -8162,6 +8162,11 @@
     <script>
         // --- 邏輯部分 ---
         let punchRecords = [];
+        // The record array is owned by the date on which a shift started.
+        // This remains stable after midnight, so an overnight clock-out always
+        // closes the same shift instead of creating a new day's record.
+        let activeShiftKey = null;
+        let currentRecordKey = null;
         let reminderTimer = null;
         let alarmLoopTimer = null;
         let stretchCheckTimer = null;
@@ -13269,14 +13274,16 @@
                 console.error("Migration error from timecardData:", e);
             }
 
-            // 2. 標準化所有 key 依據本地日期歸戶 (修復時區或日期格式差異)
+            // 2. Normalise record order without moving records between date keys.
+            // A key is the shift's start date, not necessarily an event's date.
+            // Moving records by their timestamp would split an overnight shift.
             const normalizedHistory = {};
             for (const rawKey in history) {
                 const recs = history[rawKey] || [];
                 if (!Array.isArray(recs)) continue;
                 recs.forEach(r => {
                     if (r && r.time) {
-                        const targetKey = getLocalDateStr(new Date(r.time));
+                        const targetKey = rawKey;
                         if (!normalizedHistory[targetKey]) normalizedHistory[targetKey] = [];
                         if (!normalizedHistory[targetKey].some(ex => ex.time === r.time && ex.type === r.type)) {
                             normalizedHistory[targetKey].push(r);
@@ -13290,28 +13297,24 @@
                 normalizedHistory[k].sort((a, b) => new Date(a.time) - new Date(b.time));
             }
 
-            const todayKey = getTodayKey();
-
-            // 3. 自動結算過去未打下班的班次
-            for (const dateKey in normalizedHistory) {
-                if (dateKey < todayKey) {
-                    const recs = normalizedHistory[dateKey];
-                    if (recs.length > 0 && recs.length % 2 !== 0) {
-                        const autoOut = dateKey + 'T23:59:59';
-                        recs.push({ time: autoOut, type: 'out', task: '（自動結算）' });
-                    }
-                }
-            }
-
             history = normalizedHistory;
-            try {
-                localStorage.setItem('timecardHistory', JSON.stringify(history));
-            } catch (e) {
-                console.error("Failed to save normalized history:", e);
-            }
 
-            // 4. 載入今日紀錄 (若無則預設空陣列)
-            punchRecords = history[todayKey] || [];
+            // 3. A clock-in remains open until a real clock-out is recorded.
+            // Never manufacture an end time at midnight or while loading data.
+            const openShifts = Object.entries(history)
+                .map(([key, records]) => ({ key, records, last: records[records.length - 1] }))
+                .filter(shift => shift.last && shift.last.type === 'in' && shift.last.time)
+                .sort((a, b) => new Date(b.last.time) - new Date(a.last.time));
+            activeShiftKey = openShifts.length ? openShifts[0].key : null;
+
+            // 4. Show the active shift when one exists; otherwise show today's history.
+            const todayKey = getTodayKey();
+            const latestShiftEndingToday = Object.entries(history)
+                .map(([key, records]) => ({ key, records, last: records[records.length - 1] }))
+                .filter(shift => shift.last && shift.last.time && getLocalDateStr(new Date(shift.last.time)) === todayKey)
+                .sort((a, b) => new Date(b.last.time) - new Date(a.last.time))[0];
+            currentRecordKey = activeShiftKey || (latestShiftEndingToday && latestShiftEndingToday.key) || todayKey;
+            punchRecords = history[currentRecordKey] || [];
 
             const savedOffDays = localStorage.getItem('offDays');
             if (savedOffDays) {
@@ -13322,10 +13325,11 @@
             updateYesterdayPunchOutDisplay();
         }
 
-        function saveData() {
+        function saveData(recordKeyOverride = null) {
             try {
                 const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-                history[getTodayKey()] = punchRecords;
+                const recordKey = recordKeyOverride || currentRecordKey || activeShiftKey || getTodayKey();
+                history[recordKey] = punchRecords;
                 localStorage.setItem('timecardHistory', JSON.stringify(history));
             } catch (e) {
                 console.error("Failed to save punch records:", e);
@@ -13338,21 +13342,25 @@
 
         function getDayTotalMinutes(dateKey) {
             const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
-            const records = history[dateKey] || [];
             let total = 0;
-            for (let i = 0; i < records.length; i += 2) {
-                if (records[i] && records[i].type === 'in') {
-                    const start = new Date(records[i].time);
-                    let end;
-                    if (records[i + 1] && records[i + 1].type === 'out') {
-                        end = new Date(records[i + 1].time);
-                    } else if (dateKey === getTodayKey()) {
-                        end = new Date(); // ongoing session today
-                    } else {
-                        // Past day unclosed — count until end of that day
-                        end = new Date(dateKey + 'T23:59:59');
+            const dayStart = new Date(dateKey + 'T00:00:00');
+            const dayEnd = new Date(dayStart);
+            dayEnd.setDate(dayEnd.getDate() + 1);
+            for (const records of Object.values(history)) {
+                if (!Array.isArray(records)) continue;
+                for (let i = 0; i < records.length; i += 2) {
+                    const inRecord = records[i];
+                    if (!inRecord || inRecord.type !== 'in' || !inRecord.time) continue;
+                    const start = new Date(inRecord.time);
+                    const outRecord = records[i + 1];
+                    const end = outRecord && outRecord.type === 'out' && outRecord.time
+                        ? new Date(outRecord.time)
+                        : new Date();
+                    const overlapStart = Math.max(start.getTime(), dayStart.getTime());
+                    const overlapEnd = Math.min(end.getTime(), dayEnd.getTime());
+                    if (overlapEnd > overlapStart) {
+                        total += (overlapEnd - overlapStart) / 60000;
                     }
-                    total += (end - start) / 60000;
                 }
             }
             return total;
@@ -13410,7 +13418,7 @@
             }
         }
 
-        function getNextPunchType() { return punchRecords.length % 2 === 0 ? 'in' : 'out'; }
+        function getNextPunchType() { return activeShiftKey ? 'out' : 'in'; }
 
         // 回溯尋找「前一個工作日 (跨日)」的最後一次下班 (out) 紀錄，供 11 小時跨日班次間隔檢測
         function getLastPreviousDayPunchOut() {
@@ -14502,8 +14510,22 @@
         }
 
         function punch() {
+            const type = getNextPunchType();
+            // After an overnight shift ends, its start-date record remains on
+            // screen for review. A new clock-in must start today's own record,
+            // never append to that completed overnight shift.
+            if (type === 'in' && !activeShiftKey && currentRecordKey !== getTodayKey()) {
+                try {
+                    const history = JSON.parse(localStorage.getItem('timecardHistory') || '{}');
+                    currentRecordKey = getTodayKey();
+                    punchRecords = Array.isArray(history[currentRecordKey]) ? history[currentRecordKey] : [];
+                } catch (e) {
+                    currentRecordKey = getTodayKey();
+                    punchRecords = [];
+                }
+            }
             if (punchRecords.length >= 20) { showReminder("已達今日紀錄上限", 'work'); return; }
-            haptic(getNextPunchType() === 'in' ? 'light' : 'medium');
+            haptic(type === 'in' ? 'light' : 'medium');
 
             // 夥伴特權聲學反饋 (Epic Crystal Chime / Hidden Singing Bowl)
             const petState = typeof readPetSystem === 'function' ? readPetSystem() : null;
@@ -14519,7 +14541,6 @@
             }
 
             const now = new Date();
-            const type = getNextPunchType();
             const taskInput = document.getElementById('taskInput');
             let taskName = "";
             let restIntervalMins = null;
@@ -14614,7 +14635,12 @@
             const isFirstPunchInToday = (type === 'in' && punchRecords.length === 0);
 
             punchRecords.push({ time: now.toISOString(), type: type, task: taskName, restIntervalMins: restIntervalMins });
+            if (type === 'in') {
+                activeShiftKey = getTodayKey();
+                currentRecordKey = activeShiftKey;
+            }
             saveData();
+            if (type === 'out') activeShiftKey = null;
             updateDisplay();
 
             // --- 每日首度打卡上班 · 靈籤神諭自動降臨 ---
@@ -14628,6 +14654,7 @@
         function undoLastPunch() {
             if (punchRecords.length > 0) {
                 playSingleClickSound("G4");
+                const recordKey = currentRecordKey || activeShiftKey || getTodayKey();
                 const last = punchRecords.pop();
 
                 if (last.type === 'out') {
@@ -14640,7 +14667,15 @@
                     }
                 }
 
-                saveData();
+                // Undoing an out re-opens its original shift, including after midnight.
+                if (last.type === 'out') {
+                    const previousIn = punchRecords[punchRecords.length - 1];
+                    activeShiftKey = previousIn && previousIn.type === 'in' ? recordKey : null;
+                } else if (last.type === 'in') {
+                    activeShiftKey = null;
+                }
+                currentRecordKey = recordKey;
+                saveData(recordKey);
                 updateDisplay();
             }
         }
@@ -14652,8 +14687,10 @@
 
             if (btn.dataset.confirm === 'true') {
                 playSingleClickSound("D4");
+                const recordKey = currentRecordKey || activeShiftKey || getTodayKey();
                 punchRecords = [];
-                saveData();
+                saveData(recordKey);
+                activeShiftKey = null;
                 updateDisplay();
                 // Reset UI
                 btn.dataset.confirm = 'false';
@@ -14705,7 +14742,11 @@
 
         function updateDisplay() {
             const nextType = getNextPunchType();
-            const result = calculateHours();
+            const sessionResult = calculateHours();
+            // The main dial is a calendar-day total. A single overnight shift
+            // is still stored as one shift, but its time is split correctly in
+            // daily totals and reports.
+            const result = { ...sessionResult, total: getDayTotalMinutes(getTodayKey()) };
             const lastRecord = punchRecords.findLast(r => r.type === 'in');
 
             // --- 狀態更新 ---
