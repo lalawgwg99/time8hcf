@@ -68,28 +68,6 @@
     position: relative;
 }
 
-.pet-equipment-badge {
-    position: absolute;
-    right: 4px;
-    bottom: 8px;
-    width: 28px;
-    height: 28px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--card);
-    border: 0.5px solid var(--separator);
-    box-shadow: 0 3px 10px rgba(40, 28, 16, 0.14);
-    font-size: 16px;
-    z-index: 3;
-    animation: equipmentFloat 2.8s ease-in-out infinite;
-}
-
-@keyframes equipmentFloat {
-    0%, 100% { transform: translateY(0) rotate(-3deg); }
-    50% { transform: translateY(-3px) rotate(3deg); }
-}
-
 .orbital-stage-bg {
     position: absolute;
     inset: 12px;
