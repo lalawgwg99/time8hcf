@@ -10,8 +10,8 @@
     function emptyState() {
         return {
             schemaVersion: SCHEMA_VERSION,
-            resources: { eggFragments: 0, crystalDust: 0 },
-            inventory: [],
+            resources: { eggFragments: 0, crystalDust: 0, stardust: 0 },
+            inventory: ['focus_ribbon'],
             pets: [],
             activePetId: null,
             rewards: [],
@@ -28,7 +28,7 @@
                 ...emptyState(),
                 ...parsed,
                 resources: { ...emptyState().resources, ...(parsed.resources || {}) },
-                inventory: Array.isArray(parsed.inventory) ? parsed.inventory : [],
+                inventory: Array.isArray(parsed.inventory) ? [...new Set(['focus_ribbon', ...parsed.inventory])] : ['focus_ribbon'],
                 hatchState: { ...emptyState().hatchState, ...(parsed.hatchState || {}) },
                 pets: Array.isArray(parsed.pets) ? parsed.pets : [],
                 rewards: Array.isArray(parsed.rewards) ? parsed.rewards : [],

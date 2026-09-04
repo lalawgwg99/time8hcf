@@ -4708,6 +4708,8 @@
                         </div>
 
                         <!-- Daily care loop: a small, stateful alternative to endlessly tapping for points. -->
+                        <div id="partnerDailyActions" style="background:var(--card); border-radius:14px; padding:12px 14px; margin-top:10px; border:0.5px solid var(--separator);"></div>
+
                         <!-- Action / Guidance Area -->
                         <div id="partnerActionArea"></div>
                         <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
@@ -6965,6 +6967,14 @@
             art.style.cursor = 'pointer';
             art.title = '輕觸夥伴互動';
             art.innerHTML = getPetSVG(specId, { isWorking, isTargetMet });
+            const equipped = typeof getEquippedCompanionItem === 'function' ? getEquippedCompanionItem(pet) : null;
+            if (equipped) {
+                const badge = document.createElement('span');
+                badge.className = `pet-equipment-badge ${equipped.className || ''}`;
+                badge.innerHTML = t8Icon(equipped.icon);
+                badge.title = equipped.name;
+                art.appendChild(badge);
+            }
             container.appendChild(art);
         }
         root.getPetSVG = getPetSVG;
@@ -7056,6 +7066,12 @@
         { level: 4, name: '靈魂守護', maxPts: 9999, perk: '解鎖專屬尊榮金輝與守護稱號' }
     ];
 
+    const COMPANION_EQUIPMENT = [
+        { id: 'focus_ribbon', icon: 'ribbon', name: '專注緞帶', slot: 'neck', unlock: 0, perk: '專注擊掌 +1', className: 'equip-ribbon' },
+        { id: 'moon_lamp', icon: 'lamp', name: '月光提燈', slot: 'hand', unlock: 3, perk: '夜班微光', className: 'equip-lamp' },
+        { id: 'tea_satchel', icon: 'bag', name: '茶香小包', slot: 'back', unlock: 7, perk: '收工散步 +1', className: 'equip-satchel' }
+    ];
+
     function getCompanionAffinityData() {
         const raw = localStorage.getItem('t8_companion_affinity');
         const todayStr = typeof getTodayKey === 'function' ? getTodayKey() : new Date().toISOString().slice(0, 10);
@@ -7064,7 +7080,10 @@
             level: 1,
             lastPetDate: '',
             todayPets: 0,
-            todayFortune: null
+            todayFortune: null,
+            dailyActions: { greet: false, focus: false, windDown: false },
+            careDays: 0,
+            lastCareCompleteDate: ''
         };
         if (raw) {
             try {
@@ -7078,6 +7097,7 @@
         if (data.lastPetDate !== todayStr) {
             data.lastPetDate = todayStr;
             data.todayPets = 0;
+            data.dailyActions = { greet: false, focus: false, windDown: false };
             // Pick a deterministic or fresh daily fortune based on date string hash
             let hash = 0;
             for (let i = 0; i < todayStr.length; i++) hash = (hash * 31 + todayStr.charCodeAt(i)) % COMPANION_FORTUNES.length;
@@ -7087,6 +7107,9 @@
 
         if (!data.todayFortune) {
             data.todayFortune = COMPANION_FORTUNES[0];
+        }
+        if (!data.dailyActions || typeof data.dailyActions !== 'object') {
+            data.dailyActions = { greet: false, focus: false, windDown: false };
         }
 
         return data;
@@ -7155,7 +7178,8 @@
 
         if (bondLevelText) bondLevelText.textContent = `Lv.${data.level} ${lvlInfo.name}`;
         if (bondProgressText) {
-            bondProgressText.textContent = nextLvl ? `羈絆 ${data.points} 點` : `羈絆滿級 (${data.points})`;
+            const completed = Object.values(data.dailyActions || {}).filter(Boolean).length;
+            bondProgressText.innerHTML = nextLvl ? `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>今日默契 ${completed}/3` : `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>羈絆滿級 (${data.points})`;
             bondProgressText.removeAttribute('onclick');
             bondProgressText.style.cursor = 'default';
         }
@@ -7167,10 +7191,117 @@
         }
     }
 
-    function petCompanionWithAnimation(event) {
+    function getCompanionDailyActionState() {
+        const data = getCompanionAffinityData();
+        const isWorking = typeof punchRecords !== 'undefined' && punchRecords.length % 2 === 1;
+        const lastIn = isWorking ? punchRecords[punchRecords.length - 1] : null;
+        const sessionMinutes = lastIn ? Math.max(0, (Date.now() - new Date(lastIn.time)) / 60000) : 0;
+        const hasFinishedSession = !isWorking && typeof punchRecords !== 'undefined' && punchRecords.some(r => r.type === 'out');
+        return {
+            data,
+            actions: [
+                { id: 'greet', icon: 'heart', label: '晨間問候', note: '輕觸夥伴', ready: true, reward: 1 },
+                { id: 'focus', icon: 'spark', label: '專注擊掌', note: isWorking ? (sessionMinutes >= 25 ? '可以互動' : `再專注 ${Math.ceil(25 - sessionMinutes)} 分`) : '上班後開啟', ready: isWorking && sessionMinutes >= 25, reward: 2 },
+                { id: 'windDown', icon: 'lamp', label: '收工散步', note: hasFinishedSession ? '可以互動' : '下班後開啟', ready: hasFinishedSession, reward: 2 }
+            ]
+        };
+    }
+
+    function renderCompanionDailyActions() {
+        const container = document.getElementById('partnerDailyActions');
+        if (!container) return;
+        const { data, actions } = getCompanionDailyActionState();
+        const completed = actions.filter(action => data.dailyActions?.[action.id]).length;
+        container.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;">
+                <span style="font-size:12px;font-weight:700;color:var(--label);">今日默契</span>
+                <span style="font-size:10.5px;color:var(--purple);font-weight:700;">${completed}/3 · ${data.careDays || 0} 天紀錄</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">
+                ${actions.map(action => {
+                    const done = !!data.dailyActions?.[action.id];
+                    const available = action.ready && !done;
+                    return `<button type="button" onclick="window.performCompanionAction('${action.id}', event)" ${available ? '' : 'disabled'} style="border:0.5px solid ${done ? 'rgba(77,122,82,.32)' : 'var(--separator)'};background:${done ? 'rgba(77,122,82,.10)' : available ? 'var(--fill-secondary)' : 'var(--fill-tertiary)'};color:${available || done ? 'var(--label)' : 'var(--label-tertiary)'};border-radius:11px;padding:8px 5px;cursor:${available ? 'pointer' : 'default'};font-family:inherit;text-align:center;opacity:${available || done ? '1' : '.58'};">
+                        <span style="display:block;font-size:15px;margin-bottom:3px;">${done ? t8Icon('check') : t8Icon(action.icon)}</span>
+                        <span style="display:block;font-size:10.5px;font-weight:700;white-space:nowrap;">${action.label}</span>
+                        <span style="display:block;font-size:9.5px;margin-top:2px;color:var(--label-tertiary);">${done ? `默契 +${action.reward}` : action.note}</span>
+                    </button>`;
+                }).join('')}
+            </div>`;
+    }
+
+    function getEquippedCompanionItem(pet) {
+        const id = pet?.equippedItemId;
+        return COMPANION_EQUIPMENT.find(item => item.id === id) || null;
+    }
+
+    function renderCompanionEquipment() {
+        const container = document.getElementById('partnerEquipment');
+        if (!container || typeof readPetSystem !== 'function') return;
+        const state = readPetSystem();
+        const pet = typeof activePet === 'function' ? activePet(state) : null;
+        if (!pet) { container.innerHTML = ''; return; }
+        const inventory = state.inventory || [];
+        const careDays = getCompanionAffinityData().careDays || 0;
+        container.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;font-weight:700;color:var(--label);">夥伴小物</span><span style="font-size:10.5px;color:var(--label-tertiary);">每日默契解鎖</span></div><div style="display:flex;gap:7px;">${COMPANION_EQUIPMENT.map(item => {
+            const unlocked = inventory.includes(item.id) || careDays >= item.unlock;
+            const equipped = pet.equippedItemId === item.id;
+            return `<button type="button" onclick="window.equipCompanionItem('${item.id}')" ${unlocked ? '' : 'disabled'} style="flex:1;border:0.5px solid ${equipped ? 'rgba(122,90,138,.45)' : 'var(--separator)'};background:${equipped ? 'rgba(122,90,138,.11)' : 'var(--fill-tertiary)'};border-radius:11px;padding:7px 5px;font-family:inherit;cursor:${unlocked ? 'pointer' : 'default'};opacity:${unlocked ? '1' : '.48'};text-align:center;"><span style="font-size:16px;display:block">${unlocked ? t8Icon(item.icon) : t8Icon('lock')}</span><span style="display:block;font-size:10px;font-weight:700;color:var(--label);margin-top:2px">${item.name}</span><span style="display:block;font-size:9px;color:var(--label-tertiary);margin-top:2px">${unlocked ? (equipped ? '已裝備' : item.perk) : `${item.unlock} 天解鎖`}</span></button>`;
+        }).join('')}</div>`;
+    }
+
+    function equipCompanionItem(itemId) {
+        if (typeof readPetSystem !== 'function' || typeof writePetSystem !== 'function') return;
+        const state = readPetSystem();
+        const pet = typeof activePet === 'function' ? activePet(state) : null;
+        const item = COMPANION_EQUIPMENT.find(entry => entry.id === itemId);
+        const careDays = getCompanionAffinityData().careDays || 0;
+        if (!pet || !item || (!state.inventory?.includes(itemId) && careDays < item.unlock)) return;
+        state.inventory = [...new Set([...(state.inventory || []), itemId])];
+        pet.equippedItemId = pet.equippedItemId === itemId ? null : itemId;
+        writePetSystem(state);
+        renderPartnerRoom();
+        showToast(pet.equippedItemId ? `${item.name}已裝備` : '已卸下小物');
+    }
+
+    window.performCompanionAction = performCompanionAction;
+    window.equipCompanionItem = equipCompanionItem;
+
+    function performCompanionAction(actionId, event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        const { data, actions } = getCompanionDailyActionState();
+        const action = actions.find(item => item.id === actionId);
+        if (!action || data.dailyActions?.[actionId] || !action.ready) return;
+        data.dailyActions[actionId] = true;
+        const isComplete = Object.values(data.dailyActions).every(Boolean);
+        const today = typeof getTodayKey === 'function' ? getTodayKey() : new Date().toISOString().slice(0, 10);
+        if (isComplete && data.lastCareCompleteDate !== today) {
+            data.careDays = (data.careDays || 0) + 1;
+            data.lastCareCompleteDate = today;
+        }
+        saveCompanionAffinityData(data);
+        const equipment = typeof activePet === 'function' && typeof readPetSystem === 'function' ? getEquippedCompanionItem(activePet(readPetSystem())) : null;
+        const bonus = equipment?.id === 'focus_ribbon' && actionId === 'focus' ? 1 : equipment?.id === 'tea_satchel' && actionId === 'windDown' ? 1 : 0;
+        const updated = addCompanionAffinity(action.reward + bonus);
+        updateCompanionAffinityUI(updated);
+        renderCompanionDailyActions();
+        renderCompanionEquipment();
+        petCompanionWithAnimation(null, true);
+        if (isComplete) showToast('今日默契完成 ✦');
+    }
+
+    function petCompanionWithAnimation(event, skipDailyAction = false) {
         if (event) {
             if (typeof event.stopPropagation === 'function') event.stopPropagation();
             if (typeof event.preventDefault === 'function') event.preventDefault();
+        }
+
+        if (!skipDailyAction) {
+            const data = getCompanionAffinityData();
+            if (!data.dailyActions?.greet) {
+                performCompanionAction('greet', event);
+                return;
+            }
         }
 
         if (typeof playSingleClickSound === 'function') playSingleClickSound("E5");
@@ -8116,8 +8247,17 @@
             if (actionArea) {
                 actionArea.innerHTML = (!pet && isReady) ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()" style="margin-top:10px;">✨ 喚醒晶靈</button>` : '';
             }
+            const equipmentArea = byId('partnerEquipment');
+            if (!equipmentArea && pet) {
+                const equipment = document.createElement('div');
+                equipment.id = 'partnerEquipment';
+                equipment.style.cssText = 'background:var(--card);border-radius:14px;padding:12px 14px;margin-top:10px;border:0.5px solid var(--separator);';
+                actionArea?.insertAdjacentElement('afterend', equipment);
+            }
             renderCodex(state.pets);
             if (typeof updateCompanionAffinityUI === 'function') updateCompanionAffinityUI();
+            if (typeof renderCompanionDailyActions === 'function') renderCompanionDailyActions();
+            if (typeof renderCompanionEquipment === 'function') renderCompanionEquipment();
         }
         function hatchPartnerEgg() {
             if (hatchLocked) return;
