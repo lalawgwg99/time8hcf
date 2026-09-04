@@ -2342,49 +2342,18 @@
             transition: cx 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), cy 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
         }
 
-        .ring-dial-outline {
-            fill: none;
-            stroke: var(--separator);
-            stroke-width: 1;
-        }
-
-        .ring-dial-minor,
-        .ring-dial-major {
-            stroke: var(--label-quaternary);
-            stroke-linecap: round;
-            opacity: .7;
-            pointer-events: none;
-        }
-
-        .ring-dial-minor { stroke-width: .8; }
-        .ring-dial-major { stroke: var(--label-secondary); stroke-width: 1.35; opacity: .82; }
-
-        .ring-dial-label {
-            fill: var(--label-tertiary);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            font-size: 8px;
-            font-weight: 650;
-            letter-spacing: .04em;
-            text-anchor: middle;
-            dominant-baseline: central;
-            pointer-events: none;
-        }
-
         .ring-timeline-arc {
             fill: none;
-            stroke: var(--green);
-            stroke-width: 5.5;
+            stroke: var(--blue);
+            stroke-width: 2.5;
             stroke-linecap: round;
-            opacity: .9;
+            opacity: 0.72;
             pointer-events: none;
-            filter: drop-shadow(0 1px 1px rgba(77, 122, 82, .18));
         }
-
-        .ring-timeline-arc--active { stroke: var(--blue); stroke-dasharray: 2 3.5; }
 
         .ring-timeline-tick {
             stroke: var(--label-secondary);
-            stroke-width: 1.35;
+            stroke-width: 1.5;
             stroke-linecap: round;
         }
 
@@ -2395,14 +2364,13 @@
         .ring-timeline-marker--in circle {
             fill: var(--blue);
             stroke: var(--card);
-            stroke-width: 2;
-            filter: drop-shadow(0 1px 2px rgba(110, 125, 106, .38));
+            stroke-width: 1.8;
         }
 
         .ring-timeline-marker--out circle {
             fill: var(--card);
             stroke: var(--blue);
-            stroke-width: 2;
+            stroke-width: 1.8;
         }
 
         .ring-timeline-now {
@@ -7258,7 +7226,6 @@
             if (fortuneLuckyItem) fortuneLuckyItem.textContent = `幸運物：${data.todayFortune.luckyItem}`;
             if (fortuneQuoteText) fortuneQuoteText.textContent = `「${data.todayFortune.text}」`;
         }
-    }
 
     function getCompanionDailyActionState() {
         const data = getCompanionAffinityData();
@@ -7357,6 +7324,7 @@
         renderCompanionEquipment();
         petCompanionWithAnimation(null, true);
         if (isComplete) showToast('今日默契完成 ✦');
+    }
     }
 
     function petCompanionWithAnimation(event, skipDailyAction = false) {
@@ -8909,32 +8877,9 @@
             if (!group) return;
             group.replaceChildren();
             const records = Array.isArray(punchRecords) ? punchRecords.filter(record => record?.time && ['in', 'out'].includes(record.type)) : [];
+            if (!records.length) return;
 
-            // The dial remains visible before the first punch. Its quiet hourly
-            // rhythm provides context; records only light up the lived segment.
-            group.appendChild(createRingSvgElement('circle', { cx: 132, cy: 132, r: 124, class: 'ring-dial-outline' }));
-            for (let hour = 0; hour < 24; hour += 1) {
-                const major = hour % 3 === 0;
-                const inner = ringClockPoint(new Date(2000, 0, 1, hour), major ? 120 : 122);
-                const outer = ringClockPoint(new Date(2000, 0, 1, hour), 126);
-                group.appendChild(createRingSvgElement('line', {
-                    x1: inner.x.toFixed(2), y1: inner.y.toFixed(2),
-                    x2: outer.x.toFixed(2), y2: outer.y.toFixed(2),
-                    class: major ? 'ring-dial-major' : 'ring-dial-minor'
-                }));
-                if (hour % 6 === 0) {
-                    const labelPoint = ringClockPoint(new Date(2000, 0, 1, hour), 136);
-                    const label = createRingSvgElement('text', {
-                        x: labelPoint.x.toFixed(2), y: labelPoint.y.toFixed(2),
-                        class: 'ring-dial-label', transform: `rotate(90 ${labelPoint.x.toFixed(2)} ${labelPoint.y.toFixed(2)})`
-                    });
-                    label.textContent = String(hour).padStart(2, '0');
-                    group.appendChild(label);
-                }
-            }
-
-            // Each recorded shift is a discrete 24-hour arc, so cross-midnight
-            // work reads continuously instead of becoming a fake fixed marker.
+            // A thin outer arc tells the story of each completed work segment.
             for (let index = 0; index < records.length; index += 2) {
                 const startRecord = records[index];
                 const endRecord = records[index + 1];
@@ -8942,19 +8887,19 @@
                 const start = new Date(startRecord.time);
                 const end = endRecord?.type === 'out' ? new Date(endRecord.time) : new Date();
                 if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) continue;
-                const from = ringClockPoint(start, 118);
-                const to = ringClockPoint(end, 118);
+                const from = ringClockPoint(start, 123);
+                const to = ringClockPoint(end, 123);
                 const elapsedMinutes = Math.min((end - start) / 60000, 24 * 60);
                 const arc = createRingSvgElement('path', {
                     d: `M ${from.x.toFixed(2)} ${from.y.toFixed(2)} A 123 123 0 ${elapsedMinutes > 720 ? 1 : 0} 1 ${to.x.toFixed(2)} ${to.y.toFixed(2)}`,
-                    class: `ring-timeline-arc${endRecord?.type === 'out' ? '' : ' ring-timeline-arc--active'}`
+                    class: 'ring-timeline-arc'
                 });
                 group.appendChild(arc);
             }
 
             records.forEach(record => {
-                const point = ringClockPoint(new Date(record.time), 124);
-                const outer = ringClockPoint(new Date(record.time), 131);
+                const point = ringClockPoint(new Date(record.time), 123);
+                const outer = ringClockPoint(new Date(record.time), 130);
                 const marker = createRingSvgElement('g', {
                     class: `ring-timeline-marker ring-timeline-marker--${record.type}`,
                     tabindex: '0',
@@ -8966,7 +8911,7 @@
                     x2: outer.x.toFixed(2), y2: outer.y.toFixed(2),
                     class: 'ring-timeline-tick'
                 }));
-                marker.appendChild(createRingSvgElement('circle', { cx: point.x.toFixed(2), cy: point.y.toFixed(2), r: 3.8 }));
+                marker.appendChild(createRingSvgElement('circle', { cx: point.x.toFixed(2), cy: point.y.toFixed(2), r: 4.2 }));
                 marker.addEventListener('click', event => { event.stopPropagation(); showRingTimelineTooltip(record); });
                 marker.addEventListener('keydown', event => {
                     if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showRingTimelineTooltip(record); }
@@ -8975,7 +8920,7 @@
             });
 
             if (records.length % 2 === 1 && records[records.length - 1].type === 'in') {
-                const nowPoint = ringClockPoint(new Date(), 118);
+                const nowPoint = ringClockPoint(new Date(), 123);
                 group.appendChild(createRingSvgElement('circle', {
                     cx: nowPoint.x.toFixed(2), cy: nowPoint.y.toFixed(2), r: 3.2,
                     class: 'ring-timeline-now', 'aria-label': '目前時間'
