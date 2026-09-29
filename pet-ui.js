@@ -312,8 +312,6 @@
         if (result.granted) {
             writePetSystem(result.state);
             showToast('🌱 今日工時達成 · 獲得星軌碎片 ×1');
-        } else {
-            showToast('今日碎片已凝聚 · 持續專注中');
         }
     }
 
