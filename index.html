@@ -458,13 +458,13 @@
             display: inline-flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            padding: 5px 14px;
+            gap: 12px;
+            padding: 6px 16px;
             border-radius: 999px;
             background: var(--card);
             border: 0.5px solid var(--separator);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            margin: 0 auto 10px;
+            margin: 4px auto 16px;
             -webkit-backdrop-filter: blur(12px);
             backdrop-filter: blur(12px);
             user-select: none;
@@ -585,7 +585,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
 
-        /* Apple Weather × Weatherling Depth-Aware Rain Physics */
+        /* Apple Weather × Weatherling All-Weather Physics & Card Rim Lighting */
         #weatherlingCanvas {
             position: fixed;
             inset: 0;
@@ -599,24 +599,44 @@
         body.weatherling-active #weatherlingCanvas {
             opacity: 1;
         }
-        body.weatherling-active .today-glance-bar,
-        body.weatherling-active .action-card,
-        body.weatherling-active .life-pill,
-        body.weatherling-active .zen-card,
-        body.weatherling-active .partner-stage-card,
-        body.weatherling-active .partner-ai-card,
-        body.weatherling-active .partner-radio-card {
-            box-shadow: inset 0 1px 0 rgba(165, 200, 238, 0.42), var(--shadow-card);
+        body[data-weather-fx="rain"] .today-glance-bar,
+        body[data-weather-fx="rain"] .action-card,
+        body[data-weather-fx="rain"] .zen-card,
+        body[data-weather-fx="rain"] .partner-stage-card,
+        body[data-weather-fx="rain"] .partner-ai-card,
+        body[data-weather-fx="rain"] .partner-radio-card,
+        body[data-weather-fx="thunder"] .today-glance-bar,
+        body[data-weather-fx="thunder"] .action-card,
+        body[data-weather-fx="thunder"] .zen-card,
+        body[data-weather-fx="thunder"] .partner-stage-card,
+        body[data-weather-fx="thunder"] .partner-ai-card,
+        body[data-weather-fx="thunder"] .partner-radio-card,
+        body[data-weather-fx="typhoon"] .today-glance-bar,
+        body[data-weather-fx="typhoon"] .action-card,
+        body[data-weather-fx="typhoon"] .zen-card,
+        body[data-weather-fx="typhoon"] .partner-stage-card,
+        body[data-weather-fx="typhoon"] .partner-ai-card,
+        body[data-weather-fx="typhoon"] .partner-radio-card {
+            box-shadow: inset 0 1px 0 rgba(165, 200, 238, 0.44), var(--shadow-card);
             transition: box-shadow 0.5s ease;
         }
-        html[data-zen-theme="obsidian"] body.weatherling-active .today-glance-bar,
-        html[data-zen-theme="obsidian"] body.weatherling-active .action-card,
-        html[data-zen-theme="obsidian"] body.weatherling-active .life-pill,
-        html[data-zen-theme="obsidian"] body.weatherling-active .zen-card,
-        html[data-zen-theme="obsidian"] body.weatherling-active .partner-stage-card,
-        html[data-zen-theme="obsidian"] body.weatherling-active .partner-ai-card,
-        html[data-zen-theme="obsidian"] body.weatherling-active .partner-radio-card {
-            box-shadow: inset 0 1px 0 rgba(190, 218, 250, 0.26), var(--shadow-card);
+        body[data-weather-fx="sunny"] .today-glance-bar,
+        body[data-weather-fx="sunny"] .action-card,
+        body[data-weather-fx="sunny"] .zen-card,
+        body[data-weather-fx="sunny"] .partner-stage-card,
+        body[data-weather-fx="sunny"] .partner-ai-card,
+        body[data-weather-fx="sunny"] .partner-radio-card {
+            box-shadow: inset 0 1px 0 rgba(238, 198, 130, 0.50), var(--shadow-card);
+            transition: box-shadow 0.5s ease;
+        }
+        body[data-weather-fx="cold"] .today-glance-bar,
+        body[data-weather-fx="cold"] .action-card,
+        body[data-weather-fx="cold"] .zen-card,
+        body[data-weather-fx="cold"] .partner-stage-card,
+        body[data-weather-fx="cold"] .partner-ai-card,
+        body[data-weather-fx="cold"] .partner-radio-card {
+            box-shadow: inset 0 1.5px 0 rgba(205, 232, 255, 0.62), var(--shadow-card);
+            transition: box-shadow 0.5s ease;
         }
 
         /* Apple Store Directory & Cross-Store Freight Modal */
@@ -2221,8 +2241,8 @@
         .tab-panel {
             display: none;
             flex-direction: column;
-            gap: 20px;
-            padding-top: 4px;
+            gap: 24px;
+            padding-top: 6px;
         }
 
         .tab-panel.active {
@@ -2320,7 +2340,7 @@
 
         /* --- Apple Native Hero Circular Progress Ring --- */
         .hero-section {
-            padding: 4px 0 2px;
+            padding: 8px 0 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -2328,9 +2348,9 @@
 
         .ring-container {
             position: relative;
-            width: 248px;
-            height: 248px;
-            margin-bottom: 6px;
+            width: 260px;
+            height: 260px;
+            margin-bottom: 10px;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
@@ -2399,7 +2419,7 @@
 
         #totalHours {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            font-size: 47px;
+            font-size: 50px;
             font-weight: 600;
             line-height: 1.02;
             letter-spacing: -0.04em;
@@ -4422,15 +4442,6 @@
                     <div id="progressText" class="ring-target-info">目標 8 小時</div>
                 </div>
 
-                <!-- Interactive Life Quotes & Mindset Pill -->
-                <div id="lifeSuggestion" class="life-pill" onclick="rotateLifeQuote(true)" title="點擊換一句心靈哲思">
-                    <div class="life-pill-content">
-                        <i class="fas fa-quote-left life-pill-icon"></i>
-                        <span id="lifeSuggestionText" class="life-pill-text">心若澄澈，萬物皆明；步履從容，行則必至。</span>
-                    </div>
-                    <i class="fas fa-arrow-rotate-right life-pill-refresh"></i>
-                </div>
-
                 <!-- Salary Ticker -->
                 <div id="salaryTicker" class="hidden"
                     style="text-align:center; padding:12px; background:var(--fill); border-radius:var(--radius-sm);">
@@ -5960,19 +5971,24 @@
                     </div>
                 </div>
 
-                <!-- Weatherling 景深實境雨景氛圍控制卡 (Apple Inset Grouped) -->
+                <!-- Weatherling 全天候景深實境氣象氛圍控制卡 (Apple Inset Grouped) -->
                 <div class="rounded-xl overflow-hidden mb-4" style="border:0.5px solid var(--separator); background:var(--card); padding:13px 15px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:9px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                         <div style="display:flex; align-items:center; gap:6px;">
-                            <i class="fas fa-cloud-rain" style="font-size:12px; color:var(--blue);"></i>
-                            <span style="font-size:12.5px; font-weight:700; color:var(--label); letter-spacing:-0.01em;">實境雨景氛圍</span>
+                            <i class="fas fa-cloud-sun-rain" style="font-size:12px; color:var(--blue);"></i>
+                            <span style="font-size:12.5px; font-weight:700; color:var(--label); letter-spacing:-0.01em;">實境氣象美術</span>
                         </div>
-                        <span id="weatherlingStatusSub" style="font-size:11px; font-weight:500; color:var(--label-tertiary);">跟隨即時降雨自動開啟</span>
+                        <span id="weatherlingStatusSub" style="font-size:11px; font-weight:500; color:var(--label-tertiary);">跟隨即時天氣自動演繹</span>
+                    </div>
+                    <div class="store-segmented-control" style="margin-bottom:6px;">
+                        <button type="button" class="store-seg-btn active" id="weatherlingMode_auto" onclick="setWeatherlingMode('auto')">自動</button>
+                        <button type="button" class="store-seg-btn" id="weatherlingMode_rain" onclick="setWeatherlingMode('rain')">🌧️ 微雨</button>
+                        <button type="button" class="store-seg-btn" id="weatherlingMode_thunder" onclick="setWeatherlingMode('thunder')">⛈️ 雷雨</button>
+                        <button type="button" class="store-seg-btn" id="weatherlingMode_typhoon" onclick="setWeatherlingMode('typhoon')">🌀 颱風</button>
                     </div>
                     <div class="store-segmented-control" style="margin-bottom:0;">
-                        <button type="button" class="store-seg-btn active" id="weatherlingMode_auto" onclick="setWeatherlingMode('auto')">自動</button>
-                        <button type="button" class="store-seg-btn" id="weatherlingMode_drizzle" onclick="setWeatherlingMode('drizzle')">微雨</button>
-                        <button type="button" class="store-seg-btn" id="weatherlingMode_downpour" onclick="setWeatherlingMode('downpour')">傾盆</button>
+                        <button type="button" class="store-seg-btn" id="weatherlingMode_sunny" onclick="setWeatherlingMode('sunny')">☀️ 晴陽</button>
+                        <button type="button" class="store-seg-btn" id="weatherlingMode_cold" onclick="setWeatherlingMode('cold')">❄️ 寒流</button>
                         <button type="button" class="store-seg-btn" id="weatherlingMode_off" onclick="setWeatherlingMode('off')">關閉</button>
                     </div>
                 </div>
@@ -9665,8 +9681,8 @@
             }, 12000); // 每 12 秒自動平滑輪播換句
         }
 
-        // 自動輪動初始化
-        resetQuoteAutoTimer();
+        // 已移除名人名句自動輪播計時器，釋放首頁呼吸空間
+        if (_quoteAutoTimer) clearInterval(_quoteAutoTimer);
 
         // ===== ZEN WEB AUDIO SYNTHESIZER (Acoustic Multi-Harmonic Tibetan Bowl Engine) =====
         const ZenAudio = {
@@ -10798,14 +10814,19 @@
         window.requestAccurateGPSWeather = requestAccurateGPSWeather;
 
         // ========================================================
-        // ===== Weatherling × Apple Weather 景深實境雨景系統 =====
+        // ===== Weatherling × Apple Weather 全天候 5 大實境氣象系統 =====
         // ========================================================
         (function (root) {
-            const STORAGE_MODE_KEY = 't8_weatherling_mode_v1';
-            const RAIN_WMO_CODES = new Set([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 85, 86, 95, 96, 99]);
+            const STORAGE_MODE_KEY = 't8_weatherling_mode_v2';
+            const RAIN_WMO_CODES = new Set([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82]);
+            const THUNDER_WMO_CODES = new Set([95, 96, 99]);
+            const SNOW_WMO_CODES = new Set([71, 73, 75, 77, 85, 86]);
 
             let userMode = localStorage.getItem(STORAGE_MODE_KEY) || 'auto';
-            let activeIntensity = 'off'; // 'off' | 'drizzle' | 'downpour'
+            if (userMode === 'drizzle') userMode = 'rain';
+            if (userMode === 'downpour') userMode = 'thunder';
+
+            let activeFx = 'off'; // 'off' | 'rain' | 'thunder' | 'typhoon' | 'sunny' | 'cold'
             let canvas = null;
             let ctx = null;
             let rafId = null;
@@ -10816,28 +10837,55 @@
             let drops = [];
             let splashes = [];
             let beads = [];
+            let windStreaks = [];
+            let sunMotes = [];
             let ledges = [];
             let lastSurfaceScan = 0;
 
-            function isLiveWeatherRainy() {
-                if (!_weatherData) return false;
-                if (RAIN_WMO_CODES.has(Number(_weatherData.weatherCode))) return true;
-                if (Number(_weatherData.precipitation) > 0) return true;
-                if (Number(_weatherData.popMax) >= 65) return true;
-                return false;
+            // Subtle sheet lightning state (Apple Weather restrained cloud pulse)
+            let nextLightningAt = 0;
+            let lightningStart = 0;
+            let lightningPattern = null;
+
+            function detectLiveWeatherFx() {
+                if (!_weatherData) return 'off';
+                const code = Number(_weatherData.weatherCode);
+                const wind = Number(_weatherData.windSpeed) || 0;
+                const precip = Number(_weatherData.precipitation) || 0;
+                const pop = Number(_weatherData.popMax) || 0;
+                const temp = Number(_weatherData.temp);
+                const apparent = Number(_weatherData.apparent);
+                const uv = Number(_weatherData.uvMax) || 0;
+
+                // 1. 颱風 / 狂風暴雨
+                if (wind >= 38 || (wind >= 26 && (precip >= 2.0 || [65, 67, 82, 95, 96, 99].includes(code)))) {
+                    return 'typhoon';
+                }
+                // 2. 雷雨
+                if (THUNDER_WMO_CODES.has(code)) {
+                    return 'thunder';
+                }
+                // 3. 微雨 / 降雨
+                if (RAIN_WMO_CODES.has(code) || precip > 0 || pop >= 65) {
+                    return 'rain';
+                }
+                // 4. 寒流 / 霜雪
+                if (SNOW_WMO_CODES.has(code) || (!isNaN(temp) && temp <= 14) || (!isNaN(apparent) && apparent <= 13)) {
+                    return 'cold';
+                }
+                // 5. 大太陽 / 晴朗高溫
+                if ([0, 1].includes(code) && (uv >= 6 || (!isNaN(temp) && temp >= 30))) {
+                    return 'sunny';
+                }
+                return 'off';
             }
 
-            function resolveIntensity() {
+            function resolveActiveFx() {
                 if (userMode === 'off') return 'off';
-                if (userMode === 'drizzle') return 'drizzle';
-                if (userMode === 'downpour') return 'downpour';
-                // auto mode: follow live weather
-                if (!isLiveWeatherRainy()) return 'off';
-                const code = Number(_weatherData && _weatherData.weatherCode);
-                if ([65, 67, 82, 95, 96, 99].includes(code) || Number(_weatherData && _weatherData.precipitation) >= 2.5) {
-                    return 'downpour';
+                if (['rain', 'thunder', 'typhoon', 'sunny', 'cold'].includes(userMode)) {
+                    return userMode;
                 }
-                return 'drizzle';
+                return detectLiveWeatherFx();
             }
 
             function ensureCanvas() {
@@ -10852,7 +10900,7 @@
                         if (document.hidden && rafId) {
                             cancelAnimationFrame(rafId);
                             rafId = null;
-                        } else if (!document.hidden && activeIntensity !== 'off' && !rafId) {
+                        } else if (!document.hidden && activeFx !== 'off' && !rafId) {
                             lastSurfaceScan = 0;
                             rafId = requestAnimationFrame(stepPhysics);
                         }
@@ -10874,11 +10922,10 @@
 
             function onWindowScroll() {
                 lastSurfaceScan = 0;
-                // Gentle shake-off: resting beads detach and fall when user scrolls
                 for (let i = 0; i < beads.length; i++) {
                     if (!beads[i].falling && Math.random() < 0.35) {
                         beads[i].falling = true;
-                        beads[i].vy = 1.2 + Math.random() * 1.4;
+                        beads[i].vy = 1.0 + Math.random() * 1.3;
                     }
                 }
             }
@@ -10891,25 +10938,21 @@
                 const weatherModal = document.getElementById('weatherModal');
                 const isModalOpen = weatherModal && !weatherModal.classList.contains('hidden');
 
-                let selectors = [];
-                if (isModalOpen) {
-                    selectors = [
+                const selectors = isModalOpen
+                    ? [
                         '#weatherModal .modal-enter',
                         '#weatherModal .rounded-xl',
                         '#weatherModal .weather-metric-cell'
-                    ];
-                } else {
-                    selectors = [
+                    ]
+                    : [
                         '.today-glance-bar',
                         '#ringContainer',
-                        '.life-pill',
                         '.action-card',
                         '.partner-stage-card',
                         '.partner-ai-card',
                         '.partner-radio-card',
                         '.zen-card'
                     ];
-                }
 
                 const nodes = document.querySelectorAll(selectors.join(','));
                 for (let i = 0; i < nodes.length; i++) {
@@ -10933,32 +10976,97 @@
             }
 
             function createDrop(initialRandomY) {
-                const isDownpour = activeIntensity === 'downpour';
-                const fg = Math.random() < 0.68; // 68% foreground (collides with cards), 32% background mist
-                const speed = (fg ? (isDownpour ? 9.5 : 7.2) : (isDownpour ? 5.8 : 4.6)) + Math.random() * 2.6;
-                const windX = isDownpour ? 0.85 : 0.42;
+                const fg = Math.random() < 0.68;
+                if (activeFx === 'cold') {
+                    // ❄️ 寒流冰晶飄雪
+                    return {
+                        x: Math.random() * (width + 40) - 20,
+                        y: initialRandomY ? Math.random() * height : -12 - Math.random() * 60,
+                        vx: (Math.random() - 0.5) * 0.35,
+                        vy: (fg ? 1.15 : 0.72) + Math.random() * 0.65,
+                        r: fg ? 1.6 + Math.random() * 1.3 : 1.0 + Math.random() * 0.8,
+                        phase: Math.random() * Math.PI * 2,
+                        swayAmp: 0.32 + Math.random() * 0.42,
+                        alpha: fg ? 0.58 : 0.28,
+                        fg: fg,
+                        isSnow: true
+                    };
+                }
+
+                const isTyphoon = activeFx === 'typhoon';
+                const isThunder = activeFx === 'thunder';
+                const baseSpeed = isTyphoon ? (fg ? 11.2 : 7.8) : isThunder ? (fg ? 9.4 : 6.0) : (fg ? 7.2 : 4.6);
+                const windX = isTyphoon ? (fg ? 3.8 : 2.5) : isThunder ? 0.95 : 0.42;
+
                 return {
-                    x: Math.random() * (width + 60) - 30,
-                    y: initialRandomY ? Math.random() * height : -20 - Math.random() * 80,
-                    vx: windX + (Math.random() - 0.5) * 0.2,
-                    vy: speed,
-                    len: fg ? (isDownpour ? 17 : 13) + Math.random() * 6 : 9 + Math.random() * 4,
-                    alpha: fg ? (isDownpour ? 0.36 : 0.28) : 0.14,
+                    x: Math.random() * (width + 140) - 100,
+                    y: initialRandomY ? Math.random() * height : -24 - Math.random() * 90,
+                    vx: windX + (Math.random() - 0.5) * (isTyphoon ? 0.65 : 0.2),
+                    vy: baseSpeed + Math.random() * 2.6,
+                    len: fg ? (isTyphoon ? 21 : isThunder ? 17 : 13) + Math.random() * 6 : 9 + Math.random() * 4,
+                    alpha: fg ? (isTyphoon ? 0.38 : isThunder ? 0.34 : 0.28) : 0.14,
                     width: fg ? 1.25 : 0.85,
-                    fg: fg
+                    fg: fg,
+                    isSnow: false
                 };
             }
 
-            function spawnSplash(x, y, isDownpour) {
-                const count = isDownpour ? 3 : 2;
+            function createWindStreak(initialRandomX) {
+                return {
+                    x: initialRandomX ? Math.random() * width : -120 - Math.random() * 120,
+                    y: 50 + Math.random() * (height - 120),
+                    vx: 11 + Math.random() * 6,
+                    vy: 1.1 + Math.random() * 0.8,
+                    len: 65 + Math.random() * 75,
+                    alpha: 0.08 + Math.random() * 0.08
+                };
+            }
+
+            function createSunMote(initialRandomY) {
+                return {
+                    x: width * 0.15 + Math.random() * (width * 0.8),
+                    y: initialRandomY ? Math.random() * (height * 0.72) : height * 0.65 + Math.random() * 80,
+                    vx: (Math.random() - 0.5) * 0.18,
+                    vy: -(0.18 + Math.random() * 0.26),
+                    r: 1.0 + Math.random() * 1.4,
+                    alpha: 0.18 + Math.random() * 0.24,
+                    phase: Math.random() * Math.PI * 2
+                };
+            }
+
+            function spawnCollisionEffect(x, y, ledge) {
+                if (activeFx === 'cold') {
+                    // 雪花落在卡片頂緣緩慢堆積為細緻冰霜微粒
+                    if (beads.length < 44 && Math.random() < 0.65) {
+                        beads.push({
+                            x: x,
+                            y: y - 0.5,
+                            vx: 0,
+                            vy: 0,
+                            r: 1.5 + Math.random() * 1.1,
+                            alpha: 0.68,
+                            falling: false,
+                            isFrost: true,
+                            life: 0,
+                            maxLife: 160 + Math.floor(Math.random() * 120),
+                            ledgeLeft: ledge.left,
+                            ledgeRight: ledge.right
+                        });
+                    }
+                    return;
+                }
+
+                const isHeavy = activeFx === 'thunder' || activeFx === 'typhoon';
+                const isTyphoon = activeFx === 'typhoon';
+                const count = isHeavy ? 3 : 2;
                 for (let i = 0; i < count; i++) {
-                    if (splashes.length > 90) break;
-                    const angle = -Math.PI * (0.18 + Math.random() * 0.64);
-                    const spd = 1.1 + Math.random() * 1.9;
+                    if (splashes.length > 95) break;
+                    const angle = -Math.PI * (isTyphoon ? (0.08 + Math.random() * 0.45) : (0.18 + Math.random() * 0.64));
+                    const spd = (isTyphoon ? 1.5 : 1.1) + Math.random() * 1.9;
                     splashes.push({
                         x: x,
                         y: y,
-                        vx: Math.cos(angle) * spd,
+                        vx: Math.cos(angle) * spd + (isTyphoon ? 0.9 : 0),
                         vy: Math.sin(angle) * spd - 0.4,
                         r: 0.9 + Math.random() * 0.8,
                         alpha: 0.48 + Math.random() * 0.2,
@@ -10967,20 +11075,22 @@
                     });
                 }
 
-                // Weatherling signature: pooling micro-bead on card top edge that glides & trickles
-                if (beads.length < 36 && Math.random() < (isDownpour ? 0.55 : 0.35)) {
+                if (beads.length < 38 && Math.random() < (isHeavy ? 0.55 : 0.35)) {
                     beads.push({
                         x: x,
                         y: y - 0.5,
-                        vx: (Math.random() < 0.5 ? -1 : 1) * (0.12 + Math.random() * 0.22),
+                        vx: isTyphoon
+                            ? (0.65 + Math.random() * 0.75) // 強風推動卡片頂緣水珠向右疾滑
+                            : (Math.random() < 0.5 ? -1 : 1) * (0.12 + Math.random() * 0.22),
                         vy: 0,
                         r: 1.4 + Math.random() * 0.9,
-                        alpha: 0.55,
+                        alpha: 0.56,
                         falling: false,
+                        isFrost: false,
                         life: 0,
                         maxLife: 110 + Math.floor(Math.random() * 90),
-                        ledgeLeft: x - 80,
-                        ledgeRight: x + 80
+                        ledgeLeft: ledge.left,
+                        ledgeRight: ledge.right
                     });
                 }
             }
@@ -10991,18 +11101,142 @@
                     return {
                         streak: '195, 218, 246',
                         bead: '215, 232, 255',
+                        snow: '235, 245, 255',
+                        sunRay: '255, 214, 145',
+                        lightning: '205, 225, 255',
                         spec: '255, 255, 255'
                     };
                 }
                 return {
-                    streak: '98, 122, 152',
+                    streak: '96, 120, 150',
                     bead: '86, 112, 145',
+                    snow: '135, 165, 198',
+                    sunRay: '232, 182, 98',
+                    lightning: '165, 196, 238',
                     spec: '255, 255, 255'
                 };
             }
 
+            function renderSunnyScene(now, palette) {
+                // ☀️ Apple Weather 晨曦暖陽丁達爾光束 + 浮游金塵
+                const pulse = Math.sin(now * 0.0008) * 0.015;
+                const originX = width * 0.88;
+                const originY = -30;
+
+                const rays = [
+                    { angle: 0.52, spread: 0.16, alpha: 0.085 + pulse },
+                    { angle: 0.76, spread: 0.20, alpha: 0.068 - pulse * 0.5 },
+                    { angle: 1.02, spread: 0.14, alpha: 0.055 + pulse * 0.7 }
+                ];
+
+                const maxLen = Math.max(width, height) * 1.15;
+                for (let i = 0; i < rays.length; i++) {
+                    const r = rays[i];
+                    const sway = Math.sin(now * 0.0005 + i * 1.7) * 0.025;
+                    const a1 = r.angle - r.spread * 0.5 + sway;
+                    const a2 = r.angle + r.spread * 0.5 + sway;
+
+                    const grad = ctx.createRadialGradient(originX, originY, 10, originX, originY, maxLen * 0.85);
+                    grad.addColorStop(0, `rgba(${palette.sunRay}, ${(r.alpha * 1.55).toFixed(3)})`);
+                    grad.addColorStop(0.55, `rgba(${palette.sunRay}, ${(r.alpha * 0.65).toFixed(3)})`);
+                    grad.addColorStop(1, `rgba(${palette.sunRay}, 0)`);
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(originX, originY);
+                    ctx.lineTo(originX - Math.cos(a1) * maxLen, originY + Math.sin(a1) * maxLen);
+                    ctx.lineTo(originX - Math.cos(a2) * maxLen, originY + Math.sin(a2) * maxLen);
+                    ctx.closePath();
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                // Warm top-right ambient sun corona
+                const corona = ctx.createRadialGradient(originX, 10, 4, originX, 10, 220);
+                corona.addColorStop(0, `rgba(${palette.sunRay}, 0.16)`);
+                corona.addColorStop(0.6, `rgba(${palette.sunRay}, 0.05)`);
+                corona.addColorStop(1, `rgba(${palette.sunRay}, 0)`);
+                ctx.fillStyle = corona;
+                ctx.fillRect(0, 0, width, 260);
+
+                // Floating golden motes
+                while (sunMotes.length < 18) {
+                    sunMotes.push(createSunMote(true));
+                }
+                for (let i = 0; i < sunMotes.length; i++) {
+                    const m = sunMotes[i];
+                    m.x += m.vx + Math.sin(now * 0.0012 + m.phase) * 0.12;
+                    m.y += m.vy;
+                    if (m.y < 30 || m.x < 10 || m.x > width - 10) {
+                        Object.assign(m, createSunMote(false));
+                    }
+                    const twinkle = 0.65 + 0.35 * Math.sin(now * 0.0025 + m.phase);
+                    ctx.beginPath();
+                    ctx.fillStyle = `rgba(${palette.sunRay}, ${(m.alpha * twinkle).toFixed(3)})`;
+                    ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function renderThunderLightning(now, palette) {
+                if (!nextLightningAt) {
+                    nextLightningAt = now + 2200 + Math.random() * 3800;
+                }
+                if (now >= nextLightningAt && !lightningPattern) {
+                    lightningStart = now;
+                    lightningPattern = {
+                        x: width * (0.2 + Math.random() * 0.6),
+                        duration: 340
+                    };
+                    nextLightningAt = now + 5200 + Math.random() * 5500;
+                }
+                if (lightningPattern) {
+                    const elapsed = now - lightningStart;
+                    if (elapsed > lightningPattern.duration) {
+                        lightningPattern = null;
+                        return;
+                    }
+                    // Subtle double-pulse curve (Apple Weather cloud sheet lightning)
+                    let intensity = 0;
+                    if (elapsed < 75) {
+                        intensity = (elapsed / 75) * 0.14;
+                    } else if (elapsed < 140) {
+                        intensity = 0.03;
+                    } else if (elapsed < 220) {
+                        intensity = 0.18 * (1 - Math.abs(elapsed - 180) / 45);
+                    } else {
+                        intensity = 0.12 * (1 - (elapsed - 220) / 120);
+                    }
+                    intensity = Math.max(0, intensity);
+                    if (intensity > 0.005) {
+                        const grad = ctx.createRadialGradient(
+                            lightningPattern.x, 0, 10,
+                            lightningPattern.x, 40, Math.max(width, height) * 0.78
+                        );
+                        grad.addColorStop(0, `rgba(${palette.lightning}, ${(intensity * 1.35).toFixed(3)})`);
+                        grad.addColorStop(0.5, `rgba(${palette.lightning}, ${(intensity * 0.65).toFixed(3)})`);
+                        grad.addColorStop(1, `rgba(${palette.lightning}, 0)`);
+                        ctx.fillStyle = grad;
+                        ctx.fillRect(0, 0, width, height);
+
+                        // Illuminate card top rims during lightning pulse
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${(intensity * 2.1).toFixed(3)})`;
+                        ctx.lineWidth = 1.2;
+                        for (let j = 0; j < ledges.length; j++) {
+                            const l = ledges[j];
+                            if (l.isArc) continue;
+                            ctx.beginPath();
+                            ctx.moveTo(l.left, l.y);
+                            ctx.lineTo(l.right, l.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
             function stepPhysics(now) {
-                if (activeIntensity === 'off') {
+                if (activeFx === 'off') {
                     if (ctx) ctx.clearRect(0, 0, width, height);
                     rafId = null;
                     return;
@@ -11012,8 +11246,49 @@
                     refreshWeatherlingSurfaces();
                 }
 
-                const isDownpour = activeIntensity === 'downpour';
-                const targetDropCount = isDownpour ? 68 : 36;
+                ctx.clearRect(0, 0, width, height);
+                const palette = getThemeColors();
+
+                // ☀️ 晴陽模式
+                if (activeFx === 'sunny') {
+                    renderSunnyScene(now, palette);
+                    rafId = requestAnimationFrame(stepPhysics);
+                    return;
+                }
+
+                // ⛈️ 雷雨雲層遠景微閃
+                if (activeFx === 'thunder') {
+                    renderThunderLightning(now, palette);
+                }
+
+                // 🌀 颱風氣流風線
+                if (activeFx === 'typhoon') {
+                    while (windStreaks.length < 7) {
+                        windStreaks.push(createWindStreak(true));
+                    }
+                    ctx.lineCap = 'round';
+                    for (let i = 0; i < windStreaks.length; i++) {
+                        const w = windStreaks[i];
+                        w.x += w.vx;
+                        w.y += w.vy;
+                        if (w.x - w.len > width + 60 || w.y > height) {
+                            Object.assign(w, createWindStreak(false));
+                            continue;
+                        }
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(${palette.streak}, ${w.alpha})`;
+                        ctx.lineWidth = 1.0;
+                        ctx.moveTo(w.x, w.y);
+                        ctx.lineTo(w.x - w.len, w.y - w.len * 0.1);
+                        ctx.stroke();
+                    }
+                }
+
+                const targetDropCount =
+                    activeFx === 'typhoon' ? 76 :
+                    activeFx === 'thunder' ? 62 :
+                    activeFx === 'cold' ? 42 : 36;
+
                 while (drops.length < targetDropCount) {
                     drops.push(createDrop(false));
                 }
@@ -11021,16 +11296,18 @@
                     drops.length = targetDropCount;
                 }
 
-                ctx.clearRect(0, 0, width, height);
-                const palette = getThemeColors();
-
-                // 1. Update & draw rain streaks
+                // 1. Update & draw rain / snow particles
                 ctx.lineCap = 'round';
                 for (let i = 0; i < drops.length; i++) {
                     const d = drops[i];
                     const prevY = d.y;
-                    d.x += d.vx;
-                    d.y += d.vy;
+                    if (d.isSnow) {
+                        d.x += d.vx + Math.sin(now * 0.0018 + d.phase) * d.swayAmp;
+                        d.y += d.vy;
+                    } else {
+                        d.x += d.vx;
+                        d.y += d.vy;
+                    }
 
                     let collided = false;
                     if (d.fg) {
@@ -11045,12 +11322,7 @@
                                     }
                                 }
                                 if (prevY <= surfaceY && d.y >= surfaceY) {
-                                    spawnSplash(d.x, surfaceY, isDownpour);
-                                    if (beads.length > 0) {
-                                        const lastBead = beads[beads.length - 1];
-                                        lastBead.ledgeLeft = l.left;
-                                        lastBead.ledgeRight = l.right;
-                                    }
+                                    spawnCollisionEffect(d.x, surfaceY, l);
                                     Object.assign(d, createDrop(false));
                                     collided = true;
                                     break;
@@ -11061,17 +11333,29 @@
 
                     if (collided) continue;
 
-                    if (d.y - d.len > height || d.x > width + 40) {
+                    if (d.y - 25 > height || d.x > width + 80 || d.x < -120) {
                         Object.assign(d, createDrop(false));
                         continue;
                     }
 
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(${palette.streak}, ${d.alpha})`;
-                    ctx.lineWidth = d.width;
-                    ctx.moveTo(d.x, d.y);
-                    ctx.lineTo(d.x - d.vx * 1.6, d.y - d.len);
-                    ctx.stroke();
+                    if (d.isSnow) {
+                        ctx.beginPath();
+                        ctx.fillStyle = `rgba(${palette.snow}, ${d.alpha})`;
+                        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Tiny crystalline highlight
+                        ctx.beginPath();
+                        ctx.fillStyle = `rgba(255, 255, 255, ${(d.alpha * 0.85).toFixed(2)})`;
+                        ctx.arc(d.x - d.r * 0.25, d.y - d.r * 0.25, d.r * 0.45, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(${palette.streak}, ${d.alpha})`;
+                        ctx.lineWidth = d.width;
+                        ctx.moveTo(d.x, d.y);
+                        ctx.lineTo(d.x - d.vx * 1.55, d.y - d.len);
+                        ctx.stroke();
+                    }
                 }
 
                 // 2. Update & draw micro-splashes
@@ -11079,7 +11363,7 @@
                     const s = splashes[i];
                     s.x += s.vx;
                     s.y += s.vy;
-                    s.vy += 0.17; // gravity
+                    s.vy += 0.17;
                     s.life++;
 
                     if (s.life >= s.maxLife) {
@@ -11094,7 +11378,7 @@
                     ctx.fill();
                 }
 
-                // 3. Update & draw card-edge pooling beads & corner rivulets
+                // 3. Update & draw card-edge pooling beads / frost crystals
                 for (let i = beads.length - 1; i >= 0; i--) {
                     const b = beads[i];
                     b.life++;
@@ -11105,35 +11389,43 @@
 
                     if (!b.falling) {
                         b.x += b.vx;
-                        // When bead reaches card corner, trickle down the side like a rivulet
-                        if (b.x <= b.ledgeLeft + 6 || b.x >= b.ledgeRight - 6) {
+                        if (!b.isFrost && (b.x <= b.ledgeLeft + 6 || b.x >= b.ledgeRight - 6)) {
                             b.falling = true;
-                            b.vx = 0;
-                            b.vy = 0.8 + Math.random() * 0.9;
+                            b.vx = activeFx === 'typhoon' ? 1.8 : 0;
+                            b.vy = 0.9 + Math.random() * 1.0;
                         }
                     } else {
+                        b.x += b.vx;
                         b.y += b.vy;
-                        b.vy = Math.min(b.vy + 0.08, 3.8);
+                        b.vy = Math.min(b.vy + 0.09, 4.2);
                     }
 
-                    const fade = b.life > b.maxLife - 25 ? (b.maxLife - b.life) / 25 : 1;
+                    const fade = b.life > b.maxLife - 28 ? (b.maxLife - b.life) / 28 : 1;
                     ctx.beginPath();
-                    ctx.fillStyle = `rgba(${palette.bead}, ${(b.alpha * fade).toFixed(3)})`;
+                    ctx.fillStyle = `rgba(${b.isFrost ? palette.snow : palette.bead}, ${(b.alpha * fade).toFixed(3)})`;
                     ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
                     ctx.fill();
 
-                    // Tiny Apple glass specular highlight dot on each water bead
                     ctx.beginPath();
-                    ctx.fillStyle = `rgba(${palette.spec}, ${(0.65 * fade).toFixed(3)})`;
-                    ctx.arc(b.x - b.r * 0.3, b.y - b.r * 0.3, Math.max(0.5, b.r * 0.35), 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${palette.spec}, ${(0.7 * fade).toFixed(3)})`;
+                    ctx.arc(b.x - b.r * 0.3, b.y - b.r * 0.3, Math.max(0.5, b.r * 0.36), 0, Math.PI * 2);
                     ctx.fill();
                 }
 
                 rafId = requestAnimationFrame(stepPhysics);
             }
 
+            const FX_LABELS = {
+                rain: '🌧️ 微雨 · 卡片邊緣水珠凝結彈跳',
+                thunder: '⛈️ 雷雨 · 雲層遠景微閃與傾盆水花',
+                typhoon: '🌀 颱風 · 強風斜雨與卡片水珠疾滑',
+                sunny: '☀️ 晴陽 · 晨曦暖金光束與金邊折射',
+                cold: '❄️ 寒流 · 景深飄雪與卡片頂緣凝霜',
+                off: '目前天氣舒適 · 保持純淨留白'
+            };
+
             function syncWeatherlingControlUI() {
-                const modes = ['auto', 'drizzle', 'downpour', 'off'];
+                const modes = ['auto', 'rain', 'thunder', 'typhoon', 'sunny', 'cold', 'off'];
                 modes.forEach(m => {
                     const btn = document.getElementById(`weatherlingMode_${m}`);
                     if (btn) {
@@ -11145,26 +11437,26 @@
                 const statusSub = document.getElementById('weatherlingStatusSub');
                 if (statusSub) {
                     if (userMode === 'auto') {
-                        statusSub.textContent = isLiveWeatherRainy()
-                            ? '🌧️ 偵測到降雨 · 實境雨景已自動開啟'
-                            : '跟隨即時降雨自動開啟 (目前無雨)';
-                    } else if (userMode === 'drizzle') {
-                        statusSub.textContent = '🌧️ 已開啟「微雨」卡片碰撞氛圍';
-                    } else if (userMode === 'downpour') {
-                        statusSub.textContent = '⛈️ 已開啟「傾盆」水珠凝結滑落氛圍';
+                        const autoDetected = detectLiveWeatherFx();
+                        statusSub.textContent = autoDetected === 'off'
+                            ? '跟隨即時天氣自動開啟 (目前天氣溫和)'
+                            : `自動開啟：${FX_LABELS[autoDetected]}`;
+                    } else if (userMode === 'off') {
+                        statusSub.textContent = '已關閉實境氣象美術';
                     } else {
-                        statusSub.textContent = '已關閉雨景視覺';
+                        statusSub.textContent = FX_LABELS[userMode] || '';
                     }
                 }
             }
 
             function syncWeatherlingState() {
-                const nextIntensity = resolveIntensity();
+                const nextFx = resolveActiveFx();
                 syncWeatherlingControlUI();
 
-                if (nextIntensity === 'off') {
-                    activeIntensity = 'off';
+                if (nextFx === 'off') {
+                    activeFx = 'off';
                     document.body.classList.remove('weatherling-active');
+                    document.body.removeAttribute('data-weather-fx');
                     if (rafId) {
                         cancelAnimationFrame(rafId);
                         rafId = null;
@@ -11173,20 +11465,32 @@
                     drops = [];
                     splashes = [];
                     beads = [];
+                    windStreaks = [];
+                    sunMotes = [];
                     return;
                 }
 
                 if (!ensureCanvas()) return;
-                const wasOff = activeIntensity === 'off';
-                activeIntensity = nextIntensity;
+                const fxChanged = activeFx !== nextFx;
+                activeFx = nextFx;
                 document.body.classList.add('weatherling-active');
+                document.body.setAttribute('data-weather-fx', activeFx);
                 refreshWeatherlingSurfaces();
 
-                if (wasOff) {
-                    const count = activeIntensity === 'downpour' ? 68 : 36;
+                if (fxChanged) {
                     drops = [];
-                    for (let i = 0; i < count; i++) {
-                        drops.push(createDrop(true));
+                    splashes = [];
+                    beads = [];
+                    windStreaks = [];
+                    sunMotes = [];
+                    lightningPattern = null;
+                    nextLightningAt = performance.now() + 900;
+
+                    if (activeFx === 'sunny') {
+                        for (let i = 0; i < 18; i++) sunMotes.push(createSunMote(true));
+                    } else {
+                        const count = activeFx === 'typhoon' ? 76 : activeFx === 'thunder' ? 62 : activeFx === 'cold' ? 42 : 36;
+                        for (let i = 0; i < count; i++) drops.push(createDrop(true));
                     }
                 }
                 if (!rafId && !document.hidden) {
@@ -11195,7 +11499,7 @@
             }
 
             function setWeatherlingMode(mode) {
-                if (!['auto', 'drizzle', 'downpour', 'off'].includes(mode)) return;
+                if (!['auto', 'rain', 'thunder', 'typhoon', 'sunny', 'cold', 'off'].includes(mode)) return;
                 userMode = mode;
                 try {
                     localStorage.setItem(STORAGE_MODE_KEY, mode);
