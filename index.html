@@ -2338,20 +2338,20 @@
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        /* --- Apple Native Floating Kitsune AI Orb (懸浮靈狐智囊) --- */
+        /* --- Apple Watch Motion-Inspired Bioluminescent Jellyfish AI Orb (懸浮流光水母) --- */
         #aiFloatingFoxOrb {
             position: fixed;
             right: 16px;
             bottom: calc(env(safe-area-inset-bottom, 12px) + 82px);
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             z-index: 46;
-            background: var(--nav-bg);
-            border: 0.5px solid var(--separator);
+            background: radial-gradient(circle at 50% 32%, rgba(165, 195, 255, 0.18), rgba(18, 22, 34, 0.84));
+            border: 0.5px solid rgba(255, 255, 255, 0.28);
             -webkit-backdrop-filter: blur(26px) saturate(190%);
             backdrop-filter: blur(26px) saturate(190%);
-            box-shadow: 0 8px 24px rgba(40, 24, 12, 0.14), 0 2px 6px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+            box-shadow: 0 8px 26px rgba(15, 23, 42, 0.22), 0 0 16px rgba(130, 170, 255, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.42);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2369,46 +2369,45 @@
         #aiFloatingFoxOrb.fox-dragging {
             transition: none !important;
             transform: scale(1.08);
-            box-shadow: 0 14px 32px rgba(40, 24, 12, 0.22);
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.32), 0 0 22px rgba(145, 180, 255, 0.28);
         }
         #aiFloatingFoxOrb.fox-idle-peek {
-            opacity: 0.86;
+            opacity: 0.85;
         }
-        #aiFloatingFoxOrb .fox-svg {
-            width: 31px;
-            height: 31px;
+        #aiFloatingFoxOrb .jelly-svg {
+            width: 34px;
+            height: 34px;
             overflow: visible;
-            animation: foxSubtleFloat 4.4s ease-in-out infinite;
+            animation: jellyDrift 4.2s ease-in-out infinite;
         }
-        #aiFloatingFoxOrb .fox-ear-left {
-            transform-origin: 12px 14px;
-            animation: foxEarLeftTwitch 6.5s ease-in-out infinite;
+        #aiFloatingFoxOrb .jelly-bell {
+            transform-origin: 20px 14px;
+            animation: jellyBellPulse 4.2s ease-in-out infinite;
         }
-        #aiFloatingFoxOrb .fox-ear-right {
-            transform-origin: 28px 14px;
-            animation: foxEarRightTwitch 6.5s ease-in-out infinite;
+        #aiFloatingFoxOrb .jelly-tentacles-a {
+            transform-origin: 20px 19px;
+            animation: jellyTentacleSwayA 4.2s ease-in-out infinite;
         }
-        #aiFloatingFoxOrb .fox-eyes {
-            transform-origin: 20px 22px;
-            animation: foxEyeBlink 4.8s ease-in-out infinite;
+        #aiFloatingFoxOrb .jelly-tentacles-b {
+            transform-origin: 20px 19px;
+            animation: jellyTentacleSwayB 4.2s ease-in-out infinite;
         }
-        @keyframes foxSubtleFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-1.6px); }
+        @keyframes jellyDrift {
+            0%, 100% { transform: translateY(0.8px); }
+            45% { transform: translateY(-2.2px); }
         }
-        @keyframes foxEarLeftTwitch {
-            0%, 88%, 100% { transform: rotate(0deg); }
-            92% { transform: rotate(-6deg); }
-            96% { transform: rotate(2deg); }
+        @keyframes jellyBellPulse {
+            0%, 100% { transform: scaleX(1) scaleY(1); }
+            40% { transform: scaleX(0.91) scaleY(1.07); }
+            70% { transform: scaleX(1.04) scaleY(0.96); }
         }
-        @keyframes foxEarRightTwitch {
-            0%, 88%, 100% { transform: rotate(0deg); }
-            92% { transform: rotate(6deg); }
-            96% { transform: rotate(-2deg); }
+        @keyframes jellyTentacleSwayA {
+            0%, 100% { transform: rotate(-2deg) scaleY(0.97); }
+            45% { transform: rotate(3.5deg) scaleY(1.05); }
         }
-        @keyframes foxEyeBlink {
-            0%, 93%, 100% { transform: scaleY(1); }
-            96% { transform: scaleY(0.12); }
+        @keyframes jellyTentacleSwayB {
+            0%, 100% { transform: rotate(2.5deg) scaleY(1.03); }
+            50% { transform: rotate(-3.5deg) scaleY(0.95); }
         }
 
         /* --- Apple Native Hero Circular Progress Ring --- */
@@ -5007,50 +5006,50 @@
         </button>
     </nav>
 
-    <!-- Apple Native Floating Kitsune AI Orb (懸浮靈狐智囊 · 支援自由磁吸拖曳與輕點喚醒) -->
-    <button type="button" id="aiFloatingFoxOrb" title="靈狐 AI 智囊 (可拖曳移動，輕點開啟)" aria-label="開啟靈狐 AI 智囊">
-        <svg class="fox-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Apple Watch Motion-Inspired Bioluminescent Jellyfish AI Orb (懸浮流光水母 · 支援自由磁吸拖曳與輕點喚醒) -->
+    <button type="button" id="aiFloatingFoxOrb" title="AI 智囊 (可拖曳移動，輕點開啟)" aria-label="開啟 AI 智囊">
+        <svg class="jelly-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <linearGradient id="foxFurGrad" x1="20" y1="6" x2="20" y2="35" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#E8833A" />
-                    <stop offset="65%" stop-color="#CC5F1E" />
-                    <stop offset="100%" stop-color="#A84610" />
-                </linearGradient>
-                <linearGradient id="foxEarInner" x1="20" y1="7" x2="20" y2="18" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#3A2218" />
-                    <stop offset="100%" stop-color="#8C4320" />
-                </linearGradient>
-                <linearGradient id="foxCheekCream" x1="20" y1="20" x2="20" y2="35" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#FFFDF9" />
-                    <stop offset="100%" stop-color="#EFE6D8" />
+                <radialGradient id="jellyOuterDome" cx="50%" cy="28%" r="68%">
+                    <stop offset="0%" stop-color="#F0F7FF" stop-opacity="0.95" />
+                    <stop offset="45%" stop-color="#9BC5FF" stop-opacity="0.72" />
+                    <stop offset="82%" stop-color="#B388FF" stop-opacity="0.58" />
+                    <stop offset="100%" stop-color="#6E78FF" stop-opacity="0.25" />
+                </radialGradient>
+                <radialGradient id="jellyInnerCore" cx="50%" cy="45%" r="50%">
+                    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.92" />
+                    <stop offset="55%" stop-color="#FF9EBB" stop-opacity="0.55" />
+                    <stop offset="100%" stop-color="#8C9EFF" stop-opacity="0" />
+                </radialGradient>
+                <linearGradient id="jellySilkGrad" x1="20" y1="18" x2="20" y2="37" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#D4E4FF" stop-opacity="0.85" />
+                    <stop offset="55%" stop-color="#C5A3FF" stop-opacity="0.52" />
+                    <stop offset="100%" stop-color="#80D8FF" stop-opacity="0.05" />
                 </linearGradient>
             </defs>
-            <!-- Left Ear -->
-            <g class="fox-ear-left">
-                <path d="M9.5 19.5 L6.8 6.8 C6.6 5.8 7.6 5.2 8.5 5.8 L17.5 13.2 Z" fill="url(#foxFurGrad)" />
-                <path d="M10.2 16.8 L8.4 8.4 L15.2 13.6 Z" fill="url(#foxEarInner)" opacity="0.85" />
+            <!-- Flowing Bioluminescent Tentacles (Back & Front Silk Layers) -->
+            <g class="jelly-tentacles-b" stroke="url(#jellySilkGrad)" stroke-linecap="round" fill="none">
+                <path d="M13.5 19.5 C12 24.5, 15.2 28.5, 12.8 34.2" stroke-width="1.15" />
+                <path d="M26.5 19.5 C28 24.5, 24.8 28.5, 27.2 34.2" stroke-width="1.15" />
+                <path d="M20 20.2 C18.2 25.8, 22.0 30.5, 19.5 36.5" stroke-width="1.45" />
             </g>
-            <!-- Right Ear -->
-            <g class="fox-ear-right">
-                <path d="M30.5 19.5 L33.2 6.8 C33.4 5.8 32.4 5.2 31.5 5.8 L22.5 13.2 Z" fill="url(#foxFurGrad)" />
-                <path d="M29.8 16.8 L31.6 8.4 L24.8 13.6 Z" fill="url(#foxEarInner)" opacity="0.85" />
+            <g class="jelly-tentacles-a" stroke="url(#jellySilkGrad)" stroke-linecap="round" fill="none">
+                <path d="M16.5 19.8 C15.2 24.8, 18.2 29.2, 16.0 35.5" stroke-width="1.3" />
+                <path d="M23.5 19.8 C24.8 24.8, 21.8 29.2, 24.0 35.5" stroke-width="1.3" />
             </g>
-            <!-- Head Base (Geometric Origami Diamond Contour) -->
-            <path d="M20 11 C27.5 11 33 16.8 33 23.2 C33 28.8 26.8 34.5 20 35.2 C13.2 34.5 7 28.8 7 23.2 C7 16.8 12.5 11 20 11 Z" fill="url(#foxFurGrad)" />
-            <!-- Cream White Cheeks & Chin -->
-            <path d="M7.3 23.8 C11.5 23.2 16.2 26.5 20 35.1 C13.2 34.4 7.3 28.8 7.3 23.8 Z" fill="url(#foxCheekCream)" />
-            <path d="M32.7 23.8 C28.5 23.2 23.8 26.5 20 35.1 C26.8 34.4 32.7 28.8 32.7 23.8 Z" fill="url(#foxCheekCream)" />
-            <!-- Subtle Forehead Blaze -->
-            <path d="M20 12.5 L22.2 19.5 L20 25.5 L17.8 19.5 Z" fill="#F29B52" opacity="0.45" />
-            <!-- Expressive Eyes -->
-            <g class="fox-eyes">
-                <ellipse cx="14.4" cy="22.4" rx="1.65" ry="1.85" fill="#1E1410" />
-                <circle cx="13.9" cy="21.8" r="0.55" fill="#FFFFFF" />
-                <ellipse cx="25.6" cy="22.4" rx="1.65" ry="1.85" fill="#1E1410" />
-                <circle cx="25.1" cy="21.8" r="0.55" fill="#FFFFFF" />
+            <!-- Translucent Pulsating Bell Dome (傘蓋) -->
+            <g class="jelly-bell">
+                <!-- Inner Bioluminescent Organ Glow -->
+                <ellipse cx="20" cy="14.5" rx="7.2" ry="5.2" fill="url(#jellyInnerCore)" />
+                <!-- Main Glass Bell -->
+                <path d="M8.5 17.5 C8.5 9.2, 13.5 5.5, 20 5.5 C26.5 5.5, 31.5 9.2, 31.5 17.5 C29.2 19.6, 26.2 17.8, 23.8 19.3 C21.5 20.6, 18.5 20.6, 16.2 19.3 C13.8 17.8, 10.8 19.6, 8.5 17.5 Z"
+                    fill="url(#jellyOuterDome)" stroke="rgba(255,255,255,0.68)" stroke-width="0.75" />
+                <!-- Delicate Umbrella Rib Lines -->
+                <path d="M20 6.0 C17.2 9.5, 16.2 14.2, 16.2 19.0" stroke="rgba(255,255,255,0.38)" stroke-width="0.6" stroke-linecap="round" />
+                <path d="M20 6.0 C22.8 9.5, 23.8 14.2, 23.8 19.0" stroke="rgba(255,255,255,0.38)" stroke-width="0.6" stroke-linecap="round" />
+                <!-- Top Specular Rim Highlight -->
+                <path d="M13.2 9.5 C15.2 7.4, 18.2 6.8, 21.5 7.2" stroke="rgba(255,255,255,0.85)" stroke-width="1.1" stroke-linecap="round" />
             </g>
-            <!-- Delicate Nose Tip -->
-            <path d="M18.4 31.8 Q20 31.1 21.6 31.8 Q20 33.8 18.4 31.8 Z" fill="#1E1410" />
         </svg>
     </button>
 
@@ -5065,7 +5064,7 @@
 
     <!-- Modals: iOS Action Sheet Style -->
 
-    <!-- Kitsune AI Companion Sheet Modal (懸浮靈狐智囊 Apple 原生半高抽屜) -->
+    <!-- Jellyfish AI Companion Sheet Modal (懸浮水母智囊 Apple 原生半高抽屜) -->
     <div id="aiChatSheetModal" class="fixed inset-0 hidden" style="z-index: 108;">
         <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)"
             onclick="closeAiChatSheet()"></div>
@@ -5077,12 +5076,12 @@
                 <div class="sheet-handle" style="margin-bottom:10px;"></div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div style="display:flex; align-items:center; gap:9px;">
-                        <div style="width:30px; height:30px; border-radius:50%; background:var(--fill); border:0.5px solid var(--separator); display:flex; align-items:center; justify-content:center;">
-                            <span style="font-size:15px;">🦊</span>
+                        <div style="width:30px; height:30px; border-radius:50%; background:radial-gradient(circle at 50% 30%, rgba(165,195,255,0.28), rgba(22,28,45,0.88)); border:0.5px solid var(--separator); display:flex; align-items:center; justify-content:center;">
+                            <span style="font-size:15px;">🪼</span>
                         </div>
                         <div>
-                            <h3 style="font-size:15px; font-weight:700; color:var(--label); margin:0;" id="aiChatModalTitle">靈狐智囊</h3>
-                            <div style="font-size:10.5px; color:var(--label-tertiary);" id="aiChatModelBadge">✦ 隨身門市與職場 AI 顧問</div>
+                            <h3 style="font-size:15px; font-weight:700; color:var(--label); margin:0;" id="aiChatModalTitle">流光水母智囊</h3>
+                            <div style="font-size:10.5px; color:var(--label-tertiary);" id="aiChatModelBadge">✦ 全能 AI 智慧中樞 · 即時感知工時與門市數據</div>
                         </div>
                     </div>
                     <div style="display:flex; align-items:center; gap:6px;">
@@ -5101,19 +5100,28 @@
                     </div>
                 </div>
 
-                <!-- 4 Minimal Apple Pill Prompts (單行俐落膠囊) -->
-                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-top:10px;">
-                    <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知跨店運費與預計抵達時間，方便直接複製貼到 LINE。')" class="ai-quick-tag active-scale" style="padding:6px 4px; font-size:11px; font-weight:600; text-align:center;">
+                <!-- 8 Apple Pill Prompts (橫向滑動全能膠囊列) -->
+                <div class="no-scrollbar" style="display:flex; gap:6px; margin-top:10px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch;">
+                    <button type="button" onclick="triggerAiQuickPrompt('請幫我分析今天的打卡紀錄、目前已累積工時、距離滿 8 小時還差多久，以及預計幾點可以下班？')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        📊 今日工時分析
+                    </button>
+                    <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知跨店運費與預計抵達時間，方便直接複製貼到 LINE。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
                         🚚 調貨話術
                     </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('客戶反映家電配送或安裝時間延誤，請幫我寫一段高情商、誠懇安撫並提供改期確認的 LINE 回覆範本。')" class="ai-quick-tag active-scale" style="padding:6px 4px; font-size:11px; font-weight:600; text-align:center;">
+                    <button type="button" onclick="triggerAiQuickPrompt('客戶反映家電配送或安裝時間延誤，請幫我寫一段高情商、誠懇安撫並提供改期確認的 LINE 回覆範本。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
                         🛡️ 客訴安撫
                     </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('請針對「一級能效變頻冷氣與冰箱」提煉 3 點最能打動門市客人的成交賣點金句（省電、靜音、節能補助）。')" class="ai-quick-tag active-scale" style="padding:6px 4px; font-size:11px; font-weight:600; text-align:center;">
+                    <button type="button" onclick="triggerAiQuickPrompt('請幫我整理台灣門市最實用的「房間坪數 vs 冷氣噸數/kW 對照表」，並加上西曬、頂樓、鐵皮或挑高的加大建議。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        ❄️ 冷氣坪數試算
+                    </button>
+                    <button type="button" onclick="triggerAiQuickPrompt('請針對「一級能效變頻冷氣與冰箱」提煉 3 點最能打動門市客人的成交賣點金句（省電、靜音、節能補助與貨物稅減免）。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
                         💡 家電賣點
                     </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法簡要說明：工作 4 小時休息 30 分鐘、加班費計算倍率與跨日輪班間隔 11 小時的重點。')" class="ai-quick-tag active-scale" style="padding:6px 4px; font-size:11px; font-weight:600; text-align:center;">
+                    <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法簡要說明：工作 4 小時休息 30 分鐘、平日與休息日加班費計算倍率，以及跨日輪班間隔 11 小時的重點。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
                         ⚖️ 勞基法規
+                    </button>
+                    <button type="button" onclick="triggerAiQuickPrompt('請根據我目前的今日待辦事項與備忘錄，幫我整理成一份條理分明的門市交接與待辦重點清單。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        📝 待辦交接整理
                     </button>
                 </div>
             </div>
@@ -5125,21 +5133,21 @@
 
             <!-- Typing Indicator -->
             <div id="aiTypingIndicator" style="display:none; padding:0 16px 8px; align-items:center; gap:6px;">
-                <span style="font-size:12px;">🦊</span>
-                <span style="font-size:11.5px; color:var(--label-tertiary);">靈狐正在撰寫建議中…</span>
+                <span style="font-size:12px;">🪼</span>
+                <span style="font-size:11.5px; color:var(--label-tertiary);">流光水母正在思考並整理回覆…</span>
             </div>
 
             <!-- Bottom Input Bar -->
             <div style="padding:10px 16px 24px; background:var(--bg); border-top:0.5px solid var(--separator); flex-shrink:0;">
                 <div style="display:flex; gap:8px; align-items:flex-end;">
                     <div style="flex:1; position:relative; background:var(--fill); border:0.5px solid var(--separator); border-radius:18px; padding:8px 12px; display:flex; flex-direction:column;">
-                        <textarea id="aiChatInput" rows="1" placeholder="問問靈狐智囊，或貼上草稿請它潤飾…"
+                        <textarea id="aiChatInput" rows="1" placeholder="問問水母任何事（工時、門市運費、台獎、話術或萬事通）…"
                             style="width:100%; border:none; background:transparent; color:var(--label); font-size:13.5px; font-family:inherit; resize:none; outline:none; max-height:96px; line-height:1.45;"
                             onkeydown="handleAiChatKeyDown(event)"
                             oninput="autoResizeAiTextarea(this)"></textarea>
                     </div>
                     <button type="button" id="aiSendBtn" onclick="sendAiChatMessage()" class="active-scale" aria-label="送出"
-                        style="width:38px; height:38px; border-radius:50%; background:var(--purple); border:none; color:#FFFFFF; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 8px rgba(122,90,138,0.3);">
+                        style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, #38BDF8, #818CF8); border:none; color:#FFFFFF; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 10px rgba(56,189,248,0.35);">
                         <i class="fas fa-arrow-up" style="font-size:14px;"></i>
                     </button>
                 </div>
@@ -7409,17 +7417,16 @@
     window.onPetClick = onPetClick;
 
     // ========================================================
-    // ===== 晶靈寵物 AI 貼心智囊對話系統 (OpenRouter Free) =====
+    // ===== 流光水母 AI 全能智囊系統 (Multi-Engine + Live Context) =====
     // ========================================================
     
     // Prioritized free model fallback sequence (自動容錯與多模型備援)
     const FREE_AI_MODELS = [
-        { id: 'minimax/minimax-m2.7:free', name: 'Minimax M2.7' },
-        { id: 'minimax/minimax-m3:free', name: 'Minimax M3' },
-        { id: 'google/gemma-4-31b-it:free', name: 'Google Gemma 31B' },
-        { id: 'google/gemma-4-26b-a4b-it:free', name: 'Google Gemma 26B' },
-        { id: 'z-ai/glm-5.2:free', name: 'GLM 5.2' },
-        { id: 'inclusionai/ling-3.0-flash-fin:free', name: 'Ling Flash' }
+        { id: 'google/gemini-2.0-flash-exp:free', name: 'Gemini 2.0 Flash' },
+        { id: 'deepseek/deepseek-chat-v3-0324:free', name: 'DeepSeek V3' },
+        { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 70B' },
+        { id: 'qwen/qwen-2.5-72b-instruct:free', name: 'Qwen 2.5 72B' },
+        { id: 'openrouter/free', name: 'OpenRouter Smart' }
     ];
 
     let _isAiChatSending = false;
@@ -7749,11 +7756,11 @@
         if (history.length === 0) {
             container.innerHTML = `
                 <div class="ai-msg-bubble-pet">
-                    <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px; display:flex; align-items:center; gap:5px;">
-                        <i class="fas fa-wand-magic-sparkles" style="font-size:10px;"></i>
-                        <span>T8 職場智囊</span>
+                    <div style="font-size:11px; font-weight:700; color:#38BDF8; margin-bottom:4px; display:flex; align-items:center; gap:5px;">
+                        <span>🪼</span>
+                        <span>流光水母 · 全能 AI 智囊</span>
                     </div>
-                    <div style="line-height:1.55;">夥伴辛苦了！我是您的專屬門市與職場 AI 智囊。<br>點擊上方 <b>6 大快捷指令</b>（跨店調貨話術、客訴安撫、賣點提煉、勞基法規、交接範本），或在下方直接輸入問題，我會立即為您生成可一鍵複製的專業內容。</div>
+                    <div style="line-height:1.58;">嗨！我是您的隨身<b>流光水母 AI 智囊</b>。<br>我已即時連結您的 <b>今日打卡工時、待辦事項、全台 59 店跨區運費、83 筆門市與 MD 聯絡錄、家電台獎型錄</b>，同時具備全領域萬事通知識：<br>• <b>直接問系統數據</b>：「我今天幾點下班？」、「五甲送東港運費多少？」、「鳳山店電話課長是誰？」、「日立冰箱台獎多少？」<br>• <b>職場與生活萬事通</b>：LINE 客訴與調貨話術、冷氣坪數換算、勞基法規、文案翻譯、算數與任何生活問題皆可隨時問我！</div>
                 </div>
             `;
             return;
@@ -7771,9 +7778,9 @@
                 html += `
                     <div class="ai-msg-bubble-pet">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                            <div style="font-size:11px; font-weight:700; color:var(--purple); display:flex; align-items:center; gap:5px;">
-                                <i class="fas fa-wand-magic-sparkles" style="font-size:10px;"></i>
-                                <span>T8 職場智囊</span>
+                            <div style="font-size:11px; font-weight:700; color:#38BDF8; display:flex; align-items:center; gap:5px;">
+                                <span>🪼</span>
+                                <span>流光水母智囊</span>
                             </div>
                             <button type="button" onclick="copyAiReplyByIdx(${idx})" class="active-scale"
                                 style="border:0.5px solid var(--separator); background:var(--card); color:var(--label-secondary); font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:999px; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:4px;">
@@ -7781,7 +7788,7 @@
                                 <span>複製</span>
                             </button>
                         </div>
-                        <div style="white-space:pre-wrap; line-height:1.55;">${escapeHtml(msg.content)}</div>
+                        <div style="white-space:pre-wrap; line-height:1.58;">${escapeHtml(msg.content)}</div>
                     </div>
                 `;
             }
@@ -7797,6 +7804,173 @@
             autoResizeAiTextarea(input);
             sendAiChatMessage();
         }
+    }
+
+    // ===== 動態即時感知引擎：自動擷取使用者當下工時、待辦、門市運費與家電台獎資料 =====
+    function buildLiveT8AiContext(userQuery) {
+        const parts = [];
+        const now = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        const timeStr = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+        parts.push(`【系統即時時間】${timeStr}`);
+
+        // 1. Live Work Hours & Punch Records
+        try {
+            if (typeof punchRecords !== 'undefined' && Array.isArray(punchRecords)) {
+                const isWorking = punchRecords.length > 0 && punchRecords.length % 2 === 1;
+                let workedMs = 0;
+                const logStrs = [];
+                for (let i = 0; i < punchRecords.length; i += 2) {
+                    const rIn = punchRecords[i];
+                    const rOut = punchRecords[i + 1];
+                    const tIn = new Date(rIn.time);
+                    const inHM = `${pad(tIn.getHours())}:${pad(tIn.getMinutes())}`;
+                    if (rOut) {
+                        const tOut = new Date(rOut.time);
+                        const outHM = `${pad(tOut.getHours())}:${pad(tOut.getMinutes())}`;
+                        workedMs += Math.max(0, tOut - tIn);
+                        logStrs.push(`第${Math.floor(i / 2) + 1}段 ${inHM}~${outHM}`);
+                    } else {
+                        workedMs += Math.max(0, now - tIn);
+                        logStrs.push(`第${Math.floor(i / 2) + 1}段 ${inHM}~工作中`);
+                    }
+                }
+                const totalMins = Math.floor(workedMs / 60000);
+                const hrs = Math.floor(totalMins / 60);
+                const mins = totalMins % 60;
+                const remainMins = Math.max(0, 480 - totalMins);
+                const offTime = new Date(now.getTime() + remainMins * 60000);
+                const offHM = `${pad(offTime.getHours())}:${pad(offTime.getMinutes())}`;
+
+                if (punchRecords.length === 0) {
+                    parts.push(`【今日打卡與工時狀態】今日尚未打卡（累積 0 小時 0 分）`);
+                } else {
+                    parts.push(`【今日打卡與工時狀態】目前狀態：${isWorking ? '上班計時中' : '休息或已下班'}｜已累積工時：${hrs}小時${mins}分（共 ${totalMins} 分鐘）｜打卡明細：${logStrs.join('、')}｜距離滿8小時(480分)還差：${Math.floor(remainMins / 60)}小時${remainMins % 60}分${isWorking && remainMins > 0 ? `（若持續上班預計 ${offHM} 滿 8 小時下班）` : (remainMins === 0 ? '（今日已滿 8 小時達標！）' : '')}`);
+                }
+            }
+        } catch (e) {}
+
+        // 2. Live Todo & Memo
+        try {
+            if (typeof getTodayNotes === 'function') {
+                const notes = getTodayNotes();
+                const todos = Array.isArray(notes?.todos) ? notes.todos : [];
+                const pending = todos.filter(t => !t.completed && !t.done).map(t => t.text);
+                const done = todos.filter(t => t.completed || t.done).map(t => t.text);
+                const memo = (notes?.memo || '').trim();
+                if (pending.length || done.length || memo) {
+                    parts.push(`【今日待辦與備忘】未完成待辦(${pending.length})：${pending.join('；') || '無'}｜已完成(${done.length})：${done.join('；') || '無'}｜備忘錄：${memo || '無'}`);
+                }
+            }
+        } catch (e) {}
+
+        // 3. Live TaiJiang Sales Cart & Dynamic Catalog Lookup
+        try {
+            if (typeof window.getTaiJiangAllItems === 'function' && typeof window.getTaiJiangCart === 'function') {
+                const allItems = window.getTaiJiangAllItems() || [];
+                const cart = window.getTaiJiangCart() || {};
+                const cartEntries = [];
+                let totalBonus = 0;
+                allItems.forEach(item => {
+                    const k = item.id || (item.code + '_' + item.name);
+                    const q = cart[k] || 0;
+                    if (q > 0) {
+                        totalBonus += q * item.bonus;
+                        cartEntries.push(`${item.name}(x${q}, 台獎$${item.bonus * q})`);
+                    }
+                });
+                if (cartEntries.length > 0) {
+                    parts.push(`【今日已售出台獎購物車】共累積台獎 $${totalBonus}：${cartEntries.join('、')}`);
+                }
+
+                // Search catalog if query mentions appliance brands/keywords/numbers
+                const qClean = (userQuery || '').trim().toUpperCase();
+                if (qClean.length >= 2) {
+                    const keywords = qClean.split(/[\s,，、？?！!。]+/).filter(w => w.length >= 2);
+                    const matchedItems = allItems.filter(it => {
+                        const hay = ((it.name || '') + ' ' + (it.code || '') + ' ' + (it.cat || '')).toUpperCase();
+                        return keywords.some(kw => hay.includes(kw));
+                    }).slice(0, 8);
+                    if (matchedItems.length > 0) {
+                        parts.push(`【系統家電台獎資料庫匹配結果】\n` + matchedItems.map(it => `- 料號:${it.code || '無'}｜品名:${it.name}｜單件台獎:$${it.bonus}`).join('\n'));
+                    }
+                }
+            }
+        } catch (e) {}
+
+        // 4. Dynamic Store Directory, MD Contacts & Cross-Store Freight Lookup
+        try {
+            const ds = (typeof _storeDirectoryState !== 'undefined' && _storeDirectoryState.dataStore)
+                ? _storeDirectoryState.dataStore
+                : (typeof DEFAULT_STORE_DIRECTORY_DATA !== 'undefined' ? DEFAULT_STORE_DIRECTORY_DATA : null);
+            if (ds && userQuery) {
+                const q = userQuery.trim();
+                const matchedContacts = (ds.contacts || []).filter(c => {
+                    const storeName = (c['店名'] || c['部門'] || '').replace(/[A-Za-z0-9\s]/g, '');
+                    const code = (c['代碼'] || '').trim();
+                    const mgr = (c['店長'] || c['負責人'] || '');
+                    const addr = (c['地址'] || '').slice(3, 9);
+                    return (storeName && storeName.length >= 2 && q.includes(storeName)) ||
+                           (code && code.length >= 2 && q.toUpperCase().includes(code.toUpperCase())) ||
+                           (addr && addr.length >= 2 && q.includes(addr)) ||
+                           (mgr && mgr.length >= 2 && q.includes(mgr));
+                }).slice(0, 5);
+
+                if (matchedContacts.length > 0) {
+                    parts.push(`【全省門市與家電MD通訊錄匹配】\n` + matchedContacts.map(c => {
+                        if (c['店名']) {
+                            return `- 店名:${c['店名']}(代碼:${c['代碼']})｜電話:${(c['電話'] || '').replace(/\n/g, ' ')}｜地址:${c['地址']}｜店長:${c['店長']}｜課長:${(c['課長'] || '').replace(/\n/g, ' ')}(電話:${c['課長電話'] || '無'})｜處長:${(c['處長'] || '').replace(/\n/g, ' ')}`;
+                        }
+                        return `- 部門:${(c['部門'] || '').replace(/\n/g, ' ')}｜負責人:${c['負責人']}｜電話:${c['電話']}｜分機:${c['分機']}｜LINE:${c['LINE']}`;
+                    }).join('\n'));
+                }
+
+                // Match cross-store freight fees by store name or delivery area
+                const matchedFreight = [];
+                const storesMap = ds.stores || {};
+                Object.values(storesMap).forEach(st => {
+                    const stCleanName = (st.name || '').replace(/[A-Za-z0-9\s]/g, '');
+                    const isStoreMentioned = (stCleanName && stCleanName.length >= 2 && q.includes(stCleanName)) ||
+                                             (st.code && q.toUpperCase().includes(st.code.toUpperCase()));
+                    const areaHits = (st.fees || []).filter(f => {
+                        const areas = (f.area || '').split(/[、,，/()\s]+/).filter(a => a.length >= 2);
+                        return areas.some(a => q.includes(a));
+                    });
+                    if (isStoreMentioned) {
+                        const feeSummary = (st.fees || []).map(f => `${f.fee}: ${f.area}`).join(' ｜ ');
+                        matchedFreight.push(`- ${st.name}(${st.code}) 跨區運費表：${feeSummary}`);
+                    } else if (areaHits.length > 0) {
+                        matchedFreight.push(`- ${st.name}(${st.code}) 配送至相關區域運費：` + areaHits.map(f => `${f.fee}(${f.area})`).join('、'));
+                    }
+                });
+                if (matchedFreight.length > 0) {
+                    parts.push(`【跨店／跨區運費資料庫匹配】\n` + matchedFreight.slice(0, 5).join('\n'));
+                }
+            }
+        } catch (e) {}
+
+        return parts.join('\n');
+    }
+
+    // ===== 離線／極端網路中斷時的本機智慧專家引擎 (Local Expert Fallback) =====
+    function buildLocalExpertFallback(userText, liveContext) {
+        const q = (userText || '').trim();
+        if (/工時|下班|打卡|幾點|多久/.test(q)) {
+            return `🪼 為您即時查詢今日打卡與工時狀態：\n\n${liveContext}\n\n（溫馨提醒：連續工作滿 4 小時依法須有至少 30 分鐘休息時間，祝您今日順心！）`;
+        }
+        if (/跨店|運費|店名|電話|地址|課長|店長|MD|分機/.test(q) && liveContext.includes('匹配')) {
+            return `🪼 為您從 T8 內建門市資料庫檢索到以下資訊：\n\n${liveContext}`;
+        }
+        if (/冷氣|坪數|噸數|kW/i.test(q)) {
+            return `❄️ 【台灣門市冷氣坪數 vs 能力快速對照表】\n1. 3～4 坪：約 2.2～2.8 kW（0.8～1.0 噸）\n2. 4～6 坪：約 2.8～3.6 kW（1.0～1.3 噸）\n3. 6～8 坪：約 4.1～5.0 kW（1.5～1.8 噸）\n4. 8～10 坪：約 5.0～6.3 kW（1.8～2.2 噸）\n5. 10～12 坪：約 6.3～7.2 kW（2.2～2.5 噸）\n\n💡 門市實戰建議：若客人房間有「西曬、頂樓、鐵皮屋、挑高超過 3米2 或開放式客餐廳」，每坪熱負荷需以 600～700 kcal/hr 計算，建議直接往上抓大一級噸數，壓縮機才省電又冷得快！`;
+        }
+        if (/調貨/.test(q)) {
+            return `🚚 【可直接複製的 LINE 跨店調貨親切話術】\n\n「您好！感謝您今日的選購😊 您指定的機型目前我們正為您從鄰近分店專案調撥中。跟您說明一下，跨店專案調貨會有一筆 $___ 元的跨區物流運費，預計將於 __/__（週__）抵達門市／為您安排配送。確認沒問題的話我們就立即為您鎖定庫存並排單喔，謝謝您的體諒與支持！」`;
+        }
+        if (/客訴|延誤|安撫/.test(q)) {
+            return `🛡️ 【高情商 LINE 配送／安裝延誤安撫範本】\n\n「__先生/小姐您好，非常抱歉跟您聯繫！稍早工班師傅回報，因前一站安裝現場管線狀況較複雜，為確保每一戶的施工品質與安全，今日預計抵達您府上的時間會稍微順延至 __:__ 左右（或需與您協調改約 __/__ 優先第一順位配送）。造成您的不便與久候真的非常抱歉！我們會全程為您緊盯進度，請問這個時段您方便嗎？」`;
+        }
+        return `🪼 根據目前系統即時狀態為您整理：\n\n${liveContext}\n\n若您需要撰寫特定客戶 LINE 回覆、查詢某間分店電話／跨區運費、或是詢問家電規格與生活常識，歡迎直接輸入關鍵字問我！`;
     }
 
     async function sendAiChatMessage() {
@@ -7819,24 +7993,28 @@
         _isAiChatSending = true;
 
         const apiKey = getOpenRouterApiKey();
+        const liveContext = buildLiveT8AiContext(text);
 
-        const systemPrompt = `你是 T8 工時與家電門市系統內建的「T8 門市與職場 AI 智囊」，專為台灣家電門市銷售人員與上班族提供最專業、俐落且溫暖的實戰協助。
+        const systemPrompt = `你是 T8 智慧工時與家電門市系統的「流光水母 AI 智囊（🪼）」，是一位極度聰明、全知全能、溫暖俐落的隨身 AI 顧問。
 
-【核心原則】
-1. 語言規範：必須 100% 使用道地的「台灣繁體中文」與台灣職場／門市用語（如：跨店調貨、配送安裝、冷氣噸數、一級能效、勞基法特休、LINE 訊息），嚴禁使用簡體字或中國大陸用語。
-2. 結構清晰：
-   - 若使用者需要「給客戶的話術或 LINE 回覆」，請直接給出溫和有禮、可直接複製貼上的完整訊息範本。
-   - 若使用者詢問「法規、銷售賣點或交接重點」，請用 1、2、3 條列式精準回答，直切核心，不說空洞客套話。
-3. 輸出限制：
-   - 每次回答控制在 500 至 800 字以內，精簡實用。
-   - 僅限純文字輸出，嚴禁輸出圖片或影片語法。`;
+【你的雙重超能力】
+1. **T8 系統即時數據感知專家**：你能直接讀取使用者當下的打卡工時、預計下班時間、今日待辦事項、全台 59 店跨區運費表、83 筆全省門市店長/課長/家電MD聯絡方式，以及家電台獎型錄（見下方即時感知資料）。當使用者詢問這些問題時，請直接引用下方真實數據精準回答！
+2. **全領域萬事通智慧大腦**：除了門市話術、家電規格（冷氣坪數、冰箱洗衣機比較、節能補助）、台灣勞基法規之外，使用者問任何領域的問題（包含：文案寫作、各國語言翻譯、數學計算、生活常識、旅遊美食、健康科普、程式邏輯、心理抒壓、聊天解悶），你都必須有問必答，給出最聰明、最詳盡實用的解答，絕不推託！
+
+【語言與排版規範】
+- 必須 100% 使用道地的「台灣繁體中文」與台灣慣用詞彙，嚴禁簡體字。
+- 條理分明、重點突出；若是給客戶的 LINE 話術，請提供可直接一鍵複製的完整自然段落。
+- 僅限純文字輸出，不輸出圖片或影片標籤。
+
+【使用者當下 T8 即時感知資料】
+${liveContext}`;
 
         const messagesForApi = [
             { role: 'system', content: systemPrompt }
         ];
 
-        // Add last 6 turns for context
-        const contextHistory = history.slice(-6);
+        // Add last 8 turns for rich conversational memory
+        const contextHistory = history.slice(-8);
         contextHistory.forEach(h => {
             messagesForApi.push({ role: h.role, content: h.content });
         });
@@ -7846,13 +8024,25 @@
 
         const badgeEl = document.getElementById('aiChatModelBadge');
 
+        function sanitizeAiReply(rawReply) {
+            if (!rawReply || !rawReply.trim()) return '';
+            let clean = rawReply.replace(/!\[.*?\]\(.*?\)/g, '');
+            clean = clean.replace(/<img.*?>/gi, '');
+            clean = clean.replace(/<video.*?>.*?<\/video>/gi, '');
+            if (clean.length > 1600) {
+                clean = clean.slice(0, 1585) + '…';
+            }
+            return clean.trim();
+        }
+
+        // Tier 1: Personal OpenRouter Key (if configured by user) or Tier 2: /api/ai Serverless Endpoint
         const modelsToTry = apiKey
             ? FREE_AI_MODELS
-            : [{ id: 'server-managed', name: 'T8 安全代理' }];
+            : [{ id: 'server-managed', name: '流光智慧引擎' }];
 
         for (const modelObj of modelsToTry) {
             try {
-                if (badgeEl) badgeEl.textContent = `${modelObj.name} · 連線中…`;
+                if (badgeEl) badgeEl.textContent = `✦ ${modelObj.name} · 思考中…`;
                 const usePersonalKey = Boolean(apiKey);
                 const response = await fetch(usePersonalKey ? 'https://openrouter.ai/api/v1/chat/completions' : '/api/ai', {
                     method: 'POST',
@@ -7860,76 +8050,80 @@
                         'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json',
                         'HTTP-Referer': window.location.origin,
-                        'X-Title': 'TIME8 Companion AI'
+                        'X-Title': 'TIME8 Jellyfish AI'
                     } : { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         ...(usePersonalKey ? { model: modelObj.id } : {}),
                         messages: messagesForApi,
-                        max_tokens: 750,
+                        max_tokens: 1200,
                         temperature: 0.7
                     })
                 });
 
-                if (!response.ok) {
-                    const errJson = await response.json().catch(() => ({}));
-                    const msg = errJson?.error?.message || `HTTP ${response.status}`;
-                    console.warn(`Model ${modelObj.id} failed: ${msg}. Trying next fallback...`);
-                    lastErrorMsg = msg;
-                    continue; // Auto fallback to next free model!
-                }
-
-                const json = await response.json();
-                let reply = json?.choices?.[0]?.message?.content;
-                if (reply && reply.trim()) {
-                    // Sanitize output to pure text: remove any markdown images / video tags
-                    reply = reply.replace(/!\[.*?\]\(.*?\)/g, '');
-                    reply = reply.replace(/<img.*?>/gi, '');
-                    reply = reply.replace(/<video.*?>.*?<\/video>/gi, '');
-                    
-                    // Enforce 800 char ceiling
-                    if (reply.length > 800) {
-                        reply = reply.slice(0, 790) + '…（已精簡至 800 字內）';
+                if (response.ok) {
+                    const json = await response.json().catch(() => ({}));
+                    const reply = sanitizeAiReply(json?.choices?.[0]?.message?.content);
+                    if (reply) {
+                        successResult = { text: reply, modelName: modelObj.name };
+                        break;
                     }
-
-                    successResult = {
-                        text: reply.trim(),
-                        modelName: modelObj.name
-                    };
-                    break;
+                } else {
+                    const errJson = await response.json().catch(() => ({}));
+                    lastErrorMsg = errJson?.error?.message || `HTTP ${response.status}`;
                 }
             } catch (err) {
-                console.warn(`Fetch error with ${modelObj.id}:`, err);
-                lastErrorMsg = err.message || '連線逾時';
+                lastErrorMsg = err.message || '連線異常';
             }
+        }
+
+        // Tier 3: Direct Browser Zero-Key Cloud LLM Fallback (Pollinations OpenAI-compatible GPT-4o-mini / Mistral)
+        // Ensures 100% availability for ANY question even without API keys or when /api/ai is not configured!
+        if (!successResult) {
+            for (const pubModel of [
+                { id: 'openai', name: '流光雲端 GPT' },
+                { id: 'mistral', name: '流光雲端 Mistral' }
+            ]) {
+                try {
+                    if (badgeEl) badgeEl.textContent = `✦ ${pubModel.name} · 思考中…`;
+                    const pubRes = await fetch('https://text.pollinations.ai/openai', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            model: pubModel.id,
+                            messages: messagesForApi,
+                            temperature: 0.7
+                        })
+                    });
+                    if (pubRes.ok) {
+                        const pubJson = await pubRes.json().catch(() => ({}));
+                        const reply = sanitizeAiReply(pubJson?.choices?.[0]?.message?.content);
+                        if (reply) {
+                            successResult = { text: reply, modelName: pubModel.name };
+                            break;
+                        }
+                    }
+                } catch (err) {
+                    console.warn(`Fallback ${pubModel.id} error:`, err);
+                }
+            }
+        }
+
+        // Tier 4: Offline Local Expert Fallback (if completely offline)
+        if (!successResult) {
+            successResult = {
+                text: buildLocalExpertFallback(text, liveContext),
+                modelName: '內建本機智囊'
+            };
         }
 
         if (typingIndicator) typingIndicator.style.display = 'none';
         _isAiChatSending = false;
 
-        if (successResult) {
-            history.push({ role: 'assistant', content: successResult.text, time: new Date().toISOString() });
-            saveAiChatHistory(history);
-            renderAiChatMessages();
-            if (badgeEl) badgeEl.textContent = '✦ 貼心隨行 · 智慧在線';
-
-            // Update mini preview on Partner Tab Card (Clean plain text without markdown symbols)
-            const previewEl = document.getElementById('aiPetBubblePreview');
-            if (previewEl) {
-                let cleanPreview = successResult.text.replace(/[-*#_`|~>]/g, ' ').replace(/\s+/g, ' ').trim();
-                if (cleanPreview.length > 46) cleanPreview = cleanPreview.slice(0, 44) + '…';
-                previewEl.textContent = `「${cleanPreview}」`;
-            }
-
-            if ('vibrate' in navigator) navigator.vibrate(12);
-        } else {
-            if (badgeEl) badgeEl.textContent = '線路繁忙 · 待命中';
-            showToast(`⚠️ 目前免費 AI 模型流量較大（${lastErrorMsg || '限流中'}），晶靈正在排隊重試，請稍候片刻再試～`);
-            // Add friendly offline message
-            const failMsg = '主人抱歉，目前免費 AI 線路人潮較多（限流中），請稍候 10 秒後再問我一次，我隨時都在喔！🌿';
-            history.push({ role: 'assistant', content: failMsg, time: new Date().toISOString() });
-            saveAiChatHistory(history);
-            renderAiChatMessages();
-        }
+        history.push({ role: 'assistant', content: successResult.text, time: new Date().toISOString() });
+        saveAiChatHistory(history);
+        renderAiChatMessages();
+        if (badgeEl) badgeEl.textContent = `✦ ${successResult.modelName} · 智慧在線`;
+        if ('vibrate' in navigator) navigator.vibrate(12);
     }
 
     function escapeHtml(text) {
@@ -12311,6 +12505,8 @@
         root.closeTaiJiangCustomModal = closeTaiJiangCustomModal;
         root.saveTaiJiangCustomItem = saveTaiJiangCustomItem;
         root.deleteTaiJiangCustomItem = deleteTaiJiangCustomItem;
+        root.getTaiJiangAllItems = getAllItems;
+        root.getTaiJiangCart = getCart;
 
         root.renderTaiJiangUI = renderTaiJiangUI;
 
