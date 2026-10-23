@@ -2338,6 +2338,79 @@
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
+        /* --- Apple Native Floating Kitsune AI Orb (懸浮靈狐智囊) --- */
+        #aiFloatingFoxOrb {
+            position: fixed;
+            right: 16px;
+            bottom: calc(env(safe-area-inset-bottom, 12px) + 82px);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            z-index: 46;
+            background: var(--nav-bg);
+            border: 0.5px solid var(--separator);
+            -webkit-backdrop-filter: blur(26px) saturate(190%);
+            backdrop-filter: blur(26px) saturate(190%);
+            box-shadow: 0 8px 24px rgba(40, 24, 12, 0.14), 0 2px 6px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: none;
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, box-shadow 0.28s ease;
+        }
+        #aiFloatingFoxOrb:active {
+            transform: scale(0.91);
+        }
+        #aiFloatingFoxOrb.fox-dragging {
+            transition: none !important;
+            transform: scale(1.08);
+            box-shadow: 0 14px 32px rgba(40, 24, 12, 0.22);
+        }
+        #aiFloatingFoxOrb.fox-idle-peek {
+            opacity: 0.86;
+        }
+        #aiFloatingFoxOrb .fox-svg {
+            width: 31px;
+            height: 31px;
+            overflow: visible;
+            animation: foxSubtleFloat 4.4s ease-in-out infinite;
+        }
+        #aiFloatingFoxOrb .fox-ear-left {
+            transform-origin: 12px 14px;
+            animation: foxEarLeftTwitch 6.5s ease-in-out infinite;
+        }
+        #aiFloatingFoxOrb .fox-ear-right {
+            transform-origin: 28px 14px;
+            animation: foxEarRightTwitch 6.5s ease-in-out infinite;
+        }
+        #aiFloatingFoxOrb .fox-eyes {
+            transform-origin: 20px 22px;
+            animation: foxEyeBlink 4.8s ease-in-out infinite;
+        }
+        @keyframes foxSubtleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-1.6px); }
+        }
+        @keyframes foxEarLeftTwitch {
+            0%, 88%, 100% { transform: rotate(0deg); }
+            92% { transform: rotate(-6deg); }
+            96% { transform: rotate(2deg); }
+        }
+        @keyframes foxEarRightTwitch {
+            0%, 88%, 100% { transform: rotate(0deg); }
+            92% { transform: rotate(6deg); }
+            96% { transform: rotate(-2deg); }
+        }
+        @keyframes foxEyeBlink {
+            0%, 93%, 100% { transform: scaleY(1); }
+            96% { transform: scaleY(0.12); }
+        }
+
         /* --- Apple Native Hero Circular Progress Ring --- */
         .hero-section {
             padding: 8px 0 6px;
@@ -4559,19 +4632,6 @@
 
             </section>
 
-            <!-- ===== TAB: 智囊 (Pure Clean Canvas — 待選配極簡 AI 質感功能) ===== -->
-            <section id="tabPartner" class="tab-panel">
-                <div class="partner-room" style="min-height:52vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:48px 24px;">
-                    <div style="width:48px; height:48px; border-radius:16px; background:var(--fill); border:0.5px solid var(--separator); display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); margin-bottom:14px;">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z" />
-                        </svg>
-                    </div>
-                    <div style="font-size:15px; font-weight:600; color:var(--label); letter-spacing:0.02em;">智囊空間已淨空</div>
-                    <div style="font-size:12.5px; color:var(--label-tertiary); margin-top:6px; max-width:240px; line-height:1.5;">保持極致留白，待選定專屬 Apple 原生質感功能後配置</div>
-                </div>
-            </section>
-
             <!-- ===== TAB: 新聞與專注電台 (Unified Cinema Stage + Instant News) ===== -->
             <section id="tabNews" class="tab-panel">
 
@@ -4909,7 +4969,7 @@
         </main>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation (Apple 4-Tab Golden Architecture: 今日 · 新聞 · 家電 · 設定) -->
     <nav id="bottomNav">
         <button class="nav-tab active" id="navTabToday" onclick="switchTab('Today')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
@@ -4917,12 +4977,6 @@
                 <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
             </svg>
             <span>今日</span>
-        </button>
-        <button class="nav-tab" id="navTabPartner" onclick="switchTab('Partner')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z" />
-            </svg>
-            <span>智囊</span>
         </button>
         <button class="nav-tab" id="navTabNews" onclick="switchTab('News')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"
@@ -4953,6 +5007,53 @@
         </button>
     </nav>
 
+    <!-- Apple Native Floating Kitsune AI Orb (懸浮靈狐智囊 · 支援自由磁吸拖曳與輕點喚醒) -->
+    <button type="button" id="aiFloatingFoxOrb" title="靈狐 AI 智囊 (可拖曳移動，輕點開啟)" aria-label="開啟靈狐 AI 智囊">
+        <svg class="fox-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="foxFurGrad" x1="20" y1="6" x2="20" y2="35" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#E8833A" />
+                    <stop offset="65%" stop-color="#CC5F1E" />
+                    <stop offset="100%" stop-color="#A84610" />
+                </linearGradient>
+                <linearGradient id="foxEarInner" x1="20" y1="7" x2="20" y2="18" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#3A2218" />
+                    <stop offset="100%" stop-color="#8C4320" />
+                </linearGradient>
+                <linearGradient id="foxCheekCream" x1="20" y1="20" x2="20" y2="35" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#FFFDF9" />
+                    <stop offset="100%" stop-color="#EFE6D8" />
+                </linearGradient>
+            </defs>
+            <!-- Left Ear -->
+            <g class="fox-ear-left">
+                <path d="M9.5 19.5 L6.8 6.8 C6.6 5.8 7.6 5.2 8.5 5.8 L17.5 13.2 Z" fill="url(#foxFurGrad)" />
+                <path d="M10.2 16.8 L8.4 8.4 L15.2 13.6 Z" fill="url(#foxEarInner)" opacity="0.85" />
+            </g>
+            <!-- Right Ear -->
+            <g class="fox-ear-right">
+                <path d="M30.5 19.5 L33.2 6.8 C33.4 5.8 32.4 5.2 31.5 5.8 L22.5 13.2 Z" fill="url(#foxFurGrad)" />
+                <path d="M29.8 16.8 L31.6 8.4 L24.8 13.6 Z" fill="url(#foxEarInner)" opacity="0.85" />
+            </g>
+            <!-- Head Base (Geometric Origami Diamond Contour) -->
+            <path d="M20 11 C27.5 11 33 16.8 33 23.2 C33 28.8 26.8 34.5 20 35.2 C13.2 34.5 7 28.8 7 23.2 C7 16.8 12.5 11 20 11 Z" fill="url(#foxFurGrad)" />
+            <!-- Cream White Cheeks & Chin -->
+            <path d="M7.3 23.8 C11.5 23.2 16.2 26.5 20 35.1 C13.2 34.4 7.3 28.8 7.3 23.8 Z" fill="url(#foxCheekCream)" />
+            <path d="M32.7 23.8 C28.5 23.2 23.8 26.5 20 35.1 C26.8 34.4 32.7 28.8 32.7 23.8 Z" fill="url(#foxCheekCream)" />
+            <!-- Subtle Forehead Blaze -->
+            <path d="M20 12.5 L22.2 19.5 L20 25.5 L17.8 19.5 Z" fill="#F29B52" opacity="0.45" />
+            <!-- Expressive Eyes -->
+            <g class="fox-eyes">
+                <ellipse cx="14.4" cy="22.4" rx="1.65" ry="1.85" fill="#1E1410" />
+                <circle cx="13.9" cy="21.8" r="0.55" fill="#FFFFFF" />
+                <ellipse cx="25.6" cy="22.4" rx="1.65" ry="1.85" fill="#1E1410" />
+                <circle cx="25.1" cy="21.8" r="0.55" fill="#FFFFFF" />
+            </g>
+            <!-- Delicate Nose Tip -->
+            <path d="M18.4 31.8 Q20 31.1 21.6 31.8 Q20 33.8 18.4 31.8 Z" fill="#1E1410" />
+        </svg>
+    </button>
+
     <!-- Ambient Glow (breathing while working) -->
     <div id="ambientGlow"></div>
 
@@ -4963,6 +5064,88 @@
     <canvas id="weatherlingCanvas" aria-hidden="true"></canvas>
 
     <!-- Modals: iOS Action Sheet Style -->
+
+    <!-- Kitsune AI Companion Sheet Modal (懸浮靈狐智囊 Apple 原生半高抽屜) -->
+    <div id="aiChatSheetModal" class="fixed inset-0 hidden" style="z-index: 108;">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)"
+            onclick="closeAiChatSheet()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); height:76vh; max-height:640px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 -12px 40px rgba(0,0,0,0.18);">
+            
+            <!-- Sticky Header -->
+            <div style="padding:12px 20px 12px; background:var(--bg); border-bottom:0.5px solid var(--separator); flex-shrink:0;">
+                <div class="sheet-handle" style="margin-bottom:10px;"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:9px;">
+                        <div style="width:30px; height:30px; border-radius:50%; background:var(--fill); border:0.5px solid var(--separator); display:flex; align-items:center; justify-content:center;">
+                            <span style="font-size:15px;">🦊</span>
+                        </div>
+                        <div>
+                            <h3 style="font-size:15px; font-weight:700; color:var(--label); margin:0;" id="aiChatModalTitle">靈狐智囊</h3>
+                            <div style="font-size:10.5px; color:var(--label-tertiary);" id="aiChatModelBadge">✦ 隨身門市與職場 AI 顧問</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <button type="button" onclick="openAiKeyModal()" class="active-scale" title="API 金鑰設定"
+                            style="border:0.5px solid var(--separator); background:var(--fill); color:var(--label-secondary); font-size:11px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer; font-family:inherit;">
+                            金鑰
+                        </button>
+                        <button type="button" onclick="clearAiChatHistory()" class="active-scale"
+                            style="border:0.5px solid var(--separator); background:var(--fill); color:var(--label-secondary); font-size:11px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer; font-family:inherit;">
+                            清空
+                        </button>
+                        <button type="button" onclick="closeAiChatSheet()" aria-label="關閉"
+                            style="width:28px; height:28px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                            <i class="fas fa-times" style="font-size:11.5px;"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4 Minimal Apple Pill Prompts (單行俐落膠囊) -->
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-top:10px;">
+                    <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知跨店運費與預計抵達時間，方便直接複製貼到 LINE。')" class="ai-quick-tag active-scale" style="padding:6px 4px; font-size:11px; font-weight:600; text-align:center;">
+                        🚚 調貨話術
+                    </button>
+                    <button type="button" onclick="triggerAiQuickPrompt('客戶反映家電配送或安裝時間延誤，請幫我寫一段高情商、誠懇安撫並提供改期確認的 LINE 回覆範本。')" class="ai-quick-tag active-scale" style="padding:6px 4px; font-size:11px; font-weight:600; text-align:center;">
+                        🛡️ 客訴安撫
+                    </button>
+                    <button type="button" onclick="triggerAiQuickPrompt('請針對「一級能效變頻冷氣與冰箱」提煉 3 點最能打動門市客人的成交賣點金句（省電、靜音、節能補助）。')" class="ai-quick-tag active-scale" style="padding:6px 4px; font-size:11px; font-weight:600; text-align:center;">
+                        💡 家電賣點
+                    </button>
+                    <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法簡要說明：工作 4 小時休息 30 分鐘、加班費計算倍率與跨日輪班間隔 11 小時的重點。')" class="ai-quick-tag active-scale" style="padding:6px 4px; font-size:11px; font-weight:600; text-align:center;">
+                        ⚖️ 勞基法規
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Scroll Area -->
+            <div id="aiChatMessagesContainer" style="flex:1; overflow-y:auto; padding:14px 16px 18px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch;">
+                <!-- Messages injected dynamically -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div id="aiTypingIndicator" style="display:none; padding:0 16px 8px; align-items:center; gap:6px;">
+                <span style="font-size:12px;">🦊</span>
+                <span style="font-size:11.5px; color:var(--label-tertiary);">靈狐正在撰寫建議中…</span>
+            </div>
+
+            <!-- Bottom Input Bar -->
+            <div style="padding:10px 16px 24px; background:var(--bg); border-top:0.5px solid var(--separator); flex-shrink:0;">
+                <div style="display:flex; gap:8px; align-items:flex-end;">
+                    <div style="flex:1; position:relative; background:var(--fill); border:0.5px solid var(--separator); border-radius:18px; padding:8px 12px; display:flex; flex-direction:column;">
+                        <textarea id="aiChatInput" rows="1" placeholder="問問靈狐智囊，或貼上草稿請它潤飾…"
+                            style="width:100%; border:none; background:transparent; color:var(--label); font-size:13.5px; font-family:inherit; resize:none; outline:none; max-height:96px; line-height:1.45;"
+                            onkeydown="handleAiChatKeyDown(event)"
+                            oninput="autoResizeAiTextarea(this)"></textarea>
+                    </div>
+                    <button type="button" id="aiSendBtn" onclick="sendAiChatMessage()" class="active-scale" aria-label="送出"
+                        style="width:38px; height:38px; border-radius:50%; background:var(--purple); border:none; color:#FFFFFF; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 8px rgba(122,90,138,0.3);">
+                        <i class="fas fa-arrow-up" style="font-size:14px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- AI API Key Settings Modal -->
     <div id="aiKeyModal" class="fixed inset-0 z-50 hidden">
@@ -7379,15 +7562,144 @@
     window.resetPetDefaultName = resetPetDefaultName;
 
     function openAiChatSheet() {
-        if (typeof switchTab === 'function') {
-            switchTab('Partner');
-        }
+        const modal = document.getElementById('aiChatSheetModal');
+        if (modal) modal.classList.remove('hidden');
+        if ('vibrate' in navigator) navigator.vibrate(10);
+        if (typeof playSingleClickSound === 'function') playSingleClickSound('C5');
         renderAiChatMessages();
         setTimeout(() => {
             const input = document.getElementById('aiChatInput');
             if (input) input.focus();
-        }, 180);
+        }, 240);
     }
+
+    // ===== 懸浮靈狐磁吸拖曳與輕觸喚醒控制器 (Apple Magnetic Floating Fox Controller) =====
+    (function initFloatingFoxOrb() {
+        function bindFoxOrb() {
+            const orb = document.getElementById('aiFloatingFoxOrb');
+            if (!orb || orb.dataset.bound === 'true') return;
+            orb.dataset.bound = 'true';
+
+            let isDragging = false;
+            let hasMoved = false;
+            let startX = 0, startY = 0;
+            let origLeft = 0, origTop = 0;
+            let idleTimer = null;
+
+            function scheduleIdlePeek() {
+                if (idleTimer) clearTimeout(idleTimer);
+                orb.classList.remove('fox-idle-peek');
+                idleTimer = setTimeout(() => {
+                    orb.classList.add('fox-idle-peek');
+                }, 5000);
+            }
+
+            // Restore saved vertical position & side
+            try {
+                const saved = JSON.parse(localStorage.getItem('t8_fox_orb_pos') || 'null');
+                if (saved && typeof saved.top === 'number') {
+                    const maxTop = Math.max(80, window.innerHeight - 140);
+                    const clampedTop = Math.min(Math.max(72, saved.top), maxTop);
+                    orb.style.bottom = 'auto';
+                    orb.style.top = clampedTop + 'px';
+                    if (saved.side === 'left') {
+                        orb.style.right = 'auto';
+                        orb.style.left = '14px';
+                    } else {
+                        orb.style.left = 'auto';
+                        orb.style.right = '14px';
+                    }
+                }
+            } catch (e) {}
+
+            function onPointerDown(e) {
+                if (e.button && e.button !== 0) return;
+                const pt = e.touches ? e.touches[0] : e;
+                const rect = orb.getBoundingClientRect();
+                isDragging = true;
+                hasMoved = false;
+                startX = pt.clientX;
+                startY = pt.clientY;
+                origLeft = rect.left;
+                origTop = rect.top;
+                orb.classList.remove('fox-idle-peek');
+                if (idleTimer) clearTimeout(idleTimer);
+            }
+
+            function onPointerMove(e) {
+                if (!isDragging) return;
+                const pt = e.touches ? e.touches[0] : e;
+                const dx = pt.clientX - startX;
+                const dy = pt.clientY - startY;
+                if (!hasMoved && Math.hypot(dx, dy) > 6) {
+                    hasMoved = true;
+                    orb.classList.add('fox-dragging');
+                }
+                if (hasMoved) {
+                    if (e.cancelable) e.preventDefault();
+                    const newLeft = Math.min(Math.max(8, origLeft + dx), window.innerWidth - 56);
+                    const newTop = Math.min(Math.max(64, origTop + dy), window.innerHeight - 130);
+                    orb.style.right = 'auto';
+                    orb.style.bottom = 'auto';
+                    orb.style.left = newLeft + 'px';
+                    orb.style.top = newTop + 'px';
+                }
+            }
+
+            function onPointerUp() {
+                if (!isDragging) return;
+                isDragging = false;
+                orb.classList.remove('fox-dragging');
+
+                if (!hasMoved) {
+                    openAiChatSheet();
+                    scheduleIdlePeek();
+                    return;
+                }
+
+                // Magnetic snap to nearest screen edge (Left or Right)
+                const rect = orb.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const snapLeft = centerX < window.innerWidth / 2;
+                const clampedTop = Math.min(Math.max(68, rect.top), window.innerHeight - 136);
+
+                orb.style.top = clampedTop + 'px';
+                orb.style.bottom = 'auto';
+                if (snapLeft) {
+                    orb.style.left = '14px';
+                    orb.style.right = 'auto';
+                } else {
+                    orb.style.left = 'auto';
+                    orb.style.right = '14px';
+                }
+
+                try {
+                    localStorage.setItem('t8_fox_orb_pos', JSON.stringify({
+                        side: snapLeft ? 'left' : 'right',
+                        top: Math.round(clampedTop)
+                    }));
+                } catch (e) {}
+
+                scheduleIdlePeek();
+            }
+
+            orb.addEventListener('touchstart', onPointerDown, { passive: true });
+            window.addEventListener('touchmove', onPointerMove, { passive: false });
+            window.addEventListener('touchend', onPointerUp);
+
+            orb.addEventListener('mousedown', onPointerDown);
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('mouseup', onPointerUp);
+
+            scheduleIdlePeek();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindFoxOrb);
+        } else {
+            bindFoxOrb();
+        }
+    })();
 
     function closeAiChatSheet() {
         const modal = document.getElementById('aiChatSheetModal');
@@ -8494,6 +8806,10 @@
 
         // === Tab Switching & Floating Nav Controller ===
         function switchTab(tabName) {
+            if (tabName === 'Partner') {
+                if (typeof openAiChatSheet === 'function') openAiChatSheet();
+                return;
+            }
             let actualTab = tabName;
             if (tabName === 'Insights') actualTab = 'News';
 
