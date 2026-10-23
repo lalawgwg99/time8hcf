@@ -5075,14 +5075,9 @@
             <div style="padding:12px 20px 12px; background:var(--bg); border-bottom:0.5px solid var(--separator); flex-shrink:0;">
                 <div class="sheet-handle" style="margin-bottom:10px;"></div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="display:flex; align-items:center; gap:9px;">
-                        <div style="width:30px; height:30px; border-radius:50%; background:radial-gradient(circle at 50% 30%, rgba(165,195,255,0.28), rgba(22,28,45,0.88)); border:0.5px solid var(--separator); display:flex; align-items:center; justify-content:center;">
-                            <span style="font-size:15px;">🪼</span>
-                        </div>
-                        <div>
-                            <h3 style="font-size:15px; font-weight:700; color:var(--label); margin:0;" id="aiChatModalTitle">流光水母智囊</h3>
-                            <div style="font-size:10.5px; color:var(--label-tertiary);" id="aiChatModelBadge">✦ 全能 AI 智慧中樞 · 即時感知工時與門市數據</div>
-                        </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <h3 style="font-size:15.5px; font-weight:700; color:var(--label); margin:0;" id="aiChatModalTitle">AI 助理</h3>
+                        <span id="aiChatModelBadge" style="display:none;"></span>
                     </div>
                     <div style="display:flex; align-items:center; gap:6px;">
                         <button type="button" onclick="openAiKeyModal()" class="active-scale" title="API 金鑰設定"
@@ -5100,54 +5095,50 @@
                     </div>
                 </div>
 
-                <!-- 8 Apple Pill Prompts (橫向滑動全能膠囊列) -->
+                <!-- Minimal Quick Pills (極簡清爽快捷列) -->
                 <div class="no-scrollbar" style="display:flex; gap:6px; margin-top:10px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch;">
-                    <button type="button" onclick="triggerAiQuickPrompt('請幫我分析今天的打卡紀錄、目前已累積工時、距離滿 8 小時還差多久，以及預計幾點可以下班？')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
-                        📊 今日工時分析
+                    <button type="button" onclick="triggerAiQuickPrompt('今日工時')" class="ai-quick-tag active-scale" style="padding:5px 10px; font-size:11.5px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        今日工時
                     </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知跨店運費與預計抵達時間，方便直接複製貼到 LINE。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
-                        🚚 調貨話術
+                    <button type="button" onclick="triggerAiQuickPrompt('台獎明細')" class="ai-quick-tag active-scale" style="padding:5px 10px; font-size:11.5px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        台獎明細
                     </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('客戶反映家電配送或安裝時間延誤，請幫我寫一段高情商、誠懇安撫並提供改期確認的 LINE 回覆範本。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
-                        🛡️ 客訴安撫
+                    <button type="button" onclick="triggerAiQuickPrompt('今日待辦')" class="ai-quick-tag active-scale" style="padding:5px 10px; font-size:11.5px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        今日待辦
                     </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('請幫我整理台灣門市最實用的「房間坪數 vs 冷氣噸數/kW 對照表」，並加上西曬、頂樓、鐵皮或挑高的加大建議。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
-                        ❄️ 冷氣坪數試算
+                    <button type="button" onclick="triggerAiQuickPrompt('跨區運費')" class="ai-quick-tag active-scale" style="padding:5px 10px; font-size:11.5px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        跨區運費
                     </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('請針對「一級能效變頻冷氣與冰箱」提煉 3 點最能打動門市客人的成交賣點金句（省電、靜音、節能補助與貨物稅減免）。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
-                        💡 家電賣點
+                    <button type="button" onclick="triggerAiQuickPrompt('門市與MD聯絡')" class="ai-quick-tag active-scale" style="padding:5px 10px; font-size:11.5px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        門市電話
                     </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法簡要說明：工作 4 小時休息 30 分鐘、平日與休息日加班費計算倍率，以及跨日輪班間隔 11 小時的重點。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
-                        ⚖️ 勞基法規
-                    </button>
-                    <button type="button" onclick="triggerAiQuickPrompt('請根據我目前的今日待辦事項與備忘錄，幫我整理成一份條理分明的門市交接與待辦重點清單。')" class="ai-quick-tag active-scale" style="padding:6px 10px; font-size:11px; font-weight:600; white-space:nowrap; flex-shrink:0;">
-                        📝 待辦交接整理
+                    <button type="button" onclick="triggerAiQuickPrompt('網站功能')" class="ai-quick-tag active-scale" style="padding:5px 10px; font-size:11.5px; font-weight:600; white-space:nowrap; flex-shrink:0;">
+                        網站功能
                     </button>
                 </div>
             </div>
 
             <!-- Chat Scroll Area -->
-            <div id="aiChatMessagesContainer" style="flex:1; overflow-y:auto; padding:14px 16px 18px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch;">
+            <div id="aiChatMessagesContainer" style="flex:1; overflow-y:auto; padding:14px 16px 18px; display:flex; flex-direction:column; gap:10px; -webkit-overflow-scrolling:touch;">
                 <!-- Messages injected dynamically -->
             </div>
 
             <!-- Typing Indicator -->
             <div id="aiTypingIndicator" style="display:none; padding:0 16px 8px; align-items:center; gap:6px;">
-                <span style="font-size:12px;">🪼</span>
-                <span style="font-size:11.5px; color:var(--label-tertiary);">流光水母正在思考並整理回覆…</span>
+                <span style="font-size:11.5px; color:var(--label-tertiary);">查詢中…</span>
             </div>
 
             <!-- Bottom Input Bar -->
             <div style="padding:10px 16px 24px; background:var(--bg); border-top:0.5px solid var(--separator); flex-shrink:0;">
                 <div style="display:flex; gap:8px; align-items:flex-end;">
                     <div style="flex:1; position:relative; background:var(--fill); border:0.5px solid var(--separator); border-radius:18px; padding:8px 12px; display:flex; flex-direction:column;">
-                        <textarea id="aiChatInput" rows="1" placeholder="問問水母任何事（工時、門市運費、台獎、話術或萬事通）…"
+                        <textarea id="aiChatInput" rows="1" placeholder="輸入店名、地區運費、品名/料號、工時或網站功能…"
                             style="width:100%; border:none; background:transparent; color:var(--label); font-size:13.5px; font-family:inherit; resize:none; outline:none; max-height:96px; line-height:1.45;"
                             onkeydown="handleAiChatKeyDown(event)"
                             oninput="autoResizeAiTextarea(this)"></textarea>
                     </div>
                     <button type="button" id="aiSendBtn" onclick="sendAiChatMessage()" class="active-scale" aria-label="送出"
-                        style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, #38BDF8, #818CF8); border:none; color:#FFFFFF; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 10px rgba(56,189,248,0.35);">
+                        style="width:38px; height:38px; border-radius:50%; background:var(--label); border:none; color:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;">
                         <i class="fas fa-arrow-up" style="font-size:14px;"></i>
                     </button>
                 </div>
@@ -5818,19 +5809,19 @@
                     </div>
                 </div>
 
-                <!-- 2.【智囊】AI 門市與職場工作台 -->
-                <div class="section-label">2.【智囊】AI 門市與職場助手</div>
+                <!-- 2.【懸浮水母 AI】全站查詢與助手 -->
+                <div class="section-label">2.【懸浮水母 AI】全站查詢助手</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); switchTab('Partner');">
+                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); openAiChatSheet();">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">✦ 一體化 AI 門市智囊</span>
-                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">前往 ↗</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">🪼 懸浮水母 AI 助理</span>
+                            <span style="font-size:11.5px; color:var(--blue); font-weight:600;">開啟 ↗</span>
                         </div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">內建跨店調貨話術、客訴安撫、家電賣點提煉、勞基法規秒查與班別交接範本，原地生成並支援一鍵複製。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">可自由拖曳吸附螢幕兩側；直接查詢今日工時、台獎料號、全省門市電話、跨區運費與全站功能。</div>
                     </div>
                     <div style="padding:12px 16px;">
-                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">LINE 一鍵工時回報</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">點擊頂部「LINE 工時回報」自動將今日累計工時、打卡區間與靈感籤詩一鍵傳送。</div>
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">LINE 一鍵匯出</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">支援工時統計報表與家電台獎銷售明細一鍵匯出至 LINE。</div>
                     </div>
                 </div>
 
@@ -7755,12 +7746,8 @@
 
         if (history.length === 0) {
             container.innerHTML = `
-                <div class="ai-msg-bubble-pet">
-                    <div style="font-size:11px; font-weight:700; color:#38BDF8; margin-bottom:4px; display:flex; align-items:center; gap:5px;">
-                        <span>🪼</span>
-                        <span>流光水母 · 全能 AI 智囊</span>
-                    </div>
-                    <div style="line-height:1.58;">嗨！我是您的隨身<b>流光水母 AI 智囊</b>。<br>我已即時連結您的 <b>今日打卡工時、待辦事項、全台 59 店跨區運費、83 筆門市與 MD 聯絡錄、家電台獎型錄</b>，同時具備全領域萬事通知識：<br>• <b>直接問系統數據</b>：「我今天幾點下班？」、「五甲送東港運費多少？」、「鳳山店電話課長是誰？」、「日立冰箱台獎多少？」<br>• <b>職場與生活萬事通</b>：LINE 客訴與調貨話術、冷氣坪數換算、勞基法規、文案翻譯、算數與任何生活問題皆可隨時問我！</div>
+                <div style="font-size:12.5px; color:var(--label-tertiary); text-align:center; padding:24px 12px;">
+                    直接輸入店名、地區運費、品名/料號、工時或網站功能即可查詢。
                 </div>
             `;
             return;
@@ -7776,19 +7763,14 @@
                 `;
             } else {
                 html += `
-                    <div class="ai-msg-bubble-pet">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                            <div style="font-size:11px; font-weight:700; color:#38BDF8; display:flex; align-items:center; gap:5px;">
-                                <span>🪼</span>
-                                <span>流光水母智囊</span>
-                            </div>
+                    <div class="ai-msg-bubble-pet" style="position:relative;">
+                        <div style="white-space:pre-wrap; line-height:1.52; font-size:13px;">${escapeHtml(msg.content)}</div>
+                        <div style="display:flex; justify-content:flex-end; margin-top:6px;">
                             <button type="button" onclick="copyAiReplyByIdx(${idx})" class="active-scale"
-                                style="border:0.5px solid var(--separator); background:var(--card); color:var(--label-secondary); font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:999px; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:4px;">
-                                <i class="far fa-copy" style="font-size:9.5px;"></i>
-                                <span>複製</span>
+                                style="border:0.5px solid var(--separator); background:var(--card); color:var(--label-tertiary); font-size:10px; font-weight:600; padding:2px 8px; border-radius:999px; cursor:pointer; font-family:inherit;">
+                                複製
                             </button>
                         </div>
-                        <div style="white-space:pre-wrap; line-height:1.58;">${escapeHtml(msg.content)}</div>
                     </div>
                 `;
             }
@@ -7806,171 +7788,285 @@
         }
     }
 
-    // ===== 動態即時感知引擎：自動擷取使用者當下工時、待辦、門市運費與家電台獎資料 =====
-    function buildLiveT8AiContext(userQuery) {
-        const parts = [];
+    // ===== 全站知識庫與即時數據擷取引擎 =====
+    const SITE_FEATURES_GUIDE = `【T8 網站完整功能導覽】
+1. 今日分頁（工時打卡與日常）：
+   - 打卡計時：點「上班」開始計時，支援「休息 / 繼續工作」，下班向右滑動確認防誤觸。
+   - 工時圓環：點中央時間數字可切換「累計工時」與「倒數剩餘」；連續工作滿 4 小時自動提醒休息。
+   - 補打卡：首頁打卡明細區可手動新增或修改上下班時間，支援跨日班次。
+   - 排休月曆：點首頁頂部「日期」開啟月曆，點擊日期可標記排休或查看當日歷史工時。
+   - 待辦與筆記：點首頁「待辦」按鈕可設定當前專注任務、新增勾選待辦清單、記錄隨手便籤。
+   - 統計報表：點首頁「統計」可查看本週/本月總工時、日均工時，並匯出 CSV 或分享至 LINE。
+   - 每日箴言：點首頁「箴言」可抽籤查看今日事業、財務、健康指引。
+2. 新聞分頁（直播與音樂電台）：
+   - 頂部雙模切換：「📺 新聞直播（TVBS 24H）」與「🎵 音樂電台（熱門精選、KKBOX 榜、抒情流行、發燒熱播、自訂 YouTube 連結）」，兩者音訊自動互斥不重疊。
+   - 即時新聞：提供焦點、財經、科技、生活 4 大分類快訊。
+3. 家電分頁（門市四大工具）：
+   - 台獎計算機：可搜尋品名或料號（含冰箱、洗衣機、冷氣、電視、廚電、小家電），點擊「+」累加售出獎金、新增自訂加碼品項，並支援「LINE 匯出」銷售明細。
+   - 門市與跨店運費：內建全省 83 筆門市店長/課長/處長電話信箱與家電 MD 分機（40~49MD、系統MD、後勤），以及 59 家門市跨區外送運費表。
+   - 智慧選店：點「智慧選店」輸入客戶送達地址或行政區，自動比對推薦最近門市與最低跨區運費。
+   - 五甲店配送安裝：底部專屬卡片一鍵開啟 wgapp.pages.dev 派工與安裝查詢系統。
+4. 設定與個人化：
+   - 個人檔案與主題：點首頁右上角頭像或底部「設定」，可上傳圓形頭像、設定姓名/門市，並切換 4 款主題（經典素白、黑曜夜色、竹影青綠、暮光晨紫）。
+   - 資料備份與還原：於「設定」可匯出完整打卡與設定 JSON 備份檔、匯入還原或匯出 CSV。
+   - 加入主畫面：於「設定 ➔ 加入手機主畫面」可查看 iOS Safari / Android Chrome 全螢幕安裝步驟。`;
+
+    function getLiveWorkHoursSummary() {
         const now = new Date();
         const pad = n => String(n).padStart(2, '0');
-        const timeStr = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-        parts.push(`【系統即時時間】${timeStr}`);
-
-        // 1. Live Work Hours & Punch Records
-        try {
-            if (typeof punchRecords !== 'undefined' && Array.isArray(punchRecords)) {
-                const isWorking = punchRecords.length > 0 && punchRecords.length % 2 === 1;
-                let workedMs = 0;
-                const logStrs = [];
-                for (let i = 0; i < punchRecords.length; i += 2) {
-                    const rIn = punchRecords[i];
-                    const rOut = punchRecords[i + 1];
-                    const tIn = new Date(rIn.time);
-                    const inHM = `${pad(tIn.getHours())}:${pad(tIn.getMinutes())}`;
-                    if (rOut) {
-                        const tOut = new Date(rOut.time);
-                        const outHM = `${pad(tOut.getHours())}:${pad(tOut.getMinutes())}`;
-                        workedMs += Math.max(0, tOut - tIn);
-                        logStrs.push(`第${Math.floor(i / 2) + 1}段 ${inHM}~${outHM}`);
-                    } else {
-                        workedMs += Math.max(0, now - tIn);
-                        logStrs.push(`第${Math.floor(i / 2) + 1}段 ${inHM}~工作中`);
-                    }
-                }
-                const totalMins = Math.floor(workedMs / 60000);
-                const hrs = Math.floor(totalMins / 60);
-                const mins = totalMins % 60;
-                const remainMins = Math.max(0, 480 - totalMins);
-                const offTime = new Date(now.getTime() + remainMins * 60000);
-                const offHM = `${pad(offTime.getHours())}:${pad(offTime.getMinutes())}`;
-
-                if (punchRecords.length === 0) {
-                    parts.push(`【今日打卡與工時狀態】今日尚未打卡（累積 0 小時 0 分）`);
-                } else {
-                    parts.push(`【今日打卡與工時狀態】目前狀態：${isWorking ? '上班計時中' : '休息或已下班'}｜已累積工時：${hrs}小時${mins}分（共 ${totalMins} 分鐘）｜打卡明細：${logStrs.join('、')}｜距離滿8小時(480分)還差：${Math.floor(remainMins / 60)}小時${remainMins % 60}分${isWorking && remainMins > 0 ? `（若持續上班預計 ${offHM} 滿 8 小時下班）` : (remainMins === 0 ? '（今日已滿 8 小時達標！）' : '')}`);
-                }
+        if (typeof punchRecords === 'undefined' || !Array.isArray(punchRecords) || punchRecords.length === 0) {
+            return '今日尚未打卡（累計 0 小時 0 分）';
+        }
+        const isWorking = punchRecords.length % 2 === 1;
+        let workedMs = 0;
+        const logStrs = [];
+        for (let i = 0; i < punchRecords.length; i += 2) {
+            const rIn = punchRecords[i];
+            const rOut = punchRecords[i + 1];
+            const tIn = new Date(rIn.time);
+            const inHM = `${pad(tIn.getHours())}:${pad(tIn.getMinutes())}`;
+            if (rOut) {
+                const tOut = new Date(rOut.time);
+                const outHM = `${pad(tOut.getHours())}:${pad(tOut.getMinutes())}`;
+                workedMs += Math.max(0, tOut - tIn);
+                logStrs.push(`${inHM}~${outHM}`);
+            } else {
+                workedMs += Math.max(0, now - tIn);
+                logStrs.push(`${inHM}~工作中`);
             }
-        } catch (e) {}
+        }
+        const totalMins = Math.floor(workedMs / 60000);
+        const hrs = Math.floor(totalMins / 60);
+        const mins = totalMins % 60;
+        const remainMins = Math.max(0, 480 - totalMins);
+        const offTime = new Date(now.getTime() + remainMins * 60000);
+        const offHM = `${pad(offTime.getHours())}:${pad(offTime.getMinutes())}`;
 
-        // 2. Live Todo & Memo
-        try {
-            if (typeof getTodayNotes === 'function') {
-                const notes = getTodayNotes();
-                const todos = Array.isArray(notes?.todos) ? notes.todos : [];
-                const pending = todos.filter(t => !t.completed && !t.done).map(t => t.text);
-                const done = todos.filter(t => t.completed || t.done).map(t => t.text);
-                const memo = (notes?.memo || '').trim();
-                if (pending.length || done.length || memo) {
-                    parts.push(`【今日待辦與備忘】未完成待辦(${pending.length})：${pending.join('；') || '無'}｜已完成(${done.length})：${done.join('；') || '無'}｜備忘錄：${memo || '無'}`);
-                }
-            }
-        } catch (e) {}
-
-        // 3. Live TaiJiang Sales Cart & Dynamic Catalog Lookup
-        try {
-            if (typeof window.getTaiJiangAllItems === 'function' && typeof window.getTaiJiangCart === 'function') {
-                const allItems = window.getTaiJiangAllItems() || [];
-                const cart = window.getTaiJiangCart() || {};
-                const cartEntries = [];
-                let totalBonus = 0;
-                allItems.forEach(item => {
-                    const k = item.id || (item.code + '_' + item.name);
-                    const q = cart[k] || 0;
-                    if (q > 0) {
-                        totalBonus += q * item.bonus;
-                        cartEntries.push(`${item.name}(x${q}, 台獎$${item.bonus * q})`);
-                    }
-                });
-                if (cartEntries.length > 0) {
-                    parts.push(`【今日已售出台獎購物車】共累積台獎 $${totalBonus}：${cartEntries.join('、')}`);
-                }
-
-                // Search catalog if query mentions appliance brands/keywords/numbers
-                const qClean = (userQuery || '').trim().toUpperCase();
-                if (qClean.length >= 2) {
-                    const keywords = qClean.split(/[\s,，、？?！!。]+/).filter(w => w.length >= 2);
-                    const matchedItems = allItems.filter(it => {
-                        const hay = ((it.name || '') + ' ' + (it.code || '') + ' ' + (it.cat || '')).toUpperCase();
-                        return keywords.some(kw => hay.includes(kw));
-                    }).slice(0, 8);
-                    if (matchedItems.length > 0) {
-                        parts.push(`【系統家電台獎資料庫匹配結果】\n` + matchedItems.map(it => `- 料號:${it.code || '無'}｜品名:${it.name}｜單件台獎:$${it.bonus}`).join('\n'));
-                    }
-                }
-            }
-        } catch (e) {}
-
-        // 4. Dynamic Store Directory, MD Contacts & Cross-Store Freight Lookup
-        try {
-            const ds = (typeof _storeDirectoryState !== 'undefined' && _storeDirectoryState.dataStore)
-                ? _storeDirectoryState.dataStore
-                : (typeof DEFAULT_STORE_DIRECTORY_DATA !== 'undefined' ? DEFAULT_STORE_DIRECTORY_DATA : null);
-            if (ds && userQuery) {
-                const q = userQuery.trim();
-                const matchedContacts = (ds.contacts || []).filter(c => {
-                    const storeName = (c['店名'] || c['部門'] || '').replace(/[A-Za-z0-9\s]/g, '');
-                    const code = (c['代碼'] || '').trim();
-                    const mgr = (c['店長'] || c['負責人'] || '');
-                    const addr = (c['地址'] || '').slice(3, 9);
-                    return (storeName && storeName.length >= 2 && q.includes(storeName)) ||
-                           (code && code.length >= 2 && q.toUpperCase().includes(code.toUpperCase())) ||
-                           (addr && addr.length >= 2 && q.includes(addr)) ||
-                           (mgr && mgr.length >= 2 && q.includes(mgr));
-                }).slice(0, 5);
-
-                if (matchedContacts.length > 0) {
-                    parts.push(`【全省門市與家電MD通訊錄匹配】\n` + matchedContacts.map(c => {
-                        if (c['店名']) {
-                            return `- 店名:${c['店名']}(代碼:${c['代碼']})｜電話:${(c['電話'] || '').replace(/\n/g, ' ')}｜地址:${c['地址']}｜店長:${c['店長']}｜課長:${(c['課長'] || '').replace(/\n/g, ' ')}(電話:${c['課長電話'] || '無'})｜處長:${(c['處長'] || '').replace(/\n/g, ' ')}`;
-                        }
-                        return `- 部門:${(c['部門'] || '').replace(/\n/g, ' ')}｜負責人:${c['負責人']}｜電話:${c['電話']}｜分機:${c['分機']}｜LINE:${c['LINE']}`;
-                    }).join('\n'));
-                }
-
-                // Match cross-store freight fees by store name or delivery area
-                const matchedFreight = [];
-                const storesMap = ds.stores || {};
-                Object.values(storesMap).forEach(st => {
-                    const stCleanName = (st.name || '').replace(/[A-Za-z0-9\s]/g, '');
-                    const isStoreMentioned = (stCleanName && stCleanName.length >= 2 && q.includes(stCleanName)) ||
-                                             (st.code && q.toUpperCase().includes(st.code.toUpperCase()));
-                    const areaHits = (st.fees || []).filter(f => {
-                        const areas = (f.area || '').split(/[、,，/()\s]+/).filter(a => a.length >= 2);
-                        return areas.some(a => q.includes(a));
-                    });
-                    if (isStoreMentioned) {
-                        const feeSummary = (st.fees || []).map(f => `${f.fee}: ${f.area}`).join(' ｜ ');
-                        matchedFreight.push(`- ${st.name}(${st.code}) 跨區運費表：${feeSummary}`);
-                    } else if (areaHits.length > 0) {
-                        matchedFreight.push(`- ${st.name}(${st.code}) 配送至相關區域運費：` + areaHits.map(f => `${f.fee}(${f.area})`).join('、'));
-                    }
-                });
-                if (matchedFreight.length > 0) {
-                    parts.push(`【跨店／跨區運費資料庫匹配】\n` + matchedFreight.slice(0, 5).join('\n'));
-                }
-            }
-        } catch (e) {}
-
-        return parts.join('\n');
+        const lines = [
+            `• 狀態：${isWorking ? '上班計時中' : '休息 / 已下班'}`,
+            `• 已累計：${hrs} 小時 ${mins} 分`,
+            `• 打卡區間：${logStrs.join('、')}`
+        ];
+        if (remainMins > 0) {
+            lines.push(`• 距滿 8 小時：還差 ${Math.floor(remainMins / 60)} 小時 ${remainMins % 60} 分${isWorking ? `（預計 ${offHM} 下班）` : ''}`);
+        } else {
+            lines.push(`• 進度：今日已滿 8 小時`);
+        }
+        return lines.join('\n');
     }
 
-    // ===== 離線／極端網路中斷時的本機智慧專家引擎 (Local Expert Fallback) =====
-    function buildLocalExpertFallback(userText, liveContext) {
+    function getLiveTodoSummary() {
+        if (typeof getTodayNotes !== 'function') return '目前無待辦紀錄';
+        const notes = getTodayNotes() || {};
+        const todos = Array.isArray(notes.todos) ? notes.todos : [];
+        const pending = todos.filter(t => !t.completed && !t.done).map(t => t.text);
+        const done = todos.filter(t => t.completed || t.done).map(t => t.text);
+        const memo = (notes.memo || '').trim();
+        const task = (localStorage.getItem('currentTask') || '').trim();
+        const lines = [];
+        if (task) lines.push(`• 當前任務：${task}`);
+        lines.push(`• 未完成待辦（${pending.length}）：${pending.length ? pending.join('、') : '無'}`);
+        if (done.length) lines.push(`• 已完成（${done.length}）：${done.join('、')}`);
+        if (memo) lines.push(`• 便籤：${memo}`);
+        return lines.join('\n');
+    }
+
+    function getLiveTaiJiangSummary(query) {
+        if (typeof window.getTaiJiangAllItems !== 'function' || typeof window.getTaiJiangCart !== 'function') {
+            return '';
+        }
+        const allItems = window.getTaiJiangAllItems() || [];
+        const cart = window.getTaiJiangCart() || {};
+        const cartEntries = [];
+        let totalBonus = 0;
+        let totalQty = 0;
+        allItems.forEach(item => {
+            const k = item.id || (item.code + '_' + item.name);
+            const q = cart[k] || 0;
+            if (q > 0) {
+                totalBonus += q * item.bonus;
+                totalQty += q;
+                cartEntries.push(`${item.name} x${q} ($${item.bonus * q})`);
+            }
+        });
+
+        const stopWords = ['台獎', '獎金', '明細', '查詢', '多少', '請問', '幫我', '查一下', '算一下', '目前', '今日', '銷售', '計算', '計算機'];
+        let cleanQ = (query || '').trim().toUpperCase();
+        stopWords.forEach(sw => { cleanQ = cleanQ.replace(new RegExp(sw, 'g'), ' '); });
+        const keywords = cleanQ.split(/[\s,，、？?！!。]+/).filter(w => w.length >= 2);
+
+        const matchedItems = keywords.length > 0
+            ? allItems.filter(it => {
+                const hay = ((it.name || '') + ' ' + (it.code || '') + ' ' + (it.cat || '')).toUpperCase();
+                return keywords.some(kw => hay.includes(kw));
+            }).slice(0, 10)
+            : [];
+
+        const out = [];
+        if (cartEntries.length > 0) {
+            out.push(`【目前售出台獎】共 ${totalQty} 件，合計 $${totalBonus.toLocaleString()}\n` + cartEntries.map(e => `• ${e}`).join('\n'));
+        } else if (/台獎|獎金|明細/.test(query) && matchedItems.length === 0) {
+            out.push(`【目前售出台獎】$0（尚無勾選售出品項，可至「家電 ➔ 台獎計算機」點擊 + 新增）`);
+        }
+
+        if (matchedItems.length > 0) {
+            out.push(`【台獎型錄查詢結果】\n` + matchedItems.map(it => `• [${it.code || '自訂'}] ${it.name}：台獎 $${it.bonus}`).join('\n'));
+        }
+        return out.join('\n\n');
+    }
+
+    function getLiveStoreAndFreightMatches(query) {
+        const ds = (typeof _storeDirectoryState !== 'undefined' && _storeDirectoryState.dataStore)
+            ? _storeDirectoryState.dataStore
+            : (typeof DEFAULT_STORE_DIRECTORY_DATA !== 'undefined' ? DEFAULT_STORE_DIRECTORY_DATA : null);
+        if (!ds || !query) return { contactsText: '', freightText: '' };
+
+        const q = query.trim();
+        const matchedContacts = (ds.contacts || []).filter(c => {
+            const storeName = (c['店名'] || '').replace(/[A-Za-z0-9\s()便利購]/g, '');
+            const deptName = (c['部門'] || '');
+            const code = (c['代碼'] || '').trim();
+            const mgr = (c['店長'] || c['負責人'] || '');
+            const addr = (c['地址'] || '').slice(3, 9);
+            if (storeName && storeName.length >= 2 && q.includes(storeName)) return true;
+            if (code && code.length >= 2 && q.toUpperCase().includes(code.toUpperCase())) return true;
+            if (addr && addr.length >= 2 && q.includes(addr)) return true;
+            if (mgr && mgr.length >= 2 && q.includes(mgr)) return true;
+            if (deptName) {
+                const deptTokens = deptName.split(/[\s/.\n]+/).filter(t => t.length >= 2);
+                if (deptTokens.some(t => q.toUpperCase().includes(t.toUpperCase()))) return true;
+            }
+            return false;
+        }).slice(0, 6);
+
+        const contactsText = matchedContacts.map(c => {
+            if (c['店名']) {
+                const lines = [
+                    `【${c['店名']}（代碼 ${c['代碼']}）】`,
+                    `• 電話：${(c['電話'] || '無').replace(/\n/g, ' / ')}`,
+                    `• 地址：${c['地址'] || '無'}`,
+                    `• 店長：${(c['店長'] || '無').replace(/\n/g, ' ')}`,
+                    `• 課長：${(c['課長'] || '無').replace(/\n/g, ' ')}${c['課長電話'] ? `（${c['課長電話']}）` : ''}`
+                ];
+                if (c['處長']) lines.push(`• 處長：${c['處長'].replace(/\n/g, ' ')}`);
+                if (c['助理'] || c['助理電話']) lines.push(`• 助理：${(c['助理'] || '').replace(/\n/g, ' ')} ${c['助理電話'] || ''}`);
+                return lines.join('\n');
+            }
+            return `【${(c['部門'] || '').replace(/\n/g, ' ')}】\n• 負責人：${c['負責人'] || '無'}\n• 電話：${c['電話'] || '無'}（分機 ${c['分機'] || '無'}）${c['LINE'] ? `\n• LINE：${c['LINE']}` : ''}`;
+        }).join('\n\n');
+
+        const matchedFreight = [];
+        const storesMap = ds.stores || {};
+        Object.values(storesMap).forEach(st => {
+            const stCleanName = (st.name || '').replace(/[A-Za-z0-9\s]/g, '');
+            const isStoreMentioned = (stCleanName && stCleanName.length >= 2 && q.includes(stCleanName)) ||
+                                     (st.code && q.toUpperCase() === st.code.toUpperCase());
+            const areaHits = (st.fees || []).filter(f => {
+                const areas = (f.area || '').split(/[、,，/()\s]+/).filter(a => a.length >= 2 && a !== '範圍' && a !== '除外');
+                return areas.some(a => q.includes(a));
+            });
+
+            if (isStoreMentioned && areaHits.length > 0) {
+                matchedFreight.push(`【${st.name} 跨區運費】\n` + areaHits.map(f => `• ${f.fee}：${f.area}`).join('\n'));
+            } else if (isStoreMentioned) {
+                matchedFreight.push(`【${st.name} 跨區運費表】\n` + (st.fees || []).map(f => `• ${f.fee}：${f.area}`).join('\n'));
+            } else if (areaHits.length > 0) {
+                matchedFreight.push(`• ${st.name}：${areaHits.map(f => `${f.fee}（${f.area}）`).join('、')}`);
+            }
+        });
+
+        const freightText = matchedFreight.slice(0, 6).join('\n');
+        return { contactsText, freightText };
+    }
+
+    // ===== 0 秒極速回答網站內所有功能與資料（無廢話、直接給結果） =====
+    function tryInstantSiteAnswer(userText) {
         const q = (userText || '').trim();
-        if (/工時|下班|打卡|幾點|多久/.test(q)) {
-            return `🪼 為您即時查詢今日打卡與工時狀態：\n\n${liveContext}\n\n（溫馨提醒：連續工作滿 4 小時依法須有至少 30 分鐘休息時間，祝您今日順心！）`;
+        if (!q) return null;
+
+        // 若使用者明確要求「寫話術 / 範本 / 翻譯 / 造句 / 為什麼」，交由 LLM 生成，不攔截
+        if (/話術|範本|怎麼回|幫我寫|潤飾|翻譯/.test(q)) {
+            return null;
         }
-        if (/跨店|運費|店名|電話|地址|課長|店長|MD|分機/.test(q) && liveContext.includes('匹配')) {
-            return `🪼 為您從 T8 內建門市資料庫檢索到以下資訊：\n\n${liveContext}`;
+
+        // 1. 詢問網站功能 / 導覽 / 怎麼用
+        if (/^(網站功能|功能|有哪些功能|這網站|怎麼用|使用說明|操作指南|導覽)$/.test(q) || /網站.*功能|有什麼功能/.test(q)) {
+            return SITE_FEATURES_GUIDE;
         }
-        if (/冷氣|坪數|噸數|kW/i.test(q)) {
-            return `❄️ 【台灣門市冷氣坪數 vs 能力快速對照表】\n1. 3～4 坪：約 2.2～2.8 kW（0.8～1.0 噸）\n2. 4～6 坪：約 2.8～3.6 kW（1.0～1.3 噸）\n3. 6～8 坪：約 4.1～5.0 kW（1.5～1.8 噸）\n4. 8～10 坪：約 5.0～6.3 kW（1.8～2.2 噸）\n5. 10～12 坪：約 6.3～7.2 kW（2.2～2.5 噸）\n\n💡 門市實戰建議：若客人房間有「西曬、頂樓、鐵皮屋、挑高超過 3米2 或開放式客餐廳」，每坪熱負荷需以 600～700 kcal/hr 計算，建議直接往上抓大一級噸數，壓縮機才省電又冷得快！`;
+
+        // 2. 詢問門市聯絡 / MD / 跨區運費 / 具體店名或行政區
+        const { contactsText, freightText } = getLiveStoreAndFreightMatches(q);
+        if (contactsText || freightText) {
+            if (/運費|外送|跨店|跨區|送到|配送/.test(q) && freightText) {
+                return freightText + (contactsText && !freightText.includes('【') ? `\n\n${contactsText}` : '');
+            }
+            if (/電話|地址|店長|課長|處長|助理|分機|MD|聯絡|信箱|代碼/i.test(q) && contactsText) {
+                return contactsText;
+            }
+            return [contactsText, freightText].filter(Boolean).join('\n\n');
         }
-        if (/調貨/.test(q)) {
-            return `🚚 【可直接複製的 LINE 跨店調貨親切話術】\n\n「您好！感謝您今日的選購😊 您指定的機型目前我們正為您從鄰近分店專案調撥中。跟您說明一下，跨店專案調貨會有一筆 $___ 元的跨區物流運費，預計將於 __/__（週__）抵達門市／為您安排配送。確認沒問題的話我們就立即為您鎖定庫存並排單喔，謝謝您的體諒與支持！」`;
+
+        // 若點選「跨區運費」或「門市與MD聯絡」快捷鍵
+        if (q === '跨區運費' || /^跨區運費怎麼查/.test(q)) {
+            return `可直接在此輸入「店名」或「送達地區」查詢（例如：輸入「五甲」、「鳳山」、「東港」、「屏東」、「汐止」），或前往底部「家電 ➔ 智慧選店」比對最低運費。`;
         }
-        if (/客訴|延誤|安撫/.test(q)) {
-            return `🛡️ 【高情商 LINE 配送／安裝延誤安撫範本】\n\n「__先生/小姐您好，非常抱歉跟您聯繫！稍早工班師傅回報，因前一站安裝現場管線狀況較複雜，為確保每一戶的施工品質與安全，今日預計抵達您府上的時間會稍微順延至 __:__ 左右（或需與您協調改約 __/__ 優先第一順位配送）。造成您的不便與久候真的非常抱歉！我們會全程為您緊盯進度，請問這個時段您方便嗎？」`;
+        if (q === '門市與MD聯絡' || q === '門市電話') {
+            return `可直接在此輸入「店名、店碼或部門」秒查電話、地址、店長、課長與家電 MD 分機（例如：輸入「五甲」、「內湖」、「01B」、「40MD」、「空調」、「電視」）。`;
         }
-        return `🪼 根據目前系統即時狀態為您整理：\n\n${liveContext}\n\n若您需要撰寫特定客戶 LINE 回覆、查詢某間分店電話／跨區運費、或是詢問家電規格與生活常識，歡迎直接輸入關鍵字問我！`;
+
+        // 3. 詢問台獎 / 獎金 / 料號 / 家電型錄
+        const tjResult = getLiveTaiJiangSummary(q);
+        if (tjResult && (/台獎|獎金|明細|料號|\d{5,}|日立|國際|索尼|三星|夏普|東芝|聲寶|三洋|惠而浦|大金|三菱|冷氣|冰箱|洗衣機|電視|除濕機/.test(q))) {
+            return tjResult;
+        }
+
+        // 4. 詢問今日工時 / 打卡 / 幾點下班
+        if (/^(今日工時|工時|打卡|下班|幾點下班|上班多久|還要多久)$/.test(q) || /今天.*(工時|打卡|下班|多久)|幾點.*下班/.test(q)) {
+            return `【今日工時狀態】\n${getLiveWorkHoursSummary()}`;
+        }
+
+        // 5. 詢問今日待辦 / 備忘錄 / 筆記
+        if (/^(今日待辦|待辦|備忘|備忘錄|筆記)$/.test(q) || /我的(待辦|備忘|筆記)/.test(q)) {
+            return `【今日待辦與筆記】\n${getLiveTodoSummary()}`;
+        }
+
+        // 6. 詢問網站特定子功能操作（排休月曆、補打卡、新聞、音樂電台、主題、五甲配送、備份、加入主畫面）
+        if (/排休|月曆|日曆|歷史工時/.test(q)) {
+            return `【排休與歷史月曆】\n點擊「今日」首頁最上方的「日期文字」，即可開啟月曆標記排休或查看各日工時明細。`;
+        }
+        if (/補打卡|忘記打卡|改時間|跨日/.test(q)) {
+            return `【補打卡與修改時間】\n在「今日」首頁下方的「打卡明細」區塊，可直接手動新增、編輯或刪除打卡時間，系統支援跨日班次計算。`;
+        }
+        if (/新聞|直播|TVBS|音樂|電台|聽歌/.test(q)) {
+            return `【新聞直播 & 音樂電台】\n切換至底部「新聞」分頁，頂部可切換「📺 新聞直播（TVBS 24H）」與「🎵 音樂電台（內建 4 大頻道＋自訂 YouTube 連結）」，下方提供焦點、財經、科技、生活即時新聞。`;
+        }
+        if (/五甲.*(配送|安裝|派工)|派工|安裝系統|wgapp/i.test(q)) {
+            return `【五甲店配送安裝系統】\n請至底部「家電」分頁最下方點擊「五甲店配送安裝」，或直接開啟：https://wgapp.pages.dev/`;
+        }
+        if (/主題|深色|夜色|配色|頭像|大頭照|改名/.test(q)) {
+            return `【個人檔案與主題配色】\n點擊首頁右上角「圓形頭像」或底部「設定」，即可上傳照片、修改姓名/門市，並切換 4 款主題（經典素白、黑曜夜色、竹影青綠、暮光晨紫）。`;
+        }
+        if (/備份|還原|匯出|CSV|統計/i.test(q)) {
+            return `【統計報表與資料備份】\n• 工時統計與 LINE 分享：點擊「今日」頁面的「統計」按鈕。\n• 備份/還原/CSV 匯出：點擊底部「設定」即可匯出或匯入 JSON 備份檔。`;
+        }
+        if (/主畫面|安裝|全螢幕|桌面/.test(q)) {
+            return `【加入手機主畫面】\n• iOS (Safari)：點底部「分享」➔「加入主畫面」。\n• Android (Chrome)：點右上角「⋮」➔「安裝應用程式 / 新增至主螢幕」。`;
+        }
+
+        return null;
+    }
+
+    function buildLiveT8AiContext(userQuery) {
+        const parts = [];
+        parts.push(SITE_FEATURES_GUIDE);
+        parts.push(`【當下工時狀態】\n${getLiveWorkHoursSummary()}`);
+        parts.push(`【當下待辦狀態】\n${getLiveTodoSummary()}`);
+        const tj = getLiveTaiJiangSummary(userQuery);
+        if (tj) parts.push(tj);
+        const { contactsText, freightText } = getLiveStoreAndFreightMatches(userQuery);
+        if (contactsText) parts.push(contactsText);
+        if (freightText) parts.push(freightText);
+        return parts.join('\n\n');
     }
 
     async function sendAiChatMessage() {
@@ -7988,6 +8084,17 @@
         saveAiChatHistory(history);
         renderAiChatMessages();
 
+        // Step 1: 網站內所有功能、工時、待辦、門市電話、跨區運費、台獎型錄 -> 0 秒直接精準回覆，零廢話！
+        const instantAnswer = tryInstantSiteAnswer(text);
+        if (instantAnswer) {
+            history.push({ role: 'assistant', content: instantAnswer, time: new Date().toISOString() });
+            saveAiChatHistory(history);
+            renderAiChatMessages();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            return;
+        }
+
+        // Step 2: 進階或外部問題 -> 呼叫雲端 AI（強制零廢話、直接給答案）
         const typingIndicator = document.getElementById('aiTypingIndicator');
         if (typingIndicator) typingIndicator.style.display = 'flex';
         _isAiChatSending = true;
@@ -7995,54 +8102,42 @@
         const apiKey = getOpenRouterApiKey();
         const liveContext = buildLiveT8AiContext(text);
 
-        const systemPrompt = `你是 T8 智慧工時與家電門市系統的「流光水母 AI 智囊（🪼）」，是一位極度聰明、全知全能、溫暖俐落的隨身 AI 顧問。
+        const systemPrompt = `你是 T8 網站的 AI 助理。請根據下方【T8 網站完整功能與即時資料】或你的知識庫回答。
 
-【你的雙重超能力】
-1. **T8 系統即時數據感知專家**：你能直接讀取使用者當下的打卡工時、預計下班時間、今日待辦事項、全台 59 店跨區運費表、83 筆全省門市店長/課長/家電MD聯絡方式，以及家電台獎型錄（見下方即時感知資料）。當使用者詢問這些問題時，請直接引用下方真實數據精準回答！
-2. **全領域萬事通智慧大腦**：除了門市話術、家電規格（冷氣坪數、冰箱洗衣機比較、節能補助）、台灣勞基法規之外，使用者問任何領域的問題（包含：文案寫作、各國語言翻譯、數學計算、生活常識、旅遊美食、健康科普、程式邏輯、心理抒壓、聊天解悶），你都必須有問必答，給出最聰明、最詳盡實用的解答，絕不推託！
+【嚴格輸出規範（必遵）】
+1. 簡單清爽、零廢話：直接給出答案、數據或文字範本，嚴禁任何開場白（禁止說「嗨」、「您好」、「沒問題」、「為您整理如下」）與結尾客套話（禁止說「祝您順心」、「有問題歡迎再問我」）。
+2. 100% 台灣繁體中文，條列清晰，能用 3 行講完絕不寫 10 行。
 
-【語言與排版規範】
-- 必須 100% 使用道地的「台灣繁體中文」與台灣慣用詞彙，嚴禁簡體字。
-- 條理分明、重點突出；若是給客戶的 LINE 話術，請提供可直接一鍵複製的完整自然段落。
-- 僅限純文字輸出，不輸出圖片或影片標籤。
-
-【使用者當下 T8 即時感知資料】
 ${liveContext}`;
 
         const messagesForApi = [
             { role: 'system', content: systemPrompt }
         ];
 
-        // Add last 8 turns for rich conversational memory
-        const contextHistory = history.slice(-8);
+        const contextHistory = history.slice(-6);
         contextHistory.forEach(h => {
             messagesForApi.push({ role: h.role, content: h.content });
         });
 
         let successResult = null;
-        let lastErrorMsg = '';
-
-        const badgeEl = document.getElementById('aiChatModelBadge');
 
         function sanitizeAiReply(rawReply) {
             if (!rawReply || !rawReply.trim()) return '';
             let clean = rawReply.replace(/!\[.*?\]\(.*?\)/g, '');
             clean = clean.replace(/<img.*?>/gi, '');
             clean = clean.replace(/<video.*?>.*?<\/video>/gi, '');
-            if (clean.length > 1600) {
-                clean = clean.slice(0, 1585) + '…';
+            if (clean.length > 1200) {
+                clean = clean.slice(0, 1190) + '…';
             }
             return clean.trim();
         }
 
-        // Tier 1: Personal OpenRouter Key (if configured by user) or Tier 2: /api/ai Serverless Endpoint
         const modelsToTry = apiKey
             ? FREE_AI_MODELS
-            : [{ id: 'server-managed', name: '流光智慧引擎' }];
+            : [{ id: 'server-managed', name: 'T8 AI' }];
 
         for (const modelObj of modelsToTry) {
             try {
-                if (badgeEl) badgeEl.textContent = `✦ ${modelObj.name} · 思考中…`;
                 const usePersonalKey = Boolean(apiKey);
                 const response = await fetch(usePersonalKey ? 'https://openrouter.ai/api/v1/chat/completions' : '/api/ai', {
                     method: 'POST',
@@ -8050,13 +8145,13 @@ ${liveContext}`;
                         'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json',
                         'HTTP-Referer': window.location.origin,
-                        'X-Title': 'TIME8 Jellyfish AI'
+                        'X-Title': 'TIME8 AI'
                     } : { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         ...(usePersonalKey ? { model: modelObj.id } : {}),
                         messages: messagesForApi,
-                        max_tokens: 1200,
-                        temperature: 0.7
+                        max_tokens: 900,
+                        temperature: 0.5
                     })
                 });
 
@@ -8064,55 +8159,40 @@ ${liveContext}`;
                     const json = await response.json().catch(() => ({}));
                     const reply = sanitizeAiReply(json?.choices?.[0]?.message?.content);
                     if (reply) {
-                        successResult = { text: reply, modelName: modelObj.name };
+                        successResult = { text: reply };
                         break;
                     }
-                } else {
-                    const errJson = await response.json().catch(() => ({}));
-                    lastErrorMsg = errJson?.error?.message || `HTTP ${response.status}`;
                 }
-            } catch (err) {
-                lastErrorMsg = err.message || '連線異常';
-            }
+            } catch (err) {}
         }
 
-        // Tier 3: Direct Browser Zero-Key Cloud LLM Fallback (Pollinations OpenAI-compatible GPT-4o-mini / Mistral)
-        // Ensures 100% availability for ANY question even without API keys or when /api/ai is not configured!
         if (!successResult) {
-            for (const pubModel of [
-                { id: 'openai', name: '流光雲端 GPT' },
-                { id: 'mistral', name: '流光雲端 Mistral' }
-            ]) {
+            for (const pubModel of ['openai', 'mistral']) {
                 try {
-                    if (badgeEl) badgeEl.textContent = `✦ ${pubModel.name} · 思考中…`;
                     const pubRes = await fetch('https://text.pollinations.ai/openai', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            model: pubModel.id,
+                            model: pubModel,
                             messages: messagesForApi,
-                            temperature: 0.7
+                            temperature: 0.5
                         })
                     });
                     if (pubRes.ok) {
                         const pubJson = await pubRes.json().catch(() => ({}));
                         const reply = sanitizeAiReply(pubJson?.choices?.[0]?.message?.content);
                         if (reply) {
-                            successResult = { text: reply, modelName: pubModel.name };
+                            successResult = { text: reply };
                             break;
                         }
                     }
-                } catch (err) {
-                    console.warn(`Fallback ${pubModel.id} error:`, err);
-                }
+                } catch (err) {}
             }
         }
 
-        // Tier 4: Offline Local Expert Fallback (if completely offline)
         if (!successResult) {
             successResult = {
-                text: buildLocalExpertFallback(text, liveContext),
-                modelName: '內建本機智囊'
+                text: `${getLiveWorkHoursSummary()}\n\n${SITE_FEATURES_GUIDE}`
             };
         }
 
@@ -8122,8 +8202,7 @@ ${liveContext}`;
         history.push({ role: 'assistant', content: successResult.text, time: new Date().toISOString() });
         saveAiChatHistory(history);
         renderAiChatMessages();
-        if (badgeEl) badgeEl.textContent = `✦ ${successResult.modelName} · 智慧在線`;
-        if ('vibrate' in navigator) navigator.vibrate(12);
+        if ('vibrate' in navigator) navigator.vibrate(10);
     }
 
     function escapeHtml(text) {
