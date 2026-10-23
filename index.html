@@ -341,7 +341,7 @@
         /* Ring draw-in animation on load */
         @keyframes ring-draw {
             from {
-                stroke-dashoffset: 716.28;
+                stroke-dashoffset: 640.88;
             }
         }
 
@@ -2338,9 +2338,9 @@
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        /* --- Apple Native Hero Circular Progress Ring --- */
+        /* --- Apple Native × Oriental Gilded Mountain Pendulum Ring (方案 A) --- */
         .hero-section {
-            padding: 8px 0 6px;
+            padding: 6px 0 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -2348,9 +2348,9 @@
 
         .ring-container {
             position: relative;
-            width: 260px;
-            height: 260px;
-            margin-bottom: 10px;
+            width: 284px;
+            height: 262px;
+            margin-bottom: 4px;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
@@ -2363,9 +2363,9 @@
 
         .ring-ambient-core {
             position: absolute;
-            inset: 26px;
+            inset: 28px 36px 42px 36px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(196, 168, 122, 0.09) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(212, 182, 136, 0.14) 0%, transparent 72%);
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.8s ease;
@@ -2381,10 +2381,33 @@
             50% { transform: scale(1.05); opacity: 1; }
         }
 
+        @keyframes pendulumSwing {
+            0%, 100% { transform: rotate(-6.5deg); }
+            50% { transform: rotate(6.5deg); }
+        }
+
+        @keyframes haloBreathe {
+            0%, 100% { opacity: 0.72; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.015); }
+        }
+
+        .ring-pendulum {
+            transform-origin: 150px 229px;
+            animation: pendulumSwing 3s ease-in-out infinite;
+        }
+
+        .ring-halo-glow {
+            transform-origin: 150px 134px;
+            animation: haloBreathe 4s ease-in-out infinite;
+        }
+
+        [data-zen-theme="obsidian"] #ringDialSurface {
+            fill: url(#dialSurfaceDark);
+        }
+
         .ring-container svg {
             width: 100%;
             height: 100%;
-            transform: rotate(-90deg);
             overflow: visible;
         }
 
@@ -2399,30 +2422,36 @@
         .ring-inner-content {
             position: absolute;
             inset: 0;
+            padding-bottom: 36px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
+            gap: 2px;
             pointer-events: none;
         }
 
         .hero-eyebrow {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--label-tertiary);
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--ink);
             text-transform: uppercase;
-            letter-spacing: 0.10em;
+            letter-spacing: 0.16em;
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
             transition: opacity 0.3s ease;
+            opacity: 0.88;
+        }
+
+        [data-zen-theme="obsidian"] .hero-eyebrow {
+            color: var(--ink-light);
         }
 
         #totalHours {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            font-size: 50px;
-            font-weight: 600;
+            font-size: 46px;
+            font-weight: 400;
             line-height: 1.02;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.035em;
             color: var(--label);
             font-variant-numeric: tabular-nums;
             display: flex;
@@ -2433,30 +2462,55 @@
 
         .hero-unit {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            font-size: 20px;
-            font-weight: 400;
+            font-size: 19px;
+            font-weight: 500;
             color: var(--label-tertiary);
-            margin: 0 5px 0 2px;
+            margin: 0 4px 0 2px;
             letter-spacing: 0;
+        }
+
+        /* 位置 1：圓環鐘擺正下方並列資訊列 */
+        .ring-bottom-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 2px;
         }
 
         /* Live status pill - Apple 4-State Lifecycle */
         .live-status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 4px 14px;
+            gap: 6px;
+            padding: 4px 12px;
             border-radius: 999px;
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 0.03em;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
             transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border: 0.5px solid var(--separator);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .live-status-sep {
+            opacity: 0.55;
+            font-weight: 400;
+        }
+
+        .ring-pct-inline {
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
         }
 
         /* 1. Ongoing working state */
         .live-status-pill.status-ongoing {
             background: rgba(110, 125, 106, 0.14);
+            border-color: rgba(91, 138, 96, 0.28);
             color: #436B48;
         }
 
@@ -2469,6 +2523,7 @@
         /* 2. Completed 8h & punched out state */
         .live-status-pill.status-completed {
             background: rgba(154, 120, 180, 0.14);
+            border-color: rgba(154, 120, 180, 0.3);
             color: #7B578F;
         }
 
@@ -2481,6 +2536,7 @@
         /* 3. Rest / paused punch-out state */
         .live-status-pill.status-resting {
             background: rgba(140, 120, 100, 0.12);
+            border-color: rgba(140, 120, 100, 0.25);
             color: #7A6652;
         }
 
@@ -2492,13 +2548,19 @@
 
         /* 4. Idle / Not started state */
         .live-status-pill.status-idle {
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--fill);
+            border-color: var(--separator);
             color: var(--label-tertiary);
+        }
+
+        .live-status-pill.status-idle .live-pulse-dot {
+            background: var(--label-quaternary);
         }
 
         /* 5. Continuous 4h Overtime warning state (Labor Law §35) */
         .live-status-pill.status-overtime {
             background: rgba(196, 91, 91, 0.14);
+            border-color: rgba(196, 91, 91, 0.32);
             color: #A64545;
         }
 
@@ -2509,8 +2571,8 @@
         }
 
         .live-pulse-dot {
-            width: 7px;
-            height: 7px;
+            width: 6.5px;
+            height: 6.5px;
             border-radius: 50%;
             transition: background 0.3s ease, box-shadow 0.3s ease;
         }
@@ -2520,23 +2582,13 @@
             50% { transform: scale(1.3); opacity: 1; }
         }
 
-        .ring-pct-badge {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            font-size: 13.5px;
-            font-weight: 500;
-            color: var(--label-tertiary);
-            letter-spacing: 0.04em;
-            margin-top: 1px;
-        }
-
         .ring-target-info {
-            font-size: 13.5px;
-            color: var(--label-tertiary);
+            font-size: 12.5px;
+            color: var(--label-secondary);
             font-weight: 500;
             letter-spacing: 0.01em;
             text-align: center;
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            margin-top: 2px;
         }
 
         /* --- Zen Rest Toolbar (In-place Actions: 深呼吸 · 今日靈籤 · 功德) --- */
@@ -4383,21 +4435,38 @@
                         </button>
                     </div>
 
-                    <!-- Center: 100% Clean, Sacred 226px Apple Progress Ring -->
+                    <!-- Center: 方案 A｜鎏金雙環 · 遠山鐘擺 (內部淨空 + 位置1下方並列狀態列) -->
                     <div class="ring-container" id="ringContainer" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
                         <div class="ring-ambient-core" id="ringAmbientCore"></div>
-                        <svg viewBox="0 0 264 264">
+                        <svg viewBox="0 0 300 276">
                             <defs>
+                                <!-- Soft Warm Backlight Halo -->
+                                <radialGradient id="haloGlowA" cx="50%" cy="50%" r="50%">
+                                    <stop offset="68%" stop-color="#FFE4B5" stop-opacity="0" />
+                                    <stop offset="86%" stop-color="#F6C87A" stop-opacity="0.38" />
+                                    <stop offset="100%" stop-color="#F6C87A" stop-opacity="0" />
+                                </radialGradient>
+                                <!-- Brushed Champagne Gold Metallic Gradient -->
+                                <linearGradient id="champagneGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#F5E2B8" />
+                                    <stop offset="35%" stop-color="#D4AF72" />
+                                    <stop offset="70%" stop-color="#AA8245" />
+                                    <stop offset="100%" stop-color="#E5C890" />
+                                </linearGradient>
+                                <!-- Active Progress Warm Lit Ring (方案 A 主香檳暖金光環) -->
                                 <linearGradient id="ringGradientWarm" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#D4B688" />
-                                    <stop offset="100%" stop-color="#9C7747" />
+                                    <stop offset="0%" stop-color="#FFF3D1" />
+                                    <stop offset="50%" stop-color="#F0C068" />
+                                    <stop offset="100%" stop-color="#C8933E" />
                                 </linearGradient>
                                 <linearGradient id="ringGradientGreen" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#72A979" />
+                                    <stop offset="0%" stop-color="#9BE0A4" />
+                                    <stop offset="50%" stop-color="#69B373" />
                                     <stop offset="100%" stop-color="#46734C" />
                                 </linearGradient>
                                 <linearGradient id="ringGradientPurple" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#A584BE" />
+                                    <stop offset="0%" stop-color="#DEC6F5" />
+                                    <stop offset="50%" stop-color="#A584BE" />
                                     <stop offset="100%" stop-color="#7B578F" />
                                 </linearGradient>
                                 <!-- 珍稀夥伴特權：星辰紫曜 (Epic) -->
@@ -4413,33 +4482,108 @@
                                     <stop offset="70%" stop-color="#FFA000" />
                                     <stop offset="100%" stop-color="#E65100" />
                                 </linearGradient>
+                                <!-- Dial Inner Surface Gradients (Light & Obsidian Dark) -->
+                                <radialGradient id="dialSurfaceLight" cx="50%" cy="38%" r="58%">
+                                    <stop offset="0%" stop-color="#FFFDF9" stop-opacity="0.96" />
+                                    <stop offset="75%" stop-color="#F3EADF" stop-opacity="0.90" />
+                                    <stop offset="100%" stop-color="#E6D9C3" stop-opacity="0.95" />
+                                </radialGradient>
+                                <radialGradient id="dialSurfaceDark" cx="50%" cy="38%" r="58%">
+                                    <stop offset="0%" stop-color="#28231D" stop-opacity="0.96" />
+                                    <stop offset="75%" stop-color="#1A1714" stop-opacity="0.95" />
+                                    <stop offset="100%" stop-color="#12100E" stop-opacity="0.98" />
+                                </radialGradient>
+                                <!-- Mountain Layer Gradients -->
+                                <linearGradient id="mountainBack" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#D8BC8C" stop-opacity="0.46" />
+                                    <stop offset="100%" stop-color="#B8955E" stop-opacity="0.08" />
+                                </linearGradient>
+                                <linearGradient id="mountainFront" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#C7A26B" stop-opacity="0.62" />
+                                    <stop offset="100%" stop-color="#9E7942" stop-opacity="0.16" />
+                                </linearGradient>
+                                <!-- 3D Pearl Bead Gradient -->
+                                <radialGradient id="goldBead" cx="35%" cy="30%" r="65%">
+                                    <stop offset="0%" stop-color="#FFF8E7" />
+                                    <stop offset="45%" stop-color="#D8B477" />
+                                    <stop offset="85%" stop-color="#8C652B" />
+                                    <stop offset="100%" stop-color="#5E4116" />
+                                </radialGradient>
+                                <clipPath id="dialClipA">
+                                    <circle cx="150" cy="134" r="95" />
+                                </clipPath>
+                                <filter id="warmGlowFilter" x="-30%" y="-30%" width="160%" height="160%">
+                                    <feGaussianBlur stdDeviation="4" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
                                 <filter id="beadShadow" x="-40%" y="-40%" width="180%" height="180%">
                                     <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(40,20,10,0.35)" />
                                 </filter>
                             </defs>
-                            <!-- Track circle (Apple Clean Groove) -->
-                            <circle cx="132" cy="132" r="114" fill="none" stroke="rgba(0, 0, 0, 0.05)" stroke-width="12" />
-                            <!-- Active Progress Ring (12px tube) -->
-                            <circle id="progressRing" cx="132" cy="132" r="114" fill="none"
-                                stroke="url(#ringGradientWarm)" stroke-width="12" stroke-linecap="round"
-                                stroke-dasharray="716.28" stroke-dashoffset="716.28" />
+
+                            <!-- 1. Ambient Backlit Halo -->
+                            <circle cx="150" cy="134" r="126" fill="url(#haloGlowA)" class="ring-halo-glow" />
+
+                            <!-- 2. Outer C-Arc Brass Frame + Terminal 3D Gold Beads -->
+                            <path d="M 218 38 A 118 118 0 1 0 236 214" fill="none" stroke="url(#champagneGold)" stroke-width="2.6" stroke-linecap="round" opacity="0.92" />
+                            <circle cx="218" cy="38" r="5.5" fill="url(#goldBead)" />
+                            <circle cx="236" cy="214" r="4.5" fill="url(#goldBead)" />
+
+                            <!-- 3. Subtle Horizontal Horizon Line -->
+                            <line x1="22" y1="174" x2="70" y2="174" stroke="url(#champagneGold)" stroke-width="1.4" stroke-linecap="round" opacity="0.65" />
+                            <line x1="230" y1="174" x2="276" y2="174" stroke="url(#champagneGold)" stroke-width="1.4" stroke-linecap="round" opacity="0.65" />
+
+                            <!-- 4. Pendulum (底部微律動金色鐘擺) -->
+                            <g class="ring-pendulum">
+                                <line x1="150" y1="229" x2="150" y2="258" stroke="url(#champagneGold)" stroke-width="1.5" />
+                                <circle cx="150" cy="262" r="7" fill="url(#goldBead)" />
+                            </g>
+
+                            <!-- 5. Main Dial Base & Unobstructed Layered Golden Mountains -->
+                            <circle id="ringDialSurface" cx="150" cy="134" r="95" fill="url(#dialSurfaceLight)" stroke="url(#champagneGold)" stroke-width="1.5" />
+                            <g clip-path="url(#dialClipA)">
+                                <!-- Warm Sun/Moon Halo behind mountain peaks -->
+                                <circle cx="186" cy="148" r="24" fill="url(#ringGradientWarm)" opacity="0.22" />
+                                <!-- Distant Mountain Silhouette -->
+                                <path d="M 48 182 Q 92 142 134 168 T 206 148 T 255 176 L 255 235 L 48 235 Z" fill="url(#mountainBack)" />
+                                <path d="M 48 182 Q 92 142 134 168 T 206 148 T 255 176" fill="none" stroke="url(#champagneGold)" stroke-width="1.1" opacity="0.65" />
+                                <!-- Foreground Mountain Silhouette -->
+                                <path d="M 48 198 Q 106 160 154 184 T 236 168 L 255 186 L 255 235 L 48 235 Z" fill="url(#mountainFront)" />
+                                <path d="M 48 198 Q 106 160 154 184 T 236 168" fill="none" stroke="url(#champagneGold)" stroke-width="1.3" opacity="0.85" />
+                                <!-- Subtle Clock Hour Tick Marks (12, 3, 6, 9) -->
+                                <line x1="150" y1="44" x2="150" y2="52" stroke="url(#champagneGold)" stroke-width="1.6" stroke-linecap="round" opacity="0.75" />
+                                <line x1="239" y1="134" x2="231" y2="134" stroke="url(#champagneGold)" stroke-width="1.6" stroke-linecap="round" opacity="0.75" />
+                                <line x1="150" y1="224" x2="150" y2="216" stroke="url(#champagneGold)" stroke-width="1.6" stroke-linecap="round" opacity="0.75" />
+                                <line x1="61" y1="134" x2="69" y2="134" stroke="url(#champagneGold)" stroke-width="1.6" stroke-linecap="round" opacity="0.75" />
+                            </g>
+
+                            <!-- 6. Work-Hours Progress Ring Track & Active Progress (r=102) -->
+                            <circle cx="150" cy="134" r="102" fill="none" stroke="rgba(180, 148, 95, 0.16)" stroke-width="6.5" />
+                            <circle id="progressRing" cx="150" cy="134" r="102" fill="none"
+                                stroke="url(#ringGradientWarm)" stroke-width="6.5" stroke-linecap="round"
+                                stroke-dasharray="640.88" stroke-dashoffset="640.88"
+                                transform="rotate(-90 150 134)" filter="url(#warmGlowFilter)" />
                             <!-- Leading Light Bead -->
-                            <circle id="ringLeadBead" cx="246" cy="132" r="6" fill="#FFFFFF" filter="url(#beadShadow)" opacity="0" />
+                            <circle id="ringLeadBead" cx="150" cy="32" r="5" fill="#FFFDF7" stroke="#C8933E" stroke-width="2" filter="url(#beadShadow)" opacity="0" />
                         </svg>
                         <div class="ring-inner-content">
                             <div class="hero-eyebrow" id="heroEyebrow">今日工時</div>
                             <div id="totalHours">
                                 0<span class="hero-unit">h</span>0<span class="hero-unit">m</span>
                             </div>
-                            <div id="ongoingHint" class="live-status-pill status-idle">
-                                <span class="live-pulse-dot" id="liveStatusDot"></span>
-                                <span id="liveStatusText">靜待啟程</span>
-                            </div>
-                            <span id="strokePct" class="ring-pct-badge">0%</span>
                         </div>
                     </div>
 
-                    <div id="progressText" class="ring-target-info">目標 8 小時</div>
+                    <!-- 位置 1｜圓環鐘擺正下方並列：狀態進度膠囊 + 目標時間同一排 -->
+                    <div class="ring-bottom-status-bar">
+                        <div id="ongoingHint" class="live-status-pill status-idle" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
+                            <span class="live-pulse-dot" id="liveStatusDot"></span>
+                            <span id="liveStatusText">尚未打卡</span>
+                            <span class="live-status-sep">·</span>
+                            <span id="strokePct" class="ring-pct-inline">0%</span>
+                        </div>
+                        <div id="progressText" class="ring-target-info">目標 8 小時</div>
+                    </div>
                 </div>
 
                 <!-- Salary Ticker -->
@@ -8185,7 +8329,7 @@
             const ring = document.getElementById('progressRing');
             if (!ring) return;
 
-            const circumference = 716.28;
+            const circumference = 640.88;
             const clampedPct = Math.min(Math.max(pct, 0), 100);
             const offset = circumference - (clampedPct / 100) * circumference;
             ring.style.strokeDashoffset = offset;
@@ -8211,26 +8355,29 @@
                 if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(114, 169, 121, 0.14) 0%, transparent 70%)';
             } else {
                 ring.style.stroke = 'url(#ringGradientWarm)';
-                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(196, 168, 122, 0.09) 0%, transparent 70%)';
+                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(212, 182, 136, 0.14) 0%, transparent 70%)';
             }
 
-            // Leading Light Bead
+            // Leading Light Bead (cx=150, cy=134, r=102, starts at -90deg top)
             const bead = document.getElementById('ringLeadBead');
             if (bead) {
                 if (clampedPct >= 1.5) {
-                    const angle = (clampedPct / 100) * 360;
+                    const angle = (clampedPct / 100) * 360 - 90;
                     const rad = (angle * Math.PI) / 180;
-                    const cx = 132 + 114 * Math.cos(rad);
-                    const cy = 132 + 114 * Math.sin(rad);
+                    const cx = 150 + 102 * Math.cos(rad);
+                    const cy = 134 + 102 * Math.sin(rad);
                     bead.setAttribute('cx', cx.toFixed(2));
                     bead.setAttribute('cy', cy.toFixed(2));
                     bead.style.opacity = '1';
                     if (petRarity === 'hidden') {
                         bead.setAttribute('fill', '#FFE082');
+                        bead.setAttribute('stroke', '#FFA000');
                     } else if (petRarity === 'epic') {
                         bead.setAttribute('fill', '#E1BEE7');
+                        bead.setAttribute('stroke', '#8E24AA');
                     } else {
-                        bead.setAttribute('fill', '#FFFFFF');
+                        bead.setAttribute('fill', '#FFFDF7');
+                        bead.setAttribute('stroke', '#C8933E');
                     }
                 } else {
                     bead.style.opacity = '0';
@@ -15270,7 +15417,7 @@
                 if (liveHint) {
                     liveHint.classList.remove('opacity-0', 'hidden');
                     if (!statusText || !document.getElementById('liveStatusDot')) {
-                        liveHint.innerHTML = '<span class="live-pulse-dot" id="liveStatusDot"></span><span id="liveStatusText">靜待啟程</span>';
+                        liveHint.innerHTML = '<span class="live-pulse-dot" id="liveStatusDot"></span><span id="liveStatusText">尚未打卡</span><span class="live-status-sep">·</span><span id="strokePct" class="ring-pct-inline">0%</span>';
                         statusText = document.getElementById('liveStatusText');
                     }
                     liveHint.className = 'live-status-pill';

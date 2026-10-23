@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timecard-v30';
+const CACHE_NAME = 'timecard-v31';
 const ASSETS = [
     './',
     './index.html',
