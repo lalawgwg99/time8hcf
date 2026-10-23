@@ -4559,113 +4559,16 @@
 
             </section>
 
-            <!-- ===== TAB: 智囊 (Apple Native In-Page AI Studio & Daily Report) ===== -->
+            <!-- ===== TAB: 智囊 (Pure Clean Canvas — 待選配極簡 AI 質感功能) ===== -->
             <section id="tabPartner" class="tab-panel">
-                <div class="partner-room" style="display:flex; flex-direction:column; gap:14px;">
-
-                    <!-- 1. Top Card: 今日靈感籤詩與 LINE 工時回報 (Apple Inset Card) -->
-                    <div id="partnerFortuneBondPill" class="zen-card" style="padding:14px 16px; border:0.5px solid var(--separator);">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <i class="fas fa-sparkles" style="font-size:11.5px; color:var(--orange);"></i>
-                                <span id="fortuneTitle" style="font-size:12.5px; font-weight:700; color:var(--label);">今日福氣 · 靈感湧現</span>
-                            </div>
-                            <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
-                                style="border:none; background:rgba(6,199,85,0.12); color:#06C755; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; font-family:inherit;">
-                                <i class="fab fa-line" style="font-size:12.5px;"></i>
-                                <span>LINE 工時回報</span>
-                            </button>
-                        </div>
-                        <div id="fortuneQuoteText" style="font-size:13px; color:var(--label); line-height:1.5; font-weight:500; margin-bottom:8px;">
-                            「心若從容，步步生花；今日所遇，皆為坦途。」
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:7px; border-top:0.5px solid var(--separator); font-size:11px; color:var(--label-tertiary);">
-                            <span id="fortuneLuckyItem">幸運物：美式咖啡</span>
-                            <button type="button" onclick="cycleDailyFortune(event)" class="active-scale" style="border:none; background:none; cursor:pointer; color:var(--purple); font-weight:600; display:flex; align-items:center; gap:4px; padding:0; font-size:11px; font-family:inherit;">
-                                <i class="fas fa-rotate" style="font-size:9.5px;"></i>
-                                <span>換一則靈感</span>
-                            </button>
-                        </div>
+                <div class="partner-room" style="min-height:52vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:48px 24px;">
+                    <div style="width:48px; height:48px; border-radius:16px; background:var(--fill); border:0.5px solid var(--separator); display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); margin-bottom:14px;">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z" />
+                        </svg>
                     </div>
-
-                    <!-- 2. Main Stage: 原生一體化 AI 門市與職場智囊工作台 (In-Page AI Studio) -->
-                    <div class="zen-card" id="partnerAiCard" style="padding:16px 16px 14px; border:0.5px solid var(--separator); display:flex; flex-direction:column; gap:12px;">
-                        <!-- Studio Header -->
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <i class="fas fa-wand-magic-sparkles" style="color:var(--purple); font-size:13px;"></i>
-                                    <span style="font-size:15px; font-weight:700; color:var(--label); letter-spacing:-0.01em;" id="aiCompanionCardTitle">T8 門市與職場 AI 智囊</span>
-                                </div>
-                                <div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;" id="aiChatModelBadge">✦ 繁中多模型自動備援 · 點擊下方指令即刻生成</div>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <button type="button" onclick="openAiKeyModal()" class="active-scale" title="API 金鑰設定"
-                                    style="border:0.5px solid var(--separator); background:var(--fill); color:var(--label-secondary); font-size:11px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px;">
-                                    <i class="fas fa-key" style="font-size:9.5px; opacity:0.75;"></i>
-                                    <span>設定</span>
-                                </button>
-                                <button type="button" onclick="clearAiChatHistory()" class="active-scale" title="清空對話"
-                                    style="border:0.5px solid var(--separator); background:var(--fill); color:var(--label-secondary); font-size:11px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer; font-family:inherit;">
-                                    清空
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- 6 Store & Workplace Quick Prompts (2x3 Apple Bento Grid) -->
-                        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:7px;">
-                            <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知跨店運費與預計抵達時間，語氣專業有禮，方便我直接複製貼到 LINE。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
-                                <i class="fas fa-truck-fast" style="font-size:10.5px; color:var(--blue);"></i>
-                                <span>跨店調貨話術</span>
-                            </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('客戶反映家電配送或安裝時間延誤，請幫我寫一段高情商、誠懇安撫並提供改期確認的 LINE 回覆範本。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
-                                <i class="fas fa-shield-heart" style="font-size:10.5px; color:var(--purple);"></i>
-                                <span>客訴安撫回覆</span>
-                            </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請針對「一級能效變頻冷氣與冰箱」幫我提煉 3 點最能打動門市客人的成交賣點金句（省電換算、靜音、節能補助）。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
-                                <i class="fas fa-lightbulb" style="font-size:10.5px; color:var(--orange);"></i>
-                                <span>家電賣點提煉</span>
-                            </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法幫我簡要說明：工作 4 小時休息 30 分鐘、平日與休息日加班費倍率，以及跨日輪班間隔 11 小時的具體重點。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
-                                <i class="fas fa-scale-balanced" style="font-size:10.5px; color:var(--green);"></i>
-                                <span>勞基法規秒查</span>
-                            </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請幫我提供一份門市早晚班交接清單結構（包含：待配送安裝追蹤、客訂留貨確認、今日台獎重點機型），條列清晰可直接填寫。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
-                                <i class="fas fa-clipboard-check" style="font-size:10.5px; color:var(--blue);"></i>
-                                <span>班別交接範本</span>
-                            </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('今天門市站櫃接待客人有點疲勞、肩頸緊繃，請給我 3 個在櫃檯空檔一分鐘內能完成的放鬆微運動與溫暖打氣。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
-                                <i class="fas fa-mug-hot" style="font-size:10.5px; color:var(--orange);"></i>
-                                <span>站櫃放鬆打氣</span>
-                            </button>
-                        </div>
-
-                        <!-- In-Page Chat Stream Area (無需二次彈窗，直接原地對話) -->
-                        <div id="aiChatMessagesContainer" style="min-height:220px; max-height:380px; overflow-y:auto; padding:12px; background:var(--fill-secondary); border-radius:14px; border:0.5px solid var(--separator); display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch;">
-                            <!-- Messages injected dynamically by renderAiChatMessages() -->
-                        </div>
-
-                        <!-- Typing Indicator -->
-                        <div id="aiTypingIndicator" style="display:none; padding:2px 6px; align-items:center; gap:6px;">
-                            <i class="fas fa-circle-notch fa-spin" style="font-size:11px; color:var(--purple);"></i>
-                            <span style="font-size:11.5px; color:var(--label-tertiary);">T8 智囊正在撰寫建議中…</span>
-                        </div>
-
-                        <!-- Direct Input Bar -->
-                        <div style="display:flex; gap:8px; align-items:flex-end; pt:2px;">
-                            <div style="flex:1; position:relative; background:var(--fill); border:0.5px solid var(--separator); border-radius:16px; padding:8px 12px; display:flex; flex-direction:column;">
-                                <textarea id="aiChatInput" rows="1" placeholder="輸入問題或貼上草稿請智囊潤飾… (Enter 送出)"
-                                    style="width:100%; border:none; background:transparent; color:var(--label); font-size:13.5px; font-family:inherit; resize:none; outline:none; max-height:96px; line-height:1.45;"
-                                    onkeydown="handleAiChatKeyDown(event)"
-                                    oninput="autoResizeAiTextarea(this)"></textarea>
-                            </div>
-                            <button type="button" id="aiSendBtn" onclick="sendAiChatMessage()" class="active-scale" aria-label="送出訊息"
-                                style="width:38px; height:38px; border-radius:50%; background:var(--purple); border:none; color:#FFFFFF; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 8px rgba(122,90,138,0.28);">
-                                <i class="fas fa-arrow-up" style="font-size:14px;"></i>
-                            </button>
-                        </div>
-                    </div>
-
+                    <div style="font-size:15px; font-weight:600; color:var(--label); letter-spacing:0.02em;">智囊空間已淨空</div>
+                    <div style="font-size:12.5px; color:var(--label-tertiary); margin-top:6px; max-width:240px; line-height:1.5;">保持極致留白，待選定專屬 Apple 原生質感功能後配置</div>
                 </div>
             </section>
 
