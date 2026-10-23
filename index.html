@@ -4559,167 +4559,164 @@
 
             </section>
 
+            <!-- ===== TAB: 智囊 (Apple Native In-Page AI Studio & Daily Report) ===== -->
             <section id="tabPartner" class="tab-panel">
-                <div class="partner-room">
-                    <!-- Hero Companion Stage Card -->
-                    <div class="partner-stage-card">
-                        <div class="partner-stage-header">
-                            <span class="partner-stage-title">工時夥伴</span>
+                <div class="partner-room" style="display:flex; flex-direction:column; gap:14px;">
+
+                    <!-- 1. Top Card: 今日靈感籤詩與 LINE 工時回報 (Apple Inset Card) -->
+                    <div id="partnerFortuneBondPill" class="zen-card" style="padding:14px 16px; border:0.5px solid var(--separator);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                             <div style="display:flex; align-items:center; gap:6px;">
-                                <!-- Collapsible Codex Toggle Capsule (方案 A) -->
-                                <button type="button" onclick="togglePartnerCodexDrawer()" id="partnerCodexToggleBtn" class="active-scale partner-pill-badge"
-                                    style="cursor:pointer; display:flex; align-items:center; gap:4px; border:0.5px solid var(--separator); background:var(--fill); font-family:inherit; color:var(--label-secondary);">
-                                    <span>✦ 圖鑑</span>
-                                    <span id="partnerCodexCountBadge" style="font-size:10.5px; color:var(--purple); font-weight:600;">(0/8)</span>
-                                    <i class="fas fa-chevron-down" id="partnerCodexArrowIcon" style="font-size:8.5px; transition:transform 0.3s ease;"></i>
-                                </button>
-                                <span id="partnerStageBadge" class="partner-pill-badge">凝聚中</span>
+                                <i class="fas fa-sparkles" style="font-size:11.5px; color:var(--orange);"></i>
+                                <span id="fortuneTitle" style="font-size:12.5px; font-weight:700; color:var(--label);">今日福氣 · 靈感湧現</span>
                             </div>
+                            <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
+                                style="border:none; background:rgba(6,199,85,0.12); color:#06C755; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; font-family:inherit;">
+                                <i class="fab fa-line" style="font-size:12.5px;"></i>
+                                <span>LINE 工時回報</span>
+                            </button>
                         </div>
-
-                        <!-- Collapsible Codex Drawer (方案 A 頂部折疊式抽屜) -->
-                        <div id="partnerCodexDrawer" class="partner-codex-drawer hidden">
-                            <div style="padding:12px 14px; background:var(--fill-secondary); border-radius:14px; border:0.5px solid var(--separator); margin-bottom:14px;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                    <span style="font-size:12px; font-weight:600; color:var(--label);">✦ 夥伴全圖鑑</span>
-                                    <span id="partnerCodexCount" style="font-size:11px; color:var(--label-tertiary);">已解鎖 0 / 8</span>
-                                </div>
-                                <div id="partnerCodexGrid" class="codex-grid">
-                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">紫晶幼靈</div><div class="codex-item-rarity">一般</div></div>
-                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">碧苔石精</div><div class="codex-item-rarity">一般</div></div>
-                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">熾焰火精</div><div class="codex-item-rarity">一般</div></div>
-                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">幻月晶靈</div><div class="codex-item-rarity">稀有</div></div>
-                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">翠蔓石靈</div><div class="codex-item-rarity">稀有</div></div>
-                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">幻火行者</div><div class="codex-item-rarity">稀有</div></div>
-                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">紫耀天晶</div><div class="codex-item-rarity">珍稀</div></div>
-                                    <div class="codex-item locked"><div class="codex-badge-icon">🔒</div><div class="codex-item-name">熾皇晶魄</div><div class="codex-item-rarity">隱藏</div></div>
-                                </div>
-                            </div>
+                        <div id="fortuneQuoteText" style="font-size:13px; color:var(--label); line-height:1.5; font-weight:500; margin-bottom:8px;">
+                            「心若從容，步步生花；今日所遇，皆為坦途。」
                         </div>
-
-                        <!-- 7-Segment Orbital Halo Stage -->
-                        <div id="partnerStageContainer">
-                            <div class="partner-orbital-container" aria-label="7 段工時進度光環，進度 0 / 7">
-                                <div class="orbital-stage-bg"></div>
-                                <svg class="orbital-svg" viewBox="0 0 220 220">
-                                    <defs>
-                                        <linearGradient id="orbitalGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                                            <stop offset="0%" stop-color="#C4A87A" />
-                                            <stop offset="50%" stop-color="#9A78B4" />
-                                            <stop offset="100%" stop-color="#7A5A8A" />
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M 110.00 16.00 A 94 94 0 0 0 183.15 50.84" class="orbital-track-segment"></path>
-                                    <path d="M 185.34 54.49 A 94 94 0 0 0 203.88 128.84" class="orbital-track-segment"></path>
-                                    <path d="M 203.20 133.00 A 94 94 0 0 0 153.22 193.36" class="orbital-track-segment"></path>
-                                    <path d="M 149.33 195.14 A 94 94 0 0 0 70.67 195.14" class="orbital-track-segment"></path>
-                                    <path d="M 66.78 193.36 A 94 94 0 0 0 16.80 133.00" class="orbital-track-segment"></path>
-                                    <path d="M 16.12 128.84 A 94 94 0 0 0 34.66 54.49" class="orbital-track-segment"></path>
-                                    <path d="M 36.85 50.84 A 94 94 0 0 0 110.00 16.00" class="orbital-track-segment"></path>
-                                </svg>
-                                <div class="orbital-center-egg egg-progress-0" aria-hidden="true">
-                                    <div class="egg-shadow"></div>
-                                    <div class="egg-shell">
-                                        <div class="egg-sheen"></div>
-                                        <div class="egg-core-glow"></div>
-                                        <div class="egg-facet facet-a"></div>
-                                        <div class="egg-facet facet-b"></div>
-                                        <div class="egg-glint"></div>
-                                        <div class="egg-crack crack-a"></div>
-                                        <div class="egg-crack crack-b"></div>
-                                        <div class="egg-crack crack-c"></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:7px; border-top:0.5px solid var(--separator); font-size:11px; color:var(--label-tertiary);">
+                            <span id="fortuneLuckyItem">幸運物：美式咖啡</span>
+                            <button type="button" onclick="cycleDailyFortune(event)" class="active-scale" style="border:none; background:none; cursor:pointer; color:var(--purple); font-weight:600; display:flex; align-items:center; gap:4px; padding:0; font-size:11px; font-family:inherit;">
+                                <i class="fas fa-rotate" style="font-size:9.5px;"></i>
+                                <span>換一則靈感</span>
+                            </button>
                         </div>
+                    </div>
 
-                        <!-- Hero Information Hierarchy (極簡層次) -->
-                        <div class="partner-hero-meta">
-                            <div id="partnerHeroTitle" class="partner-hero-title">0 / 7 工時結晶</div>
-                            <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-top:4px; flex-wrap:wrap;">
-                                <span id="bondLevelText" style="font-size:11.5px; font-weight:600; color:var(--purple); background:rgba(122,90,138,0.1); padding:2px 8px; border-radius:999px;">Lv.1 初識夥伴</span>
-                                <span id="partnerHeroSub" style="font-size:12px; color:var(--label-secondary);">完成今日標準工時，即可凝聚結晶</span>
-                            </div>
-                        </div>
-
-                        <!-- Minimal Daily Fortune & Bond Card (單一純粹 Apple Inset 卡片) -->
-                        <div id="partnerFortuneBondPill" class="partner-fortune-bond-card" style="background:var(--fill); border-radius:14px; padding:12px 14px; margin-top:12px; border:0.5px solid var(--separator);">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <!-- 2. Main Stage: 原生一體化 AI 門市與職場智囊工作台 (In-Page AI Studio) -->
+                    <div class="zen-card" id="partnerAiCard" style="padding:16px 16px 14px; border:0.5px solid var(--separator); display:flex; flex-direction:column; gap:12px;">
+                        <!-- Studio Header -->
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
                                 <div style="display:flex; align-items:center; gap:6px;">
-                                    <i class="fas fa-sparkles" style="font-size:11px; color:var(--orange);"></i>
-                                    <span id="fortuneTitle" style="font-size:12px; font-weight:600; color:var(--label);">今日福氣 · 靈感湧現</span>
+                                    <i class="fas fa-wand-magic-sparkles" style="color:var(--purple); font-size:13px;"></i>
+                                    <span style="font-size:15px; font-weight:700; color:var(--label); letter-spacing:-0.01em;" id="aiCompanionCardTitle">T8 門市與職場 AI 智囊</span>
                                 </div>
-                                <button type="button" onclick="shareCompanionFortuneToLine(event)" class="active-scale" 
-                                    style="border:none; background:rgba(6,199,85,0.12); color:#06C755; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; padding:3px 9px; border-radius:999px; font-family:inherit;">
-                                    <i class="fab fa-line" style="font-size:12.5px;"></i>
-                                    <span>LINE 分享</span>
+                                <div style="font-size:11px; color:var(--label-tertiary); margin-top:2px;" id="aiChatModelBadge">✦ 繁中多模型自動備援 · 點擊下方指令即刻生成</div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <button type="button" onclick="openAiKeyModal()" class="active-scale" title="API 金鑰設定"
+                                    style="border:0.5px solid var(--separator); background:var(--fill); color:var(--label-secondary); font-size:11px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px;">
+                                    <i class="fas fa-key" style="font-size:9.5px; opacity:0.75;"></i>
+                                    <span>設定</span>
+                                </button>
+                                <button type="button" onclick="clearAiChatHistory()" class="active-scale" title="清空對話"
+                                    style="border:0.5px solid var(--separator); background:var(--fill); color:var(--label-secondary); font-size:11px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer; font-family:inherit;">
+                                    清空
                                 </button>
                             </div>
-                            <div id="fortuneQuoteText" style="font-size:12.5px; color:var(--label); line-height:1.5; font-weight:500; margin-bottom:8px;">
-                                「心若從容，步步生花；今日所遇，皆為坦途。」
-                            </div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; padding-top:7px; border-top:0.5px solid var(--separator); font-size:11px; color:var(--label-tertiary);">
-                                <span id="fortuneLuckyItem">幸運物：美式咖啡</span>
-                                <span id="bondProgressText" onclick="petCompanionWithAnimation(event)" style="cursor:pointer; color:var(--purple); font-weight:600; display:flex; align-items:center; gap:3px;">
-                                    <i class="fas fa-heart" style="font-size:9.5px;"></i>
-                                    <span>輕觸晶靈互動 (+1)</span>
-                                </span>
-                            </div>
                         </div>
 
-                        <!-- Action / Guidance Area -->
-                        <div id="partnerActionArea"></div>
-                        <div id="partnerHatchNotice" class="partner-notice" aria-live="polite"></div>
-                    </div>
-
-                    <!-- AI Companion Chat Card (極簡晶靈智囊對話) -->
-                    <div class="partner-ai-card" id="partnerAiCard">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <i class="fas fa-sparkles" style="color:var(--purple); font-size:12px;"></i>
-                                <span style="font-size:13px; font-weight:600; color:var(--label);" id="aiCompanionCardTitle">晶靈智囊</span>
-                            </div>
-                            <span style="font-size:10.5px; font-weight:600; color:var(--green); background:rgba(77,122,82,0.12); padding:2px 8px; border-radius:999px;">在線守護</span>
+                        <!-- 6 Store & Workplace Quick Prompts (2x3 Apple Bento Grid) -->
+                        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:7px;">
+                            <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝通話術，重點在委婉告知跨店運費與預計抵達時間，語氣專業有禮，方便我直接複製貼到 LINE。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
+                                <i class="fas fa-truck-fast" style="font-size:10.5px; color:var(--blue);"></i>
+                                <span>跨店調貨話術</span>
+                            </button>
+                            <button type="button" onclick="triggerAiQuickPrompt('客戶反映家電配送或安裝時間延誤，請幫我寫一段高情商、誠懇安撫並提供改期確認的 LINE 回覆範本。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
+                                <i class="fas fa-shield-heart" style="font-size:10.5px; color:var(--purple);"></i>
+                                <span>客訴安撫回覆</span>
+                            </button>
+                            <button type="button" onclick="triggerAiQuickPrompt('請針對「一級能效變頻冷氣與冰箱」幫我提煉 3 點最能打動門市客人的成交賣點金句（省電換算、靜音、節能補助）。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
+                                <i class="fas fa-lightbulb" style="font-size:10.5px; color:var(--orange);"></i>
+                                <span>家電賣點提煉</span>
+                            </button>
+                            <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法幫我簡要說明：工作 4 小時休息 30 分鐘、平日與休息日加班費倍率，以及跨日輪班間隔 11 小時的具體重點。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
+                                <i class="fas fa-scale-balanced" style="font-size:10.5px; color:var(--green);"></i>
+                                <span>勞基法規秒查</span>
+                            </button>
+                            <button type="button" onclick="triggerAiQuickPrompt('請幫我提供一份門市早晚班交接清單結構（包含：待配送安裝追蹤、客訂留貨確認、今日台獎重點機型），條列清晰可直接填寫。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
+                                <i class="fas fa-clipboard-check" style="font-size:10.5px; color:var(--blue);"></i>
+                                <span>班別交接範本</span>
+                            </button>
+                            <button type="button" onclick="triggerAiQuickPrompt('今天門市站櫃接待客人有點疲勞、肩頸緊繃，請給我 3 個在櫃檯空檔一分鐘內能完成的放鬆微運動與溫暖打氣。')" class="ai-quick-tag active-scale" style="padding:8px 6px; font-size:11.5px; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:5px; border-radius:10px;">
+                                <i class="fas fa-mug-hot" style="font-size:10.5px; color:var(--orange);"></i>
+                                <span>站櫃放鬆打氣</span>
+                            </button>
                         </div>
 
-                        <!-- Speech Bubble Preview (Clean & Clickable) -->
-                        <div onclick="openAiChatSheet()" class="active-scale" 
-                            style="background:var(--fill-secondary); border-radius:12px; padding:10px 12px; margin-bottom:10px; border:0.5px solid var(--separator); cursor:pointer;">
-                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
-                                <div style="display:flex; align-items:center; gap:5px;">
-                                    <span style="font-size:11px; font-weight:600; color:var(--label-secondary);">🐾 智囊在線</span>
-                                </div>
-                                <span style="font-size:10.5px; color:var(--blue); font-weight:600;">點擊對話 ↗</span>
-                            </div>
-                            <div id="aiPetBubblePreview" style="font-size:12px; color:var(--label); line-height:1.45;">
-                                「主人辛苦了！隨時跟我說，我來幫你整理工作重點、想調貨話術。」
-                            </div>
+                        <!-- In-Page Chat Stream Area (無需二次彈窗，直接原地對話) -->
+                        <div id="aiChatMessagesContainer" style="min-height:220px; max-height:380px; overflow-y:auto; padding:12px; background:var(--fill-secondary); border-radius:14px; border:0.5px solid var(--separator); display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch;">
+                            <!-- Messages injected dynamically by renderAiChatMessages() -->
                         </div>
 
-                        <!-- 4 Quick Action Chips (Perfect Grid Fit) -->
-                        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
-                            <button type="button" onclick="triggerAiQuickPrompt('幫我寫一段給客戶的親切跨店調貨溝話術，重點在委婉告知運費與預計抵達時間。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%; display:flex; align-items:center; justify-content:center; gap:4px;">
-                                <i class="fas fa-message" style="font-size:9.5px; opacity:0.7;"></i>
-                                <span>話術</span>
-                            </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請用台灣勞基法幫我簡要說明：工作 4 小時休息 30 分鐘與跨日輪班間隔 11 小時的具體重點。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%; display:flex; align-items:center; justify-content:center; gap:4px;">
-                                <i class="fas fa-scale-balanced" style="font-size:9.5px; opacity:0.7;"></i>
-                                <span>法規</span>
-                            </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('請幫我將這段工作內容精簡整理成 3 點清晰重點，語氣專業俐落。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%; display:flex; align-items:center; justify-content:center; gap:4px;">
-                                <i class="fas fa-list-check" style="font-size:9.5px; opacity:0.7;"></i>
-                                <span>濃縮</span>
-                            </button>
-                            <button type="button" onclick="triggerAiQuickPrompt('我現在工作有點疲勞、肩頸緊繃，請給我 3 個一分鐘內能完成的放鬆深呼吸建議。')" class="ai-quick-tag active-scale" style="text-align:center; padding:6px 2px; font-size:11px; width:100%; display:flex; align-items:center; justify-content:center; gap:4px;">
-                                <i class="fas fa-mug-hot" style="font-size:9.5px; opacity:0.7;"></i>
-                                <span>打氣</span>
+                        <!-- Typing Indicator -->
+                        <div id="aiTypingIndicator" style="display:none; padding:2px 6px; align-items:center; gap:6px;">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size:11px; color:var(--purple);"></i>
+                            <span style="font-size:11.5px; color:var(--label-tertiary);">T8 智囊正在撰寫建議中…</span>
+                        </div>
+
+                        <!-- Direct Input Bar -->
+                        <div style="display:flex; gap:8px; align-items:flex-end; pt:2px;">
+                            <div style="flex:1; position:relative; background:var(--fill); border:0.5px solid var(--separator); border-radius:16px; padding:8px 12px; display:flex; flex-direction:column;">
+                                <textarea id="aiChatInput" rows="1" placeholder="輸入問題或貼上草稿請智囊潤飾… (Enter 送出)"
+                                    style="width:100%; border:none; background:transparent; color:var(--label); font-size:13.5px; font-family:inherit; resize:none; outline:none; max-height:96px; line-height:1.45;"
+                                    onkeydown="handleAiChatKeyDown(event)"
+                                    oninput="autoResizeAiTextarea(this)"></textarea>
+                            </div>
+                            <button type="button" id="aiSendBtn" onclick="sendAiChatMessage()" class="active-scale" aria-label="送出訊息"
+                                style="width:38px; height:38px; border-radius:50%; background:var(--purple); border:none; color:#FFFFFF; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 8px rgba(122,90,138,0.28);">
+                                <i class="fas fa-arrow-up" style="font-size:14px;"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Partner Focus Music Player Card (Apple Inset Cinema Player) -->
-                    <div class="partner-radio-card" id="partnerRadioCard">
-                        <div class="partner-radio-header">
+                </div>
+            </section>
+
+            <!-- ===== TAB: 新聞與專注電台 (Unified Cinema Stage + Instant News) ===== -->
+            <section id="tabNews" class="tab-panel">
+
+                <!-- Unified Apple Cinema Media Stage: 電視直播 (TVBS 24H) ⇄ 專注音樂電台 -->
+                <div style="margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
+                        <div class="editorial-label" style="margin:0; display:flex; align-items:center; gap:6px;">
+                            <span id="newsMediaLiveDot" style="width:7px; height:7px; border-radius:50%; background:#E02424; box-shadow:0 0 7px rgba(224,36,36,0.6); animation:liveDotPulse 1.5s infinite;"></span>
+                            <span id="newsMediaStageTitle">電視直播</span>
+                            <span id="newsMediaStageBadge" style="font-size:10px; font-weight:600; color:#E02424; background:rgba(224,36,36,0.08); padding:1px 6px; border-radius:999px;">TVBS 24H</span>
+                        </div>
+
+                        <!-- Apple Segmented Mode Switch: 電視直播 vs 專注電台 (共用單一 16:9 舞台，不疊雙黑框) -->
+                        <div style="display:inline-flex; background:var(--fill); padding:2.5px; border-radius:999px; border:0.5px solid var(--separator);">
+                            <button type="button" id="newsMediaBtn_tvbs" onclick="switchNewsMediaMode('tvbs')"
+                                style="border:none; background:var(--card); color:var(--label); font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer; font-family:inherit; box-shadow:0 1px 3px rgba(0,0,0,0.08); transition:all 0.2s ease;">
+                                📺 新聞直播
+                            </button>
+                            <button type="button" id="newsMediaBtn_radio" onclick="switchNewsMediaMode('radio')"
+                                style="border:none; background:transparent; color:var(--label-secondary); font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer; font-family:inherit; transition:all 0.2s ease;">
+                                🎵 音樂電台
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode 1: 16:9 TVBS 24H Live Stream Stage -->
+                    <div id="newsCinemaTvbsStage" class="zen-card" style="padding:0; overflow:hidden; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.06); border:0.5px solid var(--separator); position:relative;">
+                        <div style="position:relative; width:100%; padding-top:56.25%; background:#000;">
+                            <iframe 
+                                id="tvbsLiveIframe"
+                                src="https://www.youtube-nocookie.com/embed/m_dhMSvUCIc?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1" 
+                                title="TVBS 新聞台 24H 線上直播" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen
+                                style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
+                            </iframe>
+                        </div>
+                        <button type="button" onclick="toggleTvbsAudio(event)" id="tvbsAudioToggleBtn" class="active-scale" title="點擊在 App 內切換聲音"
+                            style="position:absolute; bottom:12px; right:12px; z-index:10; background:rgba(20,20,20,0.78); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); color:#FFFFFF; border:0.5px solid rgba(255,255,255,0.25); border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(0,0,0,0.35); font-family:inherit; outline:none;">
+                            <i class="fas fa-volume-xmark" id="tvbsAudioIcon" style="color:#FFD60A; font-size:12px;"></i>
+                            <span id="tvbsAudioText">開啟聲音</span>
+                        </button>
+                    </div>
+
+                    <!-- Mode 2: 16:9 Focus Music Radio Stage (併入新聞頁，單一劇院切換) -->
+                    <div class="partner-radio-card hidden" id="partnerRadioCard" style="margin:0;">
+                        <div class="partner-radio-header" style="margin-bottom:10px;">
                             <div style="display:flex; align-items:center; gap:9px;">
                                 <div class="radio-live-dot-container">
                                     <span class="radio-live-dot"></span>
@@ -4735,7 +4732,6 @@
                             </div>
                         </div>
 
-                        <!-- 16:9 Compact Video & Sound Stage -->
                         <div style="position:relative; width:100%; padding-top:56.25%; background:#000; border-radius:14px; overflow:hidden; margin-bottom:12px; border:0.5px solid var(--separator);">
                             <iframe 
                                 id="partnerRadioIframe" 
@@ -4746,7 +4742,6 @@
                                 allowfullscreen
                                 style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
                             </iframe>
-                            <!-- In-App Floating Apple Sound Control Button -->
                             <button type="button" onclick="togglePartnerAudio(event)" id="partnerAudioToggleBtn" class="active-scale" title="點擊在 App 內切換聲音"
                                 style="position:absolute; bottom:10px; right:10px; z-index:10; background:rgba(20,20,20,0.82); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); color:#FFFFFF; border:0.5px solid rgba(255,255,255,0.25); border-radius:999px; padding:5px 12px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(0,0,0,0.35); font-family:inherit; outline:none;">
                                 <i class="fas fa-volume-xmark" id="partnerAudioIcon" style="color:#FFD60A; font-size:12px;"></i>
@@ -4754,7 +4749,7 @@
                             </button>
                         </div>
 
-                        <!-- Station Selection Capsules Track (Apple Segments) -->
+                        <!-- Station Selection Capsules Track -->
                         <div class="partner-station-track" id="partnerStationTrack">
                             <button type="button" class="station-chip active" onclick="switchPartnerStation('leaf_hits')" id="stationChip_leaf_hits">
                                 <i class="fas fa-fire" style="font-size:10px; opacity:0.8;"></i><span>熱門精選</span>
@@ -4772,43 +4767,6 @@
                                 <i class="fas fa-sliders" style="font-size:10px; opacity:0.8;"></i><span>自訂</span>
                             </button>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ===== TAB: 新聞 (News & 24H Live Stream) ===== -->
-            <section id="tabNews" class="tab-panel">
-
-                <!-- 24H TVBS Live Stream 16:9 Cinema Card (直接播放) -->
-                <div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <div class="editorial-label" style="margin:0; display:flex; align-items:center; gap:6px;">
-                            <span style="width:7px; height:7px; border-radius:50%; background:#E02424; box-shadow:0 0 7px rgba(224,36,36,0.6); animation:liveDotPulse 1.5s infinite;"></span>
-                            <span>電視直播</span>
-                            <span style="font-size:10px; font-weight:600; color:#E02424; background:rgba(224,36,36,0.08); padding:1px 6px; border-radius:999px;">TVBS 24H</span>
-                        </div>
-                        <span style="font-size:10.5px; color:var(--label-tertiary);">支援畫中畫 (PiP)</span>
-                    </div>
-
-                    <!-- 16:9 Apple Cinema Live Screen -->
-                    <div class="zen-card" style="padding:0; overflow:hidden; border-radius:16px; margin-bottom:18px; box-shadow:0 4px 16px rgba(0,0,0,0.06); border:0.5px solid var(--separator); position:relative;">
-                        <div style="position:relative; width:100%; padding-top:56.25%; background:#000;">
-                            <iframe 
-                                id="tvbsLiveIframe"
-                                src="https://www.youtube-nocookie.com/embed/m_dhMSvUCIc?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1" 
-                                title="TVBS 新聞台 24H 線上直播" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                allowfullscreen
-                                style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;">
-                            </iframe>
-                        </div>
-                        <!-- In-App Floating Apple Sound Control Button -->
-                        <button type="button" onclick="toggleTvbsAudio(event)" id="tvbsAudioToggleBtn" class="active-scale" title="點擊在 App 內切換聲音"
-                            style="position:absolute; bottom:12px; right:12px; z-index:10; background:rgba(20,20,20,0.78); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); color:#FFFFFF; border:0.5px solid rgba(255,255,255,0.25); border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(0,0,0,0.35); font-family:inherit; outline:none;">
-                            <i class="fas fa-volume-xmark" id="tvbsAudioIcon" style="color:#FFD60A; font-size:12px;"></i>
-                            <span id="tvbsAudioText">開啟聲音</span>
-                        </button>
                     </div>
                 </div>
 
@@ -5059,9 +5017,9 @@
         </button>
         <button class="nav-tab" id="navTabPartner" onclick="switchTab('Partner')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z" />
+                <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z" />
             </svg>
-            <span>夥伴</span>
+            <span>智囊</span>
         </button>
         <button class="nav-tab" id="navTabNews" onclick="switchTab('News')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"
@@ -5102,62 +5060,6 @@
     <canvas id="weatherlingCanvas" aria-hidden="true"></canvas>
 
     <!-- Modals: iOS Action Sheet Style -->
-
-    <!-- AI Companion Chat Sheet Modal (Apple Inset 聊天室) -->
-    <div id="aiChatSheetModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/45" style="-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)"
-            onclick="closeAiChatSheet()"></div>
-        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
-            style="background:var(--bg); height:88vh; display:flex; flex-direction:column; overflow:hidden;">
-            
-            <!-- Sticky Header -->
-            <div style="padding:14px 20px 10px; background:var(--bg); border-bottom:0.5px solid var(--separator); flex-shrink:0;">
-                <div class="sheet-handle" style="margin-bottom:10px;"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <button type="button" onclick="closeAiChatSheet()" aria-label="返回"
-                        style="display:flex; align-items:center; gap:5px; border:none; background:transparent; color:var(--blue); font-size:14.5px; font-weight:500; cursor:pointer; padding:4px 0; font-family:inherit;">
-                        <i class="fas fa-chevron-left" style="font-size:12px;"></i>
-                        <span>夥伴</span>
-                    </button>
-                    <div style="text-align:center;">
-                        <h3 style="font-size:15px; font-weight:700; color:var(--label); margin:0;" id="aiChatModalTitle">晶靈智囊</h3>
-                        <div style="font-size:10px; color:var(--label-tertiary);" id="aiChatModelBadge">✦ 貼心隨行 · 智慧在線</div>
-                    </div>
-                    <button type="button" onclick="clearAiChatHistory()" aria-label="清空對話" class="active-scale"
-                        style="border:none; background:var(--fill-secondary); color:var(--label-secondary); font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer; font-family:inherit;">
-                        清空
-                    </button>
-                </div>
-            </div>
-
-            <!-- Chat Scroll Area -->
-            <div id="aiChatMessagesContainer" style="flex:1; overflow-y:auto; padding:16px 16px 20px; display:flex; flex-direction:column; gap:14px;">
-                <!-- Messages injected dynamically -->
-            </div>
-
-            <!-- Typing Indicator -->
-            <div id="aiTypingIndicator" style="display:none; padding:0 16px 8px; align-items:center; gap:6px;">
-                <span style="font-size:13px;">🐾</span>
-                <span style="font-size:11.5px; color:var(--label-tertiary);">智囊正在用心思考回覆中…</span>
-            </div>
-
-            <!-- Bottom Input Bar -->
-            <div style="padding:10px 16px 24px; background:var(--bg); border-top:0.5px solid var(--separator); flex-shrink:0;">
-                <div style="display:flex; gap:8px; align-items:flex-end;">
-                    <div style="flex:1; position:relative; background:var(--fill); border:0.5px solid var(--separator); border-radius:18px; padding:8px 12px; display:flex; flex-direction:column;">
-                        <textarea id="aiChatInput" rows="1" placeholder="問問晶靈夥伴… (純文字 500~800字)"
-                            style="width:100%; border:none; background:transparent; color:var(--label); font-size:13.5px; font-family:inherit; resize:none; outline:none; max-height:100px; line-height:1.4;"
-                            onkeydown="handleAiChatKeyDown(event)"
-                            oninput="autoResizeAiTextarea(this)"></textarea>
-                    </div>
-                    <button type="button" id="aiSendBtn" onclick="sendAiChatMessage()" class="active-scale"
-                        style="width:38px; height:38px; border-radius:50%; background:var(--purple); border:none; color:#FFFFFF; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 8px rgba(122,90,138,0.3);">
-                        <i class="fas fa-arrow-up" style="font-size:14px;"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- AI API Key Settings Modal -->
     <div id="aiKeyModal" class="fixed inset-0 z-50 hidden">
@@ -5822,47 +5724,35 @@
                     </div>
                 </div>
 
-                <!-- 2.【夥伴】晶靈與電台 -->
-                <div class="section-label">2.【夥伴】晶靈與專注電台</div>
+                <!-- 2.【智囊】AI 門市與職場工作台 -->
+                <div class="section-label">2.【智囊】AI 門市與職場助手</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);" onclick="closeUserManual(); closeSettings(); switchTab('Partner');">
+                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); switchTab('Partner');">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">結晶孵化 · 8 款全圖鑑</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">✦ 一體化 AI 門市智囊</span>
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">前往 ↗</span>
                         </div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">滿 8h 獲 1 顆碎片，集滿 7 顆可召喚晶靈；頂部可折疊切換圖鑑。</div>
-                    </div>
-                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">互動羈絆 · 升級獎勵</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">摸摸夥伴冒愛心累積好感度，Lv.3 每日多送 1 顆工時碎片。</div>
-                    </div>
-                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">LINE 一鍵回報</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">點擊「分享 LINE」自動將工時、打卡區間與今日福氣一鍵傳送。</div>
-                    </div>
-                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
-                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">AI 晶靈智囊對話</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">支援多款免費繁中模型自動切換，提供話術、法規與工作摘要（500~800字）。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">內建跨店調貨話術、客訴安撫、家電賣點提煉、勞基法規秒查與班別交接範本，原地生成並支援一鍵複製。</div>
                     </div>
                     <div style="padding:12px 16px;">
-                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">專注音樂電台</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">精選 4 組華語流行歌單，支援 App 內一鍵開啟聲音。</div>
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">LINE 一鍵工時回報</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">點擊頂部「LINE 工時回報」自動將今日累計工時、打卡區間與靈感籤詩一鍵傳送。</div>
                     </div>
                 </div>
 
-                <!-- 3.【新聞】電視直播與要聞 -->
-                <div class="section-label">3.【新聞】直播與快訊</div>
+                <!-- 3.【新聞】雙模影音劇院與要聞 -->
+                <div class="section-label">3.【新聞】雙模劇院與快訊</div>
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
-                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);" onclick="closeUserManual(); closeSettings(); switchTab('News');">
+                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator); cursor:pointer;" onclick="closeUserManual(); closeSettings(); switchTab('News');">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">24H 電視直播</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">📺 TVBS 直播 ⇄ 🎵 專注音樂電台</span>
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">觀看 ↗</span>
                         </div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">16:9 全景視窗，支援畫中畫與 App 內開啟聲音。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">單一 16:9 劇院舞台自由切換「24H 新聞直播」與「華語流行音樂電台」，自動防音訊衝突。</div>
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">4 大分類即時新聞</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">要聞、科技、生活、財經每 15 分鐘自動同步。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">焦點、財經、科技、生活每 15 分鐘自動同步，邊聽電台邊看新聞。</div>
                     </div>
                 </div>
 
@@ -7397,10 +7287,29 @@
 
         shareText += `今日福氣：${fortune.title}\n` +
             `「${fortune.text}」\n` +
-            `幸運物：${fortune.luckyItem} · 夥伴 Lv.${affinity.level}`;
+            `幸運物：${fortune.luckyItem}`;
 
         const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(shareText)}`;
         window.open(lineUrl, '_blank');
+    }
+
+    function cycleDailyFortune(event) {
+        if (event) {
+            if (typeof event.stopPropagation === 'function') event.stopPropagation();
+            if (typeof event.preventDefault === 'function') event.preventDefault();
+        }
+        if ('vibrate' in navigator) navigator.vibrate(10);
+        if (typeof playSingleClickSound === 'function') playSingleClickSound('C5');
+
+        const data = getCompanionAffinityData();
+        const currentTitle = data.todayFortune ? data.todayFortune.title : '';
+        const candidates = COMPANION_FORTUNES.filter(f => f.title !== currentTitle);
+        const pick = candidates[Math.floor(Math.random() * candidates.length)] || COMPANION_FORTUNES[0];
+        data.todayFortune = pick;
+        try {
+            localStorage.setItem('t8_companion_affinity_v1', JSON.stringify(data));
+        } catch (e) {}
+        updateCompanionAffinityUI(data);
     }
 
     function onPetClick(event) {
@@ -7410,6 +7319,7 @@
     window.petCompanionWithAnimation = petCompanionWithAnimation;
     window.shareCompanionFortuneToLine = shareCompanionFortuneToLine;
     window.updateCompanionAffinityUI = updateCompanionAffinityUI;
+    window.cycleDailyFortune = cycleDailyFortune;
     window.onPetClick = onPetClick;
 
     // ========================================================
@@ -7566,19 +7476,14 @@
     window.resetPetDefaultName = resetPetDefaultName;
 
     function openAiChatSheet() {
-        const modal = document.getElementById('aiChatSheetModal');
-        if (modal) modal.classList.remove('hidden');
-
-        // Update title with active companion name
-        const petName = getActivePetDisplayName();
-        const titleEl = document.getElementById('aiChatModalTitle');
-        if (titleEl) titleEl.textContent = `${petName} · 貼心智囊`;
-
+        if (typeof switchTab === 'function') {
+            switchTab('Partner');
+        }
         renderAiChatMessages();
         setTimeout(() => {
             const input = document.getElementById('aiChatInput');
             if (input) input.focus();
-        }, 300);
+        }, 180);
     }
 
     function closeAiChatSheet() {
@@ -7591,6 +7496,21 @@
         renderAiChatMessages();
         showToast('🧹 對話紀錄已清空');
     }
+
+    function copyAiReplyByIdx(idx) {
+        const history = getAiChatHistory();
+        const msg = history[idx];
+        if (!msg || !msg.content) return;
+        if ('vibrate' in navigator) navigator.vibrate(10);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(msg.content).then(() => {
+                showToast('📋 已複製智囊回覆，可直接貼上至 LINE');
+            }).catch(() => {
+                showToast('📋 已複製內容');
+            });
+        }
+    }
+    window.copyAiReplyByIdx = copyAiReplyByIdx;
 
     function autoResizeAiTextarea(el) {
         if (!el) return;
@@ -7610,20 +7530,22 @@
         if (!container) return;
 
         const history = getAiChatHistory();
-        const petName = getActivePetDisplayName();
 
         if (history.length === 0) {
             container.innerHTML = `
                 <div class="ai-msg-bubble-pet">
-                    <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px; display:flex; align-items:center; gap:4px;"><span>🐾</span> <span>${escapeHtml(petName)}</span></div>
-                    <div>主人好呀！我是你的專屬工時智囊～ 🌿<br>今天有什麼需要我協助的嗎？無論是跨店調貨話術、勞基法規諮詢、工作重點濃縮，還是想放鬆聊聊，我都隨時在這裡陪你！</div>
+                    <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px; display:flex; align-items:center; gap:5px;">
+                        <i class="fas fa-wand-magic-sparkles" style="font-size:10px;"></i>
+                        <span>T8 職場智囊</span>
+                    </div>
+                    <div style="line-height:1.55;">夥伴辛苦了！我是您的專屬門市與職場 AI 智囊。<br>點擊上方 <b>6 大快捷指令</b>（跨店調貨話術、客訴安撫、賣點提煉、勞基法規、交接範本），或在下方直接輸入問題，我會立即為您生成可一鍵複製的專業內容。</div>
                 </div>
             `;
             return;
         }
 
         let html = '';
-        history.forEach(msg => {
+        history.forEach((msg, idx) => {
             if (msg.role === 'user') {
                 html += `
                     <div class="ai-msg-bubble-user">
@@ -7633,8 +7555,18 @@
             } else {
                 html += `
                     <div class="ai-msg-bubble-pet">
-                        <div style="font-size:11px; font-weight:700; color:var(--purple); margin-bottom:4px; display:flex; align-items:center; gap:4px;"><span>🐾</span> <span>${escapeHtml(petName)}</span></div>
-                        <div style="white-space:pre-wrap;">${escapeHtml(msg.content)}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                            <div style="font-size:11px; font-weight:700; color:var(--purple); display:flex; align-items:center; gap:5px;">
+                                <i class="fas fa-wand-magic-sparkles" style="font-size:10px;"></i>
+                                <span>T8 職場智囊</span>
+                            </div>
+                            <button type="button" onclick="copyAiReplyByIdx(${idx})" class="active-scale"
+                                style="border:0.5px solid var(--separator); background:var(--card); color:var(--label-secondary); font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:999px; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:4px;">
+                                <i class="far fa-copy" style="font-size:9.5px;"></i>
+                                <span>複製</span>
+                            </button>
+                        </div>
+                        <div style="white-space:pre-wrap; line-height:1.55;">${escapeHtml(msg.content)}</div>
                     </div>
                 `;
             }
@@ -7644,7 +7576,6 @@
     }
 
     function triggerAiQuickPrompt(promptText) {
-        openAiChatSheet();
         const input = document.getElementById('aiChatInput');
         if (input) {
             input.value = promptText;
@@ -7673,18 +7604,17 @@
         _isAiChatSending = true;
 
         const apiKey = getOpenRouterApiKey();
-        const petName = getActivePetDisplayName();
 
-        const systemPrompt = `你是由 T8 工時系統孕育出的「工時晶靈寵物夥伴（${petName}）」，是主人最貼心、最聰明的職場與生活智囊。
+        const systemPrompt = `你是 T8 工時與家電門市系統內建的「T8 門市與職場 AI 智囊」，專為台灣家電門市銷售人員與上班族提供最專業、俐落且溫暖的實戰協助。
 
-【角色設定與原則】
-1. 語言規範：必須 100% 使用道地的「台灣繁體中文」回答，嚴禁使用任何簡體字或中國大陸用語（如視頻、信息、軟件、網絡、打印等，請一律使用影片、訊息、軟體、網路、列印）。
-2. 語氣風格：
-   - 開頭稱呼主人為「主人」或「夥伴」，語氣溫暖有同理心、元氣貼心（如：「主人辛苦囉！這件事我來幫你整理～」）。
-   - 給予具體建議時條理清晰、直切核心（優先使用 1, 2, 3 點列出），不說空洞的冗長客套話。
+【核心原則】
+1. 語言規範：必須 100% 使用道地的「台灣繁體中文」與台灣職場／門市用語（如：跨店調貨、配送安裝、冷氣噸數、一級能效、勞基法特休、LINE 訊息），嚴禁使用簡體字或中國大陸用語。
+2. 結構清晰：
+   - 若使用者需要「給客戶的話術或 LINE 回覆」，請直接給出溫和有禮、可直接複製貼上的完整訊息範本。
+   - 若使用者詢問「法規、銷售賣點或交接重點」，請用 1、2、3 條列式精準回答，直切核心，不說空洞客套話。
 3. 輸出限制：
-   - 每次回答長度嚴格控制在 500 至 800 字以內，精簡精準。
-   - 僅限純文字對話，嚴禁輸出任何圖片代碼、Markdown 圖片語法或影片標籤。`;
+   - 每次回答控制在 500 至 800 字以內，精簡實用。
+   - 僅限純文字輸出，嚴禁輸出圖片或影片語法。`;
 
         const messagesForApi = [
             { role: 'system', content: systemPrompt }
@@ -8550,6 +8480,8 @@
             if ('vibrate' in navigator) navigator.vibrate(12);
 
             if (_isPartnerAudioMuted) {
+                // 自動靜音另一台 (TVBS 新聞直播)，避免雙音訊衝突
+                if (typeof window._muteTvbsAudioSilently === 'function') window._muteTvbsAudioSilently();
                 // 解除靜音並調至最大清晰音量，100% 在 App 內
                 if (iframe && iframe.contentWindow) {
                     iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
@@ -8577,6 +8509,24 @@
                 if (btn) btn.style.background = 'rgba(20,20,20,0.82)';
             }
         }
+        window._mutePartnerAudioSilently = function() {
+            if (!_isPartnerAudioMuted) {
+                const iframe = document.getElementById('partnerRadioIframe');
+                const icon = document.getElementById('partnerAudioIcon');
+                const text = document.getElementById('partnerAudioText');
+                const btn = document.getElementById('partnerAudioToggleBtn');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+                }
+                _isPartnerAudioMuted = true;
+                if (icon) {
+                    icon.className = 'fas fa-volume-xmark';
+                    icon.style.color = '#FFD60A';
+                }
+                if (text) text.textContent = '開啟聲音';
+                if (btn) btn.style.background = 'rgba(20,20,20,0.82)';
+            }
+        };
 
         function updateLeafRadioUI() {
             const titleEl = document.getElementById('partnerRadioStationTitle');
@@ -8656,7 +8606,10 @@
             const navEl = document.getElementById('bottomNav');
             if (navEl) navEl.classList.remove('nav-hidden');
 
-            if (actualTab === 'Partner' && typeof renderPartnerRoom === 'function') renderPartnerRoom();
+            if (actualTab === 'Partner') {
+                if (typeof renderPartnerRoom === 'function') renderPartnerRoom();
+                if (typeof renderAiChatMessages === 'function') renderAiChatMessages();
+            }
             if (actualTab === 'News' && typeof fetchNews === 'function') fetchNews(false);
             if (actualTab === 'Appliance') {
                 if (typeof renderTaiJiangUI === 'function') renderTaiJiangUI();
@@ -16351,8 +16304,96 @@
                 expandBtn.classList.add('hidden');
             }
         }
-        // --- 24H 電視新聞直播音訊控制 (In-App TVBS Audio Controller) ---
+        // --- 24H 電視新聞直播音訊控制 & 雙模劇院切換 (In-App TVBS & Radio Cinema Controller) ---
         let _isTvbsMuted = true;
+        let _newsMediaMode = 'tvbs'; // 'tvbs' | 'radio'
+
+        function muteTvbsAudioSilently() {
+            if (!_isTvbsMuted) {
+                const iframe = document.getElementById('tvbsLiveIframe');
+                const icon = document.getElementById('tvbsAudioIcon');
+                const text = document.getElementById('tvbsAudioText');
+                const btn = document.getElementById('tvbsAudioToggleBtn');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+                }
+                _isTvbsMuted = true;
+                if (icon) {
+                    icon.className = 'fas fa-volume-xmark';
+                    icon.style.color = '#FFD60A';
+                }
+                if (text) text.textContent = '開啟聲音';
+                if (btn) btn.style.background = 'rgba(20,20,20,0.78)';
+            }
+        }
+        window._muteTvbsAudioSilently = muteTvbsAudioSilently;
+
+        function switchNewsMediaMode(mode) {
+            if (mode !== 'tvbs' && mode !== 'radio') return;
+            _newsMediaMode = mode;
+            if ('vibrate' in navigator) navigator.vibrate(10);
+            if (typeof playSingleClickSound === 'function') playSingleClickSound('C5');
+
+            const tvbsStage = document.getElementById('newsCinemaTvbsStage');
+            const radioStage = document.getElementById('partnerRadioCard');
+            const btnTvbs = document.getElementById('newsMediaBtn_tvbs');
+            const btnRadio = document.getElementById('newsMediaBtn_radio');
+            const titleEl = document.getElementById('newsMediaStageTitle');
+            const badgeEl = document.getElementById('newsMediaStageBadge');
+            const dotEl = document.getElementById('newsMediaLiveDot');
+
+            if (mode === 'tvbs') {
+                if (tvbsStage) tvbsStage.classList.remove('hidden');
+                if (radioStage) radioStage.classList.add('hidden');
+                if (typeof window._mutePartnerAudioSilently === 'function') window._mutePartnerAudioSilently();
+                if (btnTvbs) {
+                    btnTvbs.style.background = 'var(--card)';
+                    btnTvbs.style.color = 'var(--label)';
+                    btnTvbs.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+                }
+                if (btnRadio) {
+                    btnRadio.style.background = 'transparent';
+                    btnRadio.style.color = 'var(--label-secondary)';
+                    btnRadio.style.boxShadow = 'none';
+                }
+                if (titleEl) titleEl.textContent = '電視直播';
+                if (badgeEl) {
+                    badgeEl.textContent = 'TVBS 24H';
+                    badgeEl.style.color = '#E02424';
+                    badgeEl.style.background = 'rgba(224,36,36,0.08)';
+                }
+                if (dotEl) {
+                    dotEl.style.background = '#E02424';
+                    dotEl.style.boxShadow = '0 0 7px rgba(224,36,36,0.6)';
+                }
+            } else {
+                if (tvbsStage) tvbsStage.classList.add('hidden');
+                if (radioStage) radioStage.classList.remove('hidden');
+                muteTvbsAudioSilently();
+                if (btnRadio) {
+                    btnRadio.style.background = 'var(--card)';
+                    btnRadio.style.color = 'var(--label)';
+                    btnRadio.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+                }
+                if (btnTvbs) {
+                    btnTvbs.style.background = 'transparent';
+                    btnTvbs.style.color = 'var(--label-secondary)';
+                    btnTvbs.style.boxShadow = 'none';
+                }
+                if (titleEl) titleEl.textContent = '專注電台';
+                if (badgeEl) {
+                    badgeEl.textContent = '華語流行';
+                    badgeEl.style.color = 'var(--purple)';
+                    badgeEl.style.background = 'rgba(122,90,138,0.10)';
+                }
+                if (dotEl) {
+                    dotEl.style.background = '#34C759';
+                    dotEl.style.boxShadow = '0 0 7px rgba(52,199,89,0.6)';
+                }
+            }
+        }
+        window.switchNewsMediaMode = switchNewsMediaMode;
+
         function toggleTvbsAudio(e) {
             if (e) {
                 if (typeof e.preventDefault === 'function') e.preventDefault();
@@ -16366,6 +16407,8 @@
             if ('vibrate' in navigator) navigator.vibrate(12);
 
             if (_isTvbsMuted) {
+                // 自動靜音另一台 (音樂電台)，避免雙音訊衝突
+                if (typeof window._mutePartnerAudioSilently === 'function') window._mutePartnerAudioSilently();
                 // 解除靜音並調至清晰音量，100% 在 App 內進行，無需跳轉
                 if (iframe && iframe.contentWindow) {
                     iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
@@ -16406,6 +16449,7 @@
         if (typeof updateCurrentTime === "function") updateCurrentTime();
         if (typeof window.renderPartnerRoom === "function") window.renderPartnerRoom();
         else if (typeof renderPartnerRoom === "function") renderPartnerRoom();
+        if (typeof window.renderAiChatMessages === "function") window.renderAiChatMessages();
         if (typeof initSwipePunch === "function") initSwipePunch();
         if (typeof initBrushstroke === "function") initBrushstroke();
         if (typeof initWeatherEngine === "function") initWeatherEngine();
