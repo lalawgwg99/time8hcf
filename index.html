@@ -2539,73 +2539,6 @@
             margin-top: 2px;
         }
 
-        /* --- Apple Watch Chrono-Segment Timeline Pills (上班/休息時段直覺色標) --- */
-        .ring-segment-strip {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin: 6px auto 4px;
-            max-width: 100%;
-            padding: 0 4px;
-        }
-        .ring-seg-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 11.5px;
-            font-weight: 600;
-            font-variant-numeric: tabular-nums;
-            cursor: pointer;
-            border: 0.5px solid var(--separator);
-            background: var(--card);
-            color: var(--label-secondary);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-        .ring-seg-pill:active {
-            transform: scale(0.95);
-        }
-        .ring-seg-pill.seg-work .seg-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 5px rgba(91, 138, 96, 0.45);
-        }
-        .ring-seg-pill.seg-rest {
-            background: rgba(217, 155, 38, 0.08);
-            border-color: rgba(217, 155, 38, 0.28);
-            color: #B57C1E;
-        }
-        html[data-zen-theme="obsidian"] .ring-seg-pill.seg-rest {
-            color: #F0B85A;
-            background: rgba(240, 184, 90, 0.10);
-        }
-        .ring-seg-pill.seg-rest .seg-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            border: 1.8px dashed #D99B26;
-            background: transparent;
-        }
-        .ring-seg-pill.active-inspect {
-            border-color: var(--label);
-            background: var(--fill-secondary);
-            color: var(--label);
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-        .ring-seg-arc {
-            transition: opacity 0.3s ease, stroke-width 0.25s ease;
-            cursor: pointer;
-        }
-
         /* --- Zen Rest Toolbar (In-place Actions: 深呼吸 · 今日靈籤 · 功德) --- */
         .zen-rest-bar {
             display: flex;
@@ -4480,25 +4413,16 @@
                                     <stop offset="70%" stop-color="#FFA000" />
                                     <stop offset="100%" stop-color="#E65100" />
                                 </linearGradient>
-                                <!-- 休息時段專屬：琥珀暖金點狀刻痕 (Rest Break Gradient) -->
-                                <linearGradient id="ringGradientRest" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#E8B86D" />
-                                    <stop offset="100%" stop-color="#C88A2E" />
-                                </linearGradient>
                                 <filter id="beadShadow" x="-40%" y="-40%" width="180%" height="180%">
                                     <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(40,20,10,0.35)" />
                                 </filter>
                             </defs>
                             <!-- Track circle (Apple Clean Groove) -->
                             <circle cx="132" cy="132" r="114" fill="none" stroke="rgba(0, 0, 0, 0.05)" stroke-width="12" />
-                            <!-- Active Progress Ring (12px tube, single-session fallback) -->
+                            <!-- Active Progress Ring (12px tube) -->
                             <circle id="progressRing" cx="132" cy="132" r="114" fill="none"
                                 stroke="url(#ringGradientWarm)" stroke-width="12" stroke-linecap="round"
                                 stroke-dasharray="716.28" stroke-dashoffset="716.28" />
-                            <!-- Segmented Work & Rest Arcs Group (Apple Watch Chrono Segments) -->
-                            <g id="ringSegmentsGroup"></g>
-                            <!-- Boundary Transition Nodes Group -->
-                            <g id="ringNodesGroup"></g>
                             <!-- Leading Light Bead -->
                             <circle id="ringLeadBead" cx="246" cy="132" r="6" fill="#FFFFFF" filter="url(#beadShadow)" opacity="0" />
                         </svg>
@@ -4514,9 +4438,6 @@
                             <span id="strokePct" class="ring-pct-badge">0%</span>
                         </div>
                     </div>
-
-                    <!-- Apple Watch 雙態時段膠囊列 (直覺對應圓環上的上班段與休息段) -->
-                    <div id="ringSegmentStrip" class="ring-segment-strip hidden" aria-label="今日上班與休息時段分佈"></div>
 
                     <div id="progressText" class="ring-target-info">目標 8 小時</div>
                 </div>
@@ -5734,6 +5655,130 @@
                 style="width:100%; padding:13px; border-radius:var(--radius); font-size:14px; font-weight:700; background:var(--label); color:var(--bg); border:none; cursor:pointer; font-family:inherit; box-shadow:var(--shadow-button);">
                 完成並儲存
             </button>
+        </div>
+    </div>
+
+    <!-- Install Guide (Apple Action Sheet) -->
+    <div id="installGuideModal" class="fixed inset-0 hidden" style="z-index: 105;">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeInstallGuide()">
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); padding:14px 24px 32px; max-height:85vh; overflow-y:auto;">
+            <div class="sheet-handle"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="font-size:17px; font-weight:700; color:var(--label);">加入手機主畫面</h3>
+                <button onclick="closeInstallGuide()"
+                    style="width:30px; height:30px; border-radius:50%; background:var(--fill-secondary); border:none; display:flex; align-items:center; justify-content:center; color:var(--label-tertiary); cursor:pointer;">
+                    <i class="fas fa-times" style="font-size:12px;"></i>
+                </button>
+            </div>
+            
+            <p style="font-size:12.5px; color:var(--label-secondary); line-height:1.5; margin-bottom:16px;">
+                加入主畫面後即可隱藏瀏覽器網址列，享受 100% 全螢幕原生 App 的沉浸體驗與極速啟動：
+            </p>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+                <div style="font-size:12px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-top:4px;">🍎 iOS (Safari 瀏覽器)</div>
+                <div
+                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="fas fa-arrow-up-from-bracket"
+                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
+                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">1. 點擊 Safari 底部中央的<br><span style="font-weight:700; color:var(--label);">「分享」按鈕</span></div>
+                </div>
+                <div
+                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="far fa-plus-square"
+                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
+                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">2. 選單往下滑動，點選<br><span
+                            style="font-weight:700; color:var(--label);">「加入主畫面」</span> ➔ 按右上角「新增」</div>
+                </div>
+
+                <div style="font-size:12px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; margin-top:8px;">🤖 Android (Chrome 瀏覽器)</div>
+                <div
+                    style="display:flex; align-items:center; gap:14px; background:var(--card); padding:14px 16px; border-radius:var(--radius-sm); border:0.5px solid var(--separator);">
+                    <i class="fas fa-ellipsis-vertical"
+                        style="color:var(--blue); font-size:18px; width:22px; text-align:center;"></i>
+                    <div style="font-size:13.5px; color:var(--label-secondary); line-height:1.45;">點擊右上角「更多選單 (⋮)」➔ 選擇 <span style="font-weight:700; color:var(--label);">「安裝應用程式」</span> 或 <span style="font-weight:700; color:var(--label);">「新增至主螢幕」</span></div>
+                </div>
+            </div>
+
+            <button onclick="closeInstallGuide()"
+                style="width:100%; padding:15px; background:var(--label); color:var(--bg); border:none; border-radius:var(--radius); font-size:15px; font-weight:500; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em;">了解並返回</button>
+        </div>
+    </div>
+
+    <!-- Today Notes & Todo Modal (今日待辦與專注筆記) -->
+    <div id="notesModal" class="fixed inset-0 hidden" style="z-index: 105;">
+        <div class="absolute inset-0 bg-black/40" style="-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)"
+            onclick="closeNotesModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 rounded-t-[28px] modal-enter max-w-md mx-auto"
+            style="background:var(--bg); max-height:88vh; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+            <div style="padding:14px 24px 0; position:sticky; top:0; background:var(--bg); z-index:1;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:0.5px solid var(--separator);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-list-check" style="color:var(--blue); font-size:16px;"></i>
+                        <h3 style="font-size:16.5px; font-weight:700; color:var(--label); margin:0;">今日待辦與筆記</h3>
+                    </div>
+                    <button type="button" onclick="closeNotesModal()" aria-label="完成"
+                        style="padding:5px 12px; border-radius:999px; background:var(--fill-secondary); border:none; color:var(--blue); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;">
+                        完成
+                    </button>
+                </div>
+            </div>
+            <div style="padding:16px 24px 36px;">
+
+                <!-- 1. 當前專注主題 (打卡時自動關聯) -->
+                <div class="section-label" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>當前專注任務</span>
+                    <span style="font-size:11px; font-weight:400; color:var(--label-tertiary);">打卡時自動記錄</span>
+                </div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                    <input type="text" id="notesTaskInput" placeholder="今天正在進行什麼？（例：核心功能開發）"
+                        oninput="saveCurrentTaskFromNotes()"
+                        style="width:100%; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:10px 12px; font-size:14px; font-family:inherit; outline:none; margin-bottom:10px; transition:border 0.2s;">
+                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                        <button type="button" onclick="setQuickTaskTag('🏢 常規辦公')" class="task-chip">🏢 常規辦公</button>
+                        <button type="button" onclick="setQuickTaskTag('💻 核心開發')" class="task-chip">💻 核心開發</button>
+                        <button type="button" onclick="setQuickTaskTag('📊 專案會議')" class="task-chip">📊 專案會議</button>
+                        <button type="button" onclick="setQuickTaskTag('☕ 外出拜訪')" class="task-chip">☕ 外出拜訪</button>
+                        <button type="button" onclick="setQuickTaskTag('🧘 深度研讀')" class="task-chip">🧘 深度研讀</button>
+                    </div>
+                </div>
+
+                <!-- 2. 今日待辦清單 (To-do Checklist) -->
+                <div class="section-label" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>今日核心待辦</span>
+                    <span id="todoProgressCount" style="font-size:11px; font-weight:500; color:var(--label-tertiary);">0/0 完成</span>
+                </div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                    <!-- New Todo Input -->
+                    <div style="display:flex; gap:8px; margin-bottom:12px;">
+                        <input type="text" id="newTodoInput" placeholder="新增待辦事項..."
+                            onkeydown="if(event.key==='Enter') addNewTodoItem()"
+                            style="flex:1; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:8px 12px; font-size:13.5px; font-family:inherit; outline:none;">
+                        <button type="button" onclick="addNewTodoItem()"
+                            style="padding:0 14px; background:var(--blue); color:#fff; border:none; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- Todo Items List -->
+                    <div id="todoItemsList" style="display:flex; flex-direction:column; gap:8px;">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- 3. 隨手靈感便籤 (Quick Memo) -->
+                <div class="section-label">隨手靈感便籤</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card); padding:14px 16px;">
+                    <textarea id="notesMemoTextarea" rows="4" placeholder="記下今日進度、明早待辦、或臨時冒出的靈感想法..."
+                        oninput="saveNotesMemo()"
+                        style="width:100%; background:var(--fill); color:var(--label); border:0.5px solid var(--separator); border-radius:10px; padding:10px 12px; font-size:13.5px; font-family:inherit; outline:none; resize:none; line-height:1.5;"></textarea>
+                </div>
+
+                <button type="button" onclick="closeNotesModal()" class="active-scale"
+                    style="width:100%; padding:14px; border-radius:var(--radius); font-size:14.5px; font-weight:600; background:var(--label); color:var(--bg); border:none; cursor:pointer; box-shadow:var(--shadow-button); letter-spacing:0.06em; font-family:'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;">完成並保存</button>
+            </div>
         </div>
     </div>
 
@@ -8662,17 +8707,10 @@
             }, { passive: true });
         })();
 
-        // === Circular Ring Init & Update (Apple Native Chrono-Segment Masterpiece) ===
+        // === Circular Ring Init & Update (Apple Native Masterpiece) ===
         let _ringMode = 'elapsed'; // 'elapsed' | 'remaining'
-        let _inspectedSegmentIdx = null;
-        let _inspectTimer = null;
-        let _latestRingSegments = [];
 
         function toggleRingMode() {
-            if (_inspectedSegmentIdx !== null) {
-                clearSegmentInspection();
-                return;
-            }
             _ringMode = _ringMode === 'elapsed' ? 'remaining' : 'elapsed';
             if ('vibrate' in navigator) navigator.vibrate(15);
             updateDisplay();
@@ -8682,159 +8720,8 @@
             window._ringReady = true;
         }
 
-        function formatShortHM(dateObj) {
-            return dateObj.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
-        }
-
-        function formatMinsCompact(mins) {
-            const m = Math.max(1, Math.round(mins));
-            const h = Math.floor(m / 60);
-            const rem = m % 60;
-            if (h > 0 && rem > 0) return `${h}h${rem}m`;
-            if (h > 0) return `${h}h`;
-            return `${rem}m`;
-        }
-
-        function buildDailyTimelineSegments(isComplete) {
-            if (!Array.isArray(punchRecords) || punchRecords.length === 0) return [];
-            const segments = [];
-            const now = new Date();
-            const len = punchRecords.length;
-            let workCounter = 0;
-            let restCounter = 0;
-
-            for (let i = 0; i < len; i += 2) {
-                const inRec = punchRecords[i];
-                if (!inRec) continue;
-                const inTime = new Date(inRec.time);
-                const hasOut = (i + 1) < len;
-                const outTime = hasOut ? new Date(punchRecords[i + 1].time) : now;
-                const workMins = Math.max(0.5, (outTime - inTime) / 60000);
-                workCounter++;
-
-                segments.push({
-                    type: 'work',
-                    order: workCounter,
-                    startStr: formatShortHM(inTime),
-                    endStr: hasOut ? formatShortHM(outTime) : '現在',
-                    mins: workMins,
-                    ongoing: !hasOut,
-                    task: inRec.task || ''
-                });
-
-                // Check for rest interval after this clock-out
-                if (hasOut) {
-                    const hasNextIn = (i + 2) < len;
-                    if (hasNextIn) {
-                        const nextInTime = new Date(punchRecords[i + 2].time);
-                        const restMins = (nextInTime - outTime) / 60000;
-                        if (restMins >= 0.5) {
-                            restCounter++;
-                            segments.push({
-                                type: 'rest',
-                                order: restCounter,
-                                startStr: formatShortHM(outTime),
-                                endStr: formatShortHM(nextInTime),
-                                mins: restMins,
-                                ongoing: false
-                            });
-                        }
-                    } else if (!isComplete) {
-                        // Currently resting mid-shift before reaching target hours
-                        const restMins = (now - outTime) / 60000;
-                        if (restMins >= 0.5 && restMins <= 300) {
-                            restCounter++;
-                            segments.push({
-                                type: 'rest',
-                                order: restCounter,
-                                startStr: formatShortHM(outTime),
-                                endStr: '休息中',
-                                mins: restMins,
-                                ongoing: true
-                            });
-                        }
-                    }
-                }
-            }
-            return segments;
-        }
-
-        function describeRingArc(cx, cy, r, startDeg, endDeg) {
-            const clampedEnd = Math.min(endDeg, startDeg + 359.4);
-            const startRad = (startDeg * Math.PI) / 180;
-            const endRad = (clampedEnd * Math.PI) / 180;
-            const x1 = cx + r * Math.cos(startRad);
-            const y1 = cy + r * Math.sin(startRad);
-            const x2 = cx + r * Math.cos(endRad);
-            const y2 = cy + r * Math.sin(endRad);
-            const largeArc = (clampedEnd - startDeg) > 180 ? 1 : 0;
-            return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${largeArc} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
-        }
-
-        function clearSegmentInspection() {
-            _inspectedSegmentIdx = null;
-            if (_inspectTimer) {
-                clearTimeout(_inspectTimer);
-                _inspectTimer = null;
-            }
-            updateDisplay();
-        }
-
-        function inspectRingSegment(idx, ev) {
-            if (ev) {
-                ev.stopPropagation();
-                ev.preventDefault();
-            }
-            if ('vibrate' in navigator) navigator.vibrate(10);
-            if (typeof playSingleClickSound === 'function') playSingleClickSound('G4');
-
-            if (_inspectedSegmentIdx === idx) {
-                clearSegmentInspection();
-                return;
-            }
-
-            _inspectedSegmentIdx = idx;
-            if (_inspectTimer) clearTimeout(_inspectTimer);
-            _inspectTimer = setTimeout(() => {
-                _inspectedSegmentIdx = null;
-                updateDisplay();
-            }, 4000);
-
-            const seg = _latestRingSegments[idx];
-            if (seg) {
-                const eyebrowEl = document.getElementById('heroEyebrow');
-                const totalHoursEl = document.getElementById('totalHours');
-                const pctEl = document.getElementById('strokePct');
-                const dObj = formatDurationFancy(seg.mins);
-
-                if (eyebrowEl) {
-                    eyebrowEl.textContent = seg.type === 'work'
-                        ? `第 ${seg.order} 段上班`
-                        : `第 ${seg.order} 段休息`;
-                }
-                if (totalHoursEl) {
-                    totalHoursEl.innerHTML = `${dObj.h}<span class="hero-unit">h</span>${Math.round(dObj.m)}<span class="hero-unit">m</span>`;
-                }
-                if (pctEl) {
-                    pctEl.textContent = `${seg.startStr} – ${seg.endStr}`;
-                }
-            }
-
-            // Highlight selected arc and pill
-            document.querySelectorAll('#ringSegmentsGroup .ring-seg-arc').forEach((el, i) => {
-                el.style.opacity = i === idx ? '1' : '0.25';
-            });
-            document.querySelectorAll('#ringSegmentStrip .ring-seg-pill').forEach((el, i) => {
-                el.classList.toggle('active-inspect', i === idx);
-            });
-        }
-        window.inspectRingSegment = inspectRingSegment;
-
         function updateBrushstroke(pct, isComplete) {
             const ring = document.getElementById('progressRing');
-            const segGroup = document.getElementById('ringSegmentsGroup');
-            const nodeGroup = document.getElementById('ringNodesGroup');
-            const stripEl = document.getElementById('ringSegmentStrip');
             if (!ring) return;
 
             const circumference = 716.28;
@@ -8848,116 +8735,36 @@
             const petRarity = currentPet ? currentPet.rarity : 'common';
             const ambientCore = document.getElementById('ringAmbientCore');
 
-            let workStroke = 'url(#ringGradientWarm)';
             if (isComplete) {
-                workStroke = 'url(#ringGradientPurple)';
+                ring.style.stroke = 'url(#ringGradientPurple)';
             } else if (petRarity === 'hidden') {
-                workStroke = 'url(#ringGradientGold)';
+                // 👑 隱藏夥伴特權：純金星曜流光光環
+                ring.style.stroke = 'url(#ringGradientGold)';
                 if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(255, 193, 7, 0.22) 0%, rgba(255, 111, 0, 0.08) 50%, transparent 75%)';
             } else if (petRarity === 'epic') {
-                workStroke = 'url(#ringGradientEpic)';
+                // ✨ 史詩夥伴特權：極光紫晶流光光環
+                ring.style.stroke = 'url(#ringGradientEpic)';
                 if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(165, 107, 212, 0.20) 0%, rgba(100, 58, 154, 0.06) 50%, transparent 75%)';
             } else if (pct >= 85) {
-                workStroke = 'url(#ringGradientGreen)';
+                ring.style.stroke = 'url(#ringGradientGreen)';
                 if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(114, 169, 121, 0.14) 0%, transparent 70%)';
             } else {
-                workStroke = 'url(#ringGradientWarm)';
+                ring.style.stroke = 'url(#ringGradientWarm)';
                 if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(196, 168, 122, 0.09) 0%, transparent 70%)';
-            }
-            ring.style.stroke = workStroke;
-
-            // Build Work & Rest Segments
-            const segments = (!_isBreatheActive && typeof getTargetMinutes === 'function')
-                ? buildDailyTimelineSegments(isComplete)
-                : [];
-            _latestRingSegments = segments;
-
-            let leadAngleDeg = (clampedPct / 100) * 360;
-
-            if (_isBreatheActive || segments.length <= 1) {
-                ring.style.opacity = '1';
-                if (segGroup) segGroup.innerHTML = '';
-                if (nodeGroup) nodeGroup.innerHTML = '';
-            } else {
-                // Multi-segment Chrono Ring Mode (直观区分上班實心段 vs 休息琥珀虛線段)
-                ring.style.opacity = '0';
-                const targetMin = typeof getTargetMinutes === 'function' ? getTargetMinutes() : 480;
-                const totalWorkMins = segments.filter(s => s.type === 'work').reduce((acc, s) => acc + s.mins, 0);
-                const visualRestTotal = segments.filter(s => s.type === 'rest').reduce((acc, s) => acc + Math.min(Math.max(s.mins, 12), 120), 0);
-                const totalCapacity = Math.max(targetMin + visualRestTotal, totalWorkMins + visualRestTotal, 60);
-
-                let cursorDeg = 0;
-                const gapDeg = 3.6;
-                let arcsHtml = '';
-                let nodesHtml = '';
-
-                segments.forEach((seg, idx) => {
-                    const weightMins = seg.type === 'rest' ? Math.min(Math.max(seg.mins, 12), 120) : Math.max(seg.mins, 8);
-                    const rawSpanDeg = (weightMins / totalCapacity) * 360;
-                    const startDeg = cursorDeg + (idx === 0 ? 0 : gapDeg * 0.5);
-                    const endDeg = Math.min(358.8, Math.max(startDeg + 4.5, cursorDeg + rawSpanDeg - gapDeg * 0.5));
-                    const pathData = describeRingArc(132, 132, 114, startDeg, endDeg);
-                    const dimStyle = (_inspectedSegmentIdx !== null && _inspectedSegmentIdx !== idx) ? 'opacity:0.25;' : 'opacity:1;';
-
-                    if (seg.type === 'work') {
-                        arcsHtml += `<path d="${pathData}" class="ring-seg-arc" fill="none" stroke="${workStroke}" stroke-width="12" stroke-linecap="round" style="${dimStyle}" onclick="inspectRingSegment(${idx}, event)"><title>第 ${seg.order} 段上班：${seg.startStr}–${seg.endStr} (${formatMinsCompact(seg.mins)})</title></path>`;
-                    } else {
-                        arcsHtml += `<path d="${pathData}" class="ring-seg-arc" fill="none" stroke="url(#ringGradientRest)" stroke-width="6.5" stroke-dasharray="4 6.5" stroke-linecap="round" style="${dimStyle}" onclick="inspectRingSegment(${idx}, event)"><title>休息時段：${seg.startStr}–${seg.endStr} (${formatMinsCompact(seg.mins)})</title></path>`;
-                    }
-
-                    // Boundary transition dot at start of each segment
-                    const boundaryRad = (startDeg * Math.PI) / 180;
-                    const bx = 132 + 114 * Math.cos(boundaryRad);
-                    const by = 132 + 114 * Math.sin(boundaryRad);
-                    const dotColor = seg.type === 'rest' ? '#E8B86D' : '#FFFFFF';
-                    nodesHtml += `<circle cx="${bx.toFixed(2)}" cy="${by.toFixed(2)}" r="2.8" fill="${dotColor}" opacity="0.88" pointer-events="none" />`;
-
-                    cursorDeg = endDeg + gapDeg * 0.5;
-                    leadAngleDeg = endDeg;
-                });
-
-                if (segGroup) segGroup.innerHTML = arcsHtml;
-                if (nodeGroup) nodeGroup.innerHTML = nodesHtml;
-            }
-
-            // Render Interactive Segment Capsules Strip below Ring
-            if (stripEl) {
-                if (_isBreatheActive || segments.length === 0) {
-                    stripEl.classList.add('hidden');
-                    stripEl.innerHTML = '';
-                } else {
-                    stripEl.classList.remove('hidden');
-                    stripEl.innerHTML = segments.map((seg, idx) => {
-                        const isActive = _inspectedSegmentIdx === idx;
-                        if (seg.type === 'work') {
-                            return `<button type="button" class="ring-seg-pill seg-work ${isActive ? 'active-inspect' : ''}" onclick="inspectRingSegment(${idx}, event)" title="點擊於圓環高亮檢視此上班時段">
-                                <span class="seg-dot"></span>
-                                <span>上班 ${seg.startStr}–${seg.endStr}</span>
-                            </button>`;
-                        } else {
-                            return `<button type="button" class="ring-seg-pill seg-rest ${isActive ? 'active-inspect' : ''}" onclick="inspectRingSegment(${idx}, event)" title="點擊於圓環高亮檢視此休息時段">
-                                <span class="seg-dot"></span>
-                                <span>休息 ${seg.startStr}–${seg.endStr} (${formatMinsCompact(seg.mins)})</span>
-                            </button>`;
-                        }
-                    }).join('');
-                }
             }
 
             // Leading Light Bead
             const bead = document.getElementById('ringLeadBead');
             if (bead) {
-                if (clampedPct >= 1.5 || segments.length > 0) {
-                    const rad = (leadAngleDeg * Math.PI) / 180;
+                if (clampedPct >= 1.5) {
+                    const angle = (clampedPct / 100) * 360;
+                    const rad = (angle * Math.PI) / 180;
                     const cx = 132 + 114 * Math.cos(rad);
                     const cy = 132 + 114 * Math.sin(rad);
                     bead.setAttribute('cx', cx.toFixed(2));
                     bead.setAttribute('cy', cy.toFixed(2));
                     bead.style.opacity = '1';
-                    const lastSeg = segments[segments.length - 1];
-                    if (lastSeg && lastSeg.type === 'rest') {
-                        bead.setAttribute('fill', '#FFD584');
-                    } else if (petRarity === 'hidden') {
+                    if (petRarity === 'hidden') {
                         bead.setAttribute('fill', '#FFE082');
                     } else if (petRarity === 'epic') {
                         bead.setAttribute('fill', '#E1BEE7');
@@ -8970,24 +8777,7 @@
             }
 
             const pctEl = document.getElementById('strokePct');
-            if (_inspectedSegmentIdx !== null && segments[_inspectedSegmentIdx]) {
-                const seg = segments[_inspectedSegmentIdx];
-                const eyebrowEl = document.getElementById('heroEyebrow');
-                const totalHoursEl = document.getElementById('totalHours');
-                const dObj = formatDurationFancy(seg.mins);
-                if (eyebrowEl) {
-                    eyebrowEl.textContent = seg.type === 'work'
-                        ? `第 ${seg.order} 段上班`
-                        : `第 ${seg.order} 段休息`;
-                }
-                if (totalHoursEl) {
-                    totalHoursEl.innerHTML = `${dObj.h}<span class="hero-unit">h</span>${Math.round(dObj.m)}<span class="hero-unit">m</span>`;
-                }
-                if (pctEl) {
-                    pctEl.textContent = `${seg.startStr} – ${seg.endStr}`;
-                }
-            } else if (pctEl) {
-                _inspectedSegmentIdx = null;
+            if (pctEl) {
                 pctEl.textContent = isComplete ? '100% 達成' : Math.round(clampedPct) + '%';
             }
 
@@ -10793,6 +10583,14 @@
             div.textContent = text;
             return div.innerHTML;
         }
+        window.openNotesModal = openNotesModal;
+        window.closeNotesModal = closeNotesModal;
+        window.addNewTodoItem = addNewTodoItem;
+        window.toggleTodoItem = toggleTodoItem;
+        window.deleteTodoItem = deleteTodoItem;
+        window.setQuickTaskTag = setQuickTaskTag;
+        window.saveCurrentTaskFromNotes = saveCurrentTaskFromNotes;
+        window.saveNotesMemo = saveNotesMemo;
 
         // =============================================
         // APPLE LIVE WEATHER MODULE (即時微氣候與逐時預報引擎)
