@@ -2338,34 +2338,47 @@
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        /* --- Apple Native × Oriental Gilded Mountain Pendulum Ring (方案 A) --- */
+        /* --- 方案 A · 模式 1 精修版｜東方潮流水墨海報 × 刀鋒進度同行女劍客 --- */
         .hero-section {
-            padding: 6px 0 6px;
+            padding: 4px 0 6px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
+            width: 100%;
         }
 
         .ring-container {
             position: relative;
-            width: 284px;
-            height: 275px;
-            margin-bottom: 4px;
+            width: 100%;
+            min-height: 232px;
+            padding: 18px 18px 16px;
+            border-radius: 22px;
+            background: radial-gradient(circle at 50% 32%, #FCF9F2 0%, #F1E8D8 68%, #E4D6C0 100%);
+            border: 1.2px solid rgba(28, 23, 18, 0.18);
+            box-shadow: 0 12px 32px rgba(40, 30, 15, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+            overflow: hidden;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.35s ease, border-color 0.35s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        [data-zen-theme="obsidian"] .ring-container {
+            background: radial-gradient(circle at 50% 32%, #26221D 0%, #1A1714 70%, #12100E 100%);
+            border-color: rgba(229, 185, 85, 0.32);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
 
         .ring-container:active {
-            transform: scale(0.975);
+            transform: scale(0.985);
         }
 
         .ring-ambient-core {
             position: absolute;
-            inset: 28px 36px 42px 36px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 182, 136, 0.14) 0%, transparent 72%);
+            inset: 0;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.8s ease;
@@ -2375,137 +2388,197 @@
             opacity: 1;
         }
 
-        @keyframes pendulumSwing {
-            0%, 100% { transform: rotate(-6deg); }
-            50% { transform: rotate(6deg); }
+        .gugak-vertical-seal {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-family: "Noto Serif TC", "Songti TC", serif;
+            padding: 6px 5px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.14em;
+            line-height: 1.15;
+            background: linear-gradient(160deg, #F2D27A 0%, #D4A23E 55%, #B38124 100%);
+            color: #1C1712;
+            border: 1.4px solid #1C1712;
+            box-shadow: 2px 2px 0px #1C1712, inset 0 1px 0 rgba(255, 255, 255, 0.55);
+            user-select: none;
+            flex-shrink: 0;
         }
 
-        /* 鐘擺只在工作中擺動：以「動 / 靜」直接表達狀態 */
-        .ring-pendulum {
-            transform-origin: 150px 236px;
+        .hero-motto-main {
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: #1D565C;
+            line-height: 1.25;
         }
 
-        .ring-working .ring-pendulum {
-            animation: pendulumSwing 3.2s ease-in-out infinite;
+        [data-zen-theme="obsidian"] .hero-motto-main {
+            color: #68B6BF;
         }
+
+        .hero-eyebrow {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--label-secondary);
+            letter-spacing: 0.04em;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            margin-top: 2px;
+            opacity: 0.82;
+        }
+
+        /* Center Oversized Poster Typography (雙層立體浮雕海報大字) */
+        #totalHours {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            font-size: 58px;
+            font-weight: 900;
+            line-height: 1.02;
+            letter-spacing: -0.03em;
+            color: #FFFDF9;
+            -webkit-text-stroke: 2px #1C1712;
+            text-shadow: 3px 4px 0px #1C1712, 0 8px 20px rgba(28, 23, 18, 0.12);
+            font-variant-numeric: tabular-nums;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            margin: 14px 0 6px;
+            position: relative;
+            z-index: 20;
+            transition: transform 0.2s ease, opacity 0.25s ease;
+        }
+
+        .hero-unit,
+        .hero-unit-h,
+        .hero-unit-m {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            font-size: 23px;
+            font-weight: 800;
+            margin: 0 6px 0 3px;
+            letter-spacing: 0;
+            -webkit-text-stroke: 1.4px #1C1712;
+            text-shadow: 2px 3px 0px #1C1712;
+        }
+
+        .hero-unit,
+        .hero-unit-h {
+            color: #E5B955;
+        }
+
+        .hero-unit-m {
+            color: #1D565C;
+        }
+
+        [data-zen-theme="obsidian"] .hero-unit-m {
+            color: #54A5AE;
+        }
+
+        /* ===== Multi-Joint Swordswoman Walker & Wind Physics ===== */
+        @keyframes torsoGlide {
+            0%, 100% { transform: translateY(0px) rotate(1.5deg); }
+            25%, 75% { transform: translateY(-2.2px) rotate(2.2deg); }
+            50%      { transform: translateY(0.2px) rotate(1.5deg); }
+        }
+        @keyframes legFrontWalk {
+            0%, 100% { transform: rotate(-20deg) translateY(0px); }
+            25%      { transform: rotate(2deg) translateY(-2.5px); }
+            50%      { transform: rotate(21deg) translateY(0px); }
+            75%      { transform: rotate(0deg) translateY(0.5px); }
+        }
+        @keyframes legBackWalk {
+            0%, 100% { transform: rotate(21deg) translateY(0px); }
+            25%      { transform: rotate(0deg) translateY(0.5px); }
+            50%      { transform: rotate(-20deg) translateY(0px); }
+            75%      { transform: rotate(2deg) translateY(-2.5px); }
+        }
+        @keyframes armSwing {
+            0%, 100% { transform: rotate(12deg); }
+            50%      { transform: rotate(-14deg); }
+        }
+        @keyframes haoriHemBillow {
+            0%, 100% { transform: rotate(-2.5deg) skewX(-2deg); }
+            50%      { transform: rotate(4deg) skewX(3deg); }
+        }
+        @keyframes hairMainWave {
+            0%, 100% { transform: rotate(-4deg); }
+            50%      { transform: rotate(6deg); }
+        }
+        @keyframes hairStrandWave {
+            0%, 100% { transform: rotate(5deg) scaleY(0.97); }
+            50%      { transform: rotate(-7deg) scaleY(1.03); }
+        }
+        @keyframes tasselSwing {
+            0%, 100% { transform: rotate(-12deg); }
+            50%      { transform: rotate(16deg); }
+        }
+        @keyframes stepRipple {
+            0%   { transform: translateX(0) scale(0.4); opacity: 0.55; }
+            100% { transform: translateX(-18px) scale(1.65); opacity: 0; }
+        }
+        @keyframes mistDriftSlow {
+            0%, 100% { transform: translateX(0px) scale(1); }
+            50%      { transform: translateX(12px) scale(1.04); }
+        }
+        @keyframes eqPulse1 { 0%,100%{height:4px} 50%{height:12px} }
+        @keyframes eqPulse2 { 0%,100%{height:11px} 45%{height:4px} }
+        @keyframes eqPulse3 { 0%,100%{height:6px} 60%{height:13px} }
+
+        .walker-active .u-torso    { animation: torsoGlide 0.96s ease-in-out infinite; }
+        .walker-active .u-leg-f    { transform-origin: 48px 56px; animation: legFrontWalk 0.96s ease-in-out infinite; }
+        .walker-active .u-leg-b    { transform-origin: 46px 56px; animation: legBackWalk 0.96s ease-in-out infinite; }
+        .walker-active .u-arm      { transform-origin: 48px 34px; animation: armSwing 0.96s ease-in-out infinite; }
+        .walker-active .u-hem      { transform-origin: 46px 38px; animation: haoriHemBillow 0.96s ease-in-out infinite; }
+        .walker-active .u-hair-1   { transform-origin: 42px 17px; animation: hairMainWave 1.15s ease-in-out infinite; }
+        .walker-active .u-hair-2   { transform-origin: 42px 18px; animation: hairStrandWave 0.9s ease-in-out infinite; }
+        .walker-active .u-tassel   { transform-origin: 49px 53px; animation: tasselSwing 0.96s ease-in-out infinite; }
+        .walker-active .u-ripple-1 { transform-origin: 46px 86px; animation: stepRipple 0.96s ease-out infinite; }
+        .walker-active .u-ripple-2 { transform-origin: 46px 86px; animation: stepRipple 0.96s ease-out 0.48s infinite; }
+
+        .walker-idle .u-ripple-1,
+        .walker-idle .u-ripple-2 { opacity: 0; }
+
+        .eq-on .b1 { animation: eqPulse1 1.3s ease-in-out infinite; }
+        .eq-on .b2 { animation: eqPulse2 1.1s ease-in-out infinite; }
+        .eq-on .b3 { animation: eqPulse3 1.4s ease-in-out infinite; }
 
         @media (prefers-reduced-motion: reduce) {
-            .ring-working .ring-pendulum,
+            .walker-active *,
+            .eq-on *,
             .live-status-pill .live-pulse-dot {
                 animation: none !important;
             }
         }
 
-        [data-zen-theme="obsidian"] #ringDialSurface {
-            fill: url(#dialSurfaceDark);
-        }
-
-        [data-zen-theme="obsidian"] #ringDialBevel {
-            fill: url(#dialBevelDark);
-        }
-
-        [data-zen-theme="obsidian"] #ringTrack {
-            stroke: rgba(226, 199, 153, 0.16);
-        }
-
-        [data-zen-theme="obsidian"] #ringLeadBead {
-            stroke: #1C1A18;
-        }
-
-        .ring-container svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-
-        #progressRing {
-            transition: stroke-dashoffset 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), stroke 0.6s ease;
-        }
-
-        #ringLeadBead {
-            transition: cx 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), cy 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
-        }
-
-        .ring-inner-content {
-            position: absolute;
-            inset: 0;
-            padding-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            pointer-events: none;
-        }
-
-        .hero-eyebrow {
-            font-size: 11.5px;
-            font-weight: 500;
-            color: var(--label-tertiary);
-            letter-spacing: 0.04em;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-            transition: opacity 0.3s ease;
-        }
-
-        #totalHours {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            font-size: 44px;
-            font-weight: 300;
-            line-height: 1.02;
-            letter-spacing: -0.03em;
-            color: var(--label);
-            font-variant-numeric: tabular-nums;
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            transition: transform 0.2s ease, opacity 0.25s ease;
-        }
-
-        .hero-unit {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            font-size: 17px;
-            font-weight: 500;
-            color: var(--label-tertiary);
-            margin: 0 5px 0 2px;
-            letter-spacing: 0;
-        }
-
-        /* 位置 1：圓環鐘擺正下方並列資訊列 */
-        .ring-bottom-status-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 2px;
-        }
-
-        /* Live status pill - Apple 4-State Lifecycle */
+        /* Top-Right Jade Teal Status Pill inside Poster Card */
         .live-status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
+            gap: 5px;
+            padding: 4px 11px;
             border-radius: 999px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11.5px;
+            font-weight: 700;
             letter-spacing: 0.02em;
             font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            border: 0.5px solid var(--separator);
+            transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+            background: linear-gradient(135deg, #215F66 0%, #164449 100%) !important;
+            color: #FAF6F0 !important;
+            border: 1.2px solid #1C1712 !important;
+            box-shadow: 2px 2px 0px rgba(28, 23, 18, 0.85);
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
         }
 
         .live-status-sep {
-            opacity: 0.55;
-            font-weight: 400;
+            opacity: 0.65;
+            font-weight: 500;
         }
 
         .ring-pct-inline {
             font-variant-numeric: tabular-nums;
-            font-weight: 600;
+            font-weight: 800;
+            color: #F2D27A;
         }
 
         /* 1. Ongoing working state */
@@ -4436,147 +4509,185 @@
                         </button>
                     </div>
 
-                    <!-- Center: 方案 A 精修版｜鎏金遠山 · 雙圈 · 實體投影 · 12 格刻度 (下方並列狀態列) -->
+                    <!-- Center: 方案 A · 模式 1 精修版｜東方潮流海報 · 刀鋒進度 · 女劍客同行 -->
                     <div class="ring-container" id="ringContainer" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
                         <div class="ring-ambient-core" id="ringAmbientCore"></div>
-                        <svg viewBox="0 0 300 290" aria-hidden="true">
+
+                        <!-- Layered Ink Wash Mist & Subtle Distant Mountain Horizon -->
+                        <svg style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1;" viewBox="0 0 380 250" preserveAspectRatio="none" aria-hidden="true">
                             <defs>
-                                <!-- Champagne gold metal (light source: top-left) -->
-                                <linearGradient id="champagneGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#F7E7C4" />
-                                    <stop offset="40%" stop-color="#D9B67A" />
-                                    <stop offset="75%" stop-color="#A9824A" />
-                                    <stop offset="100%" stop-color="#E3C893" />
-                                </linearGradient>
-                                <!-- Standard Warm Gold Progress -->
-                                <linearGradient id="ringGradientWarm" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#F2D9A6" />
-                                    <stop offset="100%" stop-color="#B48A4F" />
-                                </linearGradient>
-                                <!-- Deepened Burnished Gold (85%+ Near Target) -->
-                                <linearGradient id="ringGradientDeepGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#E6C27E" />
-                                    <stop offset="100%" stop-color="#94693A" />
-                                </linearGradient>
-                                <!-- 珍稀夥伴特權：玫瑰金 (Epic) -->
-                                <linearGradient id="ringGradientEpic" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#F3D2C4" />
-                                    <stop offset="55%" stop-color="#D19C88" />
-                                    <stop offset="100%" stop-color="#A86F5C" />
-                                </linearGradient>
-                                <!-- 隱藏夥伴特權：白金 (Hidden Crown 👑) -->
-                                <linearGradient id="ringGradientGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#FFFFFF" />
-                                    <stop offset="45%" stop-color="#D9DCE1" />
-                                    <stop offset="100%" stop-color="#9AA0A8" />
-                                </linearGradient>
-                                <!-- 3D pearl bead -->
-                                <radialGradient id="goldBead" cx="35%" cy="30%" r="70%">
-                                    <stop offset="0%" stop-color="#FFF8E7" />
-                                    <stop offset="50%" stop-color="#D8B477" />
-                                    <stop offset="100%" stop-color="#6E4E1F" />
+                                <radialGradient id="gugakMistL" cx="8%" cy="46%" r="46%">
+                                    <stop offset="0%" stop-color="#8C7E6A" stop-opacity="0.22" />
+                                    <stop offset="60%" stop-color="#8C7E6A" stop-opacity="0.06" />
+                                    <stop offset="100%" stop-color="#8C7E6A" stop-opacity="0" />
                                 </radialGradient>
-                                <!-- Dial surface (light / obsidian) -->
-                                <radialGradient id="dialSurfaceLight" cx="42%" cy="36%" r="70%">
-                                    <stop offset="0%" stop-color="#FFFEFB" />
-                                    <stop offset="80%" stop-color="#F5EDE1" />
-                                    <stop offset="100%" stop-color="#ECE1CE" />
+                                <radialGradient id="gugakMistR" cx="92%" cy="44%" r="48%">
+                                    <stop offset="0%" stop-color="#6E6354" stop-opacity="0.24" />
+                                    <stop offset="65%" stop-color="#6E6354" stop-opacity="0.07" />
+                                    <stop offset="100%" stop-color="#6E6354" stop-opacity="0" />
                                 </radialGradient>
-                                <radialGradient id="dialSurfaceDark" cx="42%" cy="36%" r="70%">
-                                    <stop offset="0%" stop-color="#2A251F" />
-                                    <stop offset="80%" stop-color="#1B1815" />
-                                    <stop offset="100%" stop-color="#141210" />
-                                </radialGradient>
-                                <!-- Inner bevel vignette -->
-                                <radialGradient id="dialBevelLight" cx="50%" cy="50%" r="50%">
-                                    <stop offset="86%" stop-color="#7A5A2A" stop-opacity="0" />
-                                    <stop offset="100%" stop-color="#7A5A2A" stop-opacity="0.10" />
-                                </radialGradient>
-                                <radialGradient id="dialBevelDark" cx="50%" cy="50%" r="50%">
-                                    <stop offset="86%" stop-color="#000000" stop-opacity="0" />
-                                    <stop offset="100%" stop-color="#000000" stop-opacity="0.35" />
-                                </radialGradient>
-                                <!-- Mountains -->
-                                <linearGradient id="mountainBack" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" stop-color="#D8BC8C" stop-opacity="0.30" />
-                                    <stop offset="100%" stop-color="#D8BC8C" stop-opacity="0" />
+                                <linearGradient id="gugakInkWave" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#C8B9A2" stop-opacity="0.22" />
+                                    <stop offset="100%" stop-color="#C8B9A2" stop-opacity="0" />
                                 </linearGradient>
-                                <linearGradient id="mountainFront" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" stop-color="#C7A26B" stop-opacity="0.42" />
-                                    <stop offset="100%" stop-color="#C7A26B" stop-opacity="0.04" />
-                                </linearGradient>
-                                <clipPath id="dialClipA">
-                                    <circle cx="150" cy="136" r="98.5" />
-                                </clipPath>
-                                <!-- Soft physical drop shadow beneath the dial -->
-                                <filter id="dialDropShadow" x="-30%" y="-30%" width="160%" height="170%">
-                                    <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#503714" flood-opacity="0.10" />
-                                </filter>
                             </defs>
-
-                            <!-- 1. Outer C-arc brass frame + terminal beads (hairline) -->
-                            <path d="M 216.5 41 A 116 116 0 1 0 229.1 220.8" fill="none" stroke="url(#champagneGold)" stroke-width="1.4" stroke-linecap="round" opacity="0.9" />
-                            <circle cx="216.5" cy="41" r="4" fill="url(#goldBead)" />
-                            <circle cx="229.1" cy="220.8" r="3.2" fill="url(#goldBead)" />
-
-                            <!-- 2. Pendulum (swings only while working) -->
-                            <g class="ring-pendulum">
-                                <line x1="150" y1="236" x2="150" y2="262" stroke="url(#champagneGold)" stroke-width="1.2" />
-                                <circle cx="150" cy="267" r="5.5" fill="url(#goldBead)" />
+                            <g style="animation: mistDriftSlow 8s ease-in-out infinite;">
+                                <ellipse cx="24" cy="115" rx="120" ry="88" fill="url(#gugakMistL)" />
+                                <ellipse cx="356" cy="110" rx="130" ry="92" fill="url(#gugakMistR)" />
                             </g>
-
-                            <!-- 3. Dial with physical shadow -->
-                            <g filter="url(#dialDropShadow)">
-                                <circle id="ringDialSurface" cx="150" cy="136" r="100" fill="url(#dialSurfaceLight)" />
-                            </g>
-                            <g clip-path="url(#dialClipA)">
-                                <path d="M 48 186 Q 94 150 136 172 T 210 156 T 255 178 L 255 240 L 48 240 Z" fill="url(#mountainBack)" />
-                                <path d="M 48 202 Q 108 168 156 190 T 252 178 L 255 240 L 48 240 Z" fill="url(#mountainFront)" />
-                                <path d="M 48 202 Q 108 168 156 190 T 252 178" fill="none" stroke="url(#champagneGold)" stroke-width="0.8" opacity="0.7" />
-                            </g>
-                            <circle id="ringDialBevel" cx="150" cy="136" r="100" fill="url(#dialBevelLight)" />
-
-                            <!-- 4. 12-index precision ticks (quarters longer) -->
-                            <g stroke="url(#champagneGold)" stroke-linecap="round">
-                                <line x1="150" y1="45" x2="150" y2="52" stroke-width="1.3" opacity="0.75" />
-                                <line x1="195.5" y1="57.19" x2="193.75" y2="60.22" stroke-width="0.8" opacity="0.45" />
-                                <line x1="228.81" y1="90.5" x2="225.78" y2="92.25" stroke-width="0.8" opacity="0.45" />
-                                <line x1="241" y1="136" x2="234" y2="136" stroke-width="1.3" opacity="0.75" />
-                                <line x1="228.81" y1="181.5" x2="225.78" y2="179.75" stroke-width="0.8" opacity="0.45" />
-                                <line x1="195.5" y1="214.81" x2="193.75" y2="211.78" stroke-width="0.8" opacity="0.45" />
-                                <line x1="150" y1="227" x2="150" y2="220" stroke-width="1.3" opacity="0.75" />
-                                <line x1="104.5" y1="214.81" x2="106.25" y2="211.78" stroke-width="0.8" opacity="0.45" />
-                                <line x1="71.19" y1="181.5" x2="74.22" y2="179.75" stroke-width="0.8" opacity="0.45" />
-                                <line x1="59" y1="136" x2="66" y2="136" stroke-width="1.3" opacity="0.75" />
-                                <line x1="71.19" y1="90.5" x2="74.22" y2="92.25" stroke-width="0.8" opacity="0.45" />
-                                <line x1="104.5" y1="57.19" x2="106.25" y2="60.22" stroke-width="0.8" opacity="0.45" />
-                            </g>
-
-                            <!-- 5. Progress sits on the dial edge (r=100): track + crisp 3.5px stroke, no blur -->
-                            <circle id="ringTrack" cx="150" cy="136" r="100" fill="none" stroke="rgba(169, 130, 74, 0.18)" stroke-width="3" />
-                            <circle id="progressRing" cx="150" cy="136" r="100" fill="none"
-                                stroke="url(#ringGradientWarm)" stroke-width="3.5" stroke-linecap="round"
-                                stroke-dasharray="628.32" stroke-dashoffset="628.32"
-                                transform="rotate(-90 150 136)" />
-                            <circle id="ringLeadBead" cx="150" cy="36" r="4.5" fill="url(#goldBead)" stroke="#FFFFFF" stroke-width="1.2" opacity="0" />
+                            <path d="M 0 165 Q 95 142 190 158 T 380 148 L 380 250 L 0 250 Z" fill="url(#gugakInkWave)" />
                         </svg>
-                        <div class="ring-inner-content">
-                            <div class="hero-eyebrow" id="heroEyebrow">今日工時</div>
-                            <div id="totalHours">
-                                0<span class="hero-unit">h</span>0<span class="hero-unit">m</span>
+
+                        <!-- Top Header: Left Vertical Gold Seal ("工時") + Refined Motto + Right Jade Pill -->
+                        <div style="position:relative; z-index:20; display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div class="gugak-vertical-seal">工時</div>
+                                <div>
+                                    <div class="hero-motto-main" id="heroMottoMain">步履不停 · 專注前行</div>
+                                    <div class="hero-eyebrow" id="heroEyebrow" style="margin-top:2px;">今日累計工時</div>
+                                </div>
+                            </div>
+
+                            <!-- Top-Right Jade Teal Status Pill with Live Equalizer -->
+                            <div id="ongoingHint" class="live-status-pill status-idle" onclick="event.stopPropagation(); toggleRingMode();" title="點擊切換累計/剩餘工時">
+                                <span class="live-pulse-dot" id="liveStatusDot"></span>
+                                <span id="liveStatusText">尚未打卡</span>
+                                <span class="live-status-sep">·</span>
+                                <span id="strokePct" class="ring-pct-inline">0%</span>
+                                <div id="heroEqBox" style="display:flex; align-items:flex-end; gap:2.5px; height:13px; margin-left:3px;">
+                                    <span class="b1" style="width:2px; height:5px; border-radius:99px; background:#F0C96B;"></span>
+                                    <span class="b2" style="width:2px; height:11px; border-radius:99px; background:#F0C96B;"></span>
+                                    <span class="b3" style="width:2px; height:7px; border-radius:99px; background:#FAF6F0;"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 位置 1｜圓環鐘擺正下方並列：狀態進度膠囊 + 目標時間同一排 -->
-                    <div class="ring-bottom-status-bar">
-                        <div id="ongoingHint" class="live-status-pill status-idle" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
-                            <span class="live-pulse-dot" id="liveStatusDot"></span>
-                            <span id="liveStatusText">尚未打卡</span>
-                            <span class="live-status-sep">·</span>
-                            <span id="strokePct" class="ring-pct-inline">0%</span>
+                        <!-- Center Oversized Poster Time Typography (雙層立體浮雕海報大字) -->
+                        <div class="ring-inner-content">
+                            <div id="totalHours">
+                                00<span class="hero-unit-h">H</span>00<span class="hero-unit-m">M</span>
+                            </div>
                         </div>
-                        <div id="progressText" class="ring-target-info">目標 8 小時</div>
+
+                        <!-- 刀鋒進度軌道 + 高精細度漫步女劍客 -->
+                        <div style="position:relative; z-index:20; margin-top:46px; padding-top:12px;">
+                            <!-- High-Detail Swordswoman Walker riding along the katana progress bar -->
+                            <div id="walkerCarrier" style="position:absolute; top:-54px; left:calc(8% - 44px); width:88px; height:86px; pointer-events:none; transition:left 0.7s cubic-bezier(0.22, 1, 0.36, 1);">
+                                <svg id="walkerSvg" class="walker-idle" viewBox="0 0 92 92" width="88" height="86" style="overflow:visible;" aria-hidden="true">
+                                    <defs>
+                                        <linearGradient id="haoriSilk" x1="0" y1="0" x2="1" y2="1">
+                                            <stop offset="0%" stop-color="#FFFFFF" />
+                                            <stop offset="65%" stop-color="#F4EFE6" />
+                                            <stop offset="100%" stop-color="#E2D9C8" />
+                                        </linearGradient>
+                                        <linearGradient id="tealPant" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="#246870" />
+                                            <stop offset="100%" stop-color="#143D42" />
+                                        </linearGradient>
+                                        <linearGradient id="goldTrim" x1="0" y1="0" x2="1" y2="1">
+                                            <stop offset="0%" stop-color="#F7DF94" />
+                                            <stop offset="100%" stop-color="#C4912C" />
+                                        </linearGradient>
+                                    </defs>
+
+                                    <!-- 1. Ground Footstep Ink Ripples & Soft Cast Shadow -->
+                                    <ellipse class="u-ripple-1" cx="46" cy="86" rx="11" ry="2.6" fill="none" stroke="#1D565C" stroke-width="1.1" />
+                                    <ellipse class="u-ripple-2" cx="46" cy="86" rx="11" ry="2.6" fill="none" stroke="#D4A23E" stroke-width="1" />
+                                    <ellipse cx="47" cy="86" rx="18" ry="3.6" fill="rgba(28,23,18,0.24)" />
+
+                                    <g class="u-torso">
+                                        <!-- 2. Multi-Strand Flowing Ponytail Hair -->
+                                        <g class="u-hair-2">
+                                            <path d="M 41 18 C 24 16, 11 24, 2 35 C 13 31, 24 26, 39 24 Z" fill="#2B241E" stroke="#1C1712" stroke-width="1.1" />
+                                        </g>
+                                        <g class="u-hair-1">
+                                            <path d="M 42 15 C 25 11, 10 18, 0 28 C 12 24, 23 20, 34 21 C 21 26, 12 34, 6 42 C 19 35, 31 27, 42 22 Z" fill="#1F1A16" stroke="#1C1712" stroke-width="1.2" stroke-linejoin="round" />
+                                            <circle cx="41.5" cy="16.5" r="2.2" fill="url(#goldTrim)" stroke="#1C1712" stroke-width="0.9" />
+                                        </g>
+
+                                        <!-- 3. Back Leg -->
+                                        <g class="u-leg-b">
+                                            <path d="M 43 53 L 36 79 L 44 79 L 49 54 Z" fill="#133A3E" stroke="#1C1712" stroke-width="1.35" stroke-linejoin="round" />
+                                            <path d="M 35 78 L 47 78 C 49 78, 50 81, 49 83 L 34 83 C 33 81, 34 78, 35 78 Z" fill="#F7F4EC" stroke="#1C1712" stroke-width="1.25" />
+                                            <line x1="36" y1="81" x2="47" y2="81" stroke="#1D565C" stroke-width="1.2" />
+                                        </g>
+
+                                        <!-- 4. Front Leg -->
+                                        <g class="u-leg-f">
+                                            <path d="M 45 53 L 48 80 L 57 80 L 53 53 Z" fill="url(#tealPant)" stroke="#1C1712" stroke-width="1.35" stroke-linejoin="round" />
+                                            <rect x="48" y="61" width="6.5" height="7" rx="1" fill="#1D565C" stroke="#1C1712" stroke-width="1" />
+                                            <path d="M 47 79 L 60 79 C 62 79, 63 82, 62 84 L 46 84 C 45 82, 46 79, 47 79 Z" fill="#FFFDF9" stroke="#1C1712" stroke-width="1.25" />
+                                            <line x1="48" y1="82" x2="60" y2="82" stroke="#1D565C" stroke-width="1.2" />
+                                        </g>
+
+                                        <!-- 5. Flowing White Ink-Wash Haori Coat & Katana Scabbard -->
+                                        <g class="u-hem">
+                                            <path d="M 40 28 L 24 63 L 38 64 L 45 45 Z" fill="#EAE2D3" stroke="#1C1712" stroke-width="1.3" stroke-linejoin="round" />
+                                            <path d="M 41 26 L 31 62 L 54 60 L 54 27 Z" fill="url(#haoriSilk)" stroke="#1C1712" stroke-width="1.4" stroke-linejoin="round" />
+                                            <path d="M 35 53 Q 41 49 46 53 T 52 51" fill="none" stroke="#9C9080" stroke-width="1.1" opacity="0.65" />
+                                            <circle cx="40" cy="48" r="2.8" fill="#B5A998" opacity="0.45" />
+                                            <path d="M 47 26 L 53 38 L 54 27" fill="none" stroke="#1C1712" stroke-width="1.2" />
+
+                                            <rect x="41" y="45" width="13.5" height="5.5" rx="1.8" fill="#1D565C" stroke="#1C1712" stroke-width="1.25" />
+                                            <line x1="42" y1="47.5" x2="54" y2="47.5" stroke="url(#goldTrim)" stroke-width="1" />
+                                            <g class="u-tassel">
+                                                <circle cx="49" cy="53" r="2.5" fill="url(#goldTrim)" stroke="#1C1712" stroke-width="1" />
+                                                <path d="M 48 55 L 46.5 62 L 50.5 62 L 49.5 55 Z" fill="#C84B31" stroke="#1C1712" stroke-width="0.8" />
+                                            </g>
+
+                                            <g>
+                                                <line x1="17" y1="60" x2="60" y2="39" stroke="#1C1712" stroke-width="4.2" stroke-linecap="round" />
+                                                <line x1="19" y1="59" x2="48" y2="45" stroke="#3A332C" stroke-width="1.1" stroke-linecap="round" />
+                                                <line x1="17" y1="60" x2="21" y2="58" stroke="url(#goldTrim)" stroke-width="4.2" stroke-linecap="round" />
+                                                <ellipse cx="51" cy="43.5" rx="2.2" ry="4.2" transform="rotate(-26 51 43.5)" fill="url(#goldTrim)" stroke="#1C1712" stroke-width="1" />
+                                                <line x1="52" y1="43" x2="61" y2="38.5" stroke="#1D565C" stroke-width="3.6" stroke-linecap="round" />
+                                                <circle cx="61" cy="38.5" r="1.8" fill="url(#goldTrim)" stroke="#1C1712" stroke-width="0.8" />
+                                            </g>
+                                        </g>
+
+                                        <!-- 6. Swinging Haori Sleeve & Hand Holding Katana -->
+                                        <g class="u-arm">
+                                            <path d="M 45 29 L 38 47 L 49 48 L 51 31 Z" fill="#FFFDF9" stroke="#1C1712" stroke-width="1.35" stroke-linejoin="round" />
+                                            <circle cx="44" cy="41" r="2.5" fill="#B5A998" opacity="0.4" />
+                                            <circle cx="48" cy="46" r="2.6" fill="#F5DEC9" stroke="#1C1712" stroke-width="1.1" />
+                                        </g>
+
+                                        <!-- 7. Head, Profile Face & Studio Over-Ear Headphones -->
+                                        <g>
+                                            <rect x="46" y="22" width="4.5" height="5" fill="#EACBB0" stroke="#1C1712" stroke-width="1.1" />
+                                            <path d="M 42 15 C 42 9, 55 9, 56 16 C 56 21, 52 24, 47 24 C 43 24, 42 20, 42 15 Z" fill="#F7E2CE" stroke="#1C1712" stroke-width="1.35" />
+                                            <ellipse cx="52.5" cy="18.5" rx="1.6" ry="0.9" fill="#E59888" opacity="0.55" />
+                                            <path d="M 51.5 16.2 Q 53.2 15.4 54.4 16.4" fill="none" stroke="#1C1712" stroke-width="1.2" stroke-linecap="round" />
+                                            <path d="M 41 16 C 41 8, 56 7, 57 15 C 54 11, 49 12, 46 16 C 45 18, 44 21, 42 22 Z" fill="#1F1A16" stroke="#1C1712" stroke-width="1.2" />
+                                            <path d="M 44 10 A 7.5 7.5 0 0 1 53 10" fill="none" stroke="#1C1712" stroke-width="2.4" stroke-linecap="round" />
+                                            <rect x="44.5" y="13" width="6" height="8.5" rx="3" fill="#26221E" stroke="#1C1712" stroke-width="1.3" />
+                                            <circle cx="47.5" cy="17.2" r="1.6" fill="url(#goldTrim)" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+
+                            <!-- Katana Scabbard Progress Track with 8-Hour Gold Notches -->
+                            <div style="position:relative; height:14px; width:100%; border-radius:999px; overflow:hidden; padding:1.5px; background:#1C1712; box-shadow:0 2px 6px rgba(28,23,18,0.18), inset 0 1px 2px rgba(0,0,0,0.6);">
+                                <div id="katanaBarFill" style="height:100%; width:0%; border-radius:999px; transition:width 0.7s cubic-bezier(0.22, 1, 0.36, 1); position:relative; background:linear-gradient(90deg, #164449 0%, #1D565C 50%, #2E7B82 78%, #E5B955 100%); box-shadow:0 0 10px rgba(229,185,85,0.45);"></div>
+                                <!-- 8-Hour Precision Gold Scabbard Tick Notches -->
+                                <div style="pointer-events:none; position:absolute; inset:0; display:flex; justify-content:space-between; align-items:center; padding:0 12.5%;">
+                                    <span style="width:1px; height:6px; background:#FAF6F0; opacity:0.30;"></span>
+                                    <span style="width:1px; height:6px; background:#FAF6F0; opacity:0.30;"></span>
+                                    <span style="width:1px; height:6px; background:#FAF6F0; opacity:0.30;"></span>
+                                    <span style="width:1.5px; height:8px; background:#E5B955; opacity:0.65;"></span>
+                                    <span style="width:1px; height:6px; background:#FAF6F0; opacity:0.30;"></span>
+                                    <span style="width:1px; height:6px; background:#FAF6F0; opacity:0.30;"></span>
+                                    <span style="width:1px; height:6px; background:#FAF6F0; opacity:0.30;"></span>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Status & 8h Scale Labels -->
+                            <div class="ring-bottom-status-bar">
+                                <div id="progressText" class="ring-target-info">目標 8 小時</div>
+                                <div id="pctBottomText" style="font-size:12px; font-weight:800; color:#1D565C; font-variant-numeric:tabular-nums;">0%</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -4744,27 +4855,32 @@
 
                     <!-- Mode 2: 16:9 Focus Music Radio Stage (併入新聞頁，單一劇院切換) -->
                     <div class="partner-radio-card hidden" id="partnerRadioCard" style="margin:0;">
-                        <div class="partner-radio-header" style="margin-bottom:10px;">
-                            <div style="display:flex; align-items:center; gap:9px;">
+                        <div class="partner-radio-header" style="margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                            <div style="display:flex; align-items:center; gap:9px; min-width:0;">
                                 <div class="radio-live-dot-container">
                                     <span class="radio-live-dot"></span>
                                 </div>
-                                <div>
-                                    <div class="partner-radio-title">
-                                        <span id="partnerRadioStationTitle">華語流行專注電台</span>
+                                <div style="min-width:0;">
+                                    <div class="partner-radio-title" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        <span id="partnerRadioStationTitle">東方韻律專注電台</span>
                                     </div>
-                                    <div class="partner-radio-status" id="partnerRadioStatus">
-                                        <span>沉浸音樂陪伴中</span>
+                                    <div class="partner-radio-status" id="partnerRadioStatus" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        <span>隨機沉浸音樂陪伴中</span>
                                     </div>
                                 </div>
                             </div>
+                            <button type="button" onclick="pickRandomPartnerStation()" class="active-scale" title="隨機切換電台"
+                                style="flex-shrink:0; border:0.5px solid var(--separator); background:var(--fill); color:var(--label); border-radius:999px; padding:4px 10px; font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; font-family:inherit;">
+                                <i class="fas fa-shuffle" style="font-size:10px; color:var(--purple);"></i>
+                                <span>隨機</span>
+                            </button>
                         </div>
 
                         <div style="position:relative; width:100%; padding-top:56.25%; background:#000; border-radius:14px; overflow:hidden; margin-bottom:12px; border:0.5px solid var(--separator);">
                             <iframe 
                                 id="partnerRadioIframe" 
-                                src="https://www.youtube-nocookie.com/embed/2UUWWRuVMco?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1" 
-                                title="4K Leaf Music Player" 
+                                src="https://www.youtube-nocookie.com/embed/J5ASYakxMEk?list=RDJ5ASYakxMEk&start_radio=1&enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1" 
+                                title="Focus Music Radio Player" 
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                                 allowfullscreen
@@ -4780,16 +4896,16 @@
                         <!-- Station Selection Capsules Track -->
                         <div class="partner-station-track" id="partnerStationTrack">
                             <button type="button" class="station-chip active" onclick="switchPartnerStation('leaf_hits')" id="stationChip_leaf_hits">
-                                <i class="fas fa-fire" style="font-size:10px; opacity:0.8;"></i><span>熱門精選</span>
+                                <i class="fas fa-moon" style="font-size:10px; opacity:0.8;"></i><span>箏曲夜行</span>
                             </button>
                             <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_kkbox')" id="stationChip_leaf_kkbox">
-                                <i class="fas fa-chart-line" style="font-size:10px; opacity:0.8;"></i><span>KKBOX 榜</span>
+                                <i class="fas fa-headphones" style="font-size:10px; opacity:0.8;"></i><span>月夜國樂</span>
                             </button>
                             <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_love')" id="stationChip_leaf_love">
-                                <i class="fas fa-heart-crack" style="font-size:10px; opacity:0.8;"></i><span>抒情流行</span>
+                                <i class="fas fa-compact-disc" style="font-size:10px; opacity:0.8;"></i><span>東方律動</span>
                             </button>
                             <button type="button" class="station-chip" onclick="switchPartnerStation('leaf_tiktok')" id="stationChip_leaf_tiktok">
-                                <i class="fas fa-bolt" style="font-size:10px; opacity:0.8;"></i><span>發燒熱播</span>
+                                <i class="fas fa-music" style="font-size:10px; opacity:0.8;"></i><span>弦樂嘻哈</span>
                             </button>
                             <button type="button" class="station-chip" onclick="openCustomStationModal()" id="stationChip_custom">
                                 <i class="fas fa-sliders" style="font-size:10px; opacity:0.8;"></i><span>自訂</span>
@@ -8048,41 +8164,60 @@
         }
 
         // ==========================================
-        // ===== 夥伴專屬華語流行音樂電台 =====
+        // ===== 夥伴專屬東方潮流專注音樂電台 (支援隨機選台) =====
         // ==========================================
         const LEAF_STATIONS = {
             leaf_hits: {
-                name: '🎵 2026 華語熱門新歌精選',
-                desc: '愛就一個字 · 總會有人 · 花海 · 周杰倫/林俊傑/鄧紫棋',
-                videoId: '2UUWWRuVMco'
+                name: '🌙 TOKYO NOIR · 箏曲夜行',
+                desc: 'Japanese Rap & Koto Beats · Night Drive 專注律動',
+                videoId: 'J5ASYakxMEk',
+                listId: 'RDJ5ASYakxMEk'
             },
             leaf_kkbox: {
-                name: '📈 KKBOX 華語單曲排行週榜',
-                desc: '2026 年輕族群最愛 · 40 首超好聽流行歌曲',
-                videoId: 'crjBd2c8lq8'
+                name: '🎧 月夜國樂 · Gugak HipHop',
+                desc: '그림자가 앞장서는 달밤 길 국악 힙합 · 東方韻律漫步',
+                videoId: 'qrsgbLcPSmk',
+                listId: 'RDqrsgbLcPSmk'
             },
             leaf_love: {
-                name: '💔 最感動華語愛情歌精選',
-                desc: '如果可以 · 孤勇者 · 跳樓機 · 治癒情歌動態歌詞',
-                videoId: 'eiCjFq1fgtc'
+                name: '🏮 東方律動 · Oriental Boom Bap',
+                desc: 'Asian Thug Vibes: Kochi · Best Oriental Boom Bap Mix',
+                videoId: 'a3i8BADulZI',
+                listId: 'RDa3i8BADulZI'
             },
             leaf_tiktok: {
-                name: '⚡ 2026 抖音最火爆新歌',
-                desc: '若月亮沒來 · 最偉大的作品 · 抖音熱搜榜',
-                videoId: 'hMDfBaNfLt4'
+                name: '🎻 弦樂嘻哈 · Violin × Hip Hop',
+                desc: 'Street Pressure, Deep Groove · Tokyo Violinhop',
+                videoId: 'SS4nmufzsxU',
+                listId: 'RDSS4nmufzsxU'
             }
         };
 
-        let _currentLeafKey = 'leaf_hits';
+        const LEAF_STATION_KEYS = Object.keys(LEAF_STATIONS);
+        let _currentLeafKey = LEAF_STATION_KEYS[Math.floor(Math.random() * LEAF_STATION_KEYS.length)];
         let _isPartnerAudioMuted = true;
         let _customLeafStreamId = localStorage.getItem('t8_custom_leaf_stream') || '';
 
-        function initPartnerRadioEngine() {
-            updateLeafRadioUI();
+        function buildRadioEmbedUrl(videoId, listId, keepAudioState) {
+            const muteParam = keepAudioState && !_isPartnerAudioMuted ? 0 : 1;
+            const listQuery = listId ? `list=${listId}&start_radio=1&` : '';
+            return `https://www.youtube-nocookie.com/embed/${videoId}?${listQuery}enablejsapi=1&autoplay=1&mute=${muteParam}&playsinline=1&rel=0&modestbranding=1&controls=1`;
         }
 
-        function switchPartnerStation(stationKey) {
-            if ('vibrate' in navigator) navigator.vibrate(8);
+        function initPartnerRadioEngine() {
+            // 每次載入時隨機挑選一個電台頻道
+            const randomKey = LEAF_STATION_KEYS[Math.floor(Math.random() * LEAF_STATION_KEYS.length)];
+            switchPartnerStation(randomKey, true);
+        }
+
+        function pickRandomPartnerStation() {
+            const pool = LEAF_STATION_KEYS.filter(k => k !== _currentLeafKey);
+            const nextKey = pool[Math.floor(Math.random() * pool.length)] || LEAF_STATION_KEYS[0];
+            switchPartnerStation(nextKey, false);
+        }
+
+        function switchPartnerStation(stationKey, isSilentInit) {
+            if (!isSilentInit && 'vibrate' in navigator) navigator.vibrate(8);
             _currentLeafKey = stationKey;
 
             // Highlight chip
@@ -8095,14 +8230,14 @@
 
             if (stationKey === 'custom') {
                 if (_customLeafStreamId) {
-                    iframe.src = `https://www.youtube-nocookie.com/embed/${_customLeafStreamId}?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1`;
+                    iframe.src = buildRadioEmbedUrl(_customLeafStreamId, '', !isSilentInit);
                 } else {
                     openCustomStationModal();
                 }
             } else {
                 const station = LEAF_STATIONS[stationKey];
                 if (station) {
-                    iframe.src = `https://www.youtube-nocookie.com/embed/${station.videoId}?enablejsapi=1&autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1`;
+                    iframe.src = buildRadioEmbedUrl(station.videoId, station.listId, !isSilentInit);
                 }
             }
 
@@ -8227,6 +8362,7 @@
 
         window.togglePartnerAudio = togglePartnerAudio;
         window.switchPartnerStation = switchPartnerStation;
+        window.pickRandomPartnerStation = pickRandomPartnerStation;
         window.openCustomStationModal = openCustomStationModal;
         window.closeCustomStationModal = closeCustomStationModal;
         window.saveCustomStation = saveCustomStation;
@@ -8320,69 +8456,72 @@
         }
 
         function updateBrushstroke(pct, isComplete) {
-            const ring = document.getElementById('progressRing');
-            if (!ring) return;
-
-            const circumference = 628.32;
             const clampedPct = Math.min(Math.max(pct, 0), 100);
-            const offset = circumference - (clampedPct / 100) * circumference;
-            ring.style.strokeDashoffset = offset;
+            const barFill = document.getElementById('katanaBarFill');
+            if (barFill) {
+                barFill.style.width = clampedPct + '%';
+            }
 
-            // 夥伴特權光環檢測 (Epic 玫瑰金 / Hidden 白金 / 統一金色色系)
+            // 女劍客隨進度刀鋒同行 (8% .. 92% 安全邊界，避免貼邊裁切)
+            const walkerCarrier = document.getElementById('walkerCarrier');
+            if (walkerCarrier) {
+                const trackPos = 8 + (clampedPct / 100) * 84;
+                walkerCarrier.style.left = `calc(${trackPos.toFixed(1)}% - 44px)`;
+            }
+
+            // 夥伴特權光環與環境柔光檢測
             const petState = typeof readPetSystem === 'function' ? readPetSystem() : null;
             const currentPet = petState && typeof activePet === 'function' ? activePet(petState) : null;
             const petRarity = currentPet ? currentPet.rarity : 'common';
             const ambientCore = document.getElementById('ringAmbientCore');
 
-            if (petRarity === 'hidden') {
-                // 👑 隱藏夥伴特權：白金流光
-                ring.style.stroke = 'url(#ringGradientGold)';
-                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(220, 224, 232, 0.16) 0%, transparent 72%)';
-            } else if (petRarity === 'epic') {
-                // ✨ 珍稀夥伴特權：玫瑰金流光
-                ring.style.stroke = 'url(#ringGradientEpic)';
-                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(209, 156, 136, 0.16) 0%, transparent 72%)';
-            } else if (isComplete) {
-                ring.style.stroke = 'url(#champagneGold)';
-                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(212, 182, 136, 0.16) 0%, transparent 72%)';
-            } else if (pct >= 85) {
-                ring.style.stroke = 'url(#ringGradientDeepGold)';
-                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(212, 182, 136, 0.14) 0%, transparent 72%)';
-            } else {
-                ring.style.stroke = 'url(#ringGradientWarm)';
-                if (ambientCore) ambientCore.style.background = 'radial-gradient(circle, rgba(212, 182, 136, 0.12) 0%, transparent 72%)';
-            }
-
-            // Leading Light Bead (cx=150, cy=136, r=100, starts at -90deg top, hidden at 0% and 100%)
-            const bead = document.getElementById('ringLeadBead');
-            if (bead) {
-                if (clampedPct >= 1.5 && clampedPct < 99.8) {
-                    const angle = (clampedPct / 100) * 360 - 90;
-                    const rad = (angle * Math.PI) / 180;
-                    const cx = 150 + 100 * Math.cos(rad);
-                    const cy = 136 + 100 * Math.sin(rad);
-                    bead.setAttribute('cx', cx.toFixed(2));
-                    bead.setAttribute('cy', cy.toFixed(2));
-                    bead.style.opacity = '1';
-                    bead.setAttribute('fill', 'url(#goldBead)');
+            if (ambientCore) {
+                if (petRarity === 'hidden') {
+                    ambientCore.style.background = 'radial-gradient(circle, rgba(220, 224, 232, 0.16) 0%, transparent 72%)';
+                } else if (petRarity === 'epic') {
+                    ambientCore.style.background = 'radial-gradient(circle, rgba(209, 156, 136, 0.16) 0%, transparent 72%)';
+                } else if (isComplete) {
+                    ambientCore.style.background = 'radial-gradient(circle, rgba(212, 182, 136, 0.16) 0%, transparent 72%)';
                 } else {
-                    bead.style.opacity = '0';
+                    ambientCore.style.background = 'radial-gradient(circle, rgba(212, 182, 136, 0.12) 0%, transparent 72%)';
                 }
             }
 
             const pctEl = document.getElementById('strokePct');
             if (pctEl) {
-                pctEl.textContent = isComplete ? '100% 達成' : Math.round(clampedPct) + '%';
+                pctEl.textContent = isComplete ? '100%' : Math.round(clampedPct) + '%';
+            }
+            const pctBottomEl = document.getElementById('pctBottomText');
+            if (pctBottomEl) {
+                pctBottomEl.textContent = isComplete ? '100% 圓滿' : Math.round(clampedPct) + '%';
             }
 
-            // Core aura & pendulum swing only when working
+            // 漫步步伐、水墨金塵漣漪與音波動效：上班中或正念呼吸時啟動
             const container = document.getElementById('ringContainer');
-            const isWorking = punchRecords.length > 0 && punchRecords.length % 2 !== 0;
+            const walkerSvg = document.getElementById('walkerSvg');
+            const eqBox = document.getElementById('heroEqBox');
+            const mottoMain = document.getElementById('heroMottoMain');
+            const isWorking = (punchRecords.length > 0 && punchRecords.length % 2 !== 0) || (typeof _isBreatheActive !== 'undefined' && _isBreatheActive);
+
             if (container) {
-                if (isWorking) {
-                    container.classList.add('ring-working');
+                container.classList.toggle('ring-working', isWorking);
+            }
+            if (walkerSvg) {
+                walkerSvg.classList.toggle('walker-active', isWorking);
+                walkerSvg.classList.toggle('walker-idle', !isWorking);
+            }
+            if (eqBox) {
+                eqBox.classList.toggle('eq-on', isWorking);
+            }
+            if (mottoMain && (typeof _isBreatheActive === 'undefined' || !_isBreatheActive)) {
+                if (isComplete) {
+                    mottoMain.textContent = '今日圓滿 · 收刀歸鞘';
+                } else if (isWorking) {
+                    mottoMain.textContent = clampedPct >= 85 ? '行至終章 · 勝利在望' : '步履不停 · 專注前行';
+                } else if (punchRecords.length > 0) {
+                    mottoMain.textContent = '駐足小憩 · 養精蓄銳';
                 } else {
-                    container.classList.remove('ring-working');
+                    mottoMain.textContent = '靜待啟程 · 蓄勢待發';
                 }
             }
         }
@@ -10690,7 +10829,7 @@
                     if (rect.width < 70 || rect.height < 28) continue;
                     if (rect.top < 38 || rect.top > height - 68) continue;
 
-                    const isCircleRing = el.id === 'ringContainer';
+                    const isCircleRing = false;
                     ledges.push({
                         left: rect.left + (isCircleRing ? rect.width * 0.16 : 10),
                         right: rect.right - (isCircleRing ? rect.width * 0.16 : 10),
@@ -15358,18 +15497,22 @@
 
             if (!_isBreatheActive) {
                 if (_ringMode === 'remaining') {
-                    if (eyebrowEl) eyebrowEl.textContent = "尚餘工時";
+                    if (eyebrowEl) eyebrowEl.textContent = "尚餘目標工時";
                     if (totalHoursEl) {
-                        totalHoursEl.innerHTML = `${remObj.h}<span class="hero-unit">h</span>${Math.round(remObj.m)}<span class="hero-unit">m</span>`;
+                        const rH = String(remObj.h).padStart(2, '0');
+                        const rM = String(Math.round(remObj.m)).padStart(2, '0');
+                        totalHoursEl.innerHTML = `${rH}<span class="hero-unit-h">H</span>${rM}<span class="hero-unit-m">M</span>`;
                     }
                 } else {
-                    if (eyebrowEl) eyebrowEl.textContent = "今日工時";
+                    if (eyebrowEl) eyebrowEl.textContent = "今日累計工時";
                     if (totalHoursEl) {
-                        totalHoursEl.innerHTML = `${timeObj.h}<span class="hero-unit">h</span>${Math.round(timeObj.m)}<span class="hero-unit">m</span>`;
+                        const tH = String(timeObj.h).padStart(2, '0');
+                        const tM = String(Math.round(timeObj.m)).padStart(2, '0');
+                        totalHoursEl.innerHTML = `${tH}<span class="hero-unit-h">H</span>${tM}<span class="hero-unit-m">M</span>`;
                     }
                 }
 
-                // Update ring progress & leading bead
+                // Update katana blade progress & walking swordswoman
                 updateBrushstroke(pct, result.total >= targetMin);
             }
 
@@ -15403,7 +15546,7 @@
                 if (liveHint) {
                     liveHint.classList.remove('opacity-0', 'hidden');
                     if (!statusText || !document.getElementById('liveStatusDot')) {
-                        liveHint.innerHTML = '<span class="live-pulse-dot" id="liveStatusDot"></span><span id="liveStatusText">尚未打卡</span><span class="live-status-sep">·</span><span id="strokePct" class="ring-pct-inline">0%</span>';
+                        liveHint.innerHTML = '<span class="live-pulse-dot" id="liveStatusDot"></span><span id="liveStatusText">尚未打卡</span><span class="live-status-sep">·</span><span id="strokePct" class="ring-pct-inline">0%</span><div id="heroEqBox" style="display:flex; align-items:flex-end; gap:2.5px; height:13px; margin-left:3px;"><span class="b1" style="width:2px; height:5px; border-radius:99px; background:#F0C96B;"></span><span class="b2" style="width:2px; height:11px; border-radius:99px; background:#F0C96B;"></span><span class="b3" style="width:2px; height:7px; border-radius:99px; background:#FAF6F0;"></span></div>';
                         statusText = document.getElementById('liveStatusText');
                     }
                     liveHint.className = 'live-status-pill';
@@ -16025,13 +16168,16 @@
                 }
                 if (titleEl) titleEl.textContent = '專注電台';
                 if (badgeEl) {
-                    badgeEl.textContent = '華語流行';
+                    badgeEl.textContent = '隨機韻律';
                     badgeEl.style.color = 'var(--purple)';
                     badgeEl.style.background = 'rgba(122,90,138,0.10)';
                 }
                 if (dotEl) {
                     dotEl.style.background = '#34C759';
                     dotEl.style.boxShadow = '0 0 7px rgba(52,199,89,0.6)';
+                }
+                if (typeof pickRandomPartnerStation === 'function') {
+                    pickRandomPartnerStation();
                 }
             }
         }
