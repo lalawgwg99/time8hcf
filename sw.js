@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timecard-v35';
+const CACHE_NAME = 'timecard-v36';
 const ASSETS = [
     './',
     './index.html',
@@ -16,7 +16,15 @@ const ASSETS = [
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+        caches.open(CACHE_NAME).then(cache =>
+            Promise.all(
+                ASSETS.map(url =>
+                    fetch(url, { cache: 'reload' }).then(res => {
+                        if (res.ok) return cache.put(url, res);
+                    }).catch(() => {})
+                )
+            )
+        )
     );
     self.skipWaiting();
 });
@@ -44,10 +52,10 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Network-first for HTML navigation requests (prevents stale PWA)
+    // Network-first with cache: 'no-store' for HTML navigation requests (prevents stale PWA)
     if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
         event.respondWith(
-            fetch(event.request)
+            fetch(event.request, { cache: 'no-store' })
                 .then(response => {
                     // Update cache with fresh copy
                     const clone = response.clone();
