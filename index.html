@@ -2503,6 +2503,18 @@
         }
 
         /* --- 新版本設定可選｜東方潮流 · 刀鋒進度同行女劍客 (Gugak Style) --- */
+        .hero-style-classic-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #heroStyleClassic.hidden,
+        #heroStyleGugak.hidden {
+            display: none !important;
+        }
+
         .gugak-card-container {
             position: relative;
             width: 100%;
@@ -4666,7 +4678,7 @@
                     </div>
 
                     <!-- ================= 風格 1 (預設保留)：經典鎏金遠山 · 雙圈鐘擺 · 12 格刻度 ================= -->
-                    <div id="heroStyleClassic" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+                    <div id="heroStyleClassic" class="hero-style-classic-wrap">
                         <div class="ring-container" id="ringContainer" onclick="toggleRingMode()" title="點擊切換累計/剩餘工時">
                             <div class="ring-ambient-core" id="ringAmbientCore"></div>
                             <svg viewBox="0 0 300 290" aria-hidden="true">
@@ -4840,21 +4852,16 @@
                                 <path d="M 0 165 Q 95 142 190 158 T 380 148 L 380 250 L 0 250 Z" fill="url(#gugakInkWave)" />
                             </svg>
 
-                            <!-- Top Header: Left Vertical Gold Seal ("工時") + Refined Motto + Right Jade Pill -->
-                            <div style="position:relative; z-index:20; display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:10px;">
+                            <!-- Top Header: Left Vertical Gold Seal ("工時") + Single Clean Title + Right Jade Status Pill (無重複百分比與疊字) -->
+                            <div style="position:relative; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                                <div style="display:flex; align-items:center; gap:9px;">
                                     <div class="gugak-vertical-seal">工時</div>
-                                    <div>
-                                        <div class="hero-motto-main" id="heroMottoMain">步履不停 · 專注前行</div>
-                                        <div class="hero-eyebrow" id="gugakEyebrow" style="margin-top:2px;">今日累計工時</div>
-                                    </div>
+                                    <div class="hero-motto-main" id="heroMottoMain">步履不停 · 專注前行</div>
                                 </div>
 
                                 <!-- Top-Right Jade Teal Status Pill with Live Equalizer -->
                                 <div id="gugakOngoingHint" class="gugak-jade-pill" onclick="event.stopPropagation(); toggleRingMode();" title="點擊切換累計/剩餘工時">
                                     <span id="gugakLiveStatusText">尚未打卡</span>
-                                    <span style="opacity:0.65;">·</span>
-                                    <span id="gugakStrokePct" style="color:#F2D27A; font-weight:800; font-variant-numeric:tabular-nums;">0%</span>
                                     <div id="heroEqBox" style="display:flex; align-items:flex-end; gap:2.5px; height:13px; margin-left:3px;">
                                         <span class="b1" style="width:2px; height:5px; border-radius:99px; background:#F0C96B;"></span>
                                         <span class="b2" style="width:2px; height:11px; border-radius:99px; background:#F0C96B;"></span>
@@ -8789,8 +8796,16 @@
             _heroDisplayStyle = (style === 'gugak') ? 'gugak' : 'classic';
             const classicWrap = document.getElementById('heroStyleClassic');
             const gugakWrap = document.getElementById('heroStyleGugak');
-            if (classicWrap) classicWrap.classList.toggle('hidden', _heroDisplayStyle !== 'classic');
-            if (gugakWrap) gugakWrap.classList.toggle('hidden', _heroDisplayStyle !== 'gugak');
+            if (classicWrap) {
+                const isClassic = (_heroDisplayStyle === 'classic');
+                classicWrap.classList.toggle('hidden', !isClassic);
+                classicWrap.style.display = isClassic ? 'flex' : 'none';
+            }
+            if (gugakWrap) {
+                const isGugak = (_heroDisplayStyle === 'gugak');
+                gugakWrap.classList.toggle('hidden', !isGugak);
+                gugakWrap.style.display = isGugak ? 'block' : 'none';
+            }
 
             const optClassic = document.getElementById('heroStyleOpt_classic');
             const optGugak = document.getElementById('heroStyleOpt_gugak');
@@ -8922,7 +8937,9 @@
                 eqBox.classList.toggle('eq-on', isWorking);
             }
             if (mottoMain && (typeof _isBreatheActive === 'undefined' || !_isBreatheActive)) {
-                if (isComplete) {
+                if (_ringMode === 'remaining') {
+                    mottoMain.textContent = '尚餘目標工時';
+                } else if (isComplete) {
                     mottoMain.textContent = '今日圓滿 · 收刀歸鞘';
                 } else if (isWorking) {
                     mottoMain.textContent = clampedPct >= 85 ? '行至終章 · 勝利在望' : '步履不停 · 專注前行';
@@ -10041,13 +10058,9 @@
             if (eyebrowEl) {
                 eyebrowEl.innerHTML = `深呼吸 · 1分鐘 <button class="breathe-exit-btn" onclick="event.stopPropagation(); stopZenBreathe()">✕ 結束</button>`;
             }
-            const gugakEyebrowEl = document.getElementById('gugakEyebrow');
-            if (gugakEyebrowEl) {
-                gugakEyebrowEl.innerHTML = `深呼吸 · 1分鐘 <button class="breathe-exit-btn" onclick="event.stopPropagation(); stopZenBreathe()">✕ 結束</button>`;
-            }
             const mottoMain = document.getElementById('heroMottoMain');
             if (mottoMain) {
-                mottoMain.textContent = '調息養神 · 正念吐納';
+                mottoMain.innerHTML = `深呼吸 · 1分鐘 <button class="breathe-exit-btn" onclick="event.stopPropagation(); stopZenBreathe()">✕ 結束</button>`;
             }
 
             const totalHoursEl = document.getElementById('totalHours');
@@ -15921,9 +15934,11 @@
             const remObj = formatDurationFancy(remainingMin);
             const pct = Math.min((result.total / targetMin) * 100, 100);
 
+            // 確保單一時數介面顯示，絕不雙重出現
+            if (typeof applyHeroDisplayStyleUI === 'function') applyHeroDisplayStyleUI(_heroDisplayStyle);
+
             const eyebrowEl = document.getElementById('heroEyebrow');
             const totalHoursEl = document.getElementById('totalHours');
-            const gugakEyebrowEl = document.getElementById('gugakEyebrow');
             const gugakTotalHoursEl = document.getElementById('gugakTotalHours');
 
             if (!_isBreatheActive) {
@@ -15932,7 +15947,6 @@
                     if (totalHoursEl) {
                         totalHoursEl.innerHTML = `${remObj.h}<span class="hero-unit">h</span>${Math.round(remObj.m)}<span class="hero-unit">m</span>`;
                     }
-                    if (gugakEyebrowEl) gugakEyebrowEl.textContent = "尚餘目標工時";
                     if (gugakTotalHoursEl) {
                         const rH = String(remObj.h).padStart(2, '0');
                         const rM = String(Math.round(remObj.m)).padStart(2, '0');
@@ -15943,7 +15957,6 @@
                     if (totalHoursEl) {
                         totalHoursEl.innerHTML = `${timeObj.h}<span class="hero-unit">h</span>${Math.round(timeObj.m)}<span class="hero-unit">m</span>`;
                     }
-                    if (gugakEyebrowEl) gugakEyebrowEl.textContent = "今日累計工時";
                     if (gugakTotalHoursEl) {
                         const tH = String(timeObj.h).padStart(2, '0');
                         const tM = String(Math.round(timeObj.m)).padStart(2, '0');
