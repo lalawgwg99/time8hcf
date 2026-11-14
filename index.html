@@ -5035,6 +5035,17 @@
             flex-shrink: 0;
             pointer-events: none;
         }
+
+        /* === UI POLISH v2.4: Hide Task Input & Prevent Nav Overlap === */
+        #tabToday #taskInput,
+        #tabToday #currentTaskDisplay {
+            display: none !important;
+        }
+
+        #tabToday .action-card {
+            margin-top: 8px;
+            padding: 16px 18px;
+        }
     </style>
 </head>
 
