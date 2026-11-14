@@ -13,10 +13,10 @@
     border: 0.5px solid var(--separator);
     border-radius: var(--radius);
     padding: 22px 20px;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-card), var(--card-highlight, inset 0 1px 0 rgba(255, 255, 255, 0.5));
     position: relative;
     overflow: hidden;
-    transition: all 0.3s var(--spring);
+    transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring);
 }
 
 .partner-stage-header {

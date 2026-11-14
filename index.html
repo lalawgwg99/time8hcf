@@ -4857,6 +4857,65 @@
                 animation: none !important;
             }
         }
+
+        /* === UI POLISH v2.1: Spring, Glassmorphism & Tabular Typography === */
+        html:root,
+        html[data-zen-theme="alabaster"],
+        html[data-zen-theme="sage"] {
+            --spring: cubic-bezier(0.22, 1, 0.36, 1);
+            --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+            --glass-blur: blur(20px) saturate(160%);
+        }
+
+        html[data-zen-theme="obsidian"],
+        html[data-zen-theme="twilight"] {
+            --spring: cubic-bezier(0.22, 1, 0.36, 1);
+            --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px) saturate(160%);
+        }
+
+        .card,
+        .inset-card,
+        .action-card,
+        .zen-card {
+            box-shadow: var(--shadow-card), var(--card-highlight);
+            transition: transform 0.3s var(--spring), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        header,
+        nav,
+        .app-header,
+        .bottom-nav {
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        #totalHours,
+        .header-time,
+        .hero-unit,
+        .ring-pct,
+        .time-display,
+        .salary-ticker {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: 'tnum' 1;
+        }
+
+        .punch-btn-zen {
+            transition: transform 0.35s var(--spring), opacity 0.25s ease, background 0.4s ease, box-shadow 0.35s var(--spring);
+        }
+        .punch-btn-zen:active {
+            transform: scale(0.975);
+        }
+
+        .fa, .fas, .far, .fab,
+        i[class*="fa-"] {
+            opacity: 0.86;
+            vertical-align: -0.06em;
+            transition: opacity 0.2s ease, transform 0.2s var(--spring);
+        }
     </style>
 </head>
 
