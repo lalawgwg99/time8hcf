@@ -5005,6 +5005,30 @@
             transform: scale(0.96);
             background: var(--fill-secondary);
         }
+
+        /* === UI POLISH v2.3: 260px Sundial Ring & Geometric Icons === */
+        #tabToday .ring-container {
+            width: min(72vw, 260px);
+            height: min(70vw, 252px);
+            margin: 4px auto 10px;
+        }
+
+        #tabToday #totalHours {
+            font-size: 52px;
+            letter-spacing: -1.5px;
+        }
+
+        /* 隱藏原本的雙層沙浪路徑，改由日晷光影扇形 #sundialWedge 呈現 */
+        #ringContainer g[clip-path="url(#dialClipA)"] > path:not(#sundialWedge) {
+            display: none;
+        }
+
+        #tabToday #zenRestBar .zen-tool-btn svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -5128,6 +5152,10 @@
                                         <stop offset="86%" stop-color="#000000" stop-opacity="0" />
                                         <stop offset="100%" stop-color="#000000" stop-opacity="0.35" />
                                     </radialGradient>
+                                    <radialGradient id="sundialWedgeGrad" cx="50%" cy="50%" r="50%">
+                                        <stop offset="15%" stop-color="#C4A87A" stop-opacity="0.02" />
+                                        <stop offset="100%" stop-color="#C4A87A" stop-opacity="0.24" />
+                                    </radialGradient>
                                     <!-- Mountains -->
                                     <linearGradient id="mountainBack" x1="0%" y1="0%" x2="0%" y2="100%">
                                         <stop offset="0%" stop-color="#D8BC8C" stop-opacity="0.30" />
@@ -5162,6 +5190,7 @@
                                     <circle id="ringDialSurface" cx="150" cy="136" r="100" fill="url(#dialSurfaceLight)" />
                                 </g>
                                 <g clip-path="url(#dialClipA)">
+                                    <path id="sundialWedge" d="" fill="url(#sundialWedgeGrad)" stroke="none" />
                                     <path d="M 48 186 Q 94 150 136 172 T 210 156 T 255 178 L 255 240 L 48 240 Z" fill="url(#mountainBack)" />
                                     <path d="M 48 202 Q 108 168 156 190 T 252 178 L 255 240 L 48 240 Z" fill="url(#mountainFront)" />
                                     <path d="M 48 202 Q 108 168 156 190 T 252 178" fill="none" stroke="url(#champagneGold)" stroke-width="0.8" opacity="0.7" />
@@ -5186,6 +5215,12 @@
 
                                 <!-- 5. Progress sits on the dial edge (r=100): track + crisp 3.5px stroke, no blur -->
                                 <circle id="ringTrack" cx="150" cy="136" r="100" fill="none" stroke="rgba(169, 130, 74, 0.18)" stroke-width="3" />
+                                <g stroke="currentColor" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round">
+                                    <line x1="150" y1="38" x2="150" y2="46" />
+                                    <line x1="248" y1="136" x2="240" y2="136" />
+                                    <line x1="150" y1="234" x2="150" y2="226" />
+                                    <line x1="52" y1="136" x2="60" y2="136" />
+                                </g>
                                 <circle id="progressRing" cx="150" cy="136" r="100" fill="none"
                                     stroke="url(#ringGradientWarm)" stroke-width="3.5" stroke-linecap="round"
                                     stroke-dasharray="628.32" stroke-dashoffset="628.32"
@@ -5486,22 +5521,37 @@
                     <div id="zenRestBar" class="zen-rest-bar">
                         <!-- 1. 深呼吸 -->
                         <button type="button" class="zen-tool-btn active-scale" id="breatheToolBtn" onclick="toggleZenBreathe()" title="開啟 1 分鐘深呼吸放鬆">
-                            <i class="fas fa-wind zen-tool-icon" style="color:var(--blue); font-size:12px;"></i>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--blue); pointer-events:none; flex-shrink:0;">
+                                <circle cx="12" cy="12" r="8.5" stroke-opacity="0.28"/>
+                                <path d="M12 4.5C15.5 7.5 15.5 16.5 12 19.5C8.5 16.5 8.5 7.5 12 4.5Z"/>
+                                <path d="M4.5 12C7.5 8.5 16.5 8.5 19.5 12C16.5 15.5 7.5 15.5 4.5 12Z" stroke-opacity="0.6"/>
+                                <circle cx="12" cy="12" r="1.4" fill="#B8925A" stroke="none"/>
+                            </svg>
                             <span>深呼吸</span>
                             <span class="zen-tool-badge">1m</span>
                         </button>
 
                         <!-- 2. 今日靈籤 -->
                         <button type="button" class="zen-tool-btn active-scale" id="dailyFortuneActionBtn" onclick="openTodayFortune(event)" title="晨曦靈籤 · 查看今日專注指引">
-                            <span style="font-size:13px; line-height:1;">📜</span>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none; flex-shrink:0;">
+                                <rect x="8.5" y="3.5" width="7" height="17" rx="2.5"/>
+                                <path d="M8.5 8.5H15.5"/>
+                                <path d="M12 11.5V16.5"/>
+                                <circle cx="12" cy="6" r="1" fill="#B8925A" stroke="none"/>
+                                <path d="M5.5 7.5V16.5" stroke-opacity="0.35"/>
+                                <path d="M18.5 7.5V16.5" stroke-opacity="0.35"/>
+                            </svg>
                             <span>今日靈籤</span>
                         </button>
 
                         <!-- 3. 功德 (電子木魚) -->
                         <button type="button" class="zen-tool-btn active-scale" id="ringMuyuBadge" onclick="openMuyuModal()" title="進入辦公室功德堂 · 靜心敲木魚" aria-label="功德堂">
-                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#B88B4A; pointer-events:none; flex-shrink:0;">
-                                <path d="M12 4.5C7.5 4.5 4 8 4 12.5c0 3.8 2.6 6.8 6.2 7.5L12 20.2l1.8-.2c3.6-.7 6.2-3.7 6.2-7.5 0-4.5-3.5-8-8-8z" fill="rgba(196,168,122,0.25)" stroke="#B88B4A" />
-                                <circle cx="9.5" cy="12" r="1.2" fill="#B88B4A" />
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none; flex-shrink:0;">
+                                <path d="M5 14C5 9.2 8.4 6 12.8 6C16.8 6 19.5 8.8 19.5 12.8C19.5 16.4 16.6 18.8 12.6 18.8C8.1 18.8 5 17 5 14Z"/>
+                                <path d="M10.2 12.8H16.2"/>
+                                <circle cx="8.6" cy="12.8" r="1.2" fill="#B8925A" stroke="none"/>
+                                <path d="M17.5 4.2C19.2 5.2 20.3 6.7 20.8 8.5" stroke="#B8925A" stroke-width="1.3"/>
+                                <path d="M19.8 3C21 4.1 21.8 5.5 22.2 7" stroke="#B8925A" stroke-opacity="0.45" stroke-width="1.2"/>
                             </svg>
                             <span>功德</span>
                         </button>
@@ -17515,6 +17565,43 @@
         setInterval(updateCurrentTime, 1000);
         setInterval(playTickSound, 1000);
 
+    </script>
+    <script>
+    (function () {
+      const ring = document.getElementById('progressRing');
+      const wedge = document.getElementById('sundialWedge');
+      if (!ring || !wedge) return;
+
+      const CIRC = 628.32;
+      const CX = 150, CY = 136, R = 98.5;
+
+      function syncSundial() {
+        const rawOffset = ring.style.strokeDashoffset || ring.getAttribute('stroke-dashoffset') || CIRC;
+        const offset = parseFloat(rawOffset);
+        if (Number.isNaN(offset)) return;
+        const pct = Math.max(0, Math.min(1, 1 - offset / CIRC));
+        if (pct <= 0.002) {
+          wedge.setAttribute('d', '');
+          return;
+        }
+        if (pct >= 0.998) {
+          wedge.setAttribute('d', `M ${CX} ${CY - R} A ${R} ${R} 0 1 1 ${CX - 0.1} ${CY - R} Z`);
+          return;
+        }
+        const angle = pct * 360;
+        const rad = (angle - 90) * Math.PI / 180;
+        const x = (CX + R * Math.cos(rad)).toFixed(2);
+        const y = (CY + R * Math.sin(rad)).toFixed(2);
+        const largeArc = angle > 180 ? 1 : 0;
+        wedge.setAttribute('d', `M ${CX} ${CY} L ${CX} ${CY - R} A ${R} ${R} 0 ${largeArc} 1 ${x} ${y} Z`);
+      }
+
+      new MutationObserver(syncSundial).observe(ring, {
+        attributes: true,
+        attributeFilter: ['stroke-dashoffset', 'style']
+      });
+      syncSundial();
+    })();
     </script>
 </body>
 
