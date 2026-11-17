@@ -17007,7 +17007,8 @@
             }
 
             // --- Work Limit 觸發檢查 (Non-intrusive Capsule) ---
-            if (result.isOngoing && lastRecord) {
+            // 達標後靜音：今日累計已滿目標，不再推工作提醒（休息提醒本來就只在未達標時推）
+            if (result.isOngoing && lastRecord && result.total < targetMin) {
                 const lastInTime = new Date(lastRecord.time).getTime();
                 const targetTime = lastInTime + (appSettings.workReminderMinutes || 120) * 60000;
                 if (Date.now() > targetTime) {
