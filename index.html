@@ -5628,6 +5628,8 @@
                                 style="font-size:11px; color:var(--label-tertiary); font-weight:400; background:none; border:none; cursor:pointer; letter-spacing:0.06em;">匯出</button>
                             <button id="undoBtn" onclick="undoLastPunch()"
                                 style="font-size:11px; color:var(--label-tertiary); font-weight:400; background:none; border:none; cursor:pointer; letter-spacing:0.06em;">復原</button>
+                            <button id="addSessionBtn" onclick="openSessionEditor(null)"
+                                style="font-size:11px; color:var(--label-tertiary); font-weight:400; background:none; border:none; cursor:pointer; letter-spacing:0.06em;">＋新增</button>
                             <button id="clearBtn" onclick="clearAll()"
                                 style="font-size:11px; color:var(--red); font-weight:400; background:none; border:none; cursor:pointer; letter-spacing:0.06em;">
                                 <span>清除</span>
@@ -16557,6 +16559,155 @@
             }
         }
 
+        // =============================================
+        // 工作階段手動修正 (編輯 / 新增 / 刪除) — 僅改今天，不動其他邏輯
+        // =============================================
+        function buildTodaySessions() {
+            const sessions = [];
+            for (let i = 0; i < punchRecords.length; i++) {
+                if (punchRecords[i].type === 'in') {
+                    const outRecord = (i + 1 < punchRecords.length && punchRecords[i + 1].type === 'out') ? punchRecords[i + 1] : null;
+                    sessions.push({ in: punchRecords[i], out: outRecord, inIdx: i, outIdx: outRecord ? i + 1 : -1 });
+                    if (outRecord) i++;
+                }
+            }
+            return sessions;
+        }
+
+        function sessionEditorTime(dateObj) {
+            const d = new Date(dateObj);
+            return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        }
+
+        function openSessionEditor(sessionIdx) {
+            closeSessionEditor();
+            const sessions = buildTodaySessions();
+            const isAdd = sessionIdx === null || sessionIdx === undefined;
+            const s = isAdd ? null : sessions[sessionIdx];
+            if (!isAdd && !s) return;
+            const isOngoing = s && !s.out;
+
+            const overlay = document.createElement('div');
+            overlay.id = 'sessionEditorOverlay';
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:flex;align-items:flex-end;justify-content:center;';
+            overlay.onclick = (e) => { if (e.target === overlay) closeSessionEditor(); };
+            overlay.innerHTML = `
+                <div style="width:100%;max-width:430px;background:var(--card);border-radius:22px 22px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom, 0px));border:0.5px solid var(--separator);">
+                    <div style="font-size:16px;font-weight:600;color:var(--label);margin-bottom:4px">${isAdd ? '新增工作階段' : '修改工作階段'}</div>
+                    <div style="font-size:12px;color:var(--label-tertiary);margin-bottom:16px">${isAdd ? '補記今天忘記打卡的一段時間' : '改完會自動重算今日時數、圓環與剩餘時間'}</div>
+                    <label style="display:block;font-size:12px;color:var(--label-secondary);margin-bottom:6px">上班時間</label>
+                    <input id="sessionEditStart" type="time" value="${s ? sessionEditorTime(s.in.time) : ''}" style="width:100%;padding:12px 14px;font-size:16px;border-radius:12px;border:0.5px solid var(--separator);background:var(--fill);color:var(--label);margin-bottom:12px;box-sizing:border-box">
+                    <label style="display:block;font-size:12px;color:var(--label-secondary);margin-bottom:6px">下班時間${isOngoing ? '（留空＝繼續進行中）' : ''}</label>
+                    <input id="sessionEditEnd" type="time" value="${s && s.out ? sessionEditorTime(s.out.time) : ''}" style="width:100%;padding:12px 14px;font-size:16px;border-radius:12px;border:0.5px solid var(--separator);background:var(--fill);color:var(--label);margin-bottom:6px;box-sizing:border-box">
+                    <div id="sessionEditError" style="font-size:12px;color:var(--red);min-height:16px;margin-bottom:8px"></div>
+                    <button onclick="saveSessionEdit(${isAdd ? -1 : sessionIdx})" style="width:100%;padding:14px;border:none;border-radius:999px;background:var(--label);color:var(--card);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px">儲存</button>
+                    ${isAdd ? '' : `<button id="sessionDeleteBtn" onclick="deleteSession(${sessionIdx})" style="width:100%;padding:12px;border:0.5px solid var(--separator);border-radius:999px;background:var(--card);color:var(--red);font-size:14px;cursor:pointer;margin-bottom:8px">刪除這段</button>`}
+                    <button onclick="closeSessionEditor()" style="width:100%;padding:12px;border:none;border-radius:999px;background:transparent;color:var(--label-secondary);font-size:14px;cursor:pointer">取消</button>
+                </div>`;
+            document.body.appendChild(overlay);
+        }
+
+        function closeSessionEditor() {
+            const el = document.getElementById('sessionEditorOverlay');
+            if (el) el.remove();
+        }
+
+        function sessionEditError(msg) {
+            const el = document.getElementById('sessionEditError');
+            if (el) el.textContent = msg || '';
+            return false;
+        }
+
+        function saveSessionEdit(sessionIdx) {
+            const startVal = document.getElementById('sessionEditStart').value;
+            const endVal = document.getElementById('sessionEditEnd').value;
+            if (!startVal) return sessionEditError('請輸入上班時間');
+            const dayKey = getTodayKey();
+            const start = new Date(dayKey + 'T' + startVal + ':00');
+            if (Number.isNaN(start.getTime())) return sessionEditError('上班時間格式不正確');
+            let end = null;
+            if (endVal) {
+                end = new Date(dayKey + 'T' + endVal + ':00');
+                if (Number.isNaN(end.getTime())) return sessionEditError('下班時間格式不正確');
+                if (end <= start) return sessionEditError('下班時間必須晚於上班時間');
+                if (end > new Date()) return sessionEditError('下班時間不能晚於現在');
+            }
+            const sessions = buildTodaySessions();
+            const isAdd = sessionIdx < 0;
+            const now = new Date();
+            for (let i = 0; i < sessions.length; i++) {
+                if (!isAdd && i === sessionIdx) continue;
+                const oStart = new Date(sessions[i].in.time);
+                const oEnd = sessions[i].out ? new Date(sessions[i].out.time) : now;
+                const newEnd = end || now;
+                if (start < oEnd && newEnd > oStart) return sessionEditError('這段時間與另一段重疊，請調整');
+            }
+            const adjustElfExp = (mins) => {
+                appSettings.elfExp = Math.max(0, (appSettings.elfExp || 0) + mins);
+                localStorage.setItem('appSettings', JSON.stringify(appSettings));
+            };
+            if (isAdd) {
+                if (!end) return sessionEditError('新增階段請輸入下班時間');
+                punchRecords.push({ time: start.toISOString(), type: 'in', task: '', restIntervalMins: null });
+                punchRecords.push({ time: end.toISOString(), type: 'out', task: '', restIntervalMins: null });
+                adjustElfExp((end - start) / 60000);
+            } else {
+                const s = sessions[sessionIdx];
+                if (!s) return sessionEditError('找不到這段紀錄');
+                const oldMins = s.out ? (new Date(s.out.time) - new Date(s.in.time)) / 60000 : 0;
+                s.in.time = start.toISOString();
+                if (end) {
+                    if (s.out) {
+                        s.out.time = end.toISOString();
+                    } else {
+                        punchRecords.push({ time: end.toISOString(), type: 'out', task: '', restIntervalMins: null });
+                        activeShiftKey = null;
+                    }
+                    adjustElfExp(((end - start) / 60000) - oldMins);
+                } else if (s.out) {
+                    const outIdx = punchRecords.indexOf(s.out);
+                    if (outIdx >= 0) punchRecords.splice(outIdx, 1);
+                    adjustElfExp(-oldMins);
+                    activeShiftKey = currentRecordKey || getTodayKey();
+                }
+                if (s.inIdx === 0) {
+                    const lastDayOut = (typeof getLastPreviousDayPunchOut === 'function') ? getLastPreviousDayPunchOut() : null;
+                    s.in.restIntervalMins = (lastDayOut && lastDayOut.time) ? Math.round((start - new Date(lastDayOut.time)) / 60000) : null;
+                }
+            }
+            punchRecords.sort((a, b) => new Date(a.time) - new Date(b.time));
+            saveData();
+            updateDisplay();
+            closeSessionEditor();
+            return true;
+        }
+
+        function deleteSession(sessionIdx) {
+            const btn = document.getElementById('sessionDeleteBtn');
+            if (btn && btn.dataset.confirm !== 'true') {
+                btn.dataset.confirm = 'true';
+                btn.textContent = '再按一次確認刪除';
+                setTimeout(() => {
+                    if (btn.isConnected) { btn.dataset.confirm = 'false'; btn.textContent = '刪除這段'; }
+                }, 3000);
+                return;
+            }
+            const sessions = buildTodaySessions();
+            const s = sessions[sessionIdx];
+            if (!s) { closeSessionEditor(); return; }
+            if (s.out) {
+                const mins = (new Date(s.out.time) - new Date(s.in.time)) / 60000;
+                appSettings.elfExp = Math.max(0, (appSettings.elfExp || 0) - mins);
+                localStorage.setItem('appSettings', JSON.stringify(appSettings));
+                punchRecords.splice(punchRecords.indexOf(s.out), 1);
+            }
+            punchRecords.splice(punchRecords.indexOf(s.in), 1);
+            if (!s.out) activeShiftKey = null;
+            saveData();
+            updateDisplay();
+            closeSessionEditor();
+        }
+
         function formatTime(isoString) {
             return new Date(isoString).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
         }
@@ -16918,7 +17069,7 @@
                 }
 
                 // Render sessions in reverse (newest first)
-                [...sessions].reverse().forEach((s) => {
+                [...sessions].reverse().forEach((s, revIdx) => {
                     const inTime = new Date(s.in.time);
                     const inStr = inTime.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
                     const isOngoing = !s.out;
@@ -16953,6 +17104,9 @@
 
                     const card = document.createElement('div');
                     card.style.cssText = 'background:var(--fill-tertiary);border-radius:13px;padding:14px 16px;margin-bottom:8px;border:0.5px solid var(--separator);';
+                    card.style.cursor = 'pointer';
+                    card.title = '點擊修改時間';
+                    card.onclick = () => openSessionEditor(sessions.length - 1 - revIdx);
 
                     card.innerHTML = `
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${(s.in.task || restWarningHtml) ? '6' : '0'}px">
@@ -16962,7 +17116,7 @@
                                     ${inStr}<span style="color:var(--label-tertiary);font-weight:400;margin:0 4px">—</span>${isOngoing ? '<span style="color:var(--green)">進行中</span>' : outStr}
                                 </span>
                             </div>
-                            <span style="font-size:13px;font-weight:600;color:${isOngoing ? 'var(--green)' : 'var(--label-secondary)'};background:${isOngoing ? 'rgba(52,199,89,0.1)' : 'var(--card)'};padding:3px 10px;border-radius:20px;font-variant-numeric:tabular-nums">${durLabel}</span>
+                            <span style="font-size:13px;font-weight:600;color:${isOngoing ? 'var(--green)' : 'var(--label-secondary)'};background:${isOngoing ? 'rgba(52,199,89,0.1)' : 'var(--card)'};padding:3px 10px;border-radius:20px;font-variant-numeric:tabular-nums">${durLabel} <span style="font-size:11px;opacity:0.55">✎</span></span>
                         </div>
                         ${s.in.task ? `<div style="font-size:12px;color:var(--label-tertiary);margin-left:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><i class="fas fa-tag" style="margin-right:4px;font-size:10px"></i>${s.in.task}</div>` : ''}
                         ${restWarningHtml ? `<div style="margin-left:16px;">${restWarningHtml}</div>` : ''}
