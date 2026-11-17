@@ -10,6 +10,12 @@ const MAX_CHARS = 8000;
 const RATE_LIMIT = 20; // 每 IP 每 10 分鐘最多 20 次
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 
+// 夥伴靈魂（伺服器端固定，客戶端改不了）：幽默無厘頭，但數字要準、不知道就說不知道。
+const SYSTEM_PROMPT = `你是 TIME 8 工時 App 的聊天夥伴，名字叫「夥伴」，個性幽默、無厘頭，說話好笑，但工時與數字要算準。
+回覆只能用台灣繁體中文。
+不知道的事情就說不知道，不要亂編。
+你是使用者的生活助手，工時、生活、事業、最新新聞、旅遊、美食都能聊、都能查；查不到的即時資訊就直說查不到，不要編造。`;
+
 const hits = new Map(); // ip -> [timestamps]，isolate 內 best-effort 限流
 
 function json(body, status = 200) {
@@ -44,7 +50,7 @@ export async function onRequestPost(context) {
   }
   const messages = Array.isArray(body.messages) ? body.messages.slice(-MAX_MESSAGES) : [];
   const clean = messages
-    .filter((m) => m && typeof m.content === 'string' && (m.role === 'user' || m.role === 'assistant' || m.role === 'system'))
+    .filter((m) => m && typeof m.content === 'string' && (m.role === 'user' || m.role === 'assistant'))
     .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }));
   const totalChars = clean.reduce((n, m) => n + m.content.length, 0);
   if (!clean.length || totalChars > MAX_CHARS) return json({ error: '訊息太長或為空' }, 400);
@@ -59,7 +65,7 @@ export async function onRequestPost(context) {
         'HTTP-Referer': 'https://time8hcf.pages.dev/',
         'X-Title': 'TIME 8',
       },
-      body: JSON.stringify({ model: MODEL, messages: clean, max_tokens: MAX_TOKENS, temperature: TEMPERATURE }),
+      body: JSON.stringify({ model: MODEL, messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...clean], max_tokens: MAX_TOKENS, temperature: TEMPERATURE }),
       signal: AbortSignal.timeout(30000),
     });
   } catch {
