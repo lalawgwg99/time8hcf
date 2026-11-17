@@ -4309,7 +4309,7 @@
             background: #C44520;
         }
 
-        /* 4. Lunar (幻月晶靈 · 夜間月影系列) */
+        /* 4. Lunar (幻月夥伴 · 夜間月影系列) */
         .partner-art.series-lunar .pet-layer.body {
             background: radial-gradient(circle at 35% 25%, #FFFFFF 0%, #DCE5F8 32%, #8BA4D9 68%, #3B558E 100%);
             box-shadow: 0 10px 24px rgba(59, 85, 142, 0.28);
@@ -6882,7 +6882,7 @@
                     <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="font-size:11px; font-weight:600; color:var(--label-tertiary); letter-spacing:0.04em; text-transform:uppercase; margin-bottom:4px;">✦ 夥伴典故</div>
                         <p id="previewPetDesc" style="font-size:13px; color:var(--label); line-height:1.55; margin:0;">
-                            初生紫晶靈體，能感應工作專注的節奏。外觀透亮晶瑩，如剔透的薰衣草紫水晶。
+                            初生紫晶夥伴，能感應工作專注的節奏。外觀透亮晶瑩，如剔透的薰衣草紫水晶。
                         </p>
                     </div>
                     <div style="padding:14px 16px; border-bottom:0.5px solid var(--separator);">
@@ -7439,6 +7439,8 @@
                 hatchState: { totalHatches: 0, firstHatchCompleted: false, firstHatchRerollUsed: false },
             };
         }
+        // 舊名對照：2026-11-17 起夥伴不再叫晶靈，已孵化的舊名在此轉新名
+        const LEGACY_PET_NAME = { '紫晶幼靈': '紫晶夥伴', '幻月晶靈': '幻月夥伴', '工時晶靈': '夥伴' };
         function readPetSystem() {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY);
@@ -7448,7 +7450,7 @@
                     ...emptyState(), ...parsed,
                     resources: { ...emptyState().resources, ...(parsed.resources || {}) },
                     hatchState: { ...emptyState().hatchState, ...(parsed.hatchState || {}) },
-                    pets: Array.isArray(parsed.pets) ? parsed.pets : [],
+                    pets: Array.isArray(parsed.pets) ? parsed.pets.map(pet => (pet && LEGACY_PET_NAME[pet.name]) ? { ...pet, name: LEGACY_PET_NAME[pet.name] } : pet) : [],
                     rewards: Array.isArray(parsed.rewards) ? parsed.rewards : [],
                 };
             } catch (e) { return emptyState(); }
@@ -7693,7 +7695,7 @@
 </g>
 </svg>`;
 
-                case 'crystal_moon': // 幻月晶靈 (Moonstone & Indigo Night Glaze)
+                case 'crystal_moon': // 幻月夥伴 (Moonstone & Indigo Night Glaze)
                     return `<svg class="pet-vector-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
 <defs>
   <radialGradient id="lg_shadow" cx="50%" cy="50%" r="50%">
@@ -8161,7 +8163,7 @@
 
         if (bondLevelText) bondLevelText.textContent = `Lv.${data.level} ${lvlInfo.name}`;
         if (bondProgressText) {
-            bondProgressText.innerHTML = nextLvl ? `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>輕觸晶靈互動 (+1)` : `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>羈絆滿級 (${data.points})`;
+            bondProgressText.innerHTML = nextLvl ? `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>輕觸夥伴互動 (+1)` : `<i class="fas fa-heart" style="font-size:9.5px; margin-right:3px;"></i>羈絆滿級 (${data.points})`;
         }
 
         if (data.todayFortune) {
@@ -8469,7 +8471,7 @@
                 if (candidates.length) selected[cat] = weightedRandom(candidates, 'weight', random);
             }
             return {
-                schemaVersion: 1, petId: randomId(), name: `${series === 'crystal' ? '紫晶幼靈' : series === 'moss' ? '碧苔石精' : '熾焰火精'}`,
+                schemaVersion: 1, petId: randomId(), name: `${series === 'crystal' ? '紫晶夥伴' : series === 'moss' ? '碧苔石精' : '熾焰火精'}`,
                 series, rarity: targetRarity, colorFamily: body.colorFamily,
                 parts: Object.fromEntries([...PART_CATEGORIES].map(c => [c, selected[c]?.id || null])),
                 obtainedFrom: 'rhythm_egg', generatedAt: new Date().toISOString(), isFavorite: false,
@@ -8490,13 +8492,13 @@
         const HATCH_COST = 7;
         const RARITY_LABELS = { common: '一般', rare: '稀有', epic: '珍稀', hidden: '隱藏' };
         const CODEX_SPECIES = [
-            { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '✦', color: '#9A77BA', desc: '初生紫晶靈體，能感應工作專注的節奏。外觀透亮晶瑩，如剔透的薰衣草紫水晶。', trait: '✦ 晨曦專注守護 · 溫潤紫晶微光' },
+            { id: 'crystal_starter', name: '紫晶夥伴', series: 'crystal', rarity: 'common', icon: '✦', color: '#9A77BA', desc: '初生紫晶夥伴，能感應工作專注的節奏。外觀透亮晶瑩，如剔透的薰衣草紫水晶。', trait: '✦ 晨曦專注守護 · 溫潤紫晶微光' },
             { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common', icon: '✦', color: '#5DA672', desc: '生長於靜心土壤，散發自然安寧氣息。頭頂長出嫩綠雙葉，帶來舒緩的綠意。', trait: '✦ 森林清新氣息 · 緩解緊繃疲憊' },
             { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common', icon: '✦', color: '#E25D34', desc: '工時熱忱凝聚而成，充滿朝氣與動力。如暖陽晚霞般溫暖，隨工時躍動。', trait: '✦ 熱情活力激勵 · 提升衝刺動能' },
-            { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare', icon: '✦', color: '#5572B2', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。體態呈現銀月靛藍，安靜柔和。', trait: '✦ 夜幕月光陪伴 · 靜心無擾守候' },
+            { id: 'crystal_moon', name: '幻月夥伴', series: 'crystal', rarity: 'rare', icon: '✦', color: '#5572B2', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。體態呈現銀月靛藍，安靜柔和。', trait: '✦ 夜幕月光陪伴 · 靜心無擾守候' },
             { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare', icon: '✦', color: '#438155', desc: '藤蔓綿延不息，代表持之以恆的工作節奏。青翠石體纏繞著生命之藤。', trait: '✦ 持之以恆律動 · 穩健工作節奏' },
             { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare', icon: '✦', color: '#D45B36', desc: '敏捷靈動，激發源源不絕的靈感與熱情。雙耳如靈動火苗，富有靈性。', trait: '✦ 靈感火花迸發 · 敏捷思考同行' },
-            { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✦', color: '#80659B', desc: '珍稀晶靈，體內流動著純粹的星辰結晶。散發著深邃高貴的星軌光輝。', trait: '珍稀特權：解鎖星辰紫曜琉璃光環 ✦ 水晶微音打卡 ✦ 功德三倍加持' },
+            { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✦', color: '#80659B', desc: '珍稀夥伴，體內流動著純粹的星辰結晶。散發著深邃高貴的星軌光輝。', trait: '珍稀特權：解鎖星辰紫曜琉璃光環 ✦ 水晶微音打卡 ✦ 功德三倍加持' },
             { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden', icon: '✦', color: '#E6A820', desc: '傳說級隱藏靈獸，唯有極致專注方能召喚。頭戴純金星辰皇冠，尊榮非凡。', trait: '隱藏特權：解鎖純金星曜尊榮光環 ✦ 頌缽天籟打卡 ✦ 功德十倍暴擊' },
         ];
         let hatchLocked = false;
@@ -8786,10 +8788,10 @@
             if (cleaned === 'laladoo99' || cleaned === 'ru.4s/6cjo42k6' || cleaned === 'developer') {
                 // 1. 注入全圖鑑 8 隻完整夥伴
                 const allSpecies = [
-                    { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common' },
+                    { id: 'crystal_starter', name: '紫晶夥伴', series: 'crystal', rarity: 'common' },
                     { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common' },
                     { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common' },
-                    { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare' },
+                    { id: 'crystal_moon', name: '幻月夥伴', series: 'crystal', rarity: 'rare' },
                     { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare' },
                     { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare' },
                     { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic' },
@@ -8900,7 +8902,7 @@
             const heroTitle = byId('partnerHeroTitle');
             if (heroTitle) {
                 if (pet) {
-                    const displayName = pet.customName || pet.name || '工時晶靈';
+                    const displayName = pet.customName || pet.name || '夥伴';
                     heroTitle.innerHTML = `<span style="display:inline-flex; align-items:center; justify-content:center; gap:6px;"><span>${escapeHtml(displayName)}</span> <button type="button" onclick="window.openRenameModalForPet('${pet.petId}')" style="border:none; background:rgba(122,90,138,0.08); border-radius:999px; padding:2px 8px; color:var(--purple); cursor:pointer; font-size:11px; font-weight:500; font-family:inherit; display:inline-flex; align-items:center; gap:3px;" title="為夥伴更名"><i class="fas fa-pen" style="font-size:9px;"></i> 改名</button></span>`;
                 } else {
                     heroTitle.textContent = `凝聚中 (${count}/${HATCH_COST})`;
@@ -8919,7 +8921,7 @@
 
             const actionArea = byId('partnerActionArea');
             if (actionArea) {
-                actionArea.innerHTML = (!pet && isReady) ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()" style="margin-top:10px;">✨ 喚醒晶靈</button>` : '';
+                actionArea.innerHTML = (!pet && isReady) ? `<button class="partner-primary-btn" onclick="hatchPartnerEgg()" style="margin-top:10px;">✨ 喚醒夥伴</button>` : '';
             }
             renderCodex(state.pets);
             if (typeof updateCompanionAffinityUI === 'function') updateCompanionAffinityUI();
@@ -8932,7 +8934,7 @@
                 return;
             }
             hatchLocked = true;
-            showToast('🌱 正在孵化晶靈中…');
+            showToast('🌱 正在孵化夥伴中…');
             try {
                 const pet = generateBestPet({ isFirstHatch: !before.hatchState.firstHatchCompleted }, 3);
                 const result = commitHatch(before, pet);
@@ -10044,7 +10046,7 @@
 
 
 
-        // === 晶靈 Seiki 系統 ===
+        // === 夥伴 Seiki 系統 ===
 
         const SEIKI_DIALOGUE = {
             punch_in: {

@@ -8,13 +8,13 @@
     const RARITY_LABELS = { common: '一般', rare: '稀有', epic: '珍稀', hidden: '隱藏' };
 
     const CODEX_SPECIES = [
-        { id: 'crystal_starter', name: '紫晶幼靈', series: 'crystal', rarity: 'common', icon: '💎', desc: '初生紫晶靈體，能感應工作專注的節奏。' },
+        { id: 'crystal_starter', name: '紫晶夥伴', series: 'crystal', rarity: 'common', icon: '💎', desc: '初生紫晶夥伴，能感應工作專注的節奏。' },
         { id: 'moss_starter', name: '碧苔石精', series: 'moss', rarity: 'common', icon: '🌿', desc: '生長於靜心土壤，散發自然安寧氣息。' },
         { id: 'ember_starter', name: '熾焰火精', series: 'ember', rarity: 'common', icon: '🔥', desc: '工時熱忱凝聚而成，充滿朝氣與動力。' },
-        { id: 'crystal_moon', name: '幻月晶靈', series: 'crystal', rarity: 'rare', icon: '🌙', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。' },
+        { id: 'crystal_moon', name: '幻月夥伴', series: 'crystal', rarity: 'rare', icon: '🌙', desc: '吸收月光精華，陪伴深邃無擾的夜間專注。' },
         { id: 'moss_vine', name: '翠蔓石靈', series: 'moss', rarity: 'rare', icon: '🍃', desc: '藤蔓綿延不息，代表持之以恆的工作節奏。' },
         { id: 'ember_smirk', name: '幻火行者', series: 'ember', rarity: 'rare', icon: '⚡', desc: '敏捷靈動，激發源源不絕的靈感與熱情。' },
-        { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✨', desc: '珍稀晶靈，體內流動著純粹的星辰結晶。' },
+        { id: 'crystal_epic', name: '紫耀天晶', series: 'crystal', rarity: 'epic', icon: '✨', desc: '珍稀夥伴，體內流動著純粹的星辰結晶。' },
         { id: 'ember_crown', name: '熾皇晶魄', series: 'ember', rarity: 'hidden', icon: '👑', desc: '傳說級隱藏靈獸，唯有極致專注方能召喚。' },
     ];
 
@@ -235,7 +235,7 @@
         const heroTitle = byId('partnerHeroTitle');
         if (heroTitle) {
             if (pet) {
-                heroTitle.textContent = pet.name || '工時晶靈';
+                heroTitle.textContent = pet.name || '夥伴';
             } else {
                 heroTitle.textContent = `${count} / ${HATCH_COST} 蛋殼碎片`;
             }
@@ -246,7 +246,7 @@
             if (pet) {
                 heroSub.textContent = `${pet.series} 系列 · ${RARITY_LABELS[pet.rarity] || '一般'} · 陪伴日常工作`;
             } else if (isReady) {
-                heroSub.textContent = '✨ 已集滿 7 顆碎片，可隨時喚醒晶靈';
+                heroSub.textContent = '✨ 已集滿 7 顆碎片，可隨時喚醒夥伴';
             } else if (count === 0) {
                 heroSub.textContent = '完成今日工時目標，即可獲得第 1 顆碎片';
             } else {
@@ -260,7 +260,7 @@
             if (isReady) {
                 actionArea.innerHTML = `
                     <button class="partner-primary-btn" onclick="hatchPartnerEgg()">
-                        ✨ 開啟節奏蛋 · 喚醒晶靈
+                        ✨ 開啟節奏蛋 · 喚醒夥伴
                     </button>`;
             } else {
                 actionArea.innerHTML = `
@@ -282,7 +282,7 @@
             return;
         }
         hatchLocked = true;
-        showToast('🌱 正在孵化晶靈中…');
+        showToast('🌱 正在孵化夥伴中…');
 
         try {
             const pet = generateBestPet({ isFirstHatch: !before.hatchState.firstHatchCompleted }, 3);
