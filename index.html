@@ -5156,6 +5156,8 @@
         #t8BuddyInput:focus { outline: none; border-color: var(--label); }
         .t8b-send { width: 44px; height: 44px; border-radius: 50%; background: #201d18; color: #fff; border: none; cursor: pointer; flex: none; display: flex; align-items: center; justify-content: center; }
         .t8b-send:disabled { opacity: .4; }
+        .t8b-mood { font-size: 15px; }
+        .t8b-tag { font-size: 10.5px; color: var(--green); border: 1px solid var(--separator); border-radius: 999px; padding: 1px 7px; flex: none; white-space: nowrap; }
         /* ===== v2.11 夥伴聊天室 end ===== */
     </style>
 </head>
@@ -17900,7 +17902,7 @@
         <header class="t8b-head">
             <button type="button" class="t8b-avatar" id="t8BuddyAvatarBtn" aria-label="夥伴設定"><img src="buddy.webp" alt="夥伴"></button>
             <div class="t8b-head-text">
-                <div class="t8b-head-name" id="t8BuddyHeadName">夥伴</div>
+                <div class="t8b-head-name"><span id="t8BuddyHeadName">夥伴</span> <span class="t8b-mood" id="t8BuddyMood">🙂</span></div>
                 <div class="t8b-head-sub"><span class="t8b-dot"></span><span id="t8BuddyHeadSub">什麼都能問 · 記得你 3 件事</span></div>
             </div>
             <button type="button" class="t8b-settings-btn" id="t8BuddySettingsBtn">設定</button>
@@ -17937,6 +17939,13 @@
         var MEM_KEY = 'time8-buddy-memories-v1';
         var PERSON_KEY = 'time8-buddy-personality-v1';
         var SEEN_KEY = 'time8-buddy-seen-v1';
+        var HISTORY_KEY = 'time8-buddy-history-v1';
+        var PATTERNS_KEY = 'time8-buddy-patterns-v1';
+        var EXTRACT_KEY = 'time8-buddy-extract-v1';
+        var HISTORY_MAX_MSGS = 40; /* 20 輪 */
+        var CONTEXT_MAX_CHARS = 7000; /* 代理端截斷 8000 字，客戶端先控量 */
+        var MEM_MAX = 30; /* 記憶上限，滿了留最新的 */
+        var EXTRACT_EVERY = 3; /* 每 3 輪 AI 對話萃取一次 */
         var DEFAULT_NAME = '夥伴';
         var DEFAULT_PERSONALITY = '幽默、無厘頭，偶爾亂講一句；但工時和數字一律算準，達標後安靜。回覆只能用台灣繁體中文；不知道的事情就說不知道，不要亂編。';
         var DEFAULT_MEMORIES = ['達標之後不要再推提醒', '晚班通常 18:30 左右開始', '累的時候喜歡先深呼吸 1 分鐘'];
@@ -17981,13 +17990,85 @@
             } catch (e) { return DEFAULT_MEMORIES.slice(); }
         }
         function saveMemories(list) { lsSet(MEM_KEY, JSON.stringify(list)); }
+        /* ---- 對話歷史持久化：最近 20 輪存 localStorage，下次當上下文 ---- */
+        function loadHistory() {
+            try {
+                var raw = lsGet(HISTORY_KEY);
+                if (!raw) return [];
+                var arr = JSON.parse(raw);
+                if (!Array.isArray(arr)) return [];
+                return arr.filter(function (m) {
+                    return m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string';
+                }).slice(-HISTORY_MAX_MSGS);
+            } catch (e) { return []; }
+        }
+        function saveHistory() {
+            try {
+                if (chatHistory.length > HISTORY_MAX_MSGS) chatHistory = chatHistory.slice(-HISTORY_MAX_MSGS);
+                lsSet(HISTORY_KEY, JSON.stringify(chatHistory));
+            } catch (e) {}
+        }
+        function pushHistory(userText, assistantText) {
+            if (userText) chatHistory.push({ role: 'user', content: userText });
+            if (assistantText) chatHistory.push({ role: 'assistant', content: assistantText });
+            saveHistory();
+        }
         var buddyName = loadName();
         var memories = loadMemories();
-        var chatHistory = []; /* {role, content}，只放 user / assistant，絕不放 system */
+        var chatHistory = loadHistory(); /* {role, content}，只放 user / assistant，絕不放 system；存的是原始文字，事實前綴每次發送時才現算 */
         var pending = false;
         var greeted = false;
         var suppressClickUntil = 0;
         var forgetAllArmedUntil = 0;
+        var extracting = false;
+        var extractState = (function () {
+            try { var s = JSON.parse(lsGet(EXTRACT_KEY) || '{}'); return { count: (s && s.count) || 0 }; }
+            catch (e) { return { count: 0 }; }
+        })();
+        var patterns = (function () {
+            try {
+                var s = JSON.parse(lsGet(PATTERNS_KEY) || '{}');
+                return { lastRun: (s && s.lastRun) || 0, facts: (s && Array.isArray(s.facts)) ? s.facts : [], blocked: (s && Array.isArray(s.blocked)) ? s.blocked : [] };
+            } catch (e) { return { lastRun: 0, facts: [], blocked: [] }; }
+        })();
+        function savePatterns() { lsSet(PATTERNS_KEY, JSON.stringify(patterns)); }
+        function saveExtractState() { lsSet(EXTRACT_KEY, JSON.stringify(extractState)); }
+
+        /* ---- 記憶合併：去重＋上限（滿了留最新的） ---- */
+        function trimMemories() {
+            if (memories.length > MEM_MAX) memories = memories.slice(-MEM_MAX);
+        }
+        function isDupFact(fact) {
+            var f = fact.trim();
+            if (!f) return true;
+            for (var i = 0; i < memories.length; i++) {
+                var m = memories[i].trim();
+                if (m === f) return true;
+                if (f.length >= 4 && (m.indexOf(f) !== -1 || f.indexOf(m) !== -1)) return true;
+            }
+            return false;
+        }
+        function mergeFacts(facts) {
+            var added = 0;
+            (facts || []).forEach(function (f) {
+                f = (f || '').trim();
+                if (!f || isDupFact(f)) return;
+                memories.push(f);
+                added++;
+            });
+            if (added) { trimMemories(); saveMemories(memories); renderMemories(); }
+            return added;
+        }
+        function parseFacts(text) {
+            var out = [];
+            (text || '').split('\n').forEach(function (line) {
+                var m = line.match(/^FACT:\s*(.+)$/);
+                if (!m) return;
+                var f = m[1].trim();
+                if (f.length >= 3 && f.length <= 80) out.push(f);
+            });
+            return out;
+        }
 
         /* ---- 工時數字（全部取自 App 自己的資料） ---- */
         function fmtHM(m) {
@@ -18069,6 +18150,126 @@
             return /達標|工時|加班|下班|幾點|上了|本週|這週|這個月|本月|打卡|休息|11\s*H|11H|幾小時|幾分|目標/.test(text);
         }
 
+        /* ---- 學習迴圈 1：工作規律（從真實打卡數據歸納，不是猜的） ---- */
+        function median(nums) {
+            if (!nums.length) return null;
+            var s = nums.slice().sort(function (a, b) { return a - b; });
+            return s[Math.floor(s.length / 2)];
+        }
+        function fmtMinutes(mins) {
+            mins = Math.max(0, Math.round(mins));
+            return String(Math.floor(mins / 60)).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0');
+        }
+        function learnPatterns(force) {
+            try {
+                if (!force && Date.now() - patterns.lastRun < 24 * 60 * 60 * 1000) return;
+                var hist = {};
+                try { hist = JSON.parse(lsGet('timecardHistory') || '{}'); } catch (e) { hist = {}; }
+                var inMins = [], outMins = [], taskCount = {}, dayTotals = [];
+                Object.keys(hist).forEach(function (key) {
+                    var recs = hist[key];
+                    if (!Array.isArray(recs)) return;
+                    var dayMin = 0;
+                    for (var i = 0; i < recs.length; i += 2) {
+                        var rIn = recs[i], rOut = recs[i + 1];
+                        if (!rIn || rIn.type !== 'in' || !rIn.time) continue;
+                        var st = new Date(rIn.time);
+                        inMins.push(st.getHours() * 60 + st.getMinutes());
+                        if (rIn.task) taskCount[rIn.task] = (taskCount[rIn.task] || 0) + 1;
+                        var en = (rOut && rOut.type === 'out' && rOut.time) ? new Date(rOut.time) : null;
+                        if (en) {
+                            outMins.push(en.getHours() * 60 + en.getMinutes());
+                            dayMin += (en - st) / 60000;
+                        }
+                    }
+                    if (dayMin > 0) dayTotals.push(dayMin);
+                });
+                var facts = [];
+                function usual(list, label) {
+                    if (list.length < 3) return;
+                    var med = median(list);
+                    var near = list.filter(function (x) { return Math.abs(x - med) <= 30; }).length;
+                    if (near / list.length >= 0.7) facts.push('通常 ' + fmtMinutes(med) + ' 左右' + label);
+                }
+                usual(inMins, '上班');
+                usual(outMins, '下班');
+                var topTask = null, topN = 0;
+                Object.keys(taskCount).forEach(function (t) { if (taskCount[t] > topN) { topN = taskCount[t]; topTask = t; } });
+                if (topTask && topN >= 3) facts.push('常做的任務是「' + topTask + '」');
+                if (dayTotals.length >= 3) {
+                    var avg = dayTotals.reduce(function (a, b) { return a + b; }, 0) / dayTotals.length;
+                    facts.push('平均每天上 ' + fmtHM(avg));
+                }
+                /* 舊的規律事實先下架（數據變了就跟著變），再併入新的；使用者刪掉的放 blocked，不再回來 */
+                var oldFacts = patterns.facts || [];
+                memories = memories.filter(function (m) { return oldFacts.indexOf(m) === -1; });
+                patterns.facts = facts.filter(function (f) { return patterns.blocked.indexOf(f) === -1; });
+                patterns.lastRun = Date.now();
+                savePatterns();
+                mergeFacts(patterns.facts);
+                renderMemories();
+            } catch (e) {}
+        }
+
+        /* ---- 學習迴圈 2：記憶自動萃取（問模型，不用關鍵字硬猜） ---- */
+        function runExtraction() {
+            if (extracting) return;
+            var recent = chatHistory.slice(-12);
+            if (recent.length < 2) return;
+            extracting = true;
+            var lines = recent.map(function (m) { return (m.role === 'user' ? 'U: ' : 'A: ') + String(m.content).slice(0, 300); });
+            var prompt = '[記憶萃取] 以下是使用者最近和你的對話。請只萃取出值得長期記住的事實（喜好、習慣、作息、偏好），每條一行，格式固定為「FACT: ……」。只寫確定的事實，不確定的不要寫；沒有可記的就只回「NONE」。不要寫其他任何文字。\n對話：\n' + lines.join('\n');
+            fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
+            }).then(function (r) {
+                if (!r.ok) throw new Error('http ' + r.status);
+                return r.json();
+            }).then(function (d) {
+                var reply = (d && typeof d.reply === 'string') ? d.reply : '';
+                var facts = parseFacts(reply);
+                if (facts.length) mergeFacts(facts);
+            }).catch(function () {
+                /* 萃取失敗就靜靜跳過，下個週期再試，不打擾使用者 */
+            }).finally(function () { extracting = false; });
+        }
+        function maybeExtract() {
+            extractState.count++;
+            if (extractState.count >= EXTRACT_EVERY) {
+                extractState.count = 0;
+                saveExtractState();
+                runExtraction();
+            } else {
+                saveExtractState();
+            }
+        }
+
+        /* ---- 學習迴圈 3：上下文注入（記憶＋近期對話，量先控好） ---- */
+        function memoryBlock() {
+            if (!memories.length) return '';
+            return '[夥伴記得的事] ' + memories.slice(-12).join('；') + '。';
+        }
+        function buildMessages(text, kind) {
+            var parts = [];
+            var mem = memoryBlock();
+            if (mem) parts.push(mem);
+            if (kind === 'today' || kind === 'week' || kind === 'month' || isWorkQuestion(text)) {
+                parts.push(factsPrefix(kind || 'today'));
+            }
+            var current = (parts.length ? parts.join('\n') + '\n\n' : '') + text;
+            var msgs = chatHistory.slice(-12);
+            var total = current.length + msgs.reduce(function (n, m) { return n + (m.content || '').length; }, 0);
+            while (total > CONTEXT_MAX_CHARS && msgs.length > 2) {
+                var drop = msgs.length > 4 ? 2 : 1;
+                for (var i = 0; i < drop && msgs.length > 2; i++) {
+                    total -= (msgs.shift().content || '').length;
+                }
+            }
+            msgs.push({ role: 'user', content: current });
+            return msgs;
+        }
+
         /* ---- 訊息列表 ---- */
         function scrollBottom() {
             var box = $('t8BuddyMsgs');
@@ -18099,6 +18300,17 @@
         }
 
         /* ---- 記憶指令（本機處理，不送 /api/ai） ---- */
+        /* ---- 記憶刪除（使用者刪掉的規律事實放 blocked，不再學回來） ---- */
+        function forgetMemory(item) {
+            var idx = memories.indexOf(item);
+            if (idx !== -1) memories.splice(idx, 1);
+            if ((patterns.facts || []).indexOf(item) !== -1 && patterns.blocked.indexOf(item) === -1) {
+                patterns.blocked.push(item);
+                savePatterns();
+            }
+            saveMemories(memories);
+            renderMemories();
+        }
         function renderMemories() {
             var list = $('t8BuddyMemList');
             var count = $('t8BuddyMemCount');
@@ -18118,6 +18330,15 @@
                 var li = document.createElement('li');
                 var span = document.createElement('span');
                 span.textContent = m;
+                if ((patterns.facts || []).indexOf(m) !== -1) {
+                    var tag = document.createElement('span');
+                    tag.className = 't8b-tag';
+                    tag.textContent = '規律';
+                    li.appendChild(span);
+                    li.appendChild(tag);
+                } else {
+                    li.appendChild(span);
+                }
                 var btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 't8b-mem-del';
@@ -18125,12 +18346,9 @@
                 btn.textContent = '×';
                 btn.addEventListener('click', function () {
                     var gone = memories[idx];
-                    memories.splice(idx, 1);
-                    saveMemories(memories);
-                    renderMemories();
+                    forgetMemory(gone);
                     addMsg('sys', '已忘記：' + gone);
                 });
-                li.appendChild(span);
                 li.appendChild(btn);
                 list.appendChild(li);
             });
@@ -18154,9 +18372,7 @@
                 }
                 if (idx === -1) return '記憶裡沒有這件事，點「設定」可以看全部。';
                 var gone = memories[idx];
-                memories.splice(idx, 1);
-                saveMemories(memories);
-                renderMemories();
+                forgetMemory(gone);
                 return '好，忘掉「' + gone + '」了。';
             }
             if (/^你記得我什麼[？?]?$/.test(text)) {
@@ -18168,15 +18384,10 @@
             return null;
         }
 
-        /* ---- 送去 /api/ai ---- */
+        /* ---- 送去 /api/ai（上下文：記憶＋近期對話＋工時事實） ---- */
         function sendToAi(text, kind) {
             if (pending) return;
-            var sent = text;
-            if (kind === 'today' || kind === 'week' || kind === 'month' || isWorkQuestion(text)) {
-                sent = factsPrefix(kind || 'today') + '\n\n' + text;
-            }
-            var msgs = chatHistory.slice(-10);
-            msgs.push({ role: 'user', content: sent });
+            var msgs = buildMessages(text, kind);
             pending = true;
             setSendEnabled(false);
             showTyping();
@@ -18194,8 +18405,9 @@
                 if (!reply) throw new Error('empty');
                 hideTyping();
                 addMsg('buddy', reply);
-                chatHistory.push({ role: 'user', content: sent });
-                chatHistory.push({ role: 'assistant', content: reply });
+                setMood(reply);
+                pushHistory(text, reply);
+                maybeExtract();
             }).catch(function (err) {
                 clearTimeout(timer);
                 hideTyping();
@@ -18216,7 +18428,12 @@
             var local = handleLocalCommand(text);
             if (local !== null) {
                 showTyping();
-                setTimeout(function () { hideTyping(); addMsg('buddy', local); }, 800);
+                setTimeout(function () {
+                    hideTyping();
+                    addMsg('buddy', local);
+                    setMood(local);
+                    pushHistory(text, local);
+                }, 800);
                 return;
             }
             sendToAi(text, opts && opts.kind);
@@ -18233,10 +18450,32 @@
             } else {
                 first = '你回來啦。今天上了 ' + fmtHM(d.mins) + '，還差 ' + fmtHM(d.target - d.mins) + '，我盯著。';
             }
-            setTimeout(function () { addMsg('buddy', first); }, 320);
+            setTimeout(function () { addMsg('buddy', first); pushHistory(null, first); }, 320);
             setTimeout(function () {
-                addMsg('buddy', '對了，我不只看工時 — 今天的新聞、明天天氣、附近美食、週末去哪玩、工作上的事都能問，點下面按鈕試試。先說好：我偶爾會亂講一句，但工時數字我算得很認真。');
+                var second = '對了，我不只看工時 — 今天的新聞、明天天氣、附近美食、週末去哪玩、工作上的事都能問，點下面按鈕試試。先說好：我偶爾會亂講一句，但工時數字我算得很認真。';
+                addMsg('buddy', second);
+                setMood(second);
+                pushHistory(null, second);
             }, 320 + 850);
+        }
+        /* ---- 標頭心情符號：跟著最新回覆的語氣走（輕量關鍵字判斷，不做複雜邏輯） ---- */
+        var MOODS = [
+            [/累|辛苦|休息|睡|疲/, '😮‍💨'],
+            [/恭喜|達標|太棒|讚|厲害|完成/, '🎉'],
+            [/加油|衝|拚|努力/, '💪'],
+            [/哈哈|好笑|笑死|有趣/, '😄'],
+            [/唉|無奈|沒辦法|算了/, '😅'],
+            [/得意|嘿嘿/, '😎'],
+            [/開心|高興|耶|讚啦/, '😊'],
+            [/抱歉|對不起|不好意思/, '🙏']
+        ];
+        function setMood(text) {
+            var mood = '🙂';
+            for (var i = 0; i < MOODS.length; i++) {
+                if (MOODS[i][0].test(text || '')) { mood = MOODS[i][1]; break; }
+            }
+            var el = $('t8BuddyMood');
+            if (el) el.textContent = mood;
         }
         function openSheet() {
             var sheet = $('t8BuddySheet'), scrim = $('t8BuddyScrim'), dock = $('t8BuddyDock');
@@ -18432,6 +18671,10 @@
             if (forgetBtn) forgetBtn.addEventListener('click', function () {
                 var now = Date.now();
                 if (now < forgetAllArmedUntil) {
+                    (patterns.facts || []).forEach(function (f) {
+                        if (patterns.blocked.indexOf(f) === -1) patterns.blocked.push(f);
+                    });
+                    savePatterns();
                     memories = [];
                     saveMemories(memories);
                     renderMemories();
@@ -18482,6 +18725,7 @@
             initDrag();
             renderChips();
             initSettings();
+            learnPatterns(false);
             initComposer();
             var closeBtn = $('t8BuddyCloseBtn');
             if (closeBtn) closeBtn.addEventListener('click', closeSheet);
@@ -18512,12 +18756,18 @@
                 handleLocalCommand: handleLocalCommand, loadMemories: loadMemories,
                 loadName: loadName, fmtHM: fmtHM, handleSend: handleSend,
                 openSheet: openSheet, closeSheet: closeSheet,
+                parseFacts: parseFacts, mergeFacts: mergeFacts,
+                learnPatterns: learnPatterns, buildMessages: buildMessages,
+                setMood: setMood, runExtraction: runExtraction,
                 getMemories: function () { return memories.slice(); },
-                getHistory: function () { return chatHistory.slice(); }
+                getHistory: function () { return chatHistory.slice(); },
+                getPatterns: function () { return { facts: patterns.facts.slice(), blocked: patterns.blocked.slice() }; },
+                getExtractCount: function () { return extractState.count; }
             };
         } catch (e) {}
     })();
     </script>
+
 </body>
 
 </html>
