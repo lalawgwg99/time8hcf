@@ -6839,7 +6839,7 @@
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">🧠 記憶在背景 · 聊天指令</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。聊天打「提醒我 18:00 ……」還能排提醒，到時間 App 會跳通知（App 要開著）。</div>
                     </div>
                 </div>
 
@@ -17920,6 +17920,8 @@
         var HISTORY_KEY = 'time8-buddy-history-v1';
         var PATTERNS_KEY = 'time8-buddy-patterns-v1';
         var EXTRACT_KEY = 'time8-buddy-extract-v1';
+        var REM_KEY = 'time8-buddy-reminders-v1'; /* 提醒／待辦（v2.12.8）：{id, text, at, done, createdAt} */
+        var REM_MAX = 20; /* 同時排著的提醒上限 20 條 */
         var HISTORY_MAX_MSGS = 40; /* 20 輪 */
         var CONTEXT_MAX_CHARS = 7000; /* 代理端截斷 8000 字，客戶端先控量 */
         var MEM_MAX = 200; /* 記憶上限 200 條（v2.12.5 背景化）：相關度＋新鮮度修剪，久沒用的先淡出 */
@@ -17937,6 +17939,8 @@
             { cat: '生活', label: '附近有什麼好吃的？', q: '附近有什麼好吃的？', kind: 'food' },
             { cat: '生活', label: '我有點累了', q: '我有點累了', kind: 'tired' },
             { cat: '生活', label: '教他記一件事', q: '記住：我下班後要先去買杏仁茶', kind: 'memory' },
+            { cat: '生活', label: '提醒我 18:00 打卡', q: '提醒我 18:00 下班打卡', kind: 'remind' },
+            { cat: '生活', label: '我的提醒', q: '我的提醒', kind: 'remind' },
             { cat: '生活', label: '你記得我什麼？', q: '你記得我什麼？', kind: 'recall' },
             { cat: '旅遊', label: '週末去哪玩好？', q: '週末去哪玩好？', kind: 'travel' },
             { cat: '事業', label: '幫我想一句貼文文案', q: '幫我想一句貼文文案', kind: 'copy' }
@@ -18499,7 +18503,178 @@
                 if (!memories.length) return '我還沒記住任何事，打「記住：……」教我。';
                 return '我記得：\n' + memories.map(function (x, i) { return (i + 1) + '. ' + x.t; }).join('\n');
             }
+            /* ---- 提醒／待辦（v2.12.8）：本地指令，不走 AI、不花額度 ---- */
+            if (/^提醒我/.test(text)) {
+                var r = parseReminder(text);
+                if (r.error) return r.error;
+                var list = pruneReminders(loadReminders());
+                var dup = list.some(function (x) { return !x.done && x.text === r.text && x.at === r.at; });
+                if (dup) return '這個已經排好了，' + fmtRemindTime(r.at) + '會提醒你「' + r.text + '」。';
+                var pendingCount = list.filter(function (x) { return !x.done; }).length;
+                if (pendingCount >= REM_MAX) return '提醒排太多了（最多 ' + REM_MAX + ' 條），先取消一條再排。打「我的提醒」看看。';
+                list.push({ id: Date.now(), text: r.text, at: r.at, done: false, createdAt: Date.now() });
+                saveReminders(list);
+                return '好，⏰ ' + fmtRemindTime(r.at) + '提醒你「' + r.text + '」' + (r.moved ? '（這個時間今天已經過了，幫你排明天）' : '') + '。到時間 App 會跳通知，記得把 App 開著。';
+            }
+            if (/^我的提醒$/.test(text)) {
+                var mine = pruneReminders(loadReminders()).filter(function (x) { return !x.done; });
+                mine.sort(function (a, b) { return a.at - b.at; });
+                if (!mine.length) return '目前沒有排好的提醒。打「提醒我 18:00 ……」就能排一個。';
+                return '排好的提醒：\n' + mine.map(function (x, i) { return (i + 1) + '. ' + fmtRemindTime(x.at) + '「' + x.text + '」'; }).join('\n') + '\n取消打「取消提醒：內容」。';
+            }
+            if ((m = text.match(/^取消提醒[：:]\s*(.+)$/)) || (m = text.match(/^取消提醒\s+(.+)$/))) {
+                var key = m[1].trim();
+                var all = loadReminders();
+                var idx = -1;
+                for (var i = 0; i < all.length; i++) {
+                    if (!all[i].done && (all[i].text.indexOf(key) !== -1 || key.indexOf(all[i].text) !== -1)) { idx = i; break; }
+                }
+                if (idx === -1) return '沒有排著「' + key + '」的提醒。打「我的提醒」看看排了什麼。';
+                var gone = all[idx];
+                all.splice(idx, 1);
+                saveReminders(all);
+                return '好，取消了 ' + fmtRemindTime(gone.at) + '「' + gone.text + '」的提醒。';
+            }
+            if (/^取消提醒$/.test(text)) {
+                return '要取消哪一條？打「取消提醒：內容」，或先打「我的提醒」看看排了什麼。';
+            }
             return null;
+        }
+
+        /* ---- 提醒／待辦（v2.12.8）：聊天說「提醒我……」就記下來，到時間用 App 現有的 triggerAlarm 推播（App 開著才會響，關掉不會，沒有後端推播就老實講） ---- */
+        function loadReminders() {
+            try {
+                var arr = JSON.parse(lsGet(REM_KEY) || '[]');
+                if (!Array.isArray(arr)) return [];
+                return arr.filter(function (r) {
+                    return r && typeof r.text === 'string' && typeof r.at === 'number' && typeof r.id === 'number';
+                });
+            } catch (e) { return []; }
+        }
+        function saveReminders(list) { lsSet(REM_KEY, JSON.stringify(list)); }
+        /* 已經響過超過 24 小時的提醒清掉，排著的永遠留著 */
+        function pruneReminders(list) {
+            var now = Date.now();
+            return list.filter(function (r) { return !r.done || (now - (r.firedAt || r.at) < 24 * 3600 * 1000); });
+        }
+        /* 中文數字轉阿拉伯：支援 一～九十九（十、十一、二十、二十五、三十） */
+        function cnNumToInt(cn) {
+            var D = { '一': 1, '二': 2, '兩': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
+            if (/^\d+$/.test(cn)) return parseInt(cn, 10);
+            var t = cn.indexOf('十');
+            if (t === -1) return D[cn] || NaN;
+            var tens = t === 0 ? 1 : (D[cn[t - 1]] || NaN);
+            if (isNaN(tens)) return NaN;
+            var ones = (t + 1 < cn.length) ? (D[cn[t + 1]] || 0) : 0;
+            return tens * 10 + ones;
+        }
+        /* 把「三點」「三十分鐘」「兩小時」這類中文數字先轉成阿拉伯數字，時間解析只認阿拉伯數字 */
+        function normalizeCnTime(s) {
+            return s.replace(/([一二兩三四五六七八九十]+)\s*(?:個\s*)?(點|小時|分(?:鐘)?)/g, function (all, num, unit) {
+                var n = cnNumToInt(num);
+                return isNaN(n) ? all : (n + unit);
+            });
+        }
+        function periodToHour(period, h) {
+            if (period === '上午' || period === '早上') return h === 12 ? 0 : h;
+            if (period === '中午') return h < 11 ? h + 12 : h; /* 中午 1 點 = 13:00，中午 12 點 = 12:00 */
+            if (period === '下午') return h < 12 ? h + 12 : h;
+            if (period === '晚上') return h === 12 ? 0 : (h < 12 ? h + 12 : h);
+            return h;
+        }
+        function fmtRemindTime(at) {
+            var d = new Date(at), now = new Date();
+            if (isNaN(d.getTime())) return '';
+            var hm = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            if (d.toDateString() === now.toDateString()) return '今天 ' + hm;
+            var tom = new Date(now); tom.setDate(now.getDate() + 1);
+            if (d.toDateString() === tom.toDateString()) return '明天 ' + hm;
+            return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + hm;
+        }
+        /* 解析「提醒我……」：回 {at, text, moved} 或 {error}；text 是去掉時間敘述後剩下的事 */
+        function parseReminder(text) {
+            var now = new Date();
+            var s = normalizeCnTime((text || '').trim());
+            var m, at, rest, moved = false;
+            function clockToday(h, min, tomorrow) {
+                var d = new Date(now);
+                if (tomorrow) d.setDate(d.getDate() + 1);
+                d.setHours(h, min, 0, 0);
+                return d.getTime();
+            }
+            if (/半\s*(?:個)?\s*小?時後/.test(s)) {
+                at = Date.now() + 30 * 60000;
+                rest = s.replace(/半\s*(?:個)?\s*小?時後/, ' ');
+            } else if ((m = s.match(/(\d+)\s*小時\s*(\d+)\s*分(?:鐘)?\s*後/))) {
+                var mins = (+m[1]) * 60 + (+m[2]);
+                if (mins <= 0 || mins > 7 * 24 * 60) return { error: '提醒時間要在 1 分鐘～7 天內。' };
+                at = Date.now() + mins * 60000;
+                rest = s.replace(m[0], ' ');
+            } else if ((m = s.match(/(\d+)\s*小時後/))) {
+                var hrs = +m[1];
+                if (hrs <= 0 || hrs > 7 * 24) return { error: '提醒時間要在 1 分鐘～7 天內。' };
+                at = Date.now() + hrs * 3600000;
+                rest = s.replace(m[0], ' ');
+            } else if ((m = s.match(/(\d+)\s*分(?:鐘)?後/))) {
+                var mm = +m[1];
+                if (mm <= 0 || mm > 7 * 24 * 60) return { error: '提醒時間要在 1 分鐘～7 天內。' };
+                at = Date.now() + mm * 60000;
+                rest = s.replace(m[0], ' ');
+            } else if ((m = s.match(/明\s*天\s*(?:(上午|早上|中午|下午|晚上)\s*)?(\d{1,2})(?:\s*[：:](\d{1,2})|\s*點(?:\s*(\d{1,2})\s*分|半)?)?/))) {
+                var h1 = periodToHour(m[1] || '', +m[2]);
+                var min1 = m[3] != null ? +m[3] : (m[4] != null ? +m[4] : (m[0].indexOf('半') !== -1 ? 30 : 0));
+                if (h1 < 0 || h1 > 23 || min1 < 0 || min1 > 59) return { error: '這個時間我看不懂，再說一次，例如「提醒我明天 9:00 打卡」。' };
+                at = clockToday(h1, min1, true);
+                rest = s.replace(m[0], ' ');
+            } else if ((m = s.match(/(上午|早上|中午|下午|晚上)\s*(\d{1,2})(?:\s*[：:](\d{1,2})|\s*點(?:\s*(\d{1,2})\s*分|半)?)?/))) {
+                var h2 = periodToHour(m[1], +m[2]);
+                var min2 = m[3] != null ? +m[3] : (m[4] != null ? +m[4] : (m[0].indexOf('半') !== -1 ? 30 : 0));
+                if (h2 < 0 || h2 > 23 || min2 < 0 || min2 > 59) return { error: '這個時間我看不懂，再說一次，例如「提醒我下午三點開會」。' };
+                at = clockToday(h2, min2, false);
+                if (at <= Date.now()) { at += 24 * 3600000; moved = true; }
+                rest = s.replace(m[0], ' ');
+            } else if ((m = s.match(/(\d{1,2})[：:](\d{2})/))) {
+                var h3 = +m[1], min3 = +m[2];
+                if (h3 < 0 || h3 > 23 || min3 < 0 || min3 > 59) return { error: '這個時間我看不懂，再說一次，例如「提醒我 18:00 下班打卡」。' };
+                at = clockToday(h3, min3, false);
+                if (at <= Date.now()) { at += 24 * 3600000; moved = true; }
+                rest = s.replace(m[0], ' ');
+            } else if ((m = s.match(/(\d{1,2})\s*點(?:\s*(\d{1,2})\s*分|半)?/))) {
+                var h4 = +m[1];
+                var min4 = m[2] != null ? +m[2] : (m[0].indexOf('半') !== -1 ? 30 : 0);
+                if (h4 < 0 || h4 > 23 || min4 < 0 || min4 > 59) return { error: '這個時間我看不懂，再說一次，例如「提醒我 6 點打卡」。' };
+                at = clockToday(h4, min4, false);
+                if (at <= Date.now()) { at += 24 * 3600000; moved = true; }
+                rest = s.replace(m[0], ' ');
+            } else {
+                return { error: '幾點提醒你？例如「提醒我 18:00 下班打卡」或「提醒我 30 分鐘後喝水」。' };
+            }
+            rest = (rest || '').replace(/^提醒我[：:]?\s*/, '').replace(/^提醒\s*/, '').trim()
+                .replace(/的時候$/, '').replace(/^[，。、；：\s]+|[，。、；：\s]+$/g, '');
+            if (!rest) return { error: '提醒你什麼？例如「提醒我 18:00 下班打卡」。' };
+            return { at: at, text: rest, moved: moved };
+        }
+        /* 到時間就響：App 現成的 triggerAlarm（禪意膠囊＋系統通知），開著聊天室也補一句話 */
+        function checkReminders(nowMs) {
+            var now = nowMs || Date.now();
+            var list = loadReminders();
+            var fired = [], changed = false;
+            list.forEach(function (r) {
+                if (!r.done && typeof r.at === 'number' && r.at <= now) {
+                    r.done = true; r.firedAt = now; changed = true; fired.push(r);
+                }
+            });
+            if (changed) saveReminders(pruneReminders(list));
+            fired.forEach(function (r) {
+                try { if (typeof triggerAlarm === 'function') triggerAlarm('⏰ 夥伴提醒', r.text); } catch (e) {}
+                var sheet = $('t8BuddySheet');
+                if (sheet && sheet.classList.contains('t8b-open')) addMsg('buddy', '⏰ 到時間了：「' + r.text + '」');
+            });
+            return fired.length;
+        }
+        function startReminderTimer() {
+            checkReminders();
+            setInterval(checkReminders, 30000);
         }
 
         /* ---- 送去 /api/ai（上下文：記憶＋近期對話＋工時事實） ---- */
@@ -18682,6 +18857,7 @@
             var unread = $('t8BuddyUnread');
             if (unread) unread.classList.add('t8b-hidden');
             lsSet(SEEN_KEY, '1');
+            checkReminders(); /* 開聊天室時也順便看有沒有到期的提醒 */
             if (!greeted) { greeted = true; greet(); }
             setTimeout(function () { var inp = $('t8BuddyInput'); if (inp) inp.focus(); }, 380);
         }
@@ -19086,6 +19262,7 @@
             if ($('t8BuddyUnread') && lsGet(SEEN_KEY)) $('t8BuddyUnread').classList.add('t8b-hidden');
             initDrag();
             startBubbleTimers();
+            startReminderTimer(); /* v2.12.8：每 30 秒檢查一次到期的提醒 */
             var bubbleEl = $('t8BuddyBubble');
             if (bubbleEl) bubbleEl.addEventListener('click', function () { openSheet(); });
             renderChips();
@@ -19134,7 +19311,9 @@
                 setBubbleCat: function (c) { bubbleCat = c; bubbleCatAt = Date.now(); },
                 getBubbleCat: function () { return bubbleCat; },
                 getPatterns: function () { return { facts: patterns.facts.slice(), blocked: patterns.blocked.slice() }; },
-                getExtractCount: function () { return extractState.count; }
+                getExtractCount: function () { return extractState.count; },
+                parseReminder: parseReminder, loadReminders: loadReminders, checkReminders: checkReminders,
+                fmtRemindTime: fmtRemindTime, cnNumToInt: cnNumToInt, getReminders: function () { return loadReminders(); }
             };
         } catch (e) {}
     })();
