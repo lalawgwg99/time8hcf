@@ -5088,6 +5088,75 @@
         #tabToday #zenRestBar.zen-rest-bar {
             margin-top: 8px;
         }
+
+        /* ===== v2.11 夥伴聊天室 ===== */
+        #t8BuddyDock { position: fixed; right: 14px; bottom: 92px; z-index: 40; display: flex; align-items: flex-end; gap: 8px; touch-action: none; user-select: none; -webkit-user-select: none; }
+        #t8BuddyDock.t8b-hidden { display: none; }
+        #t8BuddyDock.t8b-dragging #t8BuddyFab { cursor: grabbing; }
+        #t8BuddyDock.t8b-dragging .t8b-bubble { opacity: .35; }
+        .t8b-bubble { max-width: 200px; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-radius: 14px 14px 4px 14px; padding: 8px 11px; font-size: 12.5px; line-height: 1.55; margin-bottom: 22px; pointer-events: none; box-shadow: 0 4px 14px rgba(30,25,15,.10); }
+        .t8b-bubble b { color: var(--green); }
+        .t8b-fab-col { display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; }
+        #t8BuddyFab { width: 76px; height: 76px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 10px 24px rgba(30,25,15,.22); cursor: grab; padding: 0; flex: none; }
+        #t8BuddyFab img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; display: block; pointer-events: none; }
+        .t8b-unread { position: absolute; top: 2px; right: 6px; min-width: 19px; height: 19px; border-radius: 10px; background: #d63c2f; color: #fff; font-size: 11px; font-weight: 700; border: 2px solid #fff; padding: 0 4px; display: flex; align-items: center; justify-content: center; z-index: 1; pointer-events: none; }
+        .t8b-unread.t8b-hidden { display: none; }
+        .t8b-name { font-size: 11px; font-weight: 700; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-radius: 999px; padding: 2px 10px; box-shadow: 0 2px 8px rgba(30,25,15,.12); white-space: nowrap; max-width: 76px; overflow: hidden; text-overflow: ellipsis; }
+        .t8b-drag-tip { position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%); background: #201d18; color: #fff; font-size: 11.5px; padding: 6px 14px; border-radius: 999px; z-index: 61; pointer-events: none; opacity: 0; transition: opacity .2s; white-space: nowrap; }
+        .t8b-drag-tip.t8b-show { opacity: 1; }
+        #t8BuddyScrim { position: fixed; inset: 0; z-index: 55; background: rgba(28,24,18,.38); opacity: 0; pointer-events: none; transition: opacity .3s; }
+        #t8BuddyScrim.t8b-open { opacity: 1; pointer-events: auto; }
+        #t8BuddySheet { position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 480px; height: 84%; z-index: 60; background: var(--bg); border-radius: 24px 24px 0 0; transform: translateY(105%); transition: transform .32s cubic-bezier(.32,.9,.35,1); display: flex; flex-direction: column; box-shadow: 0 -8px 32px rgba(30,25,15,.25); }
+        #t8BuddySheet.t8b-open { transform: translateY(0); }
+        .t8b-grab { width: 38px; height: 4px; border-radius: 2px; background: #e2ddd2; margin: 8px auto 0; flex: none; }
+        .t8b-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 0.5px solid var(--separator); flex: none; }
+        .t8b-avatar { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: none; padding: 0; background: none; cursor: pointer; flex: none; }
+        .t8b-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; display: block; }
+        .t8b-head-text { min-width: 0; flex: 1; }
+        .t8b-head-name { font-size: 16px; font-weight: 900; color: var(--label); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .t8b-head-sub { font-size: 12px; color: var(--label-tertiary); display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+        .t8b-dot { width: 7px; height: 7px; border-radius: 50%; background: #58a06b; flex: none; }
+        .t8b-settings-btn { margin-left: auto; background: var(--fill-secondary); color: var(--label); border: none; border-radius: 999px; font-size: 13px; font-weight: 700; padding: 8px 14px; min-height: 38px; cursor: pointer; font-family: inherit; flex: none; }
+        .t8b-close-btn { width: 38px; height: 38px; border-radius: 50%; background: none; border: none; font-size: 17px; color: var(--label-tertiary); cursor: pointer; flex: none; }
+        .t8b-settings { display: none; max-height: 46%; overflow-y: auto; padding: 16px 18px 14px; border-bottom: 1px solid var(--separator); flex: none; }
+        .t8b-settings.t8b-open { display: block; }
+        .t8b-set-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .t8b-set-col { flex-direction: column; align-items: stretch; gap: 6px; }
+        .t8b-set-label { width: 42px; flex: none; font-size: 13.5px; font-weight: 600; color: var(--label); }
+        .t8b-set-col .t8b-set-label { width: auto; }
+        .t8b-set-row input { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; color: var(--label); background: var(--card); border: 1px solid var(--separator); border-radius: 10px; padding: 8px 11px; min-height: 40px; font-family: inherit; }
+        .t8b-set-col input { font-size: 13.5px; font-weight: 400; line-height: 1.5; }
+        .t8b-save-btn { background: #201d18; color: #fff; border: none; font-size: 13px; font-weight: 700; border-radius: 10px; min-height: 40px; padding: 8px 14px; cursor: pointer; font-family: inherit; flex: none; }
+        .t8b-mem-head { display: flex; align-items: baseline; gap: 8px; font-size: 13.5px; font-weight: 700; color: var(--label); margin: 4px 0 8px; }
+        .t8b-mem-count { font-size: 12px; color: var(--label-tertiary); font-weight: 500; }
+        .t8b-forget-all { margin-left: auto; background: none; border: none; color: #d63c2f; font-size: 12px; font-weight: 600; cursor: pointer; padding: 4px 6px; font-family: inherit; }
+        .t8b-mem-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+        .t8b-mem-list li { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--separator); border-radius: 10px; padding: 8px 11px; font-size: 13.5px; color: var(--label); }
+        .t8b-mem-list li span { flex: 1; min-width: 0; }
+        .t8b-mem-del { flex: none; width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--fill-secondary); color: var(--label-tertiary); font-size: 14px; line-height: 1; cursor: pointer; }
+        .t8b-mem-empty { font-size: 13px; color: var(--label-tertiary); padding: 4px 2px; }
+        .t8b-mem-note { font-size: 11.5px; color: var(--label-tertiary); line-height: 1.5; margin: 10px 0 0; }
+        .t8b-msgs { flex: 1; overflow-y: auto; padding: 16px 14px 8px; display: flex; flex-direction: column; gap: 8px; }
+        .t8b-msg { max-width: 82%; font-size: 14.5px; line-height: 1.65; padding: 10px 13px; border-radius: 16px; white-space: pre-wrap; word-break: break-word; }
+        .t8b-msg-buddy { align-self: flex-start; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-bottom-left-radius: 5px; }
+        .t8b-msg-me { align-self: flex-end; background: #201d18; color: #fff; border-bottom-right-radius: 5px; }
+        .t8b-msg-sys { align-self: center; background: var(--fill-secondary); color: var(--label-tertiary); font-size: 12px; border-radius: 999px; padding: 6px 13px; max-width: 92%; text-align: center; }
+        .t8b-typing { align-self: flex-start; background: var(--card); border: 1px solid var(--separator); border-radius: 16px; border-bottom-left-radius: 5px; padding: 13px 14px; display: flex; gap: 5px; }
+        .t8b-typing i { width: 6px; height: 6px; border-radius: 50%; background: #cfc8b8; animation: t8b-bounce 1.1s infinite; }
+        .t8b-typing i:nth-child(2) { animation-delay: .18s; }
+        .t8b-typing i:nth-child(3) { animation-delay: .36s; }
+        @keyframes t8b-bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+        .t8b-chips { flex: none; padding: 8px 12px 4px; max-height: 132px; overflow-y: auto; border-top: 0.5px solid var(--separator); }
+        .t8b-chip-group { margin-bottom: 6px; }
+        .t8b-chip-cat { font-size: 11px; color: var(--label-tertiary); margin: 2px 2px 4px; }
+        .t8b-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+        .t8b-chip { min-height: 38px; font-size: 13px; border-radius: 999px; background: var(--card); color: var(--label); border: 1px solid var(--separator); padding: 8px 13px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+        .t8b-composer { flex: none; display: flex; gap: 8px; align-items: flex-end; padding: 9px 12px calc(12px + env(safe-area-inset-bottom)); border-top: 0.5px solid var(--separator); }
+        #t8BuddyInput { flex: 1; min-width: 0; border: 1px solid var(--separator); border-radius: 16px; font-size: 15px; line-height: 1.5; padding: 10px 13px; min-height: 44px; max-height: 96px; resize: none; font-family: inherit; background: var(--card); color: var(--label); }
+        #t8BuddyInput:focus { outline: none; border-color: var(--label); }
+        .t8b-send { width: 44px; height: 44px; border-radius: 50%; background: #201d18; color: #fff; border: none; cursor: pointer; flex: none; display: flex; align-items: center; justify-content: center; }
+        .t8b-send:disabled { opacity: .4; }
+        /* ===== v2.11 夥伴聊天室 end ===== */
     </style>
 </head>
 
@@ -17812,6 +17881,641 @@
         attributeFilter: ['stroke-dashoffset', 'style']
       });
       syncSundial();
+    })();
+    </script>
+
+    <!-- v2.11 夥伴聊天室 -->
+    <div id="t8BuddyDock" class="t8b-hidden" aria-label="夥伴">
+        <div class="t8b-bubble" id="t8BuddyBubble">今天還沒打卡，我陪你。</div>
+        <div class="t8b-fab-col">
+            <button type="button" id="t8BuddyFab" aria-label="打開夥伴聊天室"><img src="buddy.webp" alt="夥伴"></button>
+            <span class="t8b-unread" id="t8BuddyUnread">1</span>
+            <span class="t8b-name" id="t8BuddyNameTag">夥伴</span>
+        </div>
+    </div>
+    <div class="t8b-drag-tip" id="t8BuddyDragTip">就放這裡</div>
+    <div id="t8BuddyScrim"></div>
+    <section id="t8BuddySheet" aria-label="夥伴聊天室">
+        <div class="t8b-grab"></div>
+        <header class="t8b-head">
+            <button type="button" class="t8b-avatar" id="t8BuddyAvatarBtn" aria-label="夥伴設定"><img src="buddy.webp" alt="夥伴"></button>
+            <div class="t8b-head-text">
+                <div class="t8b-head-name" id="t8BuddyHeadName">夥伴</div>
+                <div class="t8b-head-sub"><span class="t8b-dot"></span><span id="t8BuddyHeadSub">什麼都能問 · 記得你 3 件事</span></div>
+            </div>
+            <button type="button" class="t8b-settings-btn" id="t8BuddySettingsBtn">設定</button>
+            <button type="button" class="t8b-close-btn" id="t8BuddyCloseBtn" aria-label="關閉">✕</button>
+        </header>
+        <div class="t8b-settings" id="t8BuddySettings">
+            <div class="t8b-set-row">
+                <label class="t8b-set-label" for="t8BuddyNameInput">名字</label>
+                <input id="t8BuddyNameInput" maxlength="8" value="夥伴" autocomplete="off">
+                <button type="button" class="t8b-save-btn" id="t8BuddyNameSave">儲存</button>
+            </div>
+            <div class="t8b-set-row t8b-set-col">
+                <span class="t8b-set-label">個性</span>
+                <input id="t8BuddyPersonalityInput" value="幽默、無厘頭，偶爾亂講一句；但工時和數字一律算準，達標後安靜。回覆只能用台灣繁體中文；不知道的事情就說不知道，不要亂編。" autocomplete="off">
+            </div>
+            <div class="t8b-mem-head"><span>記憶</span><span class="t8b-mem-count" id="t8BuddyMemCount">3 件事</span><button type="button" class="t8b-forget-all" id="t8BuddyForgetAll">全部忘掉</button></div>
+            <ul class="t8b-mem-list" id="t8BuddyMemList"></ul>
+            <p class="t8b-mem-note">在聊天打「記住：……」新增記憶，點 × 就忘掉。</p>
+        </div>
+        <div class="t8b-msgs" id="t8BuddyMsgs"></div>
+        <div class="t8b-chips" id="t8BuddyChips"></div>
+        <div class="t8b-composer">
+            <textarea id="t8BuddyInput" rows="1" placeholder="問工時、新聞、天氣、美食…或打「記住：……」"></textarea>
+            <button type="button" class="t8b-send" id="t8BuddySend" aria-label="送出"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5" /><path d="M5 12l7-7 7 7" /></svg></button>
+        </div>
+    </section>
+    <!-- v2.11 夥伴聊天室 end -->
+    <script>
+    /* v2.11 夥伴聊天室：懸浮拖拽鈕＋聊天室＋記憶/靈魂＋接 /api/ai（絕不送 system 訊息，靈魂在伺服器端） */
+    (function () {
+        'use strict';
+        var POS_KEY = 'time8-buddy-pos-v1';
+        var NAME_KEY = 'time8-buddy-name-v1';
+        var MEM_KEY = 'time8-buddy-memories-v1';
+        var PERSON_KEY = 'time8-buddy-personality-v1';
+        var SEEN_KEY = 'time8-buddy-seen-v1';
+        var DEFAULT_NAME = '夥伴';
+        var DEFAULT_PERSONALITY = '幽默、無厘頭，偶爾亂講一句；但工時和數字一律算準，達標後安靜。回覆只能用台灣繁體中文；不知道的事情就說不知道，不要亂編。';
+        var DEFAULT_MEMORIES = ['達標之後不要再推提醒', '晚班通常 18:30 左右開始', '累的時候喜歡先深呼吸 1 分鐘'];
+        var QUICK = [
+            { cat: '工時', label: '還差多久達標？', q: '還差多久達標？', kind: 'today' },
+            { cat: '工時', label: '這週上了幾小時？', q: '這週上了幾小時？', kind: 'week' },
+            { cat: '工時', label: '這個月加班多少？', q: '這個月加班多少？', kind: 'month' },
+            { cat: '新聞', label: '今天有什麼新聞？', q: '今天有什麼新聞？', kind: 'news' },
+            { cat: '生活', label: '明天天氣如何？', q: '明天天氣如何？', kind: 'weather' },
+            { cat: '生活', label: '附近有什麼好吃的？', q: '附近有什麼好吃的？', kind: 'food' },
+            { cat: '生活', label: '我有點累了', q: '我有點累了', kind: 'tired' },
+            { cat: '生活', label: '教他記一件事', q: '記住：我下班後要先去買杏仁茶', kind: 'memory' },
+            { cat: '生活', label: '你記得我什麼？', q: '你記得我什麼？', kind: 'recall' },
+            { cat: '旅遊', label: '週末去哪玩好？', q: '週末去哪玩好？', kind: 'travel' },
+            { cat: '事業', label: '幫我想一句貼文文案', q: '幫我想一句貼文文案', kind: 'copy' }
+        ];
+        var NEWS_DEMO = '（示範）我現在還沒接即時新聞，查不到今天最新的消息，我不會亂編。等接上即時查詢，我會把今天國內、國際、財經的重點整理成 3–5 則給你，每則附出處。';
+        var WEATHER_DEMO = '（示範）我現在還沒接即時氣象，查不到明天高雄的準確天氣，亂報會害你淋雨。等接上即時查詢再問我。';
+        var ERR_FRIENDLY = '夥伴現在有點累，連不上——等一下再問我一次。';
+        var ERR_FAST = '問太快了，休息一下再問我。';
+
+        function $(id) { return document.getElementById(id); }
+        function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+        function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+        function lsDel(k) { try { window.localStorage.removeItem(k); } catch (e) {} }
+
+        /* ---- 設定：名字 / 個性 / 記憶（localStorage 持久化） ---- */
+        function loadName() {
+            var n = lsGet(NAME_KEY);
+            return (n && n.trim()) ? n.trim() : DEFAULT_NAME;
+        }
+        function loadPersonality() {
+            var p = lsGet(PERSON_KEY);
+            return (p && p.trim()) ? p : DEFAULT_PERSONALITY;
+        }
+        function loadMemories() {
+            try {
+                var raw = lsGet(MEM_KEY);
+                if (!raw) return DEFAULT_MEMORIES.slice();
+                var arr = JSON.parse(raw);
+                return Array.isArray(arr) ? arr.filter(function (x) { return typeof x === 'string' && x.trim(); }) : DEFAULT_MEMORIES.slice();
+            } catch (e) { return DEFAULT_MEMORIES.slice(); }
+        }
+        function saveMemories(list) { lsSet(MEM_KEY, JSON.stringify(list)); }
+        var buddyName = loadName();
+        var memories = loadMemories();
+        var chatHistory = []; /* {role, content}，只放 user / assistant，絕不放 system */
+        var pending = false;
+        var greeted = false;
+        var suppressClickUntil = 0;
+        var forgetAllArmedUntil = 0;
+
+        /* ---- 工時數字（全部取自 App 自己的資料） ---- */
+        function fmtHM(m) {
+            m = Math.max(0, Math.round(m));
+            var h = Math.floor(m / 60), r = m % 60;
+            return h > 0 ? h + ' 小時 ' + r + ' 分' : r + ' 分';
+        }
+        function fmtClock(iso) {
+            if (!iso) return '';
+            var d = new Date(iso);
+            if (isNaN(d.getTime())) return '';
+            return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        }
+        function getTodayData() {
+            try {
+                var mins = (typeof getDayTotalMinutes === 'function' && typeof getTodayKey === 'function') ? getDayTotalMinutes(getTodayKey()) : 0;
+                var target = (typeof getTargetMinutes === 'function') ? getTargetMinutes() : 480;
+                var recs = (typeof punchRecords !== 'undefined' && Array.isArray(punchRecords)) ? punchRecords : [];
+                return { mins: Math.max(0, Math.round(mins || 0)), target: target || 480, records: recs };
+            } catch (e) { return { mins: 0, target: 480, records: [] }; }
+        }
+        function punchLines(recs) {
+            var out = [];
+            for (var i = 0; i < recs.length; i += 2) {
+                var rIn = recs[i], rOut = recs[i + 1];
+                if (!rIn || !rIn.time) continue;
+                if (rOut && rOut.time) out.push(fmtClock(rIn.time) + '～' + fmtClock(rOut.time));
+                else out.push(fmtClock(rIn.time) + '～進行中');
+            }
+            return out;
+        }
+        function dayKeyOf(d) {
+            if (typeof getLocalDateStr === 'function') return getLocalDateStr(d);
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+        function dayTotal(key) {
+            try { return (typeof getDayTotalMinutes === 'function') ? (getDayTotalMinutes(key) || 0) : 0; }
+            catch (e) { return 0; }
+        }
+        function weekFacts() {
+            var now = new Date();
+            var dow = (now.getDay() + 6) % 7; /* 週一=0 */
+            var total = 0, parts = [];
+            for (var i = 0; i <= dow; i++) {
+                var d = new Date(now); d.setDate(now.getDate() - (dow - i));
+                var m = Math.round(dayTotal(dayKeyOf(d)));
+                total += m;
+                parts.push('週' + '一二三四五六日'[i] + ' ' + fmtHM(m));
+            }
+            return '[本週工時事實] 本週（週一至今）累計 ' + fmtHM(total) + '（' + Math.round(total) + ' 分鐘）。各日：' + parts.join('、') + '。';
+        }
+        function monthFacts() {
+            var now = new Date();
+            var target = (typeof getTargetMinutes === 'function') ? getTargetMinutes() : 480;
+            var total = 0, overtime = 0, days = 0;
+            for (var d = 1; d <= now.getDate(); d++) {
+                var dt = new Date(now.getFullYear(), now.getMonth(), d);
+                var m = Math.round(dayTotal(dayKeyOf(dt)));
+                if (m > 0) { days++; total += m; overtime += Math.max(0, m - target); }
+            }
+            return '[本月工時事實] ' + (now.getMonth() + 1) + ' 月累計 ' + fmtHM(total) + '，出勤 ' + days + ' 天，加班 ' + fmtHM(overtime) + '（超過每日目標 ' + fmtHM(target) + ' 的部分）。';
+        }
+        function todayFacts() {
+            var d = getTodayData();
+            var now = new Date();
+            var clock = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            var s = '[今日工時事實] 今天已上 ' + fmtHM(d.mins) + '（' + d.mins + ' 分鐘），目標 ' + fmtHM(d.target) + '，還差 ' + fmtHM(Math.max(0, d.target - d.mins)) + '。';
+            var lines = punchLines(d.records);
+            if (lines.length) s += '打卡：' + lines.join('、') + '。';
+            s += '現在 ' + clock + '。請用這些數字回答，數字要準。';
+            return s;
+        }
+        function factsPrefix(kind) {
+            if (kind === 'week') return weekFacts();
+            if (kind === 'month') return monthFacts();
+            return todayFacts();
+        }
+        function isWorkQuestion(text) {
+            return /達標|工時|加班|下班|幾點|上了|本週|這週|這個月|本月|打卡|休息|11\s*H|11H|幾小時|幾分|目標/.test(text);
+        }
+
+        /* ---- 訊息列表 ---- */
+        function scrollBottom() {
+            var box = $('t8BuddyMsgs');
+            if (box) box.scrollTop = box.scrollHeight;
+        }
+        function addMsg(role, text) {
+            var box = $('t8BuddyMsgs');
+            if (!box) return;
+            var el = document.createElement('div');
+            el.className = 't8b-msg ' + (role === 'me' ? 't8b-msg-me' : role === 'sys' ? 't8b-msg-sys' : 't8b-msg-buddy');
+            el.textContent = text;
+            box.appendChild(el);
+            scrollBottom();
+        }
+        function showTyping() {
+            var box = $('t8BuddyMsgs');
+            if (!box || $('t8BuddyTyping')) return;
+            var el = document.createElement('div');
+            el.className = 't8b-typing';
+            el.id = 't8BuddyTyping';
+            el.innerHTML = '<i></i><i></i><i></i>';
+            box.appendChild(el);
+            scrollBottom();
+        }
+        function hideTyping() {
+            var el = $('t8BuddyTyping');
+            if (el && el.parentNode) el.parentNode.removeChild(el);
+        }
+
+        /* ---- 記憶指令（本機處理，不送 /api/ai） ---- */
+        function renderMemories() {
+            var list = $('t8BuddyMemList');
+            var count = $('t8BuddyMemCount');
+            var sub = $('t8BuddyHeadSub');
+            if (count) count.textContent = memories.length + ' 件事';
+            if (sub) sub.textContent = '什麼都能問 · 記得你 ' + memories.length + ' 件事';
+            if (!list) return;
+            list.innerHTML = '';
+            if (!memories.length) {
+                var empty = document.createElement('div');
+                empty.className = 't8b-mem-empty';
+                empty.textContent = '還沒記住任何事。';
+                list.appendChild(empty);
+                return;
+            }
+            memories.forEach(function (m, idx) {
+                var li = document.createElement('li');
+                var span = document.createElement('span');
+                span.textContent = m;
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 't8b-mem-del';
+                btn.setAttribute('aria-label', '忘記這件事');
+                btn.textContent = '×';
+                btn.addEventListener('click', function () {
+                    var gone = memories[idx];
+                    memories.splice(idx, 1);
+                    saveMemories(memories);
+                    renderMemories();
+                    addMsg('sys', '已忘記：' + gone);
+                });
+                li.appendChild(span);
+                li.appendChild(btn);
+                list.appendChild(li);
+            });
+        }
+        function handleLocalCommand(text) {
+            var m;
+            if ((m = text.match(/^記住[：:]\s*(.+)$/)) || (m = text.match(/^記住\s+(.+)$/))) {
+                var item = m[1].trim();
+                if (!item) return '要記什麼？打「記住：……」告訴我。';
+                if (memories.indexOf(item) !== -1) return '這個我早就記住了。';
+                memories.push(item);
+                saveMemories(memories);
+                renderMemories();
+                return '記好了：「' + item + '」。寫進我的小本本了，下次還記得。';
+            }
+            if ((m = text.match(/^忘記[：:]\s*(.+)$/)) || (m = text.match(/^忘記\s+(.+)$/))) {
+                var key = m[1].trim();
+                var idx = -1;
+                for (var i = 0; i < memories.length; i++) {
+                    if (memories[i].indexOf(key) !== -1 || key.indexOf(memories[i]) !== -1) { idx = i; break; }
+                }
+                if (idx === -1) return '記憶裡沒有這件事，點「設定」可以看全部。';
+                var gone = memories[idx];
+                memories.splice(idx, 1);
+                saveMemories(memories);
+                renderMemories();
+                return '好，忘掉「' + gone + '」了。';
+            }
+            if (/^你記得我什麼[？?]?$/.test(text)) {
+                if (!memories.length) return '我還沒記住任何事，打「記住：……」教我。';
+                return '我記得：\n' + memories.map(function (x, i) { return (i + 1) + '. ' + x; }).join('\n');
+            }
+            if (/新聞/.test(text)) return NEWS_DEMO;
+            if (/天氣/.test(text)) return WEATHER_DEMO;
+            return null;
+        }
+
+        /* ---- 送去 /api/ai ---- */
+        function sendToAi(text, kind) {
+            if (pending) return;
+            var sent = text;
+            if (kind === 'today' || kind === 'week' || kind === 'month' || isWorkQuestion(text)) {
+                sent = factsPrefix(kind || 'today') + '\n\n' + text;
+            }
+            var msgs = chatHistory.slice(-10);
+            msgs.push({ role: 'user', content: sent });
+            pending = true;
+            setSendEnabled(false);
+            showTyping();
+            var ctrl = null;
+            try { ctrl = new AbortController(); } catch (e) {}
+            var timer = setTimeout(function () { try { if (ctrl) ctrl.abort(); } catch (e) {} }, 35000);
+            var opts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: msgs }) };
+            if (ctrl) opts.signal = ctrl.signal;
+            fetch('/api/ai', opts).then(function (r) {
+                clearTimeout(timer);
+                if (!r.ok) { var err = new Error('http ' + r.status); err.status = r.status; throw err; }
+                return r.json();
+            }).then(function (d) {
+                var reply = (d && typeof d.reply === 'string') ? d.reply : '';
+                if (!reply) throw new Error('empty');
+                hideTyping();
+                addMsg('buddy', reply);
+                chatHistory.push({ role: 'user', content: sent });
+                chatHistory.push({ role: 'assistant', content: reply });
+            }).catch(function (err) {
+                clearTimeout(timer);
+                hideTyping();
+                addMsg('buddy', (err && err.status === 429) ? ERR_FAST : ERR_FRIENDLY);
+            }).finally(function () {
+                pending = false;
+                setSendEnabled(true);
+            });
+        }
+        function setSendEnabled(on) {
+            var btn = $('t8BuddySend');
+            if (btn) btn.disabled = !on;
+        }
+        function handleSend(rawText, opts) {
+            var text = (rawText || '').trim();
+            if (!text || pending) return;
+            addMsg('me', text);
+            var local = handleLocalCommand(text);
+            if (local !== null) {
+                showTyping();
+                setTimeout(function () { hideTyping(); addMsg('buddy', local); }, 800);
+                return;
+            }
+            sendToAi(text, opts && opts.kind);
+        }
+
+        /* ---- 開關聊天室 ---- */
+        function greet() {
+            var d = getTodayData();
+            var first;
+            if (!d.records.length && d.mins <= 0) {
+                first = '你回來啦。今天還沒打卡，目標是 ' + fmtHM(d.target) + '，我盯著。';
+            } else if (d.mins >= d.target) {
+                first = '你回來啦。今天已經達標了（' + fmtHM(d.mins) + '），辛苦了。';
+            } else {
+                first = '你回來啦。今天上了 ' + fmtHM(d.mins) + '，還差 ' + fmtHM(d.target - d.mins) + '，我盯著。';
+            }
+            setTimeout(function () { addMsg('buddy', first); }, 320);
+            setTimeout(function () {
+                addMsg('buddy', '對了，我不只看工時 — 今天的新聞、明天天氣、附近美食、週末去哪玩、工作上的事都能問，點下面按鈕試試。先說好：我偶爾會亂講一句，但工時數字我算得很認真。');
+            }, 320 + 850);
+        }
+        function openSheet() {
+            var sheet = $('t8BuddySheet'), scrim = $('t8BuddyScrim'), dock = $('t8BuddyDock');
+            if (!sheet) return;
+            sheet.classList.add('t8b-open');
+            if (scrim) scrim.classList.add('t8b-open');
+            if (dock) dock.classList.add('t8b-hidden');
+            var unread = $('t8BuddyUnread');
+            if (unread) unread.classList.add('t8b-hidden');
+            lsSet(SEEN_KEY, '1');
+            if (!greeted) { greeted = true; greet(); }
+            setTimeout(function () { var inp = $('t8BuddyInput'); if (inp) inp.focus(); }, 380);
+        }
+        function closeSheet() {
+            var sheet = $('t8BuddySheet'), scrim = $('t8BuddyScrim');
+            if (sheet) sheet.classList.remove('t8b-open');
+            if (scrim) scrim.classList.remove('t8b-open');
+            var set = $('t8BuddySettings');
+            if (set) set.classList.remove('t8b-open');
+            syncDockVisibility();
+            refreshBubble();
+        }
+        function toggleSettings() {
+            var set = $('t8BuddySettings');
+            if (set) set.classList.toggle('t8b-open');
+        }
+
+        /* ---- 懸浮鈕：拖拽＋位置記憶 ---- */
+        function clampPos(x, y) {
+            var dock = $('t8BuddyDock');
+            var w = (dock && dock.offsetWidth) || 290;
+            var h = (dock && dock.offsetHeight) || 110;
+            x = Math.max(6, Math.min(x, window.innerWidth - w - 6));
+            y = Math.max(44, Math.min(y, window.innerHeight - h - 78));
+            return { x: Math.round(x), y: Math.round(y) };
+        }
+        function restorePos() {
+            try {
+                var raw = lsGet(POS_KEY);
+                if (!raw) return;
+                var p = JSON.parse(raw);
+                if (typeof p.x !== 'number' || typeof p.y !== 'number') return;
+                var dock = $('t8BuddyDock');
+                if (!dock) return;
+                var c = clampPos(p.x, p.y);
+                dock.style.left = c.x + 'px';
+                dock.style.top = c.y + 'px';
+                dock.style.right = 'auto';
+                dock.style.bottom = 'auto';
+            } catch (e) {}
+        }
+        function initDrag() {
+            var fab = $('t8BuddyFab'), dock = $('t8BuddyDock');
+            if (!fab || !dock) return;
+            var startX = 0, startY = 0, baseLeft = 0, baseTop = 0, dragging = false;
+            fab.addEventListener('pointerdown', function (e) {
+                try { e.preventDefault(); } catch (err) {}
+                var r = dock.getBoundingClientRect();
+                startX = e.clientX; startY = e.clientY;
+                baseLeft = r.left; baseTop = r.top;
+                dragging = false;
+                try { fab.setPointerCapture(e.pointerId); } catch (err) {}
+            });
+            fab.addEventListener('pointermove', function (e) {
+                var dx = e.clientX - startX, dy = e.clientY - startY;
+                if (!dragging && Math.hypot(dx, dy) < 7) return;
+                if (!dragging) { dragging = true; dock.classList.add('t8b-dragging'); }
+                var c = clampPos(baseLeft + dx, baseTop + dy);
+                dock.style.left = c.x + 'px';
+                dock.style.top = c.y + 'px';
+                dock.style.right = 'auto';
+                dock.style.bottom = 'auto';
+            });
+            function endDrag(save) {
+                if (!dragging) return;
+                dragging = false;
+                dock.classList.remove('t8b-dragging');
+                if (!save) return;
+                var r = dock.getBoundingClientRect();
+                var c = clampPos(r.left, r.top);
+                lsSet(POS_KEY, JSON.stringify({ x: c.x, y: c.y }));
+                var tip = $('t8BuddyDragTip');
+                if (tip) {
+                    tip.classList.add('t8b-show');
+                    setTimeout(function () { tip.classList.remove('t8b-show'); }, 1100);
+                }
+                suppressClickUntil = Date.now() + 60;
+            }
+            fab.addEventListener('pointerup', function () { endDrag(true); });
+            fab.addEventListener('pointercancel', function () { endDrag(false); });
+            fab.addEventListener('click', function () {
+                if (Date.now() < suppressClickUntil) return;
+                openSheet();
+            });
+            window.addEventListener('resize', function () {
+                if (dock.style.left) {
+                    var r = dock.getBoundingClientRect();
+                    var c = clampPos(r.left, r.top);
+                    dock.style.left = c.x + 'px';
+                    dock.style.top = c.y + 'px';
+                }
+            });
+        }
+
+        /* ---- 懸浮泡泡文字（真實數字） ---- */
+        function refreshBubble() {
+            var el = $('t8BuddyBubble');
+            if (!el) return;
+            var d = getTodayData();
+            el.textContent = '';
+            if (!d.records.length && d.mins <= 0) { el.textContent = '今天還沒打卡，我陪你。'; return; }
+            if (d.mins >= d.target) { el.textContent = '今天達標了，辛苦了。'; return; }
+            var b = document.createElement('b');
+            b.textContent = fmtHM(d.target - d.mins);
+            el.appendChild(document.createTextNode('還差 '));
+            el.appendChild(b);
+            el.appendChild(document.createTextNode('，我陪你。'));
+        }
+
+        /* ---- 只在首頁（今日頁）顯示懸浮鈕 ---- */
+        function syncDockVisibility() {
+            var dock = $('t8BuddyDock');
+            var today = $('tabToday');
+            var sheet = $('t8BuddySheet');
+            if (!dock) return;
+            var onToday = !!(today && today.classList.contains('active'));
+            var sheetOpen = !!(sheet && sheet.classList.contains('t8b-open'));
+            if (onToday && !sheetOpen) {
+                dock.classList.remove('t8b-hidden');
+                refreshBubble();
+            } else {
+                dock.classList.add('t8b-hidden');
+            }
+        }
+
+        /* ---- 快捷問句（五類） ---- */
+        function renderChips() {
+            var box = $('t8BuddyChips');
+            if (!box) return;
+            var order = ['工時', '新聞', '生活', '旅遊', '事業'];
+            order.forEach(function (cat) {
+                var items = QUICK.filter(function (x) { return x.cat === cat; });
+                if (!items.length) return;
+                var g = document.createElement('div');
+                g.className = 't8b-chip-group';
+                var label = document.createElement('div');
+                label.className = 't8b-chip-cat';
+                label.textContent = cat;
+                var row = document.createElement('div');
+                row.className = 't8b-chip-row';
+                items.forEach(function (item) {
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 't8b-chip';
+                    b.textContent = item.label;
+                    b.addEventListener('click', function () { handleSend(item.q, { kind: item.kind }); });
+                    row.appendChild(b);
+                });
+                g.appendChild(label);
+                g.appendChild(row);
+                box.appendChild(g);
+            });
+        }
+
+        /* ---- 設定儲存 ---- */
+        function applyName(name) {
+            buddyName = name;
+            var head = $('t8BuddyHeadName');
+            var tag = $('t8BuddyNameTag');
+            if (head) head.textContent = name;
+            if (tag) tag.textContent = name;
+        }
+        function initSettings() {
+            var nameInput = $('t8BuddyNameInput');
+            var personInput = $('t8BuddyPersonalityInput');
+            if (nameInput) nameInput.value = buddyName;
+            if (personInput) personInput.value = loadPersonality();
+            applyName(buddyName);
+            var saveBtn = $('t8BuddyNameSave');
+            if (saveBtn) saveBtn.addEventListener('click', function () {
+                var v = (nameInput ? nameInput.value : '').trim();
+                if (!v) return;
+                lsSet(NAME_KEY, v);
+                applyName(v);
+                addMsg('sys', '名字改成了「' + v + '」');
+                setTimeout(function () { addMsg('buddy', '好，我叫「' + v + '」。'); }, 650);
+            });
+            if (personInput) personInput.addEventListener('change', function () {
+                var v = personInput.value.trim();
+                lsSet(PERSON_KEY, v || DEFAULT_PERSONALITY);
+            });
+            var forgetBtn = $('t8BuddyForgetAll');
+            if (forgetBtn) forgetBtn.addEventListener('click', function () {
+                var now = Date.now();
+                if (now < forgetAllArmedUntil) {
+                    memories = [];
+                    saveMemories(memories);
+                    renderMemories();
+                    addMsg('sys', '已經全部忘掉了。');
+                    forgetBtn.textContent = '全部忘掉';
+                    forgetAllArmedUntil = 0;
+                    return;
+                }
+                forgetAllArmedUntil = now + 3000;
+                forgetBtn.textContent = '確定忘掉全部？';
+                setTimeout(function () {
+                    if (Date.now() >= forgetAllArmedUntil) forgetBtn.textContent = '全部忘掉';
+                }, 3000);
+            });
+            renderMemories();
+        }
+
+        /* ---- 輸入框 ---- */
+        function initComposer() {
+            var input = $('t8BuddyInput');
+            var send = $('t8BuddySend');
+            if (!input || !send) return;
+            function autoGrow() {
+                input.style.height = 'auto';
+                input.style.height = Math.min(input.scrollHeight, 96) + 'px';
+            }
+            input.addEventListener('input', autoGrow);
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    var v = input.value;
+                    input.value = '';
+                    autoGrow();
+                    handleSend(v, {});
+                }
+            });
+            send.addEventListener('click', function () {
+                var v = input.value;
+                input.value = '';
+                autoGrow();
+                handleSend(v, {});
+            });
+        }
+
+        /* ---- 啟動 ---- */
+        function init() {
+            if ($('t8BuddyUnread') && lsGet(SEEN_KEY)) $('t8BuddyUnread').classList.add('t8b-hidden');
+            initDrag();
+            renderChips();
+            initSettings();
+            initComposer();
+            var closeBtn = $('t8BuddyCloseBtn');
+            if (closeBtn) closeBtn.addEventListener('click', closeSheet);
+            var scrim = $('t8BuddyScrim');
+            if (scrim) scrim.addEventListener('click', closeSheet);
+            var setBtn = $('t8BuddySettingsBtn');
+            if (setBtn) setBtn.addEventListener('click', toggleSettings);
+            var avatarBtn = $('t8BuddyAvatarBtn');
+            if (avatarBtn) avatarBtn.addEventListener('click', toggleSettings);
+            var today = $('tabToday');
+            if (today && typeof MutationObserver !== 'undefined') {
+                new MutationObserver(function () { syncDockVisibility(); }).observe(today, { attributes: true, attributeFilter: ['class'] });
+            }
+            if (typeof requestAnimationFrame === 'function') {
+                requestAnimationFrame(function () { restorePos(); syncDockVisibility(); });
+            } else {
+                restorePos();
+                syncDockVisibility();
+            }
+        }
+        try { init(); } catch (e) { try { console.error('t8 buddy init failed', e); } catch (err) {} }
+
+        /* 供本地自測的最小出口（不影響正式行為） */
+        try {
+            window.__t8buddy = {
+                QUICK: QUICK, isWorkQuestion: isWorkQuestion,
+                todayFacts: todayFacts, weekFacts: weekFacts, monthFacts: monthFacts,
+                handleLocalCommand: handleLocalCommand, loadMemories: loadMemories,
+                loadName: loadName, fmtHM: fmtHM, handleSend: handleSend,
+                openSheet: openSheet, closeSheet: closeSheet,
+                getMemories: function () { return memories.slice(); },
+                getHistory: function () { return chatHistory.slice(); }
+            };
+        } catch (e) {}
     })();
     </script>
 </body>
