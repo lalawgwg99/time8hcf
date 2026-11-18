@@ -6839,7 +6839,7 @@
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">🧠 記憶在背景 · 聊天指令</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。</div>
                     </div>
                 </div>
 
@@ -17895,6 +17895,11 @@
                 <input id="t8BuddyNameInput" maxlength="8" value="夥伴" autocomplete="off">
                 <button type="button" class="t8b-save-btn" id="t8BuddyNameSave">儲存</button>
             </div>
+            <div class="t8b-set-row" style="margin-bottom:0;">
+                <label class="t8b-set-label">記憶</label>
+                <span style="flex:1; min-width:0; font-size:12.5px; color:var(--label-secondary);">在背景記住 <span id="t8BuddyMemCount">0</span> 件事，不顯示清單</span>
+                <button type="button" class="t8b-save-btn" id="t8BuddyForgetAll" style="background:transparent; color:#d70015; border:1px solid #d70015;">全部忘掉</button>
+            </div>
         </div>
         <div class="t8b-msgs" id="t8BuddyMsgs"></div>
         <div class="t8b-chips" id="t8BuddyChips"></div>
@@ -17946,7 +17951,7 @@
         function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
         function lsDel(k) { try { window.localStorage.removeItem(k); } catch (e) {} }
 
-        /* ---- 設定：只剩名字；個性與記憶已背景化（個性由伺服器端靈魂固定，記憶走聊天指令） ---- */
+        /* ---- 設定：只剩名字＋全部忘掉；個性與記憶已背景化（個性由伺服器端靈魂固定，記憶走聊天指令） ---- */
         function loadName() {
             var n = lsGet(NAME_KEY);
             return (n && n.trim()) ? n.trim() : DEFAULT_NAME;
@@ -18439,10 +18444,23 @@
             saveMemories(memories);
             renderMemories();
         }
-        /* 記憶已背景化：設定頁不顯示清單，這裡只更新標頭「記得你 N 件事」 */
+        /* 記憶已背景化：設定頁不顯示清單，這裡只更新標頭「記得你 N 件事」與設定頁的件數 */
         function renderMemories() {
             var sub = $('t8BuddyHeadSub');
             if (sub) sub.textContent = '什麼都能問 · 記得你 ' + memories.length + ' 件事';
+            var cnt = $('t8BuddyMemCount');
+            if (cnt) cnt.textContent = memories.length;
+        }
+        /* 全部忘掉（設定頁按鈕與聊天指令共用）：封住已學到的規律事實＋清空背景記憶 */
+        function forgetAllMemories() {
+            (patterns.facts || []).forEach(function (f) {
+                if (patterns.blocked.indexOf(f) === -1) patterns.blocked.push(f);
+            });
+            savePatterns();
+            memories = [];
+            saveMemories(memories);
+            renderMemories();
+            forgetAllArmedUntil = 0;
         }
         function handleLocalCommand(text) {
             var m;
@@ -18459,14 +18477,7 @@
             if (/^忘[掉記]全部$/.test(text)) {
                 var now = Date.now();
                 if (now < forgetAllArmedUntil) {
-                    (patterns.facts || []).forEach(function (f) {
-                        if (patterns.blocked.indexOf(f) === -1) patterns.blocked.push(f);
-                    });
-                    savePatterns();
-                    memories = [];
-                    saveMemories(memories);
-                    renderMemories();
-                    forgetAllArmedUntil = 0;
+                    forgetAllMemories();
                     return '已經全部忘掉了。';
                 }
                 forgetAllArmedUntil = now + 3000;
@@ -19024,6 +19035,21 @@
                 applyName(v);
                 addMsg('sys', '名字改成了「' + v + '」');
                 setTimeout(function () { addMsg('buddy', '好，我叫「' + v + '」。'); }, 650);
+            });
+            var forgetBtn = $('t8BuddyForgetAll');
+            if (forgetBtn) forgetBtn.addEventListener('click', function () {
+                var now = Date.now();
+                if (now < forgetAllArmedUntil) {
+                    forgetAllMemories();
+                    forgetBtn.textContent = '全部忘掉';
+                    addMsg('sys', '已經全部忘掉了。');
+                    return;
+                }
+                forgetAllArmedUntil = now + 3000;
+                forgetBtn.textContent = '確定忘掉？';
+                setTimeout(function () {
+                    if (forgetBtn.textContent === '確定忘掉？') forgetBtn.textContent = '全部忘掉';
+                }, 3100);
             });
             renderMemories();
         }
