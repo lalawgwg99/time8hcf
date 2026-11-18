@@ -8,6 +8,7 @@ const FETCH_TIMEOUT_MS = 10000;
 const WEATHER_CACHE_MS = 10 * 60 * 1000;
 const NEWS_MAX = 8;
 const NEWS_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
+const YAHOO_RSS = 'https://tw.news.yahoo.com/rss';
 
 const CITIES = {
   '台北': [25.03, 121.56], '新北': [25.01, 121.46], '桃園': [24.99, 121.30],
@@ -73,7 +74,7 @@ function splitTitle(raw) {
   return { title: raw, source: '' };
 }
 
-function parseNewsRss(xml) {
+function parseNewsRss(xml, defaultSource) {
   const items = [];
   const blocks = xml.match(/<item>[\s\S]*?<\/item>/gi) || [];
   for (const b of blocks) {
@@ -87,23 +88,33 @@ function parseNewsRss(xml) {
       const d = new Date(pub);
       if (!isNaN(d.getTime())) time = d.toISOString();
     }
-    items.push({ title, source, time, link });
+    items.push({ title, source: source || defaultSource || '', time, link });
     if (items.length >= NEWS_MAX) break;
   }
   return items;
 }
 
-async function fetchNews(q) {
-  const base = q
-    ? 'https://news.google.com/rss/search?q=' + encodeURIComponent(q) + '&hl=zh-TW&gl=TW&ceid=TW:zh-Hant'
-    : 'https://news.google.com/rss?hl=zh-TW&gl=TW&ceid=TW:zh-Hant';
-  const res = await fetch(base, {
+async function fetchRssText(url) {
+  const res = await fetch(url, {
     headers: { 'User-Agent': NEWS_UA, Accept: 'application/rss+xml, application/xml, text/xml' },
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
-  if (!res.ok) throw new Error('news upstream ' + res.status);
-  const xml = await res.text();
-  return parseNewsRss(xml);
+  if (!res.ok) throw new Error('rss upstream ' + res.status);
+  return res.text();
+}
+
+// Google News 優先；Workers 出口 IP 被 Google 擋時退到 Yahoo 奇摩（只有頭條、無搜尋）
+async function fetchNews(q) {
+  const googleUrl = q
+    ? 'https://news.google.com/rss/search?q=' + encodeURIComponent(q) + '&hl=zh-TW&gl=TW&ceid=TW:zh-Hant'
+    : 'https://news.google.com/rss?hl=zh-TW&gl=TW&ceid=TW:zh-Hant';
+  try {
+    const items = parseNewsRss(await fetchRssText(googleUrl), 'Google 新聞');
+    if (items.length) return { items, source: 'Google News', query: q || null };
+  } catch (e) { /* 掉到備援 */ }
+  const items = parseNewsRss(await fetchRssText(YAHOO_RSS), 'Yahoo奇摩新聞');
+  if (!items.length) throw new Error('yahoo empty');
+  return { items, source: 'Yahoo奇摩新聞', query: null };
 }
 
 function wmoDesc(code) {
@@ -163,8 +174,8 @@ export async function onRequestGet(context) {
   try {
     if (kind === 'news') {
       const q = (url.searchParams.get('q') || '').trim().slice(0, 30);
-      const items = await fetchNews(q || null);
-      return json({ kind: 'news', query: q || null, fetchedAt: new Date().toISOString(), items });
+      const { items, source, query } = await fetchNews(q || null);
+      return json({ kind: 'news', query, source, fetchedAt: new Date().toISOString(), items });
     }
     const city = (url.searchParams.get('city') || '高雄').trim();
     const name = CITIES[city] ? city : '高雄';

@@ -18184,7 +18184,7 @@
                 if (it.link) s += ' ' + it.link;
                 return s;
             });
-            return '[即時新聞事實｜來源：Google News，' + fmtTpeTime(data.fetchedAt) + ' 抓取] 請只根據以下事實回答，註明每則的出處與時間；沒有的事不要編。\n' + lines.join('\n');
+            return '[即時新聞事實｜來源：' + (data.source || 'Google News') + '，' + fmtTpeTime(data.fetchedAt) + ' 抓取] 請只根據以下事實回答，註明每則的出處與時間；沒有的事不要編。\n' + lines.join('\n');
         }
         function formatWeatherFacts(data) {
             if (!data || !data.current) return '';
