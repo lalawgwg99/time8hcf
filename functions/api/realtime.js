@@ -2,7 +2,7 @@
 // 只回伺服器端抓到的事實，絕不編造；上游掛了就回通用錯誤，不洩漏細節。
 // 天氣 in-memory 快取 10 分鐘；新聞不快取（RSS 本身就是最新的）。
 
-const RATE_LIMIT = 20; // 每 IP 每 10 分鐘最多 20 次
+const RATE_LIMIT = 60; // 每 IP 每 10 分鐘最多 60 次（v2.12.3：使用者連續測試＋泡泡天氣抓取共用，放寬）
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 10000;
 const WEATHER_CACHE_MS = 10 * 60 * 1000;

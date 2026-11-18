@@ -17946,7 +17946,7 @@
         var HISTORY_MAX_MSGS = 40; /* 20 輪 */
         var CONTEXT_MAX_CHARS = 7000; /* 代理端截斷 8000 字，客戶端先控量 */
         var MEM_MAX = 30; /* 記憶上限，滿了留最新的 */
-        var EXTRACT_EVERY = 3; /* 每 3 輪 AI 對話萃取一次 */
+        var EXTRACT_EVERY = 10; /* 每 10 輪 AI 對話萃取一次（v2.12.3：不要跟使用者搶額度） */
         var DEFAULT_NAME = '夥伴';
         var DEFAULT_PERSONALITY = '幽默、無厘頭，偶爾亂講一句；但工時和數字一律算準，達標後安靜。回覆只能用台灣繁體中文；不知道的事情就說不知道，不要亂編。';
         var DEFAULT_MEMORIES = ['達標之後不要再推提醒', '晚班通常 18:30 左右開始', '累的時候喜歡先深呼吸 1 分鐘'];
@@ -17966,7 +17966,7 @@
         var NEWS_FAIL = '即時新聞現在連不上，我查不到今天最新的消息，我不會亂編。等一下再問我一次。';
         var WEATHER_FAIL = '即時天氣現在連不上，我查不到準確天氣，亂報會害你淋雨。等一下再問我一次。';
         var ERR_FRIENDLY = '夥伴現在有點累，連不上——等一下再問我一次。';
-        var ERR_FAST = '問太快了，休息一下再問我。';
+        var ERR_FAST = '問太快了，休息一下再問我，等一下就能問了。';
 
         function $(id) { return document.getElementById(id); }
         function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
@@ -18260,7 +18260,8 @@
 
         /* ---- 學習迴圈 2：記憶自動萃取（問模型，不用關鍵字硬猜） ---- */
         function runExtraction() {
-            if (extracting) return;
+            /* 萃取絕對不跟使用者提問同時打：使用者正在問或正在抓即時資料時跳過這輪 */
+            if (extracting || pending || fetchingRealtime) return;
             var recent = chatHistory.slice(-12);
             if (recent.length < 2) return;
             extracting = true;
@@ -18269,7 +18270,7 @@
             fetch('/api/ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
+                body: JSON.stringify({ messages: [{ role: 'user', content: prompt }], extract: true })
             }).then(function (r) {
                 if (!r.ok) throw new Error('http ' + r.status);
                 return r.json();
@@ -18286,7 +18287,8 @@
             if (extractState.count >= EXTRACT_EVERY) {
                 extractState.count = 0;
                 saveExtractState();
-                runExtraction();
+                /* 延後 3 秒再萃取，讓使用者那一輪完全落定；到時還在忙就跳過 */
+                setTimeout(runExtraction, 3000);
             } else {
                 saveExtractState();
             }
@@ -18444,7 +18446,15 @@
             if (ctrl) opts.signal = ctrl.signal;
             fetch('/api/ai', opts).then(function (r) {
                 clearTimeout(timer);
-                if (!r.ok) { var err = new Error('http ' + r.status); err.status = r.status; throw err; }
+                if (!r.ok) {
+                    /* 把伺服器端真正的錯誤原因帶回來顯示，不要用通用訊息蓋掉 */
+                    return r.json().catch(function () { return null; }).then(function (d) {
+                        var err = new Error('http ' + r.status);
+                        err.status = r.status;
+                        err.serverMsg = (d && typeof d.error === 'string') ? d.error : '';
+                        throw err;
+                    });
+                }
                 return r.json();
             }).then(function (d) {
                 var reply = (d && typeof d.reply === 'string') ? d.reply : '';
@@ -18457,7 +18467,8 @@
             }).catch(function (err) {
                 clearTimeout(timer);
                 hideTyping();
-                addMsg('buddy', (err && err.status === 429) ? ERR_FAST : ERR_FRIENDLY);
+                var msg = (err && err.serverMsg) ? err.serverMsg : ((err && err.status === 429) ? ERR_FAST : ERR_FRIENDLY);
+                addMsg('buddy', msg);
             }).finally(function () {
                 pending = false;
                 setSendEnabled(true);
@@ -18466,6 +18477,21 @@
         function setSendEnabled(on) {
             var btn = $('t8BuddySend');
             if (btn) btn.disabled = !on;
+        }
+        /* ---- 天氣 fallback：App 頂端現成的 cachedWeather（6 小時內），標註是稍早的資料 ---- */
+        function cachedWeatherFacts() {
+            try {
+                var w = JSON.parse(lsGet('cachedWeather') || 'null');
+                if (!w || typeof w.temp !== 'number' || !w.time) return '';
+                var ageMin = Math.round((Date.now() - w.time) / 60000);
+                if (ageMin < 0 || ageMin > 360) return '';
+                var s = '[天氣事實｜來源：App 稍早抓取，約 ' + ageMin + ' 分鐘前] ' + (w.city || '') + '：' + (w.text || '') + '，' + Math.round(w.temp) + '°C';
+                if (typeof w.apparent === 'number') s += '，體感 ' + Math.round(w.apparent) + '°C';
+                if (typeof w.humidity === 'number') s += '，濕度 ' + w.humidity + '%';
+                if (typeof w.windSpeed === 'number') s += '，風速 ' + w.windSpeed + ' km/h';
+                if (typeof w.tempMax === 'number') s += '。今日最高 ' + Math.round(w.tempMax) + '°C／最低 ' + Math.round(w.tempMin) + '°C，降雨機率 ' + (w.popMax || 0) + '%';
+                return s + '。這是稍早的天氣資料，請註明資料時間；沒有的部分不要編。';
+            } catch (e) { return ''; }
         }
         /* ---- 即時查詢：先打 /api/realtime 抓事實，再把事實當上下文送 /api/ai ---- */
         var fetchingRealtime = false;
@@ -18483,7 +18509,7 @@
             if (ctrl) opts.signal = ctrl.signal;
             fetch(url, opts).then(function (r) {
                 clearTimeout(timer);
-                if (!r.ok) throw new Error('http ' + r.status);
+                if (!r.ok) { var err = new Error('http ' + r.status); err.status = r.status; throw err; }
                 return r.json();
             }).then(function (d) {
                 var facts = rt.kind === 'news' ? formatNewsFacts(d) : formatWeatherFacts(d);
@@ -18491,10 +18517,27 @@
                 fetchingRealtime = false;
                 hideTyping();
                 sendToAi(text, rt.kind, facts);
-            }).catch(function () {
+            }).catch(function (err) {
                 clearTimeout(timer);
                 fetchingRealtime = false;
                 hideTyping();
+                /* 限流（429）就是問太快了，不是即時查詢壞掉：原因要講對 */
+                if (err && err.status === 429) {
+                    if (rt.kind === 'weather') {
+                        var fb429 = cachedWeatherFacts();
+                        if (fb429) { sendToAi(text, rt.kind, fb429); return; }
+                    }
+                    addMsg('buddy', ERR_FAST);
+                    setMood(ERR_FAST);
+                    pushHistory(text, ERR_FAST);
+                    setSendEnabled(true);
+                    return;
+                }
+                /* 天氣即時查不到時，退回 App 頂端現成的天氣資料（cachedWeather，6 小時內），標註是稍早的資料 */
+                if (rt.kind === 'weather') {
+                    var fb = cachedWeatherFacts();
+                    if (fb) { sendToAi(text, rt.kind, fb); return; }
+                }
                 var msg = rt.kind === 'news' ? NEWS_FAIL : WEATHER_FAIL;
                 addMsg('buddy', msg);
                 setMood(msg);
