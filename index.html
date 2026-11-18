@@ -5146,11 +5146,10 @@
         .t8b-typing i:nth-child(2) { animation-delay: .18s; }
         .t8b-typing i:nth-child(3) { animation-delay: .36s; }
         @keyframes t8b-bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
-        .t8b-chips { flex: none; padding: 8px 12px 4px; max-height: 132px; overflow-y: auto; border-top: 0.5px solid var(--separator); }
-        .t8b-chip-group { margin-bottom: 6px; }
-        .t8b-chip-cat { font-size: 11px; color: var(--label-tertiary); margin: 2px 2px 4px; }
-        .t8b-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
-        .t8b-chip { min-height: 38px; font-size: 13px; border-radius: 999px; background: var(--card); color: var(--label); border: 1px solid var(--separator); padding: 8px 13px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+        .t8b-chips { flex: none; padding: 8px 12px; overflow-x: auto; overflow-y: hidden; border-top: 0.5px solid var(--separator); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .t8b-chips::-webkit-scrollbar { display: none; }
+        .t8b-chip-row { display: flex; flex-wrap: nowrap; gap: 6px; width: max-content; }
+        .t8b-chip { flex: none; min-height: 32px; font-size: 12.5px; border-radius: 999px; background: var(--card); color: var(--label); border: 1px solid var(--separator); padding: 6px 11px; cursor: pointer; font-family: inherit; white-space: nowrap; }
         .t8b-composer { flex: none; display: flex; gap: 8px; align-items: flex-end; padding: 9px 12px calc(12px + env(safe-area-inset-bottom)); border-top: 0.5px solid var(--separator); }
         #t8BuddyInput { flex: 1; min-width: 0; border: 1px solid var(--separator); border-radius: 16px; font-size: 15px; line-height: 1.5; padding: 10px 13px; min-height: 44px; max-height: 96px; resize: none; font-family: inherit; background: var(--card); color: var(--label); }
         #t8BuddyInput:focus { outline: none; border-color: var(--label); }
@@ -17962,8 +17961,8 @@
             { cat: '旅遊', label: '週末去哪玩好？', q: '週末去哪玩好？', kind: 'travel' },
             { cat: '事業', label: '幫我想一句貼文文案', q: '幫我想一句貼文文案', kind: 'copy' }
         ];
-        var NEWS_DEMO = '（示範）我現在還沒接即時新聞，查不到今天最新的消息，我不會亂編。等接上即時查詢，我會把今天國內、國際、財經的重點整理成 3–5 則給你，每則附出處。';
-        var WEATHER_DEMO = '（示範）我現在還沒接即時氣象，查不到明天高雄的準確天氣，亂報會害你淋雨。等接上即時查詢再問我。';
+        var NEWS_FAIL = '即時新聞現在連不上，我查不到今天最新的消息，我不會亂編。等一下再問我一次。';
+        var WEATHER_FAIL = '即時天氣現在連不上，我查不到準確天氣，亂報會害你淋雨。等一下再問我一次。';
         var ERR_FRIENDLY = '夥伴現在有點累，連不上——等一下再問我一次。';
         var ERR_FAST = '問太快了，休息一下再問我。';
 
@@ -18150,6 +18149,52 @@
             return /達標|工時|加班|下班|幾點|上了|本週|這週|這個月|本月|打卡|休息|11\s*H|11H|幾小時|幾分|目標/.test(text);
         }
 
+        /* ---- 即時查詢意圖偵測＋事實格式化（v2.12：先抓事實再問模型，絕不編） ---- */
+        var RT_CITIES = ['台北', '新北', '桃園', '新竹', '台中', '嘉義', '台南', '高雄', '基隆', '宜蘭', '花蓮', '台東', '澎湖', '金門', '馬祖'];
+        function extractCity(text) {
+            for (var i = 0; i < RT_CITIES.length; i++) {
+                if (text.indexOf(RT_CITIES[i]) !== -1) return RT_CITIES[i];
+            }
+            return '高雄';
+        }
+        function extractNewsQuery(text) {
+            var q = text.replace(/新聞|頭條|今天|最新|消息|發生|什麼事|有|什麼|請問|幫我|查|一下|的|嗎|？|\?|！|!/g, '').trim();
+            return (q && q.length <= 20) ? q : '';
+        }
+        function detectRealtime(text, kind) {
+            if (kind === 'news') return { kind: 'news', q: extractNewsQuery(text) };
+            if (kind === 'weather') return { kind: 'weather', city: extractCity(text) };
+            if (/新聞|頭條|今天發生|最新消息|發生什麼事/.test(text)) return { kind: 'news', q: extractNewsQuery(text) };
+            if (/天氣|下雨|氣溫|會冷嗎|明天天氣/.test(text)) return { kind: 'weather', city: extractCity(text) };
+            return null;
+        }
+        function fmtTpeTime(iso) {
+            try {
+                var d = new Date(iso);
+                if (isNaN(d.getTime())) return '';
+                return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            } catch (e) { return ''; }
+        }
+        function formatNewsFacts(data) {
+            var items = (data && Array.isArray(data.items)) ? data.items : [];
+            if (!items.length) return '';
+            var lines = items.slice(0, 8).map(function (it, i) {
+                var s = (i + 1) + '. ' + (it.title || '');
+                if (it.source) s += '（' + it.source + (it.time ? '，' + fmtTpeTime(it.time) : '') + '）';
+                if (it.link) s += ' ' + it.link;
+                return s;
+            });
+            return '[即時新聞事實｜來源：Google News，' + fmtTpeTime(data.fetchedAt) + ' 抓取] 請只根據以下事實回答，註明每則的出處與時間；沒有的事不要編。\n' + lines.join('\n');
+        }
+        function formatWeatherFacts(data) {
+            if (!data || !data.current) return '';
+            var c = data.current, t = data.today || {}, n = data.tomorrow || {};
+            var s = '[即時天氣事實｜來源：Open-Meteo，' + fmtTpeTime(data.fetchedAt) + ' 抓取] ' + (data.city || '') + '現在：' + (c.desc || '') + '，' + c.temp + '°C，體感 ' + c.feelsLike + '°C，濕度 ' + c.humidity + '%，風速 ' + c.wind + ' km/h。';
+            if (t.max != null) s += '今日：' + (t.desc || '') + '，最高 ' + t.max + '°C／最低 ' + t.min + '°C，降雨機率 ' + t.rainChance + '%。';
+            if (n.max != null) s += '明日：' + (n.desc || '') + '，最高 ' + n.max + '°C／最低 ' + n.min + '°C，降雨機率 ' + n.rainChance + '%。';
+            return s + '請只根據這些事實回答，註明來源與時間；沒有的事不要編。';
+        }
+
         /* ---- 學習迴圈 1：工作規律（從真實打卡數據歸納，不是猜的） ---- */
         function median(nums) {
             if (!nums.length) return null;
@@ -18250,10 +18295,11 @@
             if (!memories.length) return '';
             return '[夥伴記得的事] ' + memories.slice(-12).join('；') + '。';
         }
-        function buildMessages(text, kind) {
+        function buildMessages(text, kind, extraFacts) {
             var parts = [];
             var mem = memoryBlock();
             if (mem) parts.push(mem);
+            if (extraFacts) parts.push(extraFacts);
             if (kind === 'today' || kind === 'week' || kind === 'month' || isWorkQuestion(text)) {
                 parts.push(factsPrefix(kind || 'today'));
             }
@@ -18379,15 +18425,13 @@
                 if (!memories.length) return '我還沒記住任何事，打「記住：……」教我。';
                 return '我記得：\n' + memories.map(function (x, i) { return (i + 1) + '. ' + x; }).join('\n');
             }
-            if (/新聞/.test(text)) return NEWS_DEMO;
-            if (/天氣/.test(text)) return WEATHER_DEMO;
             return null;
         }
 
         /* ---- 送去 /api/ai（上下文：記憶＋近期對話＋工時事實） ---- */
-        function sendToAi(text, kind) {
+        function sendToAi(text, kind, extraFacts) {
             if (pending) return;
-            var msgs = buildMessages(text, kind);
+            var msgs = buildMessages(text, kind, extraFacts);
             pending = true;
             setSendEnabled(false);
             showTyping();
@@ -18421,9 +18465,44 @@
             var btn = $('t8BuddySend');
             if (btn) btn.disabled = !on;
         }
+        /* ---- 即時查詢：先打 /api/realtime 抓事實，再把事實當上下文送 /api/ai ---- */
+        var fetchingRealtime = false;
+        function fetchRealtimeThenAsk(text, rt) {
+            fetchingRealtime = true;
+            setSendEnabled(false);
+            showTyping();
+            var url = '/api/realtime?kind=' + rt.kind
+                + (rt.kind === 'news' && rt.q ? '&q=' + encodeURIComponent(rt.q) : '')
+                + (rt.kind === 'weather' ? '&city=' + encodeURIComponent(rt.city) : '');
+            var ctrl = null;
+            try { ctrl = new AbortController(); } catch (e) {}
+            var timer = setTimeout(function () { try { if (ctrl) ctrl.abort(); } catch (e) {} }, 15000);
+            var opts = { method: 'GET' };
+            if (ctrl) opts.signal = ctrl.signal;
+            fetch(url, opts).then(function (r) {
+                clearTimeout(timer);
+                if (!r.ok) throw new Error('http ' + r.status);
+                return r.json();
+            }).then(function (d) {
+                var facts = rt.kind === 'news' ? formatNewsFacts(d) : formatWeatherFacts(d);
+                if (!facts) throw new Error('empty');
+                fetchingRealtime = false;
+                hideTyping();
+                sendToAi(text, rt.kind, facts);
+            }).catch(function () {
+                clearTimeout(timer);
+                fetchingRealtime = false;
+                hideTyping();
+                var msg = rt.kind === 'news' ? NEWS_FAIL : WEATHER_FAIL;
+                addMsg('buddy', msg);
+                setMood(msg);
+                pushHistory(text, msg);
+                setSendEnabled(true);
+            });
+        }
         function handleSend(rawText, opts) {
             var text = (rawText || '').trim();
-            if (!text || pending) return;
+            if (!text || pending || fetchingRealtime) return;
             addMsg('me', text);
             var local = handleLocalCommand(text);
             if (local !== null) {
@@ -18436,7 +18515,9 @@
                 }, 800);
                 return;
             }
-            sendToAi(text, opts && opts.kind);
+            var rt = detectRealtime(text, opts && opts.kind);
+            if (rt) { fetchRealtimeThenAsk(text, rt); return; }
+            sendToAi(text, opts && opts.kind, '');
         }
 
         /* ---- 開關聊天室 ---- */
@@ -18615,29 +18696,17 @@
         function renderChips() {
             var box = $('t8BuddyChips');
             if (!box) return;
-            var order = ['工時', '新聞', '生活', '旅遊', '事業'];
-            order.forEach(function (cat) {
-                var items = QUICK.filter(function (x) { return x.cat === cat; });
-                if (!items.length) return;
-                var g = document.createElement('div');
-                g.className = 't8b-chip-group';
-                var label = document.createElement('div');
-                label.className = 't8b-chip-cat';
-                label.textContent = cat;
-                var row = document.createElement('div');
-                row.className = 't8b-chip-row';
-                items.forEach(function (item) {
-                    var b = document.createElement('button');
-                    b.type = 'button';
-                    b.className = 't8b-chip';
-                    b.textContent = item.label;
-                    b.addEventListener('click', function () { handleSend(item.q, { kind: item.kind }); });
-                    row.appendChild(b);
-                });
-                g.appendChild(label);
-                g.appendChild(row);
-                box.appendChild(g);
+            var row = document.createElement('div');
+            row.className = 't8b-chip-row';
+            QUICK.forEach(function (item) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 't8b-chip';
+                b.textContent = item.label;
+                b.addEventListener('click', function () { handleSend(item.q, { kind: item.kind }); });
+                row.appendChild(b);
             });
+            box.appendChild(row);
         }
 
         /* ---- 設定儲存 ---- */
@@ -18761,6 +18830,8 @@
                 setMood: setMood, runExtraction: runExtraction,
                 getMemories: function () { return memories.slice(); },
                 getHistory: function () { return chatHistory.slice(); },
+                detectRealtime: detectRealtime, extractCity: extractCity, extractNewsQuery: extractNewsQuery,
+                formatNewsFacts: formatNewsFacts, formatWeatherFacts: formatWeatherFacts,
                 getPatterns: function () { return { facts: patterns.facts.slice(), blocked: patterns.blocked.slice() }; },
                 getExtractCount: function () { return extractState.count; }
             };
