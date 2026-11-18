@@ -17096,15 +17096,6 @@
                 window._restAlarmTriggered = false;
             }
 
-            // --- 今日工時達成提醒 (Daily Target Hours Goal) ---
-            if (result.total >= targetMin && punchRecords.length > 0) {
-                if (!window._targetGoalAlarmTriggered) {
-                    window._targetGoalAlarmTriggered = true;
-                    triggerAlarm('今日工時已達標', `已滿 ${appSettings.targetHours || 8} 小時`, '🎉');
-                }
-            } else if (result.total < targetMin) {
-                window._targetGoalAlarmTriggered = false;
-            }
 
             // --- 前日下班光環徽章更新 ---
             updateYesterdayPunchOutDisplay();
@@ -17735,7 +17726,7 @@
             overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:10000;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);';
 
             const steps = [
-                { icon: 'fas fa-chart-pie', title: '追蹤工時', desc: '圓環即時顯示今日累計，達標自動提醒' },
+                { icon: 'fas fa-chart-pie', title: '追蹤工時', desc: '圓環即時顯示今日累計' },
                 { icon: 'fas fa-fingerprint', title: '一鍵打卡', desc: '點擊按鈕上班，記錄工作階段' },
                 { icon: 'fas fa-arrow-right', title: '滑動下班', desc: '工作中滑動即可結束，防止誤觸' }
             ];
