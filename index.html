@@ -5123,21 +5123,9 @@
         .t8b-settings { display: none; max-height: 46%; overflow-y: auto; padding: 16px 18px 14px; border-bottom: 1px solid var(--separator); flex: none; }
         .t8b-settings.t8b-open { display: block; }
         .t8b-set-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-        .t8b-set-col { flex-direction: column; align-items: stretch; gap: 6px; }
         .t8b-set-label { width: 42px; flex: none; font-size: 13.5px; font-weight: 600; color: var(--label); }
-        .t8b-set-col .t8b-set-label { width: auto; }
         .t8b-set-row input { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; color: var(--label); background: var(--card); border: 1px solid var(--separator); border-radius: 10px; padding: 8px 11px; min-height: 40px; font-family: inherit; }
-        .t8b-set-col input { font-size: 13.5px; font-weight: 400; line-height: 1.5; }
         .t8b-save-btn { background: #201d18; color: #fff; border: none; font-size: 13px; font-weight: 700; border-radius: 10px; min-height: 40px; padding: 8px 14px; cursor: pointer; font-family: inherit; flex: none; }
-        .t8b-mem-head { display: flex; align-items: baseline; gap: 8px; font-size: 13.5px; font-weight: 700; color: var(--label); margin: 4px 0 8px; }
-        .t8b-mem-count { font-size: 12px; color: var(--label-tertiary); font-weight: 500; }
-        .t8b-forget-all { margin-left: auto; background: none; border: none; color: #d63c2f; font-size: 12px; font-weight: 600; cursor: pointer; padding: 4px 6px; font-family: inherit; }
-        .t8b-mem-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-        .t8b-mem-list li { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--separator); border-radius: 10px; padding: 8px 11px; font-size: 13.5px; color: var(--label); }
-        .t8b-mem-list li span { flex: 1; min-width: 0; }
-        .t8b-mem-del { flex: none; width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--fill-secondary); color: var(--label-tertiary); font-size: 14px; line-height: 1; cursor: pointer; }
-        .t8b-mem-empty { font-size: 13px; color: var(--label-tertiary); padding: 4px 2px; }
-        .t8b-mem-note { font-size: 11.5px; color: var(--label-tertiary); line-height: 1.5; margin: 10px 0 0; }
         .t8b-msgs { flex: 1; overflow-y: auto; padding: 16px 14px 8px; display: flex; flex-direction: column; gap: 8px; }
         .t8b-msg { max-width: 82%; font-size: 14.5px; line-height: 1.65; padding: 10px 13px; border-radius: 16px; white-space: pre-wrap; word-break: break-word; }
         .t8b-msg-buddy { align-self: flex-start; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-bottom-left-radius: 5px; }
@@ -5158,7 +5146,6 @@
         .t8b-send { width: 44px; height: 44px; border-radius: 50%; background: #201d18; color: #fff; border: none; cursor: pointer; flex: none; display: flex; align-items: center; justify-content: center; }
         .t8b-send:disabled { opacity: .4; }
         .t8b-mood { font-size: 15px; }
-        .t8b-tag { font-size: 10.5px; color: var(--green); border: 1px solid var(--separator); border-radius: 999px; padding: 1px 7px; flex: none; white-space: nowrap; }
         /* ===== v2.11 夥伴聊天室 end ===== */
     </style>
 </head>
@@ -6796,7 +6783,7 @@
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">4 大分類即時新聞</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">焦點、財經、科技、生活每 15 分鐘自動同步，邊聽電台邊看新聞。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">焦點、財經、科技、生活切換到新聞頁時自動更新，新聞快取 30 分鐘，也可按刷新立即更新。</div>
                     </div>
                 </div>
 
@@ -6836,6 +6823,23 @@
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">教學 ↗</span>
                         </div>
                         <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">Safari 分享 ➔「加入主畫面」，享全螢幕極速體驗。</div>
+                    </div>
+                </div>
+
+                <!-- 5.【夥伴】AI 夥伴 -->
+                <div class="section-label">5.【夥伴】AI 夥伴</div>
+                <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
+                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">🤖 夥伴懸浮鈕 · 拖曳聊天</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">首頁怪獸臉可拖到任意位置、位置會記住；點一下開聊天室，旁邊泡泡會輪流講工時、天氣、問候與關心。</div>
+                    </div>
+                    <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">💬 什麼都能問 · 數字算準</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">問工時、新聞、天氣、美食、旅遊、事業；工時用真實打卡算，新聞天氣查真資料，查不到老實說不編。</div>
+                    </div>
+                    <div style="padding:12px 16px;">
+                        <div style="font-size:13.5px; font-weight:600; color:var(--label);">🧠 記憶在背景 · 聊天指令</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理。</div>
                     </div>
                 </div>
 
@@ -7292,21 +7296,6 @@
                         <i class="fas fa-chevron-right" style="font-size:11px; color:var(--label-quaternary);"></i>
                     </div>
 
-                    <!-- HRIS 出勤系統 Link Row -->
-                    <a href="https://hris.uni-prosperity.com.tw/NewRadar/Account/LogOn" target="_blank" rel="noopener noreferrer"
-                        style="padding:13px 16px; border-top:0.5px solid var(--separator); display:flex; align-items:center; justify-content:space-between; text-decoration:none; cursor:pointer; -webkit-tap-highlight-color:transparent;" class="active:opacity-70">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <i class="fas fa-building-user" style="color:var(--blue); font-size:15px; width:18px; text-align:center;"></i>
-                            <div>
-                                <div style="font-size:13.5px; color:var(--label); font-weight:500;">HRIS 出勤系統</div>
-                                <div style="font-size:11px; color:var(--label-tertiary);">快速跳轉企業人資系統</div>
-                            </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:4px; color:var(--label-quaternary);">
-                            <span style="font-size:11px; font-weight:400;">前往</span>
-                            <i class="fas fa-arrow-up-right-from-square" style="font-size:11px;"></i>
-                        </div>
-                    </a>
                 </div>
 
                 <!-- 時數顯示風格 (Apple Inset Grouped Style Selector) -->
@@ -9954,7 +9943,7 @@
             } catch (e) { }
         }
 
-        // 當使用者切換分頁/開啟外部連結 (如 HRIS) 後返回，標記需要重整 AudioContext
+        // 當使用者切換分頁/開啟外部連結後返回，標記需要重整 AudioContext
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
                 _needsAudioRefresh = true;
@@ -17915,13 +17904,6 @@
                 <input id="t8BuddyNameInput" maxlength="8" value="夥伴" autocomplete="off">
                 <button type="button" class="t8b-save-btn" id="t8BuddyNameSave">儲存</button>
             </div>
-            <div class="t8b-set-row t8b-set-col">
-                <span class="t8b-set-label">個性</span>
-                <input id="t8BuddyPersonalityInput" value="幽默、無厘頭，偶爾亂講一句；但工時和數字一律算準，達標後安靜。回覆只能用台灣繁體中文；不知道的事情就說不知道，不要亂編。" autocomplete="off">
-            </div>
-            <div class="t8b-mem-head"><span>記憶</span><span class="t8b-mem-count" id="t8BuddyMemCount">3 件事</span><button type="button" class="t8b-forget-all" id="t8BuddyForgetAll">全部忘掉</button></div>
-            <ul class="t8b-mem-list" id="t8BuddyMemList"></ul>
-            <p class="t8b-mem-note">在聊天打「記住：……」新增記憶，點 × 就忘掉。</p>
         </div>
         <div class="t8b-msgs" id="t8BuddyMsgs"></div>
         <div class="t8b-chips" id="t8BuddyChips"></div>
@@ -17938,17 +17920,17 @@
         var POS_KEY = 'time8-buddy-pos-v1';
         var NAME_KEY = 'time8-buddy-name-v1';
         var MEM_KEY = 'time8-buddy-memories-v1';
-        var PERSON_KEY = 'time8-buddy-personality-v1';
         var SEEN_KEY = 'time8-buddy-seen-v1';
         var HISTORY_KEY = 'time8-buddy-history-v1';
         var PATTERNS_KEY = 'time8-buddy-patterns-v1';
         var EXTRACT_KEY = 'time8-buddy-extract-v1';
         var HISTORY_MAX_MSGS = 40; /* 20 輪 */
         var CONTEXT_MAX_CHARS = 7000; /* 代理端截斷 8000 字，客戶端先控量 */
-        var MEM_MAX = 30; /* 記憶上限，滿了留最新的 */
+        var MEM_MAX = 200; /* 記憶上限 200 條（v2.12.5 背景化）：相關度＋新鮮度修剪，久沒用的先淡出 */
+        var MEM_RETRIEVE_MAX = 6; /* 每次問答最多帶幾條相關記憶 */
+        var MEM_BLOCK_MAX_CHARS = 1200; /* 記憶區塊字數上限 */
         var EXTRACT_EVERY = 10; /* 每 10 輪 AI 對話萃取一次（v2.12.3：不要跟使用者搶額度） */
         var DEFAULT_NAME = '夥伴';
-        var DEFAULT_PERSONALITY = '幽默、無厘頭，偶爾亂講一句；但工時和數字一律算準，達標後安靜。回覆只能用台灣繁體中文；不知道的事情就說不知道，不要亂編。';
         var DEFAULT_MEMORIES = ['達標之後不要再推提醒', '晚班通常 18:30 左右開始', '累的時候喜歡先深呼吸 1 分鐘'];
         var QUICK = [
             { cat: '工時', label: '還差多久達標？', q: '還差多久達標？', kind: 'today' },
@@ -17973,22 +17955,34 @@
         function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
         function lsDel(k) { try { window.localStorage.removeItem(k); } catch (e) {} }
 
-        /* ---- 設定：名字 / 個性 / 記憶（localStorage 持久化） ---- */
+        /* ---- 設定：只剩名字；個性與記憶已背景化（個性由伺服器端靈魂固定，記憶走聊天指令） ---- */
         function loadName() {
             var n = lsGet(NAME_KEY);
             return (n && n.trim()) ? n.trim() : DEFAULT_NAME;
         }
-        function loadPersonality() {
-            var p = lsGet(PERSON_KEY);
-            return (p && p.trim()) ? p : DEFAULT_PERSONALITY;
+        /* 記憶是物件 {t: 文字, u: 上次用到的時間, n: 被用過幾次}；舊版純字串陣列直接轉過來（u=現在、n=1，舊記憶完整保留、不當成沒用過的） */
+        function normMemory(x, now) {
+            if (typeof x === 'string') {
+                var s = x.trim();
+                return s ? { t: s, u: now, n: 1 } : null;
+            }
+            if (x && typeof x.t === 'string' && x.t.trim()) {
+                return { t: x.t.trim(), u: (typeof x.u === 'number' && x.u) || now, n: (typeof x.n === 'number' && x.n >= 0) ? x.n : 1 };
+            }
+            return null;
         }
         function loadMemories() {
+            var now = Date.now();
+            function defs() { return DEFAULT_MEMORIES.map(function (s) { return { t: s, u: now, n: 1 }; }); }
             try {
                 var raw = lsGet(MEM_KEY);
-                if (!raw) return DEFAULT_MEMORIES.slice();
+                if (!raw) return defs();
                 var arr = JSON.parse(raw);
-                return Array.isArray(arr) ? arr.filter(function (x) { return typeof x === 'string' && x.trim(); }) : DEFAULT_MEMORIES.slice();
-            } catch (e) { return DEFAULT_MEMORIES.slice(); }
+                if (!Array.isArray(arr)) return defs();
+                var out = [];
+                arr.forEach(function (x) { var m = normMemory(x, now); if (m) out.push(m); });
+                return out; /* 空陣列就是真的清空了，不要復活預設值 */
+            } catch (e) { return defs(); }
         }
         function saveMemories(list) { lsSet(MEM_KEY, JSON.stringify(list)); }
         /* ---- 對話歷史持久化：最近 20 輪存 localStorage，下次當上下文 ---- */
@@ -18035,15 +18029,21 @@
         function savePatterns() { lsSet(PATTERNS_KEY, JSON.stringify(patterns)); }
         function saveExtractState() { lsSet(EXTRACT_KEY, JSON.stringify(extractState)); }
 
-        /* ---- 記憶合併：去重＋上限（滿了留最新的） ---- */
+        /* ---- 記憶合併：去重＋上限 200（評分修剪：被用過越多次、越近期越留；久沒用的先淡出） ---- */
+        function memRank(a, b) {
+            if ((b.n || 0) !== (a.n || 0)) return (b.n || 0) - (a.n || 0);
+            return (b.u || 0) - (a.u || 0);
+        }
         function trimMemories() {
-            if (memories.length > MEM_MAX) memories = memories.slice(-MEM_MAX);
+            if (memories.length <= MEM_MAX) return;
+            var ranked = memories.slice().sort(memRank).slice(0, MEM_MAX);
+            memories = memories.filter(function (m) { return ranked.indexOf(m) !== -1; });
         }
         function isDupFact(fact) {
-            var f = fact.trim();
+            var f = (fact || '').trim();
             if (!f) return true;
             for (var i = 0; i < memories.length; i++) {
-                var m = memories[i].trim();
+                var m = memories[i].t.trim();
                 if (m === f) return true;
                 if (f.length >= 4 && (m.indexOf(f) !== -1 || f.indexOf(m) !== -1)) return true;
             }
@@ -18051,10 +18051,11 @@
         }
         function mergeFacts(facts) {
             var added = 0;
+            var now = Date.now();
             (facts || []).forEach(function (f) {
                 f = (f || '').trim();
                 if (!f || isDupFact(f)) return;
-                memories.push(f);
+                memories.push({ t: f, u: now, n: 1 }); /* 剛從對話萃取 = 剛用過一次 */
                 added++;
             });
             if (added) { trimMemories(); saveMemories(memories); renderMemories(); }
@@ -18249,7 +18250,7 @@
                 }
                 /* 舊的規律事實先下架（數據變了就跟著變），再併入新的；使用者刪掉的放 blocked，不再回來 */
                 var oldFacts = patterns.facts || [];
-                memories = memories.filter(function (m) { return oldFacts.indexOf(m) === -1; });
+                memories = memories.filter(function (m) { return oldFacts.indexOf(m.t) === -1; });
                 patterns.facts = facts.filter(function (f) { return patterns.blocked.indexOf(f) === -1; });
                 patterns.lastRun = Date.now();
                 savePatterns();
@@ -18294,14 +18295,98 @@
             }
         }
 
-        /* ---- 學習迴圈 3：上下文注入（記憶＋近期對話，量先控好） ---- */
-        function memoryBlock() {
-            if (!memories.length) return '';
-            return '[夥伴記得的事] ' + memories.slice(-12).join('；') + '。';
+        /* ---- 學習迴圈 3：上下文注入（檢索記憶＋近期對話，量先控好） ---- */
+        /* 檢索：只挑跟這句話有關的幾條（關鍵字＋主題），不把 200 條全塞進去；工時題再加帶核心畫像（規律事實） */
+        var MEM_TOPICS = {
+            work: ['工時', '上班', '下班', '打卡', '加班', '達標', '目標', '休息', '請假', '遲到', '早退'],
+            weather: ['天氣', '下雨', '氣溫', '會冷', '颱風', '出門'],
+            news: ['新聞', '頭條', '發生'],
+            food: ['美食', '吃', '餐廳', '喝', '杏仁茶', '仙草', '早餐', '午餐', '晚餐'],
+            travel: ['旅遊', '去哪', '玩', '週末', '出遊', '景點'],
+            mood: ['累', '心情', '睡', '壓力', '放鬆', '深呼吸'],
+            life: ['喜歡', '習慣', '每天', '常常']
+        };
+        function memTokens(s) {
+            var out = [];
+            var re = /[\u4e00-\u9fff]+|[A-Za-z0-9]+/g, m;
+            while ((m = re.exec(s || '')) !== null) {
+                var tok = m[0];
+                if (tok.length >= 2) out.push(tok);
+                if (/^[\u4e00-\u9fff]+$/.test(tok)) {
+                    for (var i = 0; i + 2 <= tok.length; i++) out.push(tok.slice(i, i + 2));
+                }
+            }
+            return out;
+        }
+        function memScoreFor(text, mem) {
+            var t = mem.t;
+            var score = 0;
+            var seen = {};
+            memTokens(text).forEach(function (tk) {
+                if (seen[tk]) return;
+                seen[tk] = 1;
+                if (t.indexOf(tk) !== -1) score += 2;
+            });
+            var topics = Object.keys(MEM_TOPICS);
+            for (var i = 0; i < topics.length; i++) {
+                var words = MEM_TOPICS[topics[i]];
+                var qHit = false, mHit = false;
+                for (var j = 0; j < words.length; j++) {
+                    if (text.indexOf(words[j]) !== -1) qHit = true;
+                    if (t.indexOf(words[j]) !== -1) mHit = true;
+                }
+                if (qHit && mHit) score += 1;
+            }
+            return score;
+        }
+        function retrieveMemories(text, kind) {
+            var scored = [];
+            memories.forEach(function (m) {
+                var s = memScoreFor(text, m);
+                if (s > 0) scored.push({ m: m, s: s });
+            });
+            scored.sort(function (a, b) {
+                if (b.s !== a.s) return b.s - a.s;
+                return memRank(a.m, b.m);
+            });
+            var picked = [];
+            var chars = 0;
+            var i;
+            for (i = 0; i < scored.length && picked.length < MEM_RETRIEVE_MAX; i++) {
+                var t = scored[i].m.t;
+                if (chars + t.length > MEM_BLOCK_MAX_CHARS) continue;
+                picked.push(scored[i].m);
+                chars += t.length;
+            }
+            /* 工時題加帶核心畫像：最多 2 條規律事實（數據學到的固定作息） */
+            if (kind === 'today' || kind === 'week' || kind === 'month' || isWorkQuestion(text)) {
+                var pfacts = patterns.facts || [];
+                for (i = 0; i < pfacts.length && picked.length < MEM_RETRIEVE_MAX; i++) {
+                    var f = pfacts[i];
+                    var obj = null;
+                    for (var j = 0; j < memories.length; j++) { if (memories[j].t === f) { obj = memories[j]; break; } }
+                    if (!obj) continue;
+                    var already = false;
+                    for (var k = 0; k < picked.length; k++) { if (picked[k] === obj) { already = true; break; } }
+                    if (already) continue;
+                    if (chars + f.length > MEM_BLOCK_MAX_CHARS) continue;
+                    picked.push(obj);
+                    chars += f.length;
+                }
+            }
+            var now = Date.now();
+            picked.forEach(function (m) { m.u = now; m.n = (m.n || 0) + 1; });
+            if (picked.length) saveMemories(memories);
+            return picked.map(function (m) { return m.t; });
+        }
+        function memoryBlock(text, kind) {
+            var picked = retrieveMemories(text, kind);
+            if (!picked.length) return '';
+            return '[夥伴記得的事] ' + picked.join('；') + '。';
         }
         function buildMessages(text, kind, extraFacts) {
             var parts = [];
-            var mem = memoryBlock();
+            var mem = memoryBlock(text, kind);
             if (mem) parts.push(mem);
             if (extraFacts) parts.push(extraFacts);
             if (kind === 'today' || kind === 'week' || kind === 'month' || isWorkQuestion(text)) {
@@ -18352,82 +18437,65 @@
         /* ---- 記憶指令（本機處理，不送 /api/ai） ---- */
         /* ---- 記憶刪除（使用者刪掉的規律事實放 blocked，不再學回來） ---- */
         function forgetMemory(item) {
-            var idx = memories.indexOf(item);
+            var text = (typeof item === 'string') ? item : (item && item.t) || '';
+            var idx = -1;
+            for (var i = 0; i < memories.length; i++) { if (memories[i].t === text) { idx = i; break; } }
             if (idx !== -1) memories.splice(idx, 1);
-            if ((patterns.facts || []).indexOf(item) !== -1 && patterns.blocked.indexOf(item) === -1) {
-                patterns.blocked.push(item);
+            if ((patterns.facts || []).indexOf(text) !== -1 && patterns.blocked.indexOf(text) === -1) {
+                patterns.blocked.push(text);
                 savePatterns();
             }
             saveMemories(memories);
             renderMemories();
         }
+        /* 記憶已背景化：設定頁不顯示清單，這裡只更新標頭「記得你 N 件事」 */
         function renderMemories() {
-            var list = $('t8BuddyMemList');
-            var count = $('t8BuddyMemCount');
             var sub = $('t8BuddyHeadSub');
-            if (count) count.textContent = memories.length + ' 件事';
             if (sub) sub.textContent = '什麼都能問 · 記得你 ' + memories.length + ' 件事';
-            if (!list) return;
-            list.innerHTML = '';
-            if (!memories.length) {
-                var empty = document.createElement('div');
-                empty.className = 't8b-mem-empty';
-                empty.textContent = '還沒記住任何事。';
-                list.appendChild(empty);
-                return;
-            }
-            memories.forEach(function (m, idx) {
-                var li = document.createElement('li');
-                var span = document.createElement('span');
-                span.textContent = m;
-                if ((patterns.facts || []).indexOf(m) !== -1) {
-                    var tag = document.createElement('span');
-                    tag.className = 't8b-tag';
-                    tag.textContent = '規律';
-                    li.appendChild(span);
-                    li.appendChild(tag);
-                } else {
-                    li.appendChild(span);
-                }
-                var btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 't8b-mem-del';
-                btn.setAttribute('aria-label', '忘記這件事');
-                btn.textContent = '×';
-                btn.addEventListener('click', function () {
-                    var gone = memories[idx];
-                    forgetMemory(gone);
-                    addMsg('sys', '已忘記：' + gone);
-                });
-                li.appendChild(btn);
-                list.appendChild(li);
-            });
         }
         function handleLocalCommand(text) {
             var m;
             if ((m = text.match(/^記住[：:]\s*(.+)$/)) || (m = text.match(/^記住\s+(.+)$/))) {
                 var item = m[1].trim();
                 if (!item) return '要記什麼？打「記住：……」告訴我。';
-                if (memories.indexOf(item) !== -1) return '這個我早就記住了。';
-                memories.push(item);
+                if (isDupFact(item)) return '這個我早就記住了。';
+                memories.push({ t: item, u: Date.now(), n: 1 });
+                trimMemories();
                 saveMemories(memories);
                 renderMemories();
                 return '記好了：「' + item + '」。寫進我的小本本了，下次還記得。';
             }
-            if ((m = text.match(/^忘記[：:]\s*(.+)$/)) || (m = text.match(/^忘記\s+(.+)$/))) {
+            if (/^忘[掉記]全部$/.test(text)) {
+                var now = Date.now();
+                if (now < forgetAllArmedUntil) {
+                    (patterns.facts || []).forEach(function (f) {
+                        if (patterns.blocked.indexOf(f) === -1) patterns.blocked.push(f);
+                    });
+                    savePatterns();
+                    memories = [];
+                    saveMemories(memories);
+                    renderMemories();
+                    forgetAllArmedUntil = 0;
+                    return '已經全部忘掉了。';
+                }
+                forgetAllArmedUntil = now + 3000;
+                return '真的要全部忘掉嗎？再打一次「忘掉全部」確認。';
+            }
+            if ((m = text.match(/^忘[記掉][：:]\s*(.+)$/)) || (m = text.match(/^忘[記掉]\s+(.+)$/))) {
                 var key = m[1].trim();
                 var idx = -1;
                 for (var i = 0; i < memories.length; i++) {
-                    if (memories[i].indexOf(key) !== -1 || key.indexOf(memories[i]) !== -1) { idx = i; break; }
+                    var mt = memories[i].t;
+                    if (mt.indexOf(key) !== -1 || key.indexOf(mt) !== -1) { idx = i; break; }
                 }
-                if (idx === -1) return '記憶裡沒有這件事，點「設定」可以看全部。';
-                var gone = memories[idx];
+                if (idx === -1) return '記憶裡沒有這件事。';
+                var gone = memories[idx].t;
                 forgetMemory(gone);
                 return '好，忘掉「' + gone + '」了。';
             }
             if (/^你記得我什麼[？?]?$/.test(text)) {
                 if (!memories.length) return '我還沒記住任何事，打「記住：……」教我。';
-                return '我記得：\n' + memories.map(function (x, i) { return (i + 1) + '. ' + x; }).join('\n');
+                return '我記得：\n' + memories.map(function (x, i) { return (i + 1) + '. ' + x.t; }).join('\n');
             }
             return null;
         }
@@ -18955,9 +19023,7 @@
         }
         function initSettings() {
             var nameInput = $('t8BuddyNameInput');
-            var personInput = $('t8BuddyPersonalityInput');
             if (nameInput) nameInput.value = buddyName;
-            if (personInput) personInput.value = loadPersonality();
             applyName(buddyName);
             var saveBtn = $('t8BuddyNameSave');
             if (saveBtn) saveBtn.addEventListener('click', function () {
@@ -18967,32 +19033,6 @@
                 applyName(v);
                 addMsg('sys', '名字改成了「' + v + '」');
                 setTimeout(function () { addMsg('buddy', '好，我叫「' + v + '」。'); }, 650);
-            });
-            if (personInput) personInput.addEventListener('change', function () {
-                var v = personInput.value.trim();
-                lsSet(PERSON_KEY, v || DEFAULT_PERSONALITY);
-            });
-            var forgetBtn = $('t8BuddyForgetAll');
-            if (forgetBtn) forgetBtn.addEventListener('click', function () {
-                var now = Date.now();
-                if (now < forgetAllArmedUntil) {
-                    (patterns.facts || []).forEach(function (f) {
-                        if (patterns.blocked.indexOf(f) === -1) patterns.blocked.push(f);
-                    });
-                    savePatterns();
-                    memories = [];
-                    saveMemories(memories);
-                    renderMemories();
-                    addMsg('sys', '已經全部忘掉了。');
-                    forgetBtn.textContent = '全部忘掉';
-                    forgetAllArmedUntil = 0;
-                    return;
-                }
-                forgetAllArmedUntil = now + 3000;
-                forgetBtn.textContent = '確定忘掉全部？';
-                setTimeout(function () {
-                    if (Date.now() >= forgetAllArmedUntil) forgetBtn.textContent = '全部忘掉';
-                }, 3000);
             });
             renderMemories();
         }
@@ -19066,6 +19106,7 @@
                 openSheet: openSheet, closeSheet: closeSheet,
                 parseFacts: parseFacts, mergeFacts: mergeFacts,
                 learnPatterns: learnPatterns, buildMessages: buildMessages,
+                retrieveMemories: retrieveMemories, memoryBlock: memoryBlock,
                 setMood: setMood, runExtraction: runExtraction,
                 getMemories: function () { return memories.slice(); },
                 getHistory: function () { return chatHistory.slice(); },
