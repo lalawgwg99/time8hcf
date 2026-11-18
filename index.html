@@ -5090,18 +5090,20 @@
         }
 
         /* ===== v2.11 夥伴聊天室 ===== */
-        #t8BuddyDock { position: fixed; right: 14px; bottom: 92px; z-index: 40; display: flex; align-items: flex-end; gap: 8px; touch-action: none; user-select: none; -webkit-user-select: none; }
+        #t8BuddyDock { position: fixed; right: 14px; bottom: 92px; z-index: 40; display: flex; align-items: flex-end; gap: 7px; touch-action: none; user-select: none; -webkit-user-select: none; }
         #t8BuddyDock.t8b-hidden { display: none; }
+        #t8BuddyDock.t8b-flip { flex-direction: row-reverse; }
         #t8BuddyDock.t8b-dragging #t8BuddyFab { cursor: grabbing; }
         #t8BuddyDock.t8b-dragging .t8b-bubble { opacity: .35; }
-        .t8b-bubble { max-width: 200px; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-radius: 14px 14px 4px 14px; padding: 8px 11px; font-size: 12.5px; line-height: 1.55; margin-bottom: 22px; pointer-events: none; box-shadow: 0 4px 14px rgba(30,25,15,.10); }
+        .t8b-bubble { max-width: 168px; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-radius: 14px 14px 4px 14px; padding: 7px 10px; font-size: 12px; line-height: 1.5; margin-bottom: 13px; pointer-events: auto; cursor: pointer; box-shadow: 0 4px 14px rgba(30,25,15,.10); }
+        #t8BuddyDock.t8b-flip .t8b-bubble { border-radius: 14px 14px 14px 4px; }
         .t8b-bubble b { color: var(--green); }
-        .t8b-fab-col { display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; }
-        #t8BuddyFab { width: 76px; height: 76px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 10px 24px rgba(30,25,15,.22); cursor: grab; padding: 0; flex: none; }
+        .t8b-fab-col { display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; }
+        #t8BuddyFab { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #fff; box-shadow: 0 8px 18px rgba(30,25,15,.22); cursor: grab; padding: 0; flex: none; }
         #t8BuddyFab img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; display: block; pointer-events: none; }
-        .t8b-unread { position: absolute; top: 2px; right: 6px; min-width: 19px; height: 19px; border-radius: 10px; background: #d63c2f; color: #fff; font-size: 11px; font-weight: 700; border: 2px solid #fff; padding: 0 4px; display: flex; align-items: center; justify-content: center; z-index: 1; pointer-events: none; }
+        .t8b-unread { position: absolute; top: 0; right: 2px; min-width: 15px; height: 15px; border-radius: 8px; background: #d63c2f; color: #fff; font-size: 9px; font-weight: 700; border: 1.5px solid #fff; padding: 0 3px; display: flex; align-items: center; justify-content: center; z-index: 1; pointer-events: none; }
         .t8b-unread.t8b-hidden { display: none; }
-        .t8b-name { font-size: 11px; font-weight: 700; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-radius: 999px; padding: 2px 10px; box-shadow: 0 2px 8px rgba(30,25,15,.12); white-space: nowrap; max-width: 76px; overflow: hidden; text-overflow: ellipsis; }
+        .t8b-name { font-size: 9px; font-weight: 700; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-radius: 999px; padding: 1px 8px; box-shadow: 0 2px 8px rgba(30,25,15,.12); white-space: nowrap; max-width: 50px; overflow: hidden; text-overflow: ellipsis; }
         .t8b-drag-tip { position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%); background: #201d18; color: #fff; font-size: 11.5px; padding: 6px 14px; border-radius: 999px; z-index: 61; pointer-events: none; opacity: 0; transition: opacity .2s; white-space: nowrap; }
         .t8b-drag-tip.t8b-show { opacity: 1; }
         #t8BuddyScrim { position: fixed; inset: 0; z-index: 55; background: rgba(28,24,18,.38); opacity: 0; pointer-events: none; transition: opacity .3s; }
@@ -18587,11 +18589,57 @@
         /* ---- 懸浮鈕：拖拽＋位置記憶 ---- */
         function clampPos(x, y) {
             var dock = $('t8BuddyDock');
-            var w = (dock && dock.offsetWidth) || 290;
-            var h = (dock && dock.offsetHeight) || 110;
+            var w = (dock && dock.offsetWidth) || 230;
+            var h = (dock && dock.offsetHeight) || 70;
             x = Math.max(6, Math.min(x, window.innerWidth - w - 6));
             y = Math.max(44, Math.min(y, window.innerHeight - h - 78));
             return { x: Math.round(x), y: Math.round(y) };
+        }
+        /* 泡泡換邊：鈕在左半邊→泡泡放右邊，右半邊→泡泡放左邊；拖動中也即時換 */
+        function syncBubbleSide() {
+            var dock = $('t8BuddyDock');
+            if (!dock || !dock.offsetWidth) return;
+            var r = dock.getBoundingClientRect();
+            var cx = r.left + r.width / 2;
+            dock.classList.toggle('t8b-flip', cx < window.innerWidth / 2);
+        }
+        /* 落點整理：拖完／還原／轉向時，別讓鈕蓋住錶盤中心、也別擋住打卡卡 */
+        function avoidZones(x, y) {
+            var dock = $('t8BuddyDock');
+            var w = (dock && dock.offsetWidth) || 230;
+            var h = (dock && dock.offsetHeight) || 70;
+            var zones = [];
+            var ring = document.getElementById('ringContainer');
+            if (ring) {
+                var rr = ring.getBoundingClientRect();
+                if (rr.width > 0) zones.push({ x: rr.left + rr.width * 0.19, y: rr.top + rr.height * 0.19, w: rr.width * 0.62, h: rr.height * 0.62 });
+            }
+            var pb = document.getElementById('punchBtn');
+            if (pb) {
+                var card = (pb.closest && pb.closest('.action-card')) || pb;
+                var pr = card.getBoundingClientRect();
+                if (pr.width > 0) zones.push({ x: pr.left, y: pr.top, w: pr.width, h: pr.height });
+            }
+            for (var i = 0; i < zones.length; i++) {
+                var z = zones[i];
+                if (x < z.x + z.w && x + w > z.x && y < z.y + z.h && y + h > z.y) {
+                    var above = z.y - h - 8, below = z.y + z.h + 8;
+                    var upCost = y - above, downCost = below - y;
+                    var topOk = above >= 44, botOk = below + h <= window.innerHeight - 78;
+                    if (topOk && (!botOk || upCost <= downCost)) y = above;
+                    else if (botOk) y = below;
+                }
+            }
+            return clampPos(x, y);
+        }
+        function settleDock() {
+            var dock = $('t8BuddyDock');
+            if (!dock || !dock.style.left) return;
+            var r = dock.getBoundingClientRect();
+            var c = avoidZones(r.left, r.top);
+            dock.style.left = c.x + 'px';
+            dock.style.top = c.y + 'px';
+            syncBubbleSide();
         }
         function restorePos() {
             try {
@@ -18601,11 +18649,12 @@
                 if (typeof p.x !== 'number' || typeof p.y !== 'number') return;
                 var dock = $('t8BuddyDock');
                 if (!dock) return;
-                var c = clampPos(p.x, p.y);
+                var c = avoidZones(p.x, p.y);
                 dock.style.left = c.x + 'px';
                 dock.style.top = c.y + 'px';
                 dock.style.right = 'auto';
                 dock.style.bottom = 'auto';
+                syncBubbleSide();
             } catch (e) {}
         }
         function initDrag() {
@@ -18629,6 +18678,7 @@
                 dock.style.top = c.y + 'px';
                 dock.style.right = 'auto';
                 dock.style.bottom = 'auto';
+                syncBubbleSide();
             });
             function endDrag(save) {
                 if (!dragging) return;
@@ -18636,8 +18686,11 @@
                 dock.classList.remove('t8b-dragging');
                 if (!save) return;
                 var r = dock.getBoundingClientRect();
-                var c = clampPos(r.left, r.top);
+                var c = avoidZones(r.left, r.top);
+                dock.style.left = c.x + 'px';
+                dock.style.top = c.y + 'px';
                 lsSet(POS_KEY, JSON.stringify({ x: c.x, y: c.y }));
+                syncBubbleSide();
                 var tip = $('t8BuddyDragTip');
                 if (tip) {
                     tip.classList.add('t8b-show');
@@ -18652,21 +18705,138 @@
                 openSheet();
             });
             window.addEventListener('resize', function () {
-                if (dock.style.left) {
-                    var r = dock.getBoundingClientRect();
-                    var c = clampPos(r.left, r.top);
-                    dock.style.left = c.x + 'px';
-                    dock.style.top = c.y + 'px';
-                }
+                settleDock();
             });
         }
 
-        /* ---- 懸浮泡泡文字（真實數字） ---- */
-        function refreshBubble() {
+        /* ---- 懸浮泡泡：會輪流講不同話的活夥伴（v2.12.2） ---- */
+        var BUBBLE_ROTATE_MS = 30 * 60 * 1000; /* 開著時約每 30 分鐘換一句 */
+        var BUBBLE_TICK_MS = 30000; /* 工時數字每 30 秒重算，泡泡不舊 */
+        var BUBBLE_WEATHER_KEY = 'time8-buddy-weather-v1';
+        var bubbleCat = ''; /* 上一句的類別：work/weather/greeting/care/humor/memory */
+        var bubbleCatAt = 0;
+        var bubbleWeatherFetching = false;
+        function bubbleContinuousMins() {
+            try {
+                var recs = (typeof punchRecords !== 'undefined' && Array.isArray(punchRecords)) ? punchRecords : [];
+                if (!recs.length) return 0;
+                var last = recs[recs.length - 1];
+                if (!last || last.type !== 'in' || !last.time) return 0;
+                var m = (Date.now() - new Date(last.time).getTime()) / 60000;
+                return (m > 0 && m < 1440) ? Math.round(m) : 0;
+            } catch (e) { return 0; }
+        }
+        /* App 頂端天氣列那份現成資料（localStorage cachedWeather），沒有才打 /api/realtime */
+        function bubbleWeatherSync() {
+            try {
+                var raw = lsGet('cachedWeather');
+                if (raw) {
+                    var w = JSON.parse(raw);
+                    if (w && typeof w.temp === 'number') return { temp: Math.round(w.temp), desc: w.text || '', icon: w.icon || '☀️', pop: (typeof w.popMax === 'number' ? w.popMax : 0), city: w.city || '' };
+                }
+            } catch (e) {}
+            try {
+                var bw = JSON.parse(lsGet(BUBBLE_WEATHER_KEY) || 'null');
+                if (bw && bw.at && (Date.now() - bw.at) < 30 * 60 * 1000 && bw.data && typeof bw.data.temp === 'number') return bw.data;
+            } catch (e) {}
+            return null;
+        }
+        function bubbleWeatherFetch() {
+            if (bubbleWeatherFetching) return;
+            try {
+                var bw = JSON.parse(lsGet(BUBBLE_WEATHER_KEY) || 'null');
+                if (bw && bw.at && (Date.now() - bw.at) < 30 * 60 * 1000) return;
+            } catch (e) {}
+            bubbleWeatherFetching = true;
+            fetch('/api/realtime?kind=weather').then(function (r) { return r.json(); }).then(function (j) {
+                bubbleWeatherFetching = false;
+                if (!j || !j.current || typeof j.current.temp !== 'number') return;
+                var data = { temp: Math.round(j.current.temp), desc: j.current.desc || '', icon: '☀️', pop: (j.today && typeof j.today.rainChance === 'number' ? j.today.rainChance : 0), city: j.city || '' };
+                if (/雨/.test(data.desc)) data.icon = '🌧️';
+                else if (/陰|雲/.test(data.desc)) data.icon = '☁️';
+                lsSet(BUBBLE_WEATHER_KEY, JSON.stringify({ at: Date.now(), data: data }));
+                if (bubbleCat === 'weather') renderBubble();
+            }).catch(function () { bubbleWeatherFetching = false; });
+        }
+        function userMemories() {
+            try {
+                var raw = lsGet(MEM_KEY);
+                if (!raw) return [];
+                var arr = JSON.parse(raw);
+                return Array.isArray(arr) ? arr.filter(function (x) { return typeof x === 'string' && x.trim(); }) : [];
+            } catch (e) { return []; }
+        }
+        function pickBubbleCat() {
+            var d = getTodayData();
+            var remaining = Math.max(0, d.target - d.mins);
+            var hour = new Date().getHours();
+            var w = bubbleWeatherSync();
+            var raining = !!(w && (w.pop >= 30 || /雨/.test(w.desc)));
+            var cont = bubbleContinuousMins();
+            var mems = userMemories();
+            var cands = [];
+            function add(cat, weight) { if (weight > 0) cands.push({ cat: cat, w: weight }); }
+            add('work', 3 + (remaining <= 60 ? 3 : remaining <= 120 ? 1 : 0));
+            if (w) add('weather', 2 + (raining ? 3 : 0));
+            else bubbleWeatherFetch();
+            add('greeting', 2 + (hour < 10 ? 3 : (hour >= 12 && hour < 14) ? 1 : 0));
+            add('care', 2 + (cont >= 120 ? 4 : cont >= 60 ? 2 : 0) + (hour >= 20 ? 2 : 0));
+            add('humor', 1.5);
+            if (mems.length) add('memory', 2);
+            var pool = cands.filter(function (c) { return c.cat !== bubbleCat; });
+            if (!pool.length) pool = cands;
+            if (!pool.length) return 'work';
+            var total = 0;
+            pool.forEach(function (c) { total += c.w; });
+            var r = Math.random() * total;
+            for (var i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) return pool[i].cat; }
+            return pool[pool.length - 1].cat;
+        }
+        function bubbleLine(list) { return list[Math.floor(Math.random() * list.length)]; }
+        function renderBubble() {
             var el = $('t8BuddyBubble');
             if (!el) return;
             var d = getTodayData();
             el.textContent = '';
+            if (bubbleCat === 'weather') {
+                var w = bubbleWeatherSync();
+                if (!w) { bubbleCat = 'work'; return renderBubble(); }
+                var line = (w.pop >= 30 || /雨/.test(w.desc))
+                    ? '今天 ' + w.temp + '°C 有雨，記得帶傘 ' + (w.icon || '🌧️')
+                    : w.temp >= 30
+                        ? '今天 ' + w.temp + '°C，記得多喝水 ' + (w.icon || '☀️')
+                        : '今天 ' + w.temp + '°C，' + (w.desc || '天氣不錯') + ' ' + (w.icon || '☀️');
+                el.textContent = line;
+                return;
+            }
+            if (bubbleCat === 'greeting') {
+                var h = new Date().getHours();
+                var g = h < 10 ? ['早安，今天也要加油 ☀️', '早安，我在這裡陪你 🙂']
+                    : h < 12 ? ['上午好，慢慢來也沒關係 🙂', '上午了，喝口水再繼續 💧']
+                    : h < 14 ? ['午安，吃飽了嗎？😋', '中午了，休息一下再上工 🙂']
+                    : h < 17 ? ['下午好，剩下的我們一起拚 💪', '下午了，別忘了起來動一動 🙂']
+                    : h < 19 ? ['快下班了，再撐一下 💪', '傍晚了，今天辛苦了 🙂']
+                    : ['晚上好，今天也辛苦了 🌙', '夜深了，早點休息喔 🌙'];
+                el.textContent = bubbleLine(g);
+                return;
+            }
+            if (bubbleCat === 'care') {
+                el.textContent = bubbleLine(['今天心情怎麼樣？', '累了就跟我說，休息一下也沒關係 🙂', '深呼吸一下，我在這裡陪你。', '肩膀痠嗎？動一動再回來 💪']);
+                return;
+            }
+            if (bubbleCat === 'humor') {
+                el.textContent = bubbleLine(['剛剛數你的工時，數到一半差點睡著 😄', '今天的我是全新的我，昨天那個已經下班了 😄', '偷偷告訴你，我最喜歡看你達標的樣子 🎉', '我剛剛練習了微笑，你看，我一直在笑 🙂']);
+                return;
+            }
+            if (bubbleCat === 'memory') {
+                var mems = userMemories();
+                if (!mems.length) { bubbleCat = 'work'; return renderBubble(); }
+                var m = bubbleLine(mems);
+                if (m.length > 14) m = m.slice(0, 14) + '…';
+                el.textContent = '上次你說「' + m + '」，我還記得喔 🙂';
+                return;
+            }
+            /* work（預設）：跟主畫面同一份數字 */
             if (!d.records.length && d.mins <= 0) { el.textContent = '今天還沒打卡，我陪你。'; return; }
             if (d.mins >= d.target) { el.textContent = '今天達標了，辛苦了。'; return; }
             var b = document.createElement('b');
@@ -18674,6 +18844,28 @@
             el.appendChild(document.createTextNode('還差 '));
             el.appendChild(b);
             el.appendChild(document.createTextNode('，我陪你。'));
+        }
+        function refreshBubble() {
+            var now = Date.now();
+            if (!bubbleCat || now - bubbleCatAt > BUBBLE_ROTATE_MS) {
+                bubbleCat = pickBubbleCat();
+                bubbleCatAt = now;
+            }
+            renderBubble();
+        }
+        function startBubbleTimers() {
+            setInterval(function () {
+                var dock = $('t8BuddyDock');
+                if (!dock || dock.classList.contains('t8b-hidden')) return;
+                bubbleCat = pickBubbleCat();
+                bubbleCatAt = Date.now();
+                renderBubble();
+            }, BUBBLE_ROTATE_MS);
+            setInterval(function () {
+                var dock = $('t8BuddyDock');
+                if (!dock || dock.classList.contains('t8b-hidden')) return;
+                if (bubbleCat === 'work') renderBubble(); /* 只重算工時數字，不換類別 */
+            }, BUBBLE_TICK_MS);
         }
 
         /* ---- 只在首頁（今日頁）顯示懸浮鈕 ---- */
@@ -18687,6 +18879,7 @@
             if (onToday && !sheetOpen) {
                 dock.classList.remove('t8b-hidden');
                 refreshBubble();
+                syncBubbleSide();
             } else {
                 dock.classList.add('t8b-hidden');
             }
@@ -18792,6 +18985,9 @@
         function init() {
             if ($('t8BuddyUnread') && lsGet(SEEN_KEY)) $('t8BuddyUnread').classList.add('t8b-hidden');
             initDrag();
+            startBubbleTimers();
+            var bubbleEl = $('t8BuddyBubble');
+            if (bubbleEl) bubbleEl.addEventListener('click', function () { openSheet(); });
             renderChips();
             initSettings();
             learnPatterns(false);
@@ -18832,6 +19028,10 @@
                 getHistory: function () { return chatHistory.slice(); },
                 detectRealtime: detectRealtime, extractCity: extractCity, extractNewsQuery: extractNewsQuery,
                 formatNewsFacts: formatNewsFacts, formatWeatherFacts: formatWeatherFacts,
+                pickBubbleCat: pickBubbleCat, renderBubble: renderBubble, refreshBubble: refreshBubble,
+                bubbleContinuousMins: bubbleContinuousMins, bubbleWeatherSync: bubbleWeatherSync,
+                setBubbleCat: function (c) { bubbleCat = c; bubbleCatAt = Date.now(); },
+                getBubbleCat: function () { return bubbleCat; },
                 getPatterns: function () { return { facts: patterns.facts.slice(), blocked: patterns.blocked.slice() }; },
                 getExtractCount: function () { return extractState.count; }
             };
