@@ -6839,7 +6839,7 @@
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">🧠 記憶在背景 · 聊天指令</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。聊天打「提醒我 18:00 ……」還能排提醒，到時間 App 會跳通知（App 要開著）。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。聊天打「提醒我 18:00 ……」還能排提醒，到時間 App 會跳通知（App 要開著）。聊天打「記一筆：……」可以隨手記帳記事，打「我記了什麼」查看、「刪筆記：內容」刪掉。</div>
                     </div>
                 </div>
 
@@ -17922,6 +17922,8 @@
         var EXTRACT_KEY = 'time8-buddy-extract-v1';
         var REM_KEY = 'time8-buddy-reminders-v1'; /* 提醒／待辦（v2.12.8）：{id, text, at, done, createdAt} */
         var REM_MAX = 20; /* 同時排著的提醒上限 20 條 */
+        var NOTE_KEY = 'time8-buddy-notes-v1'; /* 記帳／記事（v2.12.10）：{id, text, createdAt} */
+        var NOTE_MAX = 50; /* 筆記上限 50 條 */
         var HISTORY_MAX_MSGS = 40; /* 20 輪 */
         var CONTEXT_MAX_CHARS = 7000; /* 代理端截斷 8000 字，客戶端先控量 */
         var MEM_MAX = 200; /* 記憶上限 200 條（v2.12.5 背景化）：相關度＋新鮮度修剪，久沒用的先淡出 */
@@ -17941,6 +17943,8 @@
             { cat: '生活', label: '教他記一件事', q: '記住：我下班後要先去買杏仁茶', kind: 'memory' },
             { cat: '生活', label: '提醒我 18:00 打卡', q: '提醒我 18:00 下班打卡', kind: 'remind' },
             { cat: '生活', label: '我的提醒', q: '我的提醒', kind: 'remind' },
+            { cat: '生活', label: '記一筆 午餐 120 元', q: '記一筆：午餐 120 元', kind: 'note' },
+            { cat: '生活', label: '我記了什麼', q: '我記了什麼', kind: 'note' },
             { cat: '生活', label: '你記得我什麼？', q: '你記得我什麼？', kind: 'recall' },
             { cat: '旅遊', label: '週末去哪玩好？', q: '週末去哪玩好？', kind: 'travel' },
             { cat: '事業', label: '幫我想一句貼文文案', q: '幫我想一句貼文文案', kind: 'copy' }
@@ -18386,6 +18390,12 @@
         }
         function buildMessages(text, kind, extraFacts) {
             var parts = [];
+            /* 現在時間永遠先講：模型本來沒有時鐘，問「今天星期幾」會亂猜（v2.12.10 實測抓到） */
+            var nowD = new Date();
+            var wds = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            parts.push('[現在時間] ' + nowD.getFullYear() + '年' + (nowD.getMonth() + 1) + '月' + nowD.getDate() + '日'
+                + wds[nowD.getDay()] + ' ' + String(nowD.getHours()).padStart(2, '0') + ':' + String(nowD.getMinutes()).padStart(2, '0')
+                + '（台灣時間）。');
             var mem = memoryBlock(text, kind);
             if (mem) parts.push(mem);
             if (extraFacts) parts.push(extraFacts);
@@ -18538,6 +18548,47 @@
             if (/^取消提醒$/.test(text)) {
                 return '要取消哪一條？打「取消提醒：內容」，或先打「我的提醒」看看排了什麼。';
             }
+            /* ---- 記帳／記事（v2.12.10）：本地指令，不走 AI、不花額度 ---- */
+            if ((m = text.match(/^記一筆[：:]\s*(.+)$/)) || (m = text.match(/^記一筆\s+(.+)$/))) {
+                var note = m[1].trim();
+                if (!note) return '要記什麼？打「記一筆：……」告訴我。';
+                var notes = loadNotes();
+                if (notes.some(function (x) { return x.text === note; })) return '這條已經記過了：「' + note + '」。';
+                if (notes.length >= NOTE_MAX) return '筆記滿了（最多 ' + NOTE_MAX + ' 條），先刪一條再記。打「我記了什麼」看看。';
+                notes.push({ id: Date.now(), text: note, createdAt: Date.now() });
+                saveNotes(notes);
+                return '記好了：「' + note + '」。打「我記了什麼」可以隨時查看。';
+            }
+            if (/^我記了什麼$/.test(text) || /^我的筆記$/.test(text)) {
+                var mine2 = loadNotes();
+                if (!mine2.length) return '還沒記任何事。打「記一筆：……」就能記一筆，例如「記一筆：午餐 120 元」。';
+                return '你記的：\n' + mine2.map(function (x, i) { return (i + 1) + '. ' + fmtNoteDate(x.createdAt) + '「' + x.text + '」'; }).join('\n') + '\n刪掉打「刪筆記：第 N 條」或「刪筆記：內容」。';
+            }
+            if ((m = text.match(/^刪筆記[：:]\s*(.+)$/)) || (m = text.match(/^刪筆記\s+(.+)$/))) {
+                var nkey = m[1].trim();
+                var allNotes = loadNotes();
+                if (!allNotes.length) return '還沒記任何事，沒什麼好刪的。';
+                var numM = nkey.match(/^第\s*(\d+)\s*條?$/);
+                if (numM) nkey = numM[1];
+                if (/^\d+$/.test(nkey)) {
+                    var n = parseInt(nkey, 10);
+                    if (n < 1 || n > allNotes.length) return '筆記只有 ' + allNotes.length + ' 條，沒有第 ' + n + ' 條。打「我記了什麼」看看編號。';
+                    var goneNote = allNotes.splice(n - 1, 1)[0];
+                    saveNotes(allNotes);
+                    return '好，刪掉了第 ' + n + ' 條「' + goneNote.text + '」。';
+                }
+                var nidx = -1;
+                for (var ni = 0; ni < allNotes.length; ni++) {
+                    if (allNotes[ni].text.indexOf(nkey) !== -1 || nkey.indexOf(allNotes[ni].text) !== -1) { nidx = ni; break; }
+                }
+                if (nidx === -1) return '筆記裡沒有「' + nkey + '」。打「我記了什麼」看看記了什麼。';
+                var gone2 = allNotes.splice(nidx, 1)[0];
+                saveNotes(allNotes);
+                return '好，刪掉了「' + gone2.text + '」。';
+            }
+            if (/^刪筆記$/.test(text)) {
+                return '要刪哪一條？打「刪筆記：第 N 條」或「刪筆記：內容」，或先打「我記了什麼」看看。';
+            }
             return null;
         }
 
@@ -18675,6 +18726,26 @@
         function startReminderTimer() {
             checkReminders();
             setInterval(checkReminders, 30000);
+        }
+
+        /* ---- 記帳／記事（v2.12.10）：存在本機，隨時問「我記了什麼」 ---- */
+        function loadNotes() {
+            try {
+                var arr = JSON.parse(lsGet(NOTE_KEY) || '[]');
+                if (!Array.isArray(arr)) return [];
+                return arr.filter(function (n) {
+                    return n && typeof n.text === 'string' && typeof n.id === 'number';
+                });
+            } catch (e) { return []; }
+        }
+        function saveNotes(list) { lsSet(NOTE_KEY, JSON.stringify(list)); }
+        function fmtNoteDate(ts) {
+            var d = new Date(ts), now = new Date();
+            if (isNaN(d.getTime())) return '';
+            if (d.toDateString() === now.toDateString()) return '今天';
+            var tom = new Date(now); tom.setDate(now.getDate() - 1);
+            if (d.toDateString() === tom.toDateString()) return '昨天';
+            return (d.getMonth() + 1) + '/' + d.getDate();
         }
 
         /* ---- 送去 /api/ai（上下文：記憶＋近期對話＋工時事實） ---- */
@@ -19313,7 +19384,8 @@
                 getPatterns: function () { return { facts: patterns.facts.slice(), blocked: patterns.blocked.slice() }; },
                 getExtractCount: function () { return extractState.count; },
                 parseReminder: parseReminder, loadReminders: loadReminders, checkReminders: checkReminders,
-                fmtRemindTime: fmtRemindTime, cnNumToInt: cnNumToInt, getReminders: function () { return loadReminders(); }
+                fmtRemindTime: fmtRemindTime, cnNumToInt: cnNumToInt, getReminders: function () { return loadReminders(); },
+                loadNotes: loadNotes, fmtNoteDate: fmtNoteDate, getNotes: function () { return loadNotes(); }
             };
         } catch (e) {}
     })();
