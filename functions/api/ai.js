@@ -4,7 +4,7 @@
 // v2.12.3：使用者提問每 IP 每 10 分鐘 60 次；背景記憶萃取走獨立額度（每 IP 每 10 分鐘 10 次），不吃使用者額度。
 // 上游 OpenRouter 429 是短暫突發限流，先等 1.5 秒重試一次，還 429 才回使用者，訊息不再寫「明天再來」。
 
-const MODEL = 'particle-ai/particle-1:free'; // 當日主力免費模型（每日掃描更新）
+const MODEL = 'baidu/ernie-5.5-flash-preview:free'; // 試用中（2026-11-19 起，榮德親口訂試幾天；不好就換回 particle-1:free）
 const MAX_TOKENS = 800;
 const TEMPERATURE = 0.9;
 const MAX_MESSAGES = 20;
