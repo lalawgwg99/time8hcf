@@ -6835,7 +6835,7 @@
                     </div>
                     <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">💬 什麼都能問 · 數字算準</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">問工時、新聞、天氣、美食、旅遊、事業；工時用真實打卡算，新聞天氣查真資料，查不到老實說不編。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">問工時、新聞、天氣、匯率、美食、旅遊、事業；工時用真實打卡算，新聞天氣匯率查真資料，查不到老實說不編。</div>
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">🧠 記憶在背景 · 聊天指令</div>
@@ -17938,6 +17938,7 @@
             { cat: '工時', label: '這個月加班多少？', q: '這個月加班多少？', kind: 'month' },
             { cat: '新聞', label: '今天有什麼新聞？', q: '今天有什麼新聞？', kind: 'news' },
             { cat: '生活', label: '明天天氣如何？', q: '明天天氣如何？', kind: 'weather' },
+            { cat: '生活', label: '100 美金多少台幣？', q: '100 美金多少台幣？', kind: 'fx' },
             { cat: '生活', label: '附近有什麼好吃的？', q: '附近有什麼好吃的？', kind: 'food' },
             { cat: '生活', label: '我有點累了', q: '我有點累了', kind: 'tired' },
             { cat: '生活', label: '教他記一件事', q: '記住：我下班後要先去買杏仁茶', kind: 'memory' },
@@ -17951,6 +17952,7 @@
         ];
         var NEWS_FAIL = '即時新聞現在連不上，我查不到今天最新的消息，我不會亂編。等一下再問我一次。';
         var WEATHER_FAIL = '即時天氣現在連不上，我查不到準確天氣，亂報會害你淋雨。等一下再問我一次。';
+        var FX_FAIL = '即時匯率現在連不上，我查不到最新匯率，亂報會害你換錯錢。等一下再問我一次。';
         var ERR_FRIENDLY = '夥伴現在有點累，連不上——等一下再問我一次。';
         var ERR_FAST = '問太快了，休息一下再問我，等一下就能問了。';
 
@@ -18171,8 +18173,11 @@
         function detectRealtime(text, kind) {
             if (kind === 'news') return { kind: 'news', q: extractNewsQuery(text) };
             if (kind === 'weather') return { kind: 'weather', city: extractCity(text) };
+            if (kind === 'fx') return { kind: 'fx', fx: extractFx(text) };
             if (/新聞|頭條|今天發生|最新消息|發生什麼事/.test(text)) return { kind: 'news', q: extractNewsQuery(text) };
             if (/天氣|下雨|氣溫|會冷嗎|明天天氣/.test(text)) return { kind: 'weather', city: extractCity(text) };
+            var fxd = detectFx(text);
+            if (fxd) return { kind: 'fx', fx: fxd };
             return null;
         }
         function fmtTpeTime(iso) {
@@ -18200,6 +18205,63 @@
             if (t.max != null) s += '今日：' + (t.desc || '') + '，最高 ' + t.max + '°C／最低 ' + t.min + '°C，降雨機率 ' + t.rainChance + '%。';
             if (n.max != null) s += '明日：' + (n.desc || '') + '，最高 ' + n.max + '°C／最低 ' + n.min + '°C，降雨機率 ' + n.rainChance + '%。';
             return s + '請只根據這些事實回答，註明來源與時間；沒有的事不要編。';
+        }
+        /* ---- 匯率查詢（v2.12.11）：先抓事實再問模型，絕不編；金額只認阿拉伯數字，沒寫金額就是 1 單位 ---- */
+        var FX_CURRENCIES = [
+            { code: 'USD', names: ['美金', '美元', '美幣'] },
+            { code: 'JPY', names: ['日圓', '日幣', '日元'] },
+            { code: 'EUR', names: ['歐元'] },
+            { code: 'CNY', names: ['人民幣'] },
+            { code: 'GBP', names: ['英鎊'] },
+            { code: 'HKD', names: ['港幣', '港元'] },
+            { code: 'AUD', names: ['澳幣', '澳元'] },
+            { code: 'KRW', names: ['韓元', '韓幣'] },
+            { code: 'SGD', names: ['新幣', '新加坡幣'] },
+            { code: 'CAD', names: ['加幣', '加元'] },
+            { code: 'THB', names: ['泰銖'] },
+            { code: 'TWD', names: ['台幣', '新台幣'] }
+        ];
+        var FX_CODE_NAMES = { USD: '美元', JPY: '日圓', EUR: '歐元', CNY: '人民幣', GBP: '英鎊', HKD: '港幣', AUD: '澳幣', KRW: '韓元', SGD: '新加坡幣', CAD: '加幣', THB: '泰銖', TWD: '台幣' };
+        function extractFx(text) {
+            var found = [];
+            FX_CURRENCIES.forEach(function (c) {
+                c.names.forEach(function (n) {
+                    var i = text.indexOf(n);
+                    if (i !== -1) found.push({ code: c.code, i: i });
+                });
+            });
+            found.sort(function (a, b) { return a.i - b.i; });
+            var amount = 1;
+            var am = text.match(/([\d,]+(?:\.\d+)?)/);
+            if (am) { var v = parseFloat(am[1].replace(/,/g, '')); if (isFinite(v) && v > 0) amount = v; }
+            if (!found.length) return { base: 'USD', target: 'TWD', amount: amount };
+            var first = found[0].code, other = null;
+            for (var i = 1; i < found.length; i++) { if (found[i].code !== first) { other = found[i].code; break; } }
+            if (!other) return { base: first, target: (first === 'TWD' ? 'USD' : 'TWD'), amount: amount };
+            return { base: first, target: other, amount: amount };
+        }
+        function detectFx(text) {
+            if (/匯率|換算|換多少|等於多少|兌換|美金|美元|日圓|日幣|歐元|人民幣|英鎊|港幣|澳幣|韓元|新幣|加幣|泰銖|台幣/.test(text)) return extractFx(text);
+            return null;
+        }
+        function fmtNum(n, digits) {
+            var v = Number(n);
+            if (!isFinite(v)) return '';
+            var parts = v.toFixed(digits).split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.join('.');
+        }
+        function formatFxFacts(data, fx) {
+            if (!data || !data.rates || !fx || typeof data.rates[fx.target] !== 'number') return '';
+            var base = data.base || fx.base;
+            var rate = data.rates[fx.target]; /* 1 單位 base = rate 單位 target */
+            var baseName = FX_CODE_NAMES[base] || base;
+            var targetName = FX_CODE_NAMES[fx.target] || fx.target;
+            var s = '[即時匯率事實｜來源：' + (data.source || 'ExchangeRate-API') + '，' + fmtTpeTime(data.fetchedAt) + ' 抓取，牌價更新於 ' + (data.updated || '今日') + '] '
+                + '1 ' + baseName + ' = ' + fmtNum(rate, 4) + ' ' + targetName + '；';
+            if (fx.amount !== 1) s += fmtNum(fx.amount, 0) + ' ' + baseName + ' = ' + fmtNum(fx.amount * rate, 2) + ' ' + targetName + '；';
+            s += '反過來 1 ' + targetName + ' = ' + fmtNum(1 / rate, 4) + ' ' + baseName + '。';
+            return s + '請只根據這些數字回答，註明來源與時間；沒有的事不要編。';
         }
 
         /* ---- 學習迴圈 1：工作規律（從真實打卡數據歸納，不是猜的） ---- */
@@ -18817,7 +18879,8 @@
             showTyping();
             var url = '/api/realtime?kind=' + rt.kind
                 + (rt.kind === 'news' && rt.q ? '&q=' + encodeURIComponent(rt.q) : '')
-                + (rt.kind === 'weather' ? '&city=' + encodeURIComponent(rt.city) : '');
+                + (rt.kind === 'weather' ? '&city=' + encodeURIComponent(rt.city) : '')
+                + (rt.kind === 'fx' ? '&base=' + encodeURIComponent(rt.fx.base) : '');
             var ctrl = null;
             try { ctrl = new AbortController(); } catch (e) {}
             var timer = setTimeout(function () { try { if (ctrl) ctrl.abort(); } catch (e) {} }, 15000);
@@ -18828,7 +18891,7 @@
                 if (!r.ok) { var err = new Error('http ' + r.status); err.status = r.status; throw err; }
                 return r.json();
             }).then(function (d) {
-                var facts = rt.kind === 'news' ? formatNewsFacts(d) : formatWeatherFacts(d);
+                var facts = rt.kind === 'news' ? formatNewsFacts(d) : rt.kind === 'weather' ? formatWeatherFacts(d) : formatFxFacts(d, rt.fx);
                 if (!facts) throw new Error('empty');
                 fetchingRealtime = false;
                 hideTyping();
@@ -18854,7 +18917,7 @@
                     var fb = cachedWeatherFacts();
                     if (fb) { sendToAi(text, rt.kind, fb); return; }
                 }
-                var msg = rt.kind === 'news' ? NEWS_FAIL : WEATHER_FAIL;
+                var msg = rt.kind === 'news' ? NEWS_FAIL : rt.kind === 'weather' ? WEATHER_FAIL : FX_FAIL;
                 addMsg('buddy', msg);
                 setMood(msg);
                 pushHistory(text, msg);

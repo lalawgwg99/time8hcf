@@ -1,11 +1,14 @@
-// TIME 8 即時查詢：新聞（Google News RSS）＋天氣（Open-Meteo），免費、免 key。
+// TIME 8 即時查詢：新聞（Google News RSS）＋天氣（Open-Meteo）＋匯率（ExchangeRate-API），免費、免 key。
 // 只回伺服器端抓到的事實，絕不編造；上游掛了就回通用錯誤，不洩漏細節。
-// 天氣 in-memory 快取 10 分鐘；新聞不快取（RSS 本身就是最新的）。
+// 天氣 in-memory 快取 10 分鐘；匯率快取 10 分鐘（牌價一天才變一次）；新聞不快取（RSS 本身就是最新的）。
 
 const RATE_LIMIT = 60; // 每 IP 每 10 分鐘最多 60 次（v2.12.3：使用者連續測試＋泡泡天氣抓取共用，放寬）
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 10000;
 const WEATHER_CACHE_MS = 10 * 60 * 1000;
+const FX_CACHE_MS = 10 * 60 * 1000;
+const FX_BASES = ['USD', 'EUR', 'JPY', 'CNY', 'GBP', 'HKD', 'AUD', 'KRW', 'SGD', 'CAD', 'THB', 'NZD', 'CHF', 'PHP', 'VND', 'MYR', 'IDR', 'TWD'];
+const FX_KEEP = ['TWD', 'USD', 'JPY', 'EUR', 'CNY', 'GBP', 'HKD', 'AUD', 'KRW', 'SGD', 'CAD', 'THB', 'NZD', 'CHF', 'PHP', 'VND', 'MYR', 'IDR'];
 const NEWS_MAX = 8;
 const NEWS_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
 const YAHOO_RSS = 'https://tw.news.yahoo.com/rss';
@@ -30,6 +33,7 @@ const WMO = {
 
 const hits = new Map(); // ip -> [timestamps]，isolate 內 best-effort 限流
 const weatherCache = new Map(); // city -> { at, body }
+const fxCache = new Map(); // base -> { at, body }
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -162,11 +166,51 @@ async function fetchWeather(city) {
   return body;
 }
 
+/* ---- 匯率（v2.12.11）：open.er-api.com 優先，掛了退到 exchangerate-api v4；兩邊都是免費免 key 的同一家公開牌價 ---- */
+async function fetchFxJson(url) {
+  const res = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+  if (!res.ok) throw new Error('fx upstream ' + res.status);
+  const d = await res.json();
+  if (!d || typeof d.rates !== 'object') throw new Error('fx bad payload');
+  return d;
+}
+
+async function fetchFx(base) {
+  const cached = fxCache.get(base);
+  if (cached && Date.now() - cached.at < FX_CACHE_MS) return cached.body;
+  let data = null;
+  let updated = '';
+  try {
+    data = await fetchFxJson('https://open.er-api.com/v6/latest/' + base);
+    updated = data.time_last_update_utc || '';
+  } catch (e) { /* 掉到備援 */ }
+  if (!data) {
+    data = await fetchFxJson('https://api.exchangerate-api.com/v4/latest/' + base);
+    updated = data.date || '';
+  }
+  const rates = {};
+  FX_KEEP.forEach(function (c) {
+    if (typeof data.rates[c] === 'number') rates[c] = data.rates[c];
+  });
+  if (typeof rates.TWD !== 'number' && base !== 'TWD') throw new Error('fx no TWD rate');
+  if (base === 'TWD' && typeof rates.USD !== 'number') throw new Error('fx no USD rate');
+  const body = {
+    kind: 'fx',
+    base: base,
+    updated: updated,
+    source: 'ExchangeRate-API',
+    fetchedAt: new Date().toISOString(),
+    rates: rates,
+  };
+  fxCache.set(base, { at: Date.now(), body });
+  return body;
+}
+
 export async function onRequestGet(context) {
   const { request } = context;
   const url = new URL(request.url);
   const kind = url.searchParams.get('kind') || '';
-  if (kind !== 'news' && kind !== 'weather') return json({ error: 'kind 必須是 news 或 weather' }, 400);
+  if (kind !== 'news' && kind !== 'weather' && kind !== 'fx') return json({ error: 'kind 必須是 news、weather 或 fx' }, 400);
 
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (rateLimited(ip)) return json({ error: '問太快了，休息一下再問' }, 429);
@@ -176,6 +220,11 @@ export async function onRequestGet(context) {
       const q = (url.searchParams.get('q') || '').trim().slice(0, 30);
       const { items, source, query } = await fetchNews(q || null);
       return json({ kind: 'news', query, source, fetchedAt: new Date().toISOString(), items });
+    }
+    if (kind === 'fx') {
+      const base = (url.searchParams.get('base') || 'USD').trim().toUpperCase();
+      const b = FX_BASES.indexOf(base) !== -1 ? base : 'USD';
+      return json(await fetchFx(b));
     }
     const city = (url.searchParams.get('city') || '高雄').trim();
     const name = CITIES[city] ? city : '高雄';
