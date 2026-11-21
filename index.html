@@ -4732,7 +4732,13 @@
     /* === 聖誕主題「暖爐聖誕夜」v2.12.24：裝飾只在 christmas 顯示 === */
     html[data-zen-theme="christmas"] { background: linear-gradient(180deg, #F7EFDF 0%, #F5EAD2 45%, #F1E2C2 100%); }
     html[data-zen-theme="christmas"] body { background: transparent !important; }
-    [data-zen-theme="christmas"] .today-glance-bar { margin-top: 56px; }
+    /* v2.12.28 聖誕緊湊：pill 下移 56px 把三鈕頂到導覽列後面，整組往上收約 61px（三鈕回到導覽列上方） */
+    [data-zen-theme="christmas"] .today-glance-bar { margin-top: 32px; }
+    html[data-zen-theme="christmas"] #swipeTrack { margin-top: 6px !important; }
+    html[data-zen-theme="christmas"] #zenRestBar { margin-top: 6px; }
+    html[data-zen-theme="christmas"] #tabToday .action-card { padding-top: 8px; }
+    html[data-zen-theme="christmas"] #tabToday .action-card .status-row { padding-bottom: 2px; }
+    html[data-zen-theme="christmas"] #salaryTicker { padding-top: 6px !important; padding-bottom: 6px !important; }
     #xmasBokeh, #xmasSnow, #xmasPine, #xmasBow, #xmasSprigR, #xmasStars, #xmasBaubles { display: none; }
     html[data-zen-theme="christmas"] #xmasBokeh { display: block; position: fixed; inset: 0; z-index: 0; pointer-events: none; background:
       radial-gradient(circle 95px at 88% 10%, rgba(255,205,110,.65), rgba(255,205,110,0) 70%),
