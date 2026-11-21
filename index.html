@@ -11437,7 +11437,7 @@
             }
 
             function getThemeColors() {
-                const theme = document.documentElement.getAttribute('data-zen-theme') || 'alabaster';
+                const theme = document.documentElement.getAttribute('data-zen-theme') || 'christmas';
                 if (theme === 'obsidian') {
                     return {
                         streak: '195, 218, 246',
@@ -13982,7 +13982,7 @@
 
             updateModalAvatarDisplay(_tempAvatarPhoto, profile.name || 'TIME 8');
 
-            const currentTheme = appSettings.zenTheme || 'alabaster';
+            const currentTheme = appSettings.zenTheme || 'christmas';
             updateThemePickerUI(currentTheme);
 
             const modal = document.getElementById('userProfileModal');
@@ -14135,7 +14135,7 @@
             if ('vibrate' in navigator) navigator.vibrate(10);
             playSingleClickSound("G4");
 
-            const currentTheme = appSettings.zenTheme || 'alabaster';
+            const currentTheme = appSettings.zenTheme || 'christmas';
             updateThemePickerUI(currentTheme);
 
             const modal = document.getElementById('themePickerModal');
@@ -14166,7 +14166,7 @@
         }
 
         function applyZenTheme(themeKey) {
-            const theme = ZEN_THEMES[themeKey] || ZEN_THEMES.alabaster;
+            const theme = ZEN_THEMES[themeKey] || ZEN_THEMES.christmas;
             document.documentElement.setAttribute('data-zen-theme', themeKey);
 
             // Update SVG Gradient stops
@@ -14382,8 +14382,16 @@
                 }
             }
             if (!appSettings.targetHours) appSettings.targetHours = 8;
-            if (!appSettings.zenTheme) appSettings.zenTheme = 'alabaster';
-            applyZenTheme(appSettings.zenTheme || 'alabaster');
+            // v2.12.27 聖誕全員預設：一次性把所有人切到 christmas（marker 防重複；用戶手動換回後不再強制）
+            try {
+                if (!localStorage.getItem('time8-xmas-2026-default')) {
+                    appSettings.zenTheme = 'christmas';
+                    localStorage.setItem('appSettings', JSON.stringify(appSettings));
+                    localStorage.setItem('time8-xmas-2026-default', '1');
+                }
+            } catch (e) {}
+            if (!appSettings.zenTheme) appSettings.zenTheme = 'christmas';
+            applyZenTheme(appSettings.zenTheme || 'christmas');
 
             // 1. 讀取並整合所有歷史儲存來源 (包含 timecardHistory 與舊版相容資料)
             let history = {};
