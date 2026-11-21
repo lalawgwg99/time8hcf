@@ -18077,6 +18077,25 @@
             sendToAi(text, opts && opts.kind, '');
         }
 
+        /* ---- 開場第二句輪換：每次開聊天室換一種說法，不重複同一句 ---- */
+        var BUDDY_INTRO_VARIANTS = [
+            '對了，我不只看工時 — 今天的新聞、明天天氣、附近美食、週末去哪玩、工作上的事都能問，點下面按鈕試試。先說好：我偶爾會亂講一句，但工時數字我算得很認真。',
+            '順便說一下，我不是只會算工時的木頭人喔。新聞、天氣、吃什麼、假日去哪、工作的事，通通可以丟給我。先講好，我有時候會講幹話，但工時我絕對算到分毫不差。',
+            '嘿，別只把我當打卡機！想知道今天有什麼新聞、明天會不會下雨、附近有什麼好吃的、週末去哪放風，都可以問我。老實說，我偶爾會胡扯一下，不過工時數字我可是很龜毛的。',
+            '提醒你一下，我會的比你想的多：查新聞、問天氣、找美食、排行程，連工作的事都能聊，下面按鈕點一點就知道。醜話先說，我有時會亂講一句，但工時絕對算得比你還認真。',
+            '你知道嗎，我不只是個算工時的工具人。新聞、天氣、美食、週末計畫，什麼都能問我，試試下面的按鈕。先說，我偶爾會講錯話，但工時的數字我一分都不會算錯。',
+            '來，我再自我介紹一次：工時我幫你盯，新鮮事我幫你查，天氣、美食、假日去哪玩，我都包了。先打個預防針，我有時候會亂講，但工時數字我算得很認真，你放心。'
+        ];
+        function pickBuddyIntro() {
+            var idx = 0;
+            try {
+                var last = parseInt(localStorage.getItem('time8-buddy-intro-idx-v1') || '-1', 10);
+                idx = (isNaN(last) ? 0 : last + 1) % BUDDY_INTRO_VARIANTS.length;
+                localStorage.setItem('time8-buddy-intro-idx-v1', String(idx));
+            } catch (e) {}
+            return BUDDY_INTRO_VARIANTS[idx];
+        }
+
         /* ---- 開關聊天室 ---- */
         function greet(longAway) {
             var d = getTodayData();
@@ -18091,7 +18110,7 @@
             var first = (longAway ? '好久不見！我是' + buddyName + '，' : '你回來啦，我是' + buddyName + '，') + workPart;
             setTimeout(function () { addMsg('buddy', first); pushHistory(null, first); }, 320);
             setTimeout(function () {
-                var second = '對了，我不只看工時 — 今天的新聞、明天天氣、附近美食、週末去哪玩、工作上的事都能問，點下面按鈕試試。先說好：我偶爾會亂講一句，但工時數字我算得很認真。';
+                var second = pickBuddyIntro();
                 addMsg('buddy', second);
                 setMood(second);
                 pushHistory(null, second);
