@@ -4,7 +4,7 @@
 // v2.12.3：使用者提問每 IP 每 10 分鐘 60 次；背景記憶萃取走獨立額度（每 IP 每 10 分鐘 10 次），不吃使用者額度。
 // 上游 OpenRouter 429 是短暫突發限流，先等 1.5 秒重試一次，還 429 才回使用者，訊息不再寫「明天再來」。
 
-const MODEL = 'baidu/ernie-5.5-flash-preview:free'; // 試用中（2026-11-19 起，榮德親口訂試幾天；不好就換回 particle-1:free）
+const MODELS = ['particle-ai/particle-1:free', 'baidu/ernie-5.5-flash-preview:free']; // 自動換模型（2026-11-21 榮德親口訂）：主力回 particle，429／空回應自動換下一個備援；ERNIE 試用結束（空回應＋限流太頻繁）。
 const MAX_TOKENS = 800;
 const TEMPERATURE = 0.9;
 const MAX_MESSAGES = 20;
@@ -51,38 +51,44 @@ function sleep(ms) {
 }
 
 async function callUpstream(apiKey, payload) {
-  for (let attempt = 0; attempt < 2; attempt++) {
-    let upstream;
-    try {
-      upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + apiKey,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://time8hcf.pages.dev/',
-          'X-Title': 'TIME 8',
-        },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(30000),
-      });
-    } catch {
-      return { error: 'AI 連線失敗，請稍後再試', status: 502 };
+  let lastErr = { error: 'AI 暫時沒回應，請稍後再試', status: 502 };
+  for (const model of MODELS) {
+    const p = { ...payload, model };
+    for (let attempt = 0; attempt < 2; attempt++) {
+      let upstream;
+      try {
+        upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + apiKey,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://time8hcf.pages.dev/',
+            'X-Title': 'TIME 8',
+          },
+          body: JSON.stringify(p),
+          signal: AbortSignal.timeout(30000),
+        });
+      } catch {
+        lastErr = { error: 'AI 連線失敗，請稍後再試', status: 502 };
+        break;
+      }
+      // 上游 429 是短暫突發限流：第一次先等 1.5 秒重試一次，不要直接說沒額度
+      if (upstream.status === 429 && attempt === 0) {
+        await sleep(UPSTREAM_RETRY_DELAY_MS);
+        continue;
+      }
+      if (!upstream.ok) {
+        if (upstream.status === 429) { lastErr = { error: '現在問的人有點多，等一下再問。', status: 429 }; break; }
+        lastErr = { error: 'AI 暫時沒回應，請稍後再試', status: 502 };
+        break;
+      }
+      const data = await upstream.json();
+      const reply = data?.choices?.[0]?.message?.content?.trim();
+      if (!reply) { lastErr = { error: '有點問題，等吧！我去問我大哥榮德..', status: 502 }; break; }
+      return { reply };
     }
-    // 上游 429 是短暫突發限流：第一次先等 1.5 秒重試一次，不要直接說沒額度
-    if (upstream.status === 429 && attempt === 0) {
-      await sleep(UPSTREAM_RETRY_DELAY_MS);
-      continue;
-    }
-    if (!upstream.ok) {
-      if (upstream.status === 429) return { error: '現在問的人有點多，等一下再問。', status: 429 };
-      return { error: 'AI 暫時沒回應，請稍後再試', status: 502 };
-    }
-    const data = await upstream.json();
-    const reply = data?.choices?.[0]?.message?.content?.trim();
-    if (!reply) return { error: '有點問題，等吧！我去問我大哥榮德..', status: 502 };
-    return { reply };
   }
-  return { error: '現在問的人有點多，等一下再問。', status: 429 };
+  return lastErr;
 }
 
 export async function onRequestPost(context) {
@@ -114,7 +120,6 @@ export async function onRequestPost(context) {
   if (!clean.length || totalChars > MAX_CHARS) return json({ error: '訊息太長或為空' }, 400);
 
   const result = await callUpstream(apiKey, {
-    model: MODEL,
     messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...clean],
     max_tokens: MAX_TOKENS,
     temperature: TEMPERATURE,
