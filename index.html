@@ -14389,16 +14389,18 @@
                 }
             }
             if (!appSettings.targetHours) appSettings.targetHours = 8;
-            // v2.12.19 聖誕預設：第一次升級到這版，全員預設暖爐聖誕夜（marker 寫入後不再強制遷移，使用者手動切回其他主題留得住）
+            // v2.12.20 聖誕預設撤回：v2.12.19 強制全員聖誕太醜，先切回原本的素白；只撤一次（曾被遷移的用戶切回素白，之後手動選聖誕留得住）
             try {
-                if (!localStorage.getItem('time8-xmas-2026-applied')) {
-                    localStorage.setItem('time8-xmas-2026-applied', '1');
-                    appSettings.zenTheme = 'christmas';
-                    localStorage.setItem('appSettings', JSON.stringify(appSettings));
+                if (!localStorage.getItem('time8-xmas-2026-reverted')) {
+                    localStorage.setItem('time8-xmas-2026-reverted', '1');
+                    if (localStorage.getItem('time8-xmas-2026-applied') && appSettings.zenTheme === 'christmas') {
+                        appSettings.zenTheme = 'alabaster';
+                        localStorage.setItem('appSettings', JSON.stringify(appSettings));
+                    }
                 }
             } catch (e) {}
-            if (!appSettings.zenTheme) appSettings.zenTheme = 'christmas';
-            applyZenTheme(appSettings.zenTheme || 'christmas');
+            if (!appSettings.zenTheme) appSettings.zenTheme = 'alabaster';
+            applyZenTheme(appSettings.zenTheme || 'alabaster');
 
             // 1. 讀取並整合所有歷史儲存來源 (包含 timecardHistory 與舊版相容資料)
             let history = {};
