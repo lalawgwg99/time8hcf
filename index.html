@@ -4673,6 +4673,12 @@
         .t8b-msg-buddy { align-self: flex-start; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-bottom-left-radius: 5px; }
         .t8b-msg-me { align-self: flex-end; background: #201d18; color: #fff; border-bottom-right-radius: 5px; }
         .t8b-msg-sys { align-self: center; background: var(--fill-secondary); color: var(--label-tertiary); font-size: 12px; border-radius: 999px; padding: 6px 13px; max-width: 92%; text-align: center; }
+        /* 四角色影片慶祝（v2.12.14） */
+        .t8b-celebrate-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(28,24,18,.55); display: flex; align-items: center; justify-content: center; padding: 20px; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+        .t8b-celebrate-video { width: min(92vw, 560px); aspect-ratio: 16 / 9; border-radius: 16px; box-shadow: 0 16px 48px rgba(0,0,0,.4); background: #000; opacity: 0; transition: opacity .3s; display: block; }
+        .t8b-celebrate-video.t8b-ready { opacity: 1; }
+        .t8b-crew-video { width: 260px; max-width: 82%; border-radius: 14px; overflow: hidden; background: #000; flex: none; align-self: flex-start; box-shadow: 0 4px 16px rgba(30,25,15,.18); }
+        .t8b-crew-video video { width: 100%; display: block; }
         .t8b-typing { align-self: flex-start; background: var(--card); border: 1px solid var(--separator); border-radius: 16px; border-bottom-left-radius: 5px; padding: 13px 14px; display: flex; gap: 5px; }
         .t8b-typing i { width: 6px; height: 6px; border-radius: 50%; background: #cfc8b8; animation: t8b-bounce 1.1s infinite; }
         .t8b-typing i:nth-child(2) { animation-delay: .18s; }
@@ -18003,7 +18009,7 @@
             var lastOpen = 0;
             try { lastOpen = parseInt(lsGet(LAST_OPEN_KEY) || '0', 10) || 0; } catch (e) {}
             lsSet(LAST_OPEN_KEY, String(Date.now()));
-            if (!greeted) { greeted = true; greet(lastOpen && (Date.now() - lastOpen) > 24 * 60 * 60 * 1000); }
+            if (!greeted) { greeted = true; var la = lastOpen && (Date.now() - lastOpen) > 24 * 60 * 60 * 1000; greet(la); if (la) showCrewVideoInChat(); }
             setTimeout(function () { var inp = $('t8BuddyInput'); if (inp) inp.focus(); }, 380);
         }
         function closeSheet() {
@@ -18303,6 +18309,79 @@
         function careLeft() { return careCountToday() < CARE_MAX_PER_DAY; }
         var careBumpedSeq = -1; /* 同一個泡泡只算一次關心（切頁重畫不重算） */
         function bumpCareOnce() { if (careBumpedSeq !== bubblePickSeq) { careBumpedSeq = bubblePickSeq; bumpCare(); } }
+        /* ---- 四角色影片慶祝（v2.12.14）：滿 4 小時＋滿目標時數，各一天一次 ---- */
+        var CELEB_KEY = 'time8-buddy-celebrate-v1'; /* {day, four, target}，跨日重置 */
+        var CELEB_FOUR_MIN = 240;
+        function celebState() {
+            try {
+                var s = JSON.parse(lsGet(CELEB_KEY) || 'null');
+                if (s && s.day === careDayStr(new Date())) return s;
+            } catch (e) {}
+            return { day: careDayStr(new Date()), four: false, target: false };
+        }
+        function saveCelebState(s) { try { lsSet(CELEB_KEY, JSON.stringify(s)); } catch (e) {} }
+        function showCelebrateVideo() {
+            if (buddyReducedMotion()) return;
+            if (document.querySelector('.t8b-celebrate-overlay')) return; /* 已在播就不再疊 */
+            var overlay = document.createElement('div');
+            overlay.className = 't8b-celebrate-overlay';
+            var video = document.createElement('video');
+            video.className = 't8b-celebrate-video';
+            video.src = 'buddy-crew.mp4';
+            video.muted = true; video.loop = true; video.playsInline = true;
+            video.setAttribute('playsinline', ''); video.setAttribute('muted', '');
+            video.preload = 'auto';
+            var closed = false, ready = false;
+            function close() { if (closed) return; closed = true; clearTimeout(autoTimer); clearTimeout(watchTimer); if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }
+            var autoTimer = setTimeout(close, 6000); /* 播約 6 秒自動關掉 */
+            var watchTimer = setTimeout(function () { if (!ready) close(); }, 4000); /* 4 秒還播不出來就安靜收掉，不留黑框 */
+            video.addEventListener('canplay', function () { ready = true; video.classList.add('t8b-ready'); });
+            video.addEventListener('error', close);
+            overlay.addEventListener('click', close);
+            overlay.appendChild(video);
+            document.body.appendChild(overlay);
+            var p = null;
+            try { p = video.play(); } catch (e) { close(); return; }
+            if (p && p.catch) p.catch(function () { close(); });
+        }
+        function checkCelebrate() {
+            if (buddyReducedMotion()) return;
+            if (typeof document !== 'undefined' && document.visibilityState && document.visibilityState !== 'visible') return;
+            var d;
+            try { d = getTodayData(); } catch (e) { return; }
+            if (!d || !d.records || !d.records.length || !(d.mins > 0)) return;
+            var target = d.target || 480;
+            var s = celebState();
+            var hitTarget = d.mins >= target && !s.target;
+            var hitFour = d.mins >= CELEB_FOUR_MIN && !s.four;
+            if (!hitTarget && !hitFour) return;
+            if (hitTarget) s.target = true;
+            if (hitFour) s.four = true;
+            saveCelebState(s); /* 同一次兩個都到（例如目標就是 4 小時）：只播一次，兩個都記下來 */
+            showCelebrateVideo();
+        }
+        setTimeout(checkCelebrate, 3000);
+        setInterval(checkCelebrate, 10000);
+        /* ---- 聊天室久未見開場影片（v2.12.14）：>24h 沒開，頂部播一次 ---- */
+        function showCrewVideoInChat() {
+            if (buddyReducedMotion()) return;
+            var box = $('t8BuddyMsgs');
+            if (!box || box.querySelector('.t8b-crew-video')) return;
+            var wrap = document.createElement('div');
+            wrap.className = 't8b-crew-video';
+            var video = document.createElement('video');
+            video.src = 'buddy-crew.mp4';
+            video.muted = true; video.playsInline = true;
+            video.setAttribute('playsinline', ''); video.setAttribute('muted', '');
+            video.preload = 'auto';
+            video.addEventListener('error', function () { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); });
+            wrap.addEventListener('click', function () { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); });
+            wrap.appendChild(video);
+            box.insertBefore(wrap, box.firstChild);
+            var p = null;
+            try { p = video.play(); } catch (e) { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); return; }
+            if (p && p.catch) p.catch(function () { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); });
+        }
         /* 記憶開話題：讀正規化的記憶（物件 {t,u,n}），優先用使用者自己說的、不是預設種子的 */
         function userMemories() {
             try {
