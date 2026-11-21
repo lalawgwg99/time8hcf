@@ -79,7 +79,7 @@ async function callUpstream(apiKey, payload) {
     }
     const data = await upstream.json();
     const reply = data?.choices?.[0]?.message?.content?.trim();
-    if (!reply) return { error: 'AI 沒回話，請再問一次', status: 502 };
+    if (!reply) return { error: '有點問題，等吧！我去問我大哥榮德..', status: 502 };
     return { reply };
   }
   return { error: '現在問的人有點多，等一下再問。', status: 429 };
