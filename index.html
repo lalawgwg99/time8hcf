@@ -192,57 +192,6 @@
             --ink-gold: #CDB3DF;
         }
 
-        /* === ZEN THEME 5: 暖爐聖誕夜 (Christmas Hearth - v2.12.19) === */
-        [data-zen-theme="christmas"] {
-            --bg: #F6EEDF;
-            --card: #FDFAF3;
-            --card-secondary: #EFE6D2;
-            --separator: rgba(60, 42, 20, 0.08);
-            --label: #241A10;
-            --label-secondary: #5C4A34;
-            --label-tertiary: #A08B6E;
-            --label-quaternary: #C9B89E;
-            --blue: #2F5D3A;
-            --blue-light: #4E7D5A;
-            --green: #2F5D3A;
-            --red: #A93226;
-            --orange: #9A7040;
-            --purple: #7A5A8A;
-            --teal: #4A788A;
-            --fill: rgba(60, 42, 20, 0.05);
-            --fill-secondary: rgba(60, 42, 20, 0.08);
-            --fill-tertiary: rgba(60, 42, 20, 0.03);
-            --header-bg: rgba(246, 238, 223, 0.88);
-            --nav-bg: rgba(253, 250, 243, 0.92);
-            --ring-warm-1: #D4B688;
-            --ring-warm-2: #9C7747;
-            --shadow-card: 0 2px 32px rgba(60, 42, 10, 0.06), 0 1px 6px rgba(60, 42, 10, 0.05);
-            --shadow-elevated: 0 8px 48px rgba(60, 42, 10, 0.14), 0 2px 12px rgba(60, 42, 10, 0.08);
-            --shadow-button: 0 2px 16px rgba(36, 26, 16, 0.18), 0 1px 4px rgba(36, 26, 16, 0.12);
-            --shadow-blue: 0 4px 20px rgba(47, 93, 58, 0.22);
-            --ink: #8B6840;
-            --ink-light: #C4A87A;
-            --ink-gold: #E8C17A;
-        }
-
-        /* === v2.12.19 聖誕裝飾：只在 christmas 主題出現，全部 pointer-events:none、絕不蓋住文字與按鈕 === */
-        #xmasSnow { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; display: none; }
-        [data-zen-theme="christmas"] #xmasSnow { display: block; }
-        #xmasSnow i { position: absolute; top: -12px; display: block; background: #FFFFFF; border-radius: 50%; box-shadow: 0 0 4px rgba(255, 255, 255, 0.55); animation: xmas-fall linear infinite; }
-        @keyframes xmas-fall { from { transform: translateY(-4vh) translateX(0); } to { transform: translateY(108vh) translateX(28px); } }
-        #xmasPine { position: absolute; top: 88px; left: -8px; width: 92px; height: 80px; z-index: 0; pointer-events: none; display: none; }
-        [data-zen-theme="christmas"] #xmasPine { display: block; }
-        [data-zen-theme="christmas"] #tabToday .today-glance-bar { position: relative; z-index: 1; }
-        #t8BuddySantaHat { position: absolute; top: -13px; left: 44%; width: 34px; height: 26px; transform: translateX(-50%) rotate(-8deg); pointer-events: none; display: none; z-index: 2; }
-        [data-zen-theme="christmas"] #t8BuddySantaHat { display: block; }
-        [data-zen-theme="christmas"] .swipe-track { background: rgba(47, 93, 58, 0.07); border: 2px solid #2F5D3A; box-shadow: inset 0 0 0 1px #D4B688, inset 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(47, 93, 58, 0.10); }
-        [data-zen-theme="christmas"] .swipe-track::after { content: ""; position: absolute; right: 12px; top: 50%; width: 22px; height: 22px; transform: translateY(-50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 12c3-4 8-5 11-3-1 4-5 8-11 3z' fill='%233A6B45'/%3E%3Cpath d='M21 12c-3-4-8-5-11-3 1 4 5 8 11 3z' fill='%232F5D3A'/%3E%3Ccircle cx='10' cy='15' r='2.4' fill='%23C0392B'/%3E%3Ccircle cx='14.5' cy='15.5' r='2.4' fill='%23A93226'/%3E%3Ccircle cx='12.2' cy='18' r='2.2' fill='%23C0392B'/%3E%3C/svg%3E") center / contain no-repeat; pointer-events: none; z-index: 1; }
-        [data-zen-theme="christmas"] .swipe-label { color: #2F5D3A; }
-        [data-zen-theme="christmas"] .swipe-progress { background: linear-gradient(90deg, rgba(47, 93, 58, 0.14) 0%, rgba(47, 93, 58, 0.24) 100%); }
-        @media (prefers-reduced-motion: reduce) {
-            [data-zen-theme="christmas"] #xmasSnow { display: none; }
-            #xmasSnow i { animation: none; }
-        }
 
         /* === OBSIDIAN DARK MODE SPECIFIC VISIBILITY & CONTRAST ENHANCEMENTS === */
         [data-zen-theme="obsidian"] .punch-btn-zen {
@@ -4750,44 +4699,10 @@
 
 <body style="min-height:100vh; background:var(--bg); overflow-x:hidden;">
 
-    <!-- v2.12.19 聖誕雪花：只在 christmas 主題顯示，pointer-events:none -->
-    <div id="xmasSnow" aria-hidden="true"><i style="left:3%; width:5px; height:5px; opacity:.6; animation-duration:13s; animation-delay:-2s;"></i><i style="left:8%; width:3px; height:3px; opacity:.45; animation-duration:10s; animation-delay:-7s;"></i><i style="left:12%; width:6px; height:6px; opacity:.7; animation-duration:16s; animation-delay:-4s;"></i><i style="left:17%; width:4px; height:4px; opacity:.5; animation-duration:11s; animation-delay:-11s;"></i><i style="left:22%; width:7px; height:7px; opacity:.75; animation-duration:17s; animation-delay:-1s;"></i><i style="left:27%; width:3px; height:3px; opacity:.4; animation-duration:9s; animation-delay:-14s;"></i><i style="left:31%; width:5px; height:5px; opacity:.6; animation-duration:14s; animation-delay:-6s;"></i><i style="left:36%; width:4px; height:4px; opacity:.5; animation-duration:12s; animation-delay:-9s;"></i><i style="left:41%; width:6px; height:6px; opacity:.65; animation-duration:15s; animation-delay:-3s;"></i><i style="left:46%; width:3px; height:3px; opacity:.45; animation-duration:10s; animation-delay:-12s;"></i><i style="left:50%; width:5px; height:5px; opacity:.6; animation-duration:13s; animation-delay:-8s;"></i><i style="left:55%; width:7px; height:7px; opacity:.7; animation-duration:18s; animation-delay:-5s;"></i><i style="left:59%; width:4px; height:4px; opacity:.5; animation-duration:11s; animation-delay:-15s;"></i><i style="left:64%; width:3px; height:3px; opacity:.4; animation-duration:9s; animation-delay:-2s;"></i><i style="left:68%; width:6px; height:6px; opacity:.65; animation-duration:16s; animation-delay:-10s;"></i><i style="left:73%; width:4px; height:4px; opacity:.55; animation-duration:12s; animation-delay:-6s;"></i><i style="left:78%; width:5px; height:5px; opacity:.6; animation-duration:14s; animation-delay:-13s;"></i><i style="left:82%; width:3px; height:3px; opacity:.45; animation-duration:10s; animation-delay:-4s;"></i><i style="left:87%; width:6px; height:6px; opacity:.7; animation-duration:15s; animation-delay:-9s;"></i><i style="left:91%; width:4px; height:4px; opacity:.5; animation-duration:11s; animation-delay:-1s;"></i><i style="left:95%; width:5px; height:5px; opacity:.6; animation-duration:13s; animation-delay:-7s;"></i><i style="left:98%; width:3px; height:3px; opacity:.4; animation-duration:9s; animation-delay:-16s;"></i></div>
 
     <div style="max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;"
         id="app">
 
-        <!-- v2.12.19 聖誕松枝：只在 christmas 主題顯示，左上角角落，日期列下方，絕不蓋文字 -->
-        <div id="xmasPine" aria-hidden="true">
-            <svg viewBox="0 0 110 96" width="92" height="80" fill="none">
-                <path d="M6 4 C 30 18, 62 44, 104 90" stroke="#2F5D3A" stroke-width="2.5" stroke-linecap="round"/>
-                <g stroke-linecap="round" stroke-width="5">
-                    <path d="M20 12 L4 2" stroke="#3A6B45"/>
-                    <path d="M20 12 L8 16" stroke="#2F5D3A"/>
-                    <path d="M20 12 L14 24" stroke="#3A6B45"/>
-                    <path d="M34 22 L18 12" stroke="#2F5D3A"/>
-                    <path d="M34 22 L24 30" stroke="#3A6B45"/>
-                    <path d="M34 22 L30 36" stroke="#2F5D3A"/>
-                    <path d="M48 34 L32 26" stroke="#3A6B45"/>
-                    <path d="M48 34 L40 44" stroke="#2F5D3A"/>
-                    <path d="M48 34 L46 50" stroke="#3A6B45"/>
-                    <path d="M62 48 L48 40" stroke="#2F5D3A"/>
-                    <path d="M62 48 L56 60" stroke="#3A6B45"/>
-                    <path d="M62 48 L62 64" stroke="#2F5D3A"/>
-                    <path d="M76 62 L62 54" stroke="#3A6B45"/>
-                    <path d="M76 62 L70 72" stroke="#2F5D3A"/>
-                    <path d="M76 62 L78 76" stroke="#3A6B45"/>
-                    <path d="M90 76 L78 68" stroke="#2F5D3A"/>
-                    <path d="M90 76 L86 84" stroke="#3A6B45"/>
-                    <path d="M90 76 L94 86" stroke="#2F5D3A"/>
-                </g>
-                <ellipse cx="28" cy="20" rx="7" ry="9" transform="rotate(-18 28 20)" fill="#8A6D3B"/>
-                <path d="M22 16 q6 3 12 0 M22 22 q6 3 12 0 M23 27 q5 2 10 0" stroke="#6B4F2A" stroke-width="1.2"/>
-                <circle cx="54" cy="30" r="3.5" fill="#C0392B"/>
-                <circle cx="62" cy="38" r="3.5" fill="#A93226"/>
-                <circle cx="46" cy="42" r="3.2" fill="#C0392B"/>
-                <circle cx="72" cy="56" r="5" fill="#D4B688" stroke="#9C7747" stroke-width="1"/>
-            </svg>
-        </div>
 
         <!-- Header: Minimal Editorial (方案 B: 個人中心與主題一體化) -->
         <header id="appHeader">
@@ -5998,23 +5913,6 @@
                         </div>
                     </div>
 
-                    <!-- 5. 暖爐聖誕夜 -->
-                    <div class="theme-card-option" id="themeOpt_christmas" onclick="selectZenTheme('christmas')">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div class="theme-palette-preview" style="background:#F6EEDF; border:1px solid rgba(60,42,20,0.12);">
-                                <span style="background:#2F5D3A;"></span>
-                                <span style="background:#D4B688;"></span>
-                            </div>
-                            <div>
-                                <div style="font-size:14px; font-weight:600; color:var(--label);">暖爐聖誕夜 🎄</div>
-                                <div style="font-size:11.5px; color:var(--label-tertiary);">暖金爐火 · 松枝雪花 · 聖誕限定</div>
-                            </div>
-                        </div>
-                        <div class="theme-check-icon" id="themeCheck_christmas">
-                            <i class="fas fa-check"></i>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
@@ -6231,10 +6129,10 @@
                     </div>
                     <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);" onclick="closeUserManual(); closeSettings(); openThemePicker();">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">5 款質感主題</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">4 款質感主題</span>
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">切換 ↗</span>
                         </div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">輕點首頁右上角切換：素白、夜色、青綠、晨紫、聖誕。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">輕點首頁右上角切換：素白、夜色、青綠、晨紫。</div>
                     </div>
                     <div style="padding:12px 16px;" onclick="closeUserManual(); showInstallGuide();">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -13939,15 +13837,6 @@
                 ringGreen2: '#5C4472',
                 ringPurple1: '#C49EE2',
                 ringPurple2: '#8E67A8'
-            },
-            christmas: {
-                name: '暖爐聖誕夜',
-                ringWarm1: '#D4B688',
-                ringWarm2: '#9C7747',
-                ringGreen1: '#72A979',
-                ringGreen2: '#46734C',
-                ringPurple1: '#A584BE',
-                ringPurple2: '#7B578F'
             }
         };
 
@@ -14200,7 +14089,7 @@
         }
 
         function updateThemePickerUI(activeThemeKey) {
-            ['alabaster', 'obsidian', 'sage', 'twilight', 'christmas'].forEach(k => {
+            ['alabaster', 'obsidian', 'sage', 'twilight'].forEach(k => {
                 const card = document.getElementById(`themeOpt_${k}`);
                 if (card) {
                     if (k === activeThemeKey) {
@@ -14389,16 +14278,8 @@
                 }
             }
             if (!appSettings.targetHours) appSettings.targetHours = 8;
-            // v2.12.20 聖誕預設撤回：v2.12.19 強制全員聖誕太醜，先切回原本的素白；只撤一次（曾被遷移的用戶切回素白，之後手動選聖誕留得住）
-            try {
-                if (!localStorage.getItem('time8-xmas-2026-reverted')) {
-                    localStorage.setItem('time8-xmas-2026-reverted', '1');
-                    if (localStorage.getItem('time8-xmas-2026-applied') && appSettings.zenTheme === 'christmas') {
-                        appSettings.zenTheme = 'alabaster';
-                        localStorage.setItem('appSettings', JSON.stringify(appSettings));
-                    }
-                }
-            } catch (e) {}
+            // v2.12.22 已下架的主題切回素白
+            try { if (appSettings.zenTheme === 'christmas') { appSettings.zenTheme = 'alabaster'; localStorage.setItem('appSettings', JSON.stringify(appSettings)); } } catch (e) {}
             if (!appSettings.zenTheme) appSettings.zenTheme = 'alabaster';
             applyZenTheme(appSettings.zenTheme || 'alabaster');
 
@@ -17105,8 +16986,6 @@
         <div class="t8b-bubble" id="t8BuddyBubble">今天還沒打卡，我陪你。</div>
         <div class="t8b-fab-col">
             <button type="button" id="t8BuddyFab" aria-label="打開夥伴聊天室"><img src="buddy.webp" alt="夥伴"></button>
-            <!-- v2.12.19 聖誕帽：只在 christmas 主題顯示，pointer-events:none，不影響拖拽／點按 -->
-            <span id="t8BuddySantaHat" aria-hidden="true"><svg viewBox="0 0 36 28" width="34" height="26"><path d="M3 19 C 5 9, 13 3, 29 4 C 26 8, 23 12, 21 15 C 19 18, 17 19, 15 19 Z" fill="#C0392B"/><circle cx="30" cy="5" r="4" fill="#FFFFFF"/><rect x="1" y="18" width="22" height="7" rx="3.5" fill="#FFFFFF" stroke="#E8E0D5" stroke-width="0.5"/></svg></span>
             <span class="t8b-unread" id="t8BuddyUnread">1</span>
             <span class="t8b-name" id="t8BuddyNameTag">夥伴</span>
         </div>
