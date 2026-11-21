@@ -10695,7 +10695,13 @@
                 let cityName = customCity || '台北市';
 
                 if (!customLat || !customLon) {
-                    try {
+                    /* v2.12.16：有自動定位存的城市就用它（GPS 定位，比 IP 定位準；VPN 下 IP 常誤判台北），不再打 IP 定位 */
+                    const stored = (typeof t8StoredCityCoords === 'function') ? t8StoredCityCoords() : null;
+                    if (stored) {
+                        lat = stored.lat;
+                        lon = stored.lon;
+                        cityName = stored.city;
+                    } else try {
                         const geoRes = await fetch('https://get.geojs.io/v1/ip/geo.json', { signal: AbortSignal.timeout(3500) });
                         if (geoRes.ok) {
                             const geoData = await geoRes.json();
@@ -10816,6 +10822,81 @@
                     setTimeout(() => refreshIcon.classList.remove('fa-spin'), 300);
                 }
             }
+        }
+
+        /* ---- 每日第一次打卡自動定位更新天氣（v2.12.16） ----
+           觸發：punch() 每天第一次上班打卡成功後呼叫，一天一次（日期戳記去重）。
+           只存城市名，不存經緯度；失敗（拒絕授權／逾時／抓不到）全部靜默留用舊城市。
+           注意：cachedWeather 是頂端天氣列的全量 shape（icon/text/popMax/最高最低/逐小時…），
+           所以刷新走現成的 fetchLiveWeatherData(lat, lon, city)，不直接把 /api/realtime
+           的回應寫進 cachedWeather（shape 不同，詳情頁會顯示 undefined）。 */
+        const T8_AUTO_LOCATE_DAY_KEY = 'time8-auto-locate-day-v1';
+        const T8_WEATHER_CITY_KEY = 'time8-weather-city-v1';
+        /* 對照 functions/api/realtime.js 的 CITIES 表（15 縣市，客戶端算最近城市，不新增外部 API） */
+        const T8_CITY_COORDS = {
+            '台北': [25.03, 121.56], '新北': [25.01, 121.46], '桃園': [24.99, 121.30],
+            '新竹': [24.80, 120.97], '台中': [24.14, 120.68], '嘉義': [23.48, 120.45],
+            '台南': [22.99, 120.21], '高雄': [22.62, 120.31], '基隆': [25.13, 121.74],
+            '宜蘭': [24.75, 121.75], '花蓮': [23.97, 121.60], '台東': [22.75, 121.15],
+            '澎湖': [23.57, 119.58], '金門': [24.44, 118.38], '馬祖': [26.16, 119.95]
+        };
+
+        function t8NearestCity(lat, lon) {
+            let best = '高雄';
+            let bestD = Infinity;
+            const toRad = Math.PI / 180;
+            for (const name in T8_CITY_COORDS) {
+                const c = T8_CITY_COORDS[name];
+                const dLat = (c[0] - lat) * toRad;
+                const dLon = (c[1] - lon) * toRad;
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                    + Math.cos(lat * toRad) * Math.cos(c[0] * toRad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                const d = 2 * 6371 * Math.asin(Math.sqrt(a));
+                if (d < bestD) { bestD = d; best = name; }
+            }
+            return best;
+        }
+
+        function t8StoredWeatherCity() {
+            try {
+                const c = localStorage.getItem(T8_WEATHER_CITY_KEY);
+                if (c && T8_CITY_COORDS[c]) return c;
+            } catch (e) {}
+            return '高雄';
+        }
+
+        function t8StoredCityCoords() {
+            try {
+                const c = localStorage.getItem(T8_WEATHER_CITY_KEY);
+                if (c && T8_CITY_COORDS[c]) return { lat: T8_CITY_COORDS[c][0], lon: T8_CITY_COORDS[c][1], city: c };
+            } catch (e) {}
+            return null;
+        }
+
+        function autoLocateWeatherToday() {
+            try {
+                const today = (typeof getTodayKey === 'function') ? getTodayKey() : new Date().toISOString().slice(0, 10);
+                let done = null;
+                try { done = localStorage.getItem(T8_AUTO_LOCATE_DAY_KEY); } catch (e) {}
+                if (done === today) return; /* 當天已跑過 */
+                if (!('geolocation' in navigator)) return;
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        try {
+                            const lat = pos.coords.latitude;
+                            const lon = pos.coords.longitude;
+                            if (typeof lat !== 'number' || typeof lon !== 'number' || isNaN(lat) || isNaN(lon)) return;
+                            const city = t8NearestCity(lat, lon);
+                            try { localStorage.setItem(T8_WEATHER_CITY_KEY, city); } catch (e) {}
+                            try { localStorage.setItem(T8_AUTO_LOCATE_DAY_KEY, today); } catch (e) {}
+                            /* 立刻用 GPS 經緯度＋城市刷新天氣（現成路徑，寫回 cachedWeather 全量 shape；isManual=false 不跳通知） */
+                            if (typeof fetchLiveWeatherData === 'function') fetchLiveWeatherData(false, lat, lon, city);
+                        } catch (e) {}
+                    },
+                    () => { /* 拒絕授權／逾時：靜默留用舊城市，不記 done */ },
+                    { timeout: 10000, maximumAge: 0 }
+                );
+            } catch (e) {}
         }
 
         function renderWeatherBadge() {
@@ -15588,6 +15669,8 @@
                 setTimeout(() => {
                     autoDrawDailyFortuneSlip();
                 }, 550);
+                /* v2.12.16：每日第一次打卡自動定位更新天氣（非同步，不擋打卡） */
+                try { autoLocateWeatherToday(); } catch (e) {}
             }
         }
 
@@ -17186,7 +17269,8 @@
             for (var i = 0; i < RT_CITIES.length; i++) {
                 if (text.indexOf(RT_CITIES[i]) !== -1) return RT_CITIES[i];
             }
-            return '高雄';
+            /* 沒指名城市：用自動定位存的城市，沒存過才回高雄（v2.12.16） */
+            return (typeof t8StoredWeatherCity === 'function') ? t8StoredWeatherCity() : '高雄';
         }
         function extractNewsQuery(text) {
             var q = text.replace(/新聞|頭條|今天|最新|消息|發生|什麼事|有|什麼|請問|幫我|查|一下|的|嗎|？|\?|！|!/g, '').trim();
@@ -18289,7 +18373,9 @@
                 if (bw && bw.at && (Date.now() - bw.at) < 30 * 60 * 1000) return;
             } catch (e) {}
             bubbleWeatherFetching = true;
-            fetch('/api/realtime?kind=weather').then(function (r) { return r.json(); }).then(function (j) {
+            /* v2.12.16：泡泡天氣也帶自動定位存的城市，沒存過才回高雄 */
+            var _autoCity = (typeof t8StoredWeatherCity === 'function') ? t8StoredWeatherCity() : '高雄';
+            fetch('/api/realtime?kind=weather&city=' + encodeURIComponent(_autoCity)).then(function (r) { return r.json(); }).then(function (j) {
                 bubbleWeatherFetching = false;
                 if (!j || !j.current || typeof j.current.temp !== 'number') return;
                 var data = { temp: Math.round(j.current.temp), desc: j.current.desc || '', icon: '☀️', pop: (j.today && typeof j.today.rainChance === 'number' ? j.today.rainChance : 0), city: j.city || '' };
