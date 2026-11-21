@@ -192,6 +192,39 @@
             --ink-gold: #CDB3DF;
         }
 
+        /* === ZEN THEME 5: 暖爐聖誕夜 (Christmas) — 變數與素白同值，底色走漸層 === */
+        [data-zen-theme="christmas"] {
+            --bg: #F4EFE6;
+            --card: #FDFAF5;
+            --card-secondary: #EDE8DF;
+            --separator: rgba(40, 32, 20, 0.07);
+            --label: #1C1712;
+            --label-secondary: #52493E;
+            --label-tertiary: #9C9086;
+            --label-quaternary: #C4B8AE;
+            --blue: #6E7D6A;
+            --blue-light: #8BAB86;
+            --green: #4D7A52;
+            --red: #9A4040;
+            --orange: #9A7040;
+            --purple: #7A5A8A;
+            --teal: #4A788A;
+            --fill: rgba(40, 32, 20, 0.05);
+            --fill-secondary: rgba(40, 32, 20, 0.08);
+            --fill-tertiary: rgba(40, 32, 20, 0.03);
+            --header-bg: rgba(244, 239, 230, 0.88);
+            --nav-bg: rgba(253, 250, 245, 0.92);
+            --ring-warm-1: #D4B688;
+            --ring-warm-2: #9C7747;
+            --shadow-card: 0 2px 32px rgba(40, 30, 10, 0.05), 0 1px 6px rgba(40, 30, 10, 0.04);
+            --shadow-elevated: 0 8px 48px rgba(40, 30, 10, 0.12), 0 2px 12px rgba(40, 30, 10, 0.07);
+            --shadow-button: 0 2px 16px rgba(28, 23, 12, 0.18), 0 1px 4px rgba(28, 23, 12, 0.12);
+            --shadow-blue: 0 4px 20px rgba(110, 125, 106, 0.22);
+            --ink: #8B6840;
+            --ink-light: #C4A87A;
+            --ink-gold: #E8C17A;
+        }
+
 
         /* === OBSIDIAN DARK MODE SPECIFIC VISIBILITY & CONTRAST ENHANCEMENTS === */
         [data-zen-theme="obsidian"] .punch-btn-zen {
@@ -4695,9 +4728,53 @@
         .t8b-mood { font-size: 15px; }
         /* ===== v2.11 夥伴聊天室 end ===== */
     </style>
+    <style>
+    /* === 聖誕主題「暖爐聖誕夜」v2.12.24：裝飾只在 christmas 顯示 === */
+    html[data-zen-theme="christmas"] { background: linear-gradient(180deg, #F7EFDF 0%, #F5EAD2 45%, #F1E2C2 100%); }
+    html[data-zen-theme="christmas"] body { background: transparent !important; }
+    [data-zen-theme="christmas"] .today-glance-bar { margin-top: 56px; }
+    #xmasBokeh, #xmasSnow, #xmasPine, #xmasSprig, #xmasBow, #xmasSprigR, #xmasStars, #xmasBaubles { display: none; }
+    html[data-zen-theme="christmas"] #xmasBokeh { display: block; position: fixed; inset: 0; z-index: 0; pointer-events: none; background:
+      radial-gradient(circle 95px at 88% 10%, rgba(255,205,110,.65), rgba(255,205,110,0) 70%),
+      radial-gradient(circle 70px at 94% 38%, rgba(255,205,110,.5), rgba(255,205,110,0) 70%),
+      radial-gradient(circle 80px at 8% 88%, rgba(255,205,110,.45), rgba(255,205,110,0) 70%),
+      radial-gradient(circle 60px at 78% 68%, rgba(255,220,150,.4), rgba(255,220,150,0) 70%),
+      radial-gradient(circle 55px at 12% 45%, rgba(255,220,150,.35), rgba(255,220,150,0) 70%); }
+    html[data-zen-theme="christmas"] #xmasSnow { display: block; position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    #xmasSnow i { position: absolute; display: block; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='%23FFFFFF' stroke-width='1.8' stroke-linecap='round'%3E%3Cline x1='12' y1='2' x2='12' y2='22'/%3E%3Cline x1='3.2' y1='7' x2='20.8' y2='17'/%3E%3Cline x1='20.8' y1='7' x2='3.2' y2='17'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; filter: drop-shadow(0 0 2px rgba(255,255,255,.8)); }
+    #xmasSnow b { position: absolute; display: block; background: #fff; border-radius: 50%; box-shadow: 0 0 4px rgba(255,255,255,.7); }
+    html[data-zen-theme="christmas"] #xmasPine { display: block; position: fixed; top: 58px; left: -6px; width: 104px; height: auto; z-index: 0; pointer-events: none; }
+    html[data-zen-theme="christmas"] #xmasSprig { display: block; position: fixed; left: -8px; bottom: 96px; width: 92px; height: auto; z-index: 0; pointer-events: none; transform: rotate(-6deg); }
+    html[data-zen-theme="christmas"] #xmasSprigR { display: block; position: fixed; top: 58px; right: -6px; width: 72px; height: auto; z-index: 0; pointer-events: none; transform: scaleX(-1); }
+    html[data-zen-theme="christmas"] #xmasBow { display: block; position: fixed; top: 76px; left: 60px; width: 36px; height: auto; z-index: 1; pointer-events: none; transform: rotate(-12deg); }
+    html[data-zen-theme="christmas"] #xmasStars { display: block; position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    #xmasStars i { position: absolute; display: block; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 L14.5 9.5 L22 12 L14.5 14.5 L12 22 L9.5 14.5 L2 12 L9.5 9.5 Z' fill='%23E8C17A'/%3E%3C/svg%3E") center / contain no-repeat; filter: drop-shadow(0 0 3px rgba(232,193,122,.9)); opacity: .85; }
+    html[data-zen-theme="christmas"] #xmasBaubles { display: block; position: fixed; inset: 0 0 auto 0; height: 110px; z-index: 0; pointer-events: none; }
+    #xmasBaubles span { position: absolute; top: 0; width: 1.5px; height: 82px; background: rgba(90,60,30,.45); }
+    #xmasBaubles span::after { content: ""; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 18px; height: 18px; border-radius: 50%; box-shadow: inset -2px -3px 4px rgba(0,0,0,.18), 0 1px 3px rgba(0,0,0,.15); }
+    #xmasBaubles span:nth-child(1) { left: 40%; } #xmasBaubles span:nth-child(1)::after { background: radial-gradient(circle at 35% 30%, #F1948A, #C0392B 65%); }
+    #xmasBaubles span:nth-child(2) { left: 50%; height: 96px; } #xmasBaubles span:nth-child(2)::after { background: radial-gradient(circle at 35% 30%, #F9E79F, #D4AC0D 65%); }
+    #xmasBaubles span:nth-child(3) { left: 60%; } #xmasBaubles span:nth-child(3)::after { background: radial-gradient(circle at 35% 30%, #A9DFBF, #2F5D3A 65%); }
+    html[data-zen-theme="christmas"] #swipeTrack { background-color: rgba(47,93,58,.10); border: 2px solid #2F5D3A; box-shadow: inset 0 0 0 1px #D4B688, 0 2px 10px rgba(47,93,58,.15); }
+    html[data-zen-theme="christmas"] #tabToday .swipe-label { color: #8A2A20; }
+    .xmas-holly { display: none; position: absolute; top: 50%; width: 26px; height: 26px; transform: translateY(-50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 12c3-4 8-5 11-3-1 4-5 8-11 3z' fill='%233A6B45'/%3E%3Cpath d='M21 12c-3-4-8-5-11-3 1 4 5 8 11 3z' fill='%232F5D3A'/%3E%3Ccircle cx='10' cy='15' r='2.4' fill='%23C0392B'/%3E%3Ccircle cx='14.5' cy='15.5' r='2.4' fill='%23A93226'/%3E%3Ccircle cx='12.2' cy='18' r='2.2' fill='%23C0392B'/%3E%3C/svg%3E") center / contain no-repeat; pointer-events: none; z-index: 2; }
+    .xmas-holly-l { left: 8px; }
+    .xmas-holly-r { right: 8px; }
+    html[data-zen-theme="christmas"] .xmas-holly { display: block; }
+    html[data-zen-theme="christmas"] #t8BuddyDock::before { content: ""; position: absolute; top: -14px; left: 50%; width: 46px; height: 34px; transform: translateX(-50%) rotate(8deg); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 36'%3E%3Cpath d='M4 25 C 6 12, 14 3, 26 3 C 35 3, 42 8, 45 15 C 46 18, 46 20, 45 22 C 40 19, 33 17, 25 17 C 16 17, 9 20, 4 25 Z' fill='%23C0392B'/%3E%3Cpath d='M30 4 C 38 5, 43 10, 45 15 C 46 18, 46 20, 45 22 C 42 20, 38 18, 34 17 C 36 12, 34 7, 30 4 Z' fill='%23A93226' fill-opacity='0.45'/%3E%3Crect x='2' y='24' width='44' height='9' rx='4.5' fill='%23FFFFFF'/%3E%3Ccircle cx='45' cy='22' r='5' fill='%23FFFFFF'/%3E%3C/svg%3E") center / contain no-repeat; pointer-events: none; z-index: 2; }
+    </style>
 </head>
 
 <body style="min-height:100vh; background:var(--bg); overflow-x:hidden;">
+    <!-- 聖誕裝飾（只在 christmas 主題顯示，見上方 <style>） -->
+    <div id="xmasBokeh" aria-hidden="true"></div>
+    <div id="xmasSnow" aria-hidden="true"><i style="left:4%; top:60px; width:18px; height:18px;"></i><i style="left:12%; top:300px; width:22px; height:22px;"></i><i style="left:30%; top:130px; width:16px; height:16px;"></i><i style="left:52%; top:480px; width:20px; height:20px;"></i><i style="left:68%; top:220px; width:18px; height:18px;"></i><i style="left:80%; top:90px; width:22px; height:22px;"></i><i style="left:88%; top:620px; width:16px; height:16px;"></i><i style="left:94%; top:350px; width:20px; height:20px;"></i><b style="left:8%; top:200px; width:7px; height:7px;"></b><b style="left:18%; top:420px; width:5px; height:5px;"></b><b style="left:25%; top:60px; width:6px; height:6px;"></b><b style="left:40%; top:260px; width:7px; height:7px;"></b><b style="left:58%; top:120px; width:5px; height:5px;"></b><b style="left:72%; top:520px; width:6px; height:6px;"></b><b style="left:85%; top:180px; width:7px; height:7px;"></b><b style="left:95%; top:480px; width:5px; height:5px;"></b><b style="left:35%; top:700px; width:6px; height:6px;"></b><b style="left:65%; top:760px; width:5px; height:5px;"></b><i style="left:18%; top:560px; width:20px; height:20px;"></i><i style="left:38%; top:380px; width:17px; height:17px;"></i><i style="left:62%; top:700px; width:19px; height:19px;"></i><i style="left:92%; top:520px; width:18px; height:18px;"></i><b style="left:15%; top:320px; width:6px; height:6px;"></b><b style="left:78%; top:300px; width:6px; height:6px;"></b></div>
+    <img id="xmasPine" src="xmas-garland.webp" aria-hidden="true">
+    <img id="xmasSprig" src="xmas-garland.webp" aria-hidden="true">
+    <img id="xmasBow" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 32'%3E%3Cellipse cx='11' cy='13' rx='10' ry='6.5' fill='%23C0392B' transform='rotate(-24 11 13)'/%3E%3Cellipse cx='29' cy='13' rx='10' ry='6.5' fill='%23A93226' transform='rotate(24 29 13)'/%3E%3Cpath d='M16 19 L12 30 L19 25 Z' fill='%23C0392B'/%3E%3Cpath d='M24 19 L28 30 L21 25 Z' fill='%23A93226'/%3E%3Ccircle cx='20' cy='15' r='4.2' fill='%23C0392B'/%3E%3C/svg%3E" aria-hidden="true">
+    <img id="xmasSprigR" src="xmas-garland.webp" aria-hidden="true">
+    <div id="xmasStars" aria-hidden="true"><i style="left:8%; top:500px; width:16px; height:16px;"></i><i style="left:88%; top:180px; width:18px; height:18px;"></i><i style="left:45%; top:650px; width:14px; height:14px;"></i><i style="left:70%; top:420px; width:16px; height:16px;"></i><i style="left:25%; top:760px; width:15px; height:15px;"></i></div>
+    <div id="xmasBaubles" aria-hidden="true"><span></span><span></span><span></span></div>
 
 
     <div style="max-width:430px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; position:relative;"
@@ -4957,6 +5034,8 @@
                     <!-- Swipe to punch out (Apple Native Slide to Action) -->
                     <div id="swipeTrack" class="swipe-track hidden" style="margin-top:14px;">
                         <div class="swipe-progress"></div>
+                        <span class="xmas-holly xmas-holly-l" aria-hidden="true"></span>
+                        <span class="xmas-holly xmas-holly-r" aria-hidden="true"></span>
                         <div class="swipe-label">
                             <span>滑動打卡下班</span>
                             <i class="fas fa-chevron-right" style="font-size:11px; opacity:0.6;"></i>
@@ -5913,6 +5992,23 @@
                         </div>
                     </div>
 
+                    <!-- 5. 暖爐聖誕夜 -->
+                    <div class="theme-card-option" id="themeOpt_christmas" onclick="selectZenTheme('christmas')">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="theme-palette-preview" style="background:#F6EEDF; border:1px solid rgba(90,60,20,0.15);">
+                                <span style="background:#2F5D3A;"></span>
+                                <span style="background:#C0392B;"></span>
+                            </div>
+                            <div>
+                                <div style="font-size:14px; font-weight:600; color:var(--label);">暖爐聖誕夜</div>
+                                <div style="font-size:11.5px; color:var(--label-tertiary);">暖金底色 · 松枝雪花彩球</div>
+                            </div>
+                        </div>
+                        <div class="theme-check-icon" id="themeCheck_christmas">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -6129,7 +6225,7 @@
                     </div>
                     <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);" onclick="closeUserManual(); closeSettings(); openThemePicker();">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">4 款質感主題</span>
+                            <span style="font-size:13.5px; font-weight:600; color:var(--label);">5 款質感主題</span>
                             <span style="font-size:11.5px; color:var(--blue); font-weight:600;">切換 ↗</span>
                         </div>
                         <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">輕點首頁右上角切換：素白、夜色、青綠、晨紫。</div>
@@ -13837,6 +13933,15 @@
                 ringGreen2: '#5C4472',
                 ringPurple1: '#C49EE2',
                 ringPurple2: '#8E67A8'
+            },
+            christmas: {
+                name: '暖爐聖誕夜',
+                ringWarm1: '#D4B688',
+                ringWarm2: '#9C7747',
+                ringGreen1: '#72A979',
+                ringGreen2: '#46734C',
+                ringPurple1: '#A584BE',
+                ringPurple2: '#7B578F'
             }
         };
 
@@ -14089,7 +14194,7 @@
         }
 
         function updateThemePickerUI(activeThemeKey) {
-            ['alabaster', 'obsidian', 'sage', 'twilight'].forEach(k => {
+            ['alabaster', 'obsidian', 'sage', 'twilight', 'christmas'].forEach(k => {
                 const card = document.getElementById(`themeOpt_${k}`);
                 if (card) {
                     if (k === activeThemeKey) {
@@ -14278,8 +14383,6 @@
                 }
             }
             if (!appSettings.targetHours) appSettings.targetHours = 8;
-            // v2.12.22 已下架的主題切回素白
-            try { if (appSettings.zenTheme === 'christmas') { appSettings.zenTheme = 'alabaster'; localStorage.setItem('appSettings', JSON.stringify(appSettings)); } } catch (e) {}
             if (!appSettings.zenTheme) appSettings.zenTheme = 'alabaster';
             applyZenTheme(appSettings.zenTheme || 'alabaster');
 
