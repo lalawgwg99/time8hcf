@@ -5126,6 +5126,10 @@
         .t8b-set-label { width: 42px; flex: none; font-size: 13.5px; font-weight: 600; color: var(--label); }
         .t8b-set-row input { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; color: var(--label); background: var(--card); border: 1px solid var(--separator); border-radius: 10px; padding: 8px 11px; min-height: 40px; font-family: inherit; }
         .t8b-save-btn { background: #201d18; color: #fff; border: none; font-size: 13px; font-weight: 700; border-radius: 10px; min-height: 40px; padding: 8px 14px; cursor: pointer; font-family: inherit; flex: none; }
+        .t8b-toggle { width: 52px; height: 32px; flex: none; border-radius: 999px; border: none; background: #cfcfcf; position: relative; cursor: pointer; padding: 0; font-family: inherit; transition: background .2s; }
+        .t8b-toggle .t8b-toggle-knob { position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25); transition: left .2s; }
+        .t8b-toggle[aria-checked="true"] { background: #34c759; }
+        .t8b-toggle[aria-checked="true"] .t8b-toggle-knob { left: 23px; }
         .t8b-msgs { flex: 1; overflow-y: auto; padding: 16px 14px 8px; display: flex; flex-direction: column; gap: 8px; }
         .t8b-msg { max-width: 82%; font-size: 14.5px; line-height: 1.65; padding: 10px 13px; border-radius: 16px; white-space: pre-wrap; word-break: break-word; }
         .t8b-msg-buddy { align-self: flex-start; background: var(--card); color: var(--label); border: 1px solid var(--separator); border-bottom-left-radius: 5px; }
@@ -6831,7 +6835,7 @@
                 <div class="rounded-xl overflow-hidden mb-5" style="border:0.5px solid var(--separator); background:var(--card);">
                     <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">🤖 夥伴懸浮鈕 · 拖曳聊天</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">首頁怪獸臉可拖到任意位置、位置會記住；點一下開聊天室，旁邊泡泡會輪流講工時、天氣、問候與關心。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">首頁怪獸臉可拖到任意位置、位置會記住；點一下開聊天室，旁邊泡泡會看天氣、時段與你的記憶主動講關心的話。覺得佔畫面可以在聊天室設定裡關掉懸浮夥伴，關掉也能從設定頁開對話。</div>
                     </div>
                     <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">💬 什麼都能問 · 數字算準</div>
@@ -17895,6 +17899,16 @@
                 <input id="t8BuddyNameInput" maxlength="8" value="夥伴" autocomplete="off">
                 <button type="button" class="t8b-save-btn" id="t8BuddyNameSave">儲存</button>
             </div>
+            <div class="t8b-set-row">
+                <label class="t8b-set-label">懸浮夥伴</label>
+                <span style="flex:1; min-width:0; font-size:12.5px; color:var(--label-secondary);">關掉就藏起來，不佔畫面</span>
+                <button type="button" class="t8b-toggle" id="t8BuddyVisibleToggle" role="switch" aria-checked="true" aria-label="顯示懸浮夥伴"><span class="t8b-toggle-knob"></span></button>
+            </div>
+            <div class="t8b-set-row">
+                <label class="t8b-set-label">對話</label>
+                <span style="flex:1; min-width:0; font-size:12.5px; color:var(--label-secondary);">直接開聊天室</span>
+                <button type="button" class="t8b-save-btn" id="t8BuddyOpenChat">開啟對話</button>
+            </div>
             <div class="t8b-set-row" style="margin-bottom:0;">
                 <label class="t8b-set-label">記憶</label>
                 <span style="flex:1; min-width:0; font-size:12.5px; color:var(--label-secondary);">在背景記住 <span id="t8BuddyMemCount">0</span> 件事，不顯示清單</span>
@@ -17924,6 +17938,10 @@
         var REM_MAX = 20; /* 同時排著的提醒上限 20 條 */
         var NOTE_KEY = 'time8-buddy-notes-v1'; /* 記帳／記事（v2.12.10）：{id, text, createdAt} */
         var NOTE_MAX = 50; /* 筆記上限 50 條 */
+        var VISIBLE_KEY = 'time8-buddy-visible-v1'; /* 懸浮夥伴開關（v2.12.12）：只有 '0' 是關，預設開 */
+        var CARE_KEY = 'time8-buddy-care-v1'; /* 關心類當天已出現次數 {day, n}，一天最多 3 次 */
+        var LAST_OPEN_KEY = 'time8-buddy-lastopen-v1'; /* 上次開聊天室的時間戳（>24h 沒開 → 打招呼） */
+        var CARE_MAX_PER_DAY = 3;
         var HISTORY_MAX_MSGS = 40; /* 20 輪 */
         var CONTEXT_MAX_CHARS = 7000; /* 代理端截斷 8000 字，客戶端先控量 */
         var MEM_MAX = 200; /* 記憶上限 200 條（v2.12.5 背景化）：相關度＋新鮮度修剪，久沒用的先淡出 */
@@ -18811,6 +18829,13 @@
         }
 
         /* ---- 送去 /api/ai（上下文：記憶＋近期對話＋工時事實） ---- */
+        /* 回覆結尾偶爾丟一個問題，把話接下去（v2.12.12）：只有回覆沒問句時才接，機率 3 成 */
+        var FOLLOW_UPS = ['對了，今天過得怎麼樣？', '還有什麼想聊的嗎？', '要不要我幫你查點別的？', '今天有什麼開心的事嗎？', '晚點想吃點什麼？'];
+        function maybeFollowUp(reply) {
+            if (!reply || /[？?]\s*$/.test(reply)) return '';
+            if (Math.random() >= 0.3) return '';
+            return ' ' + FOLLOW_UPS[Math.floor(Math.random() * FOLLOW_UPS.length)];
+        }
         function sendToAi(text, kind, extraFacts) {
             if (pending) return;
             var msgs = buildMessages(text, kind, extraFacts);
@@ -18838,6 +18863,7 @@
                 var reply = (d && typeof d.reply === 'string') ? d.reply : '';
                 if (!reply) throw new Error('empty');
                 hideTyping();
+                reply = reply + maybeFollowUp(reply);
                 addMsg('buddy', reply);
                 setMood(reply);
                 pushHistory(text, reply);
@@ -18933,6 +18959,7 @@
                 showTyping();
                 setTimeout(function () {
                     hideTyping();
+                    local = local + maybeFollowUp(local);
                     addMsg('buddy', local);
                     setMood(local);
                     pushHistory(text, local);
@@ -18945,16 +18972,17 @@
         }
 
         /* ---- 開關聊天室 ---- */
-        function greet() {
+        function greet(longAway) {
             var d = getTodayData();
-            var first;
+            var workPart;
             if (!d.records.length && d.mins <= 0) {
-                first = '你回來啦。今天還沒打卡，目標是 ' + fmtHM(d.target) + '，我盯著。';
+                workPart = '今天還沒打卡，目標是 ' + fmtHM(d.target) + '，我盯著。';
             } else if (d.mins >= d.target) {
-                first = '你回來啦。今天已經達標了（' + fmtHM(d.mins) + '），辛苦了。';
+                workPart = '今天已經達標了（' + fmtHM(d.mins) + '），辛苦了。';
             } else {
-                first = '你回來啦。今天上了 ' + fmtHM(d.mins) + '，還差 ' + fmtHM(d.target - d.mins) + '，我盯著。';
+                workPart = '今天上了 ' + fmtHM(d.mins) + '，還差 ' + fmtHM(d.target - d.mins) + '，我盯著。';
             }
+            var first = (longAway ? '好久不見！我是' + buddyName + '，' : '你回來啦，我是' + buddyName + '，') + workPart;
             setTimeout(function () { addMsg('buddy', first); pushHistory(null, first); }, 320);
             setTimeout(function () {
                 var second = '對了，我不只看工時 — 今天的新聞、明天天氣、附近美食、週末去哪玩、工作上的事都能問，點下面按鈕試試。先說好：我偶爾會亂講一句，但工時數字我算得很認真。';
@@ -18963,6 +18991,7 @@
                 pushHistory(null, second);
             }, 320 + 850);
         }
+
         /* ---- 標頭心情符號：跟著最新回覆的語氣走（輕量關鍵字判斷，不做複雜邏輯） ---- */
         var MOODS = [
             [/累|辛苦|休息|睡|疲/, '😮‍💨'],
@@ -18992,7 +19021,10 @@
             if (unread) unread.classList.add('t8b-hidden');
             lsSet(SEEN_KEY, '1');
             checkReminders(); /* 開聊天室時也順便看有沒有到期的提醒 */
-            if (!greeted) { greeted = true; greet(); }
+            var lastOpen = 0;
+            try { lastOpen = parseInt(lsGet(LAST_OPEN_KEY) || '0', 10) || 0; } catch (e) {}
+            lsSet(LAST_OPEN_KEY, String(Date.now()));
+            if (!greeted) { greeted = true; greet(lastOpen && (Date.now() - lastOpen) > 24 * 60 * 60 * 1000); }
             setTimeout(function () { var inp = $('t8BuddyInput'); if (inp) inp.focus(); }, 380);
         }
         function closeSheet() {
@@ -19136,8 +19168,9 @@
         var BUBBLE_ROTATE_MS = 30 * 60 * 1000; /* 開著時約每 30 分鐘換一句 */
         var BUBBLE_TICK_MS = 30000; /* 工時數字每 30 秒重算，泡泡不舊 */
         var BUBBLE_WEATHER_KEY = 'time8-buddy-weather-v1';
-        var bubbleCat = ''; /* 上一句的類別：work/weather/greeting/care/humor/memory */
+        var bubbleCat = ''; /* 上一句的類別：work/weather/greeting/care/humor/memory/life/quiet */
         var bubbleCatAt = 0;
+        var bubblePickSeq = 0; /* 泡泡輪換序號：關心只算一次的依據（比時間戳穩） */
         var bubbleWeatherFetching = false;
         function bubbleContinuousMins() {
             try {
@@ -19151,19 +19184,27 @@
         }
         /* App 頂端天氣列那份現成資料（localStorage cachedWeather），沒有才打 /api/realtime */
         function bubbleWeatherSync() {
+            var ydayTemp = null;
+            try {
+                var bw0 = JSON.parse(lsGet(BUBBLE_WEATHER_KEY) || 'null');
+                if (bw0 && typeof bw0.ydayTemp === 'number') ydayTemp = bw0.ydayTemp;
+            } catch (e) {}
             try {
                 var raw = lsGet('cachedWeather');
                 if (raw) {
                     var w = JSON.parse(raw);
-                    if (w && typeof w.temp === 'number') return { temp: Math.round(w.temp), desc: w.text || '', icon: w.icon || '☀️', pop: (typeof w.popMax === 'number' ? w.popMax : 0), city: w.city || '' };
+                    if (w && typeof w.temp === 'number') return { temp: Math.round(w.temp), desc: w.text || '', icon: w.icon || '☀️', pop: (typeof w.popMax === 'number' ? w.popMax : 0), city: w.city || '', ydayTemp: ydayTemp };
                 }
             } catch (e) {}
             try {
                 var bw = JSON.parse(lsGet(BUBBLE_WEATHER_KEY) || 'null');
-                if (bw && bw.at && (Date.now() - bw.at) < 30 * 60 * 1000 && bw.data && typeof bw.data.temp === 'number') return bw.data;
+                if (bw && bw.at && (Date.now() - bw.at) < 30 * 60 * 1000 && bw.data && typeof bw.data.temp === 'number') {
+                    return { temp: bw.data.temp, desc: bw.data.desc || '', icon: bw.data.icon || '☀️', pop: bw.data.pop || 0, city: bw.data.city || '', ydayTemp: (typeof bw.ydayTemp === 'number' ? bw.ydayTemp : ydayTemp) };
+                }
             } catch (e) {}
             return null;
         }
+
         function bubbleWeatherFetch() {
             if (bubbleWeatherFetching) return;
             try {
@@ -19177,35 +19218,64 @@
                 var data = { temp: Math.round(j.current.temp), desc: j.current.desc || '', icon: '☀️', pop: (j.today && typeof j.today.rainChance === 'number' ? j.today.rainChance : 0), city: j.city || '' };
                 if (/雨/.test(data.desc)) data.icon = '🌧️';
                 else if (/陰|雲/.test(data.desc)) data.icon = '☁️';
-                lsSet(BUBBLE_WEATHER_KEY, JSON.stringify({ at: Date.now(), data: data }));
+                /* 記下昨天的氣溫，才能說「比昨天冷幾度」（v2.12.12）：換日才搬，同一天不動 */
+                var prev = null;
+                try { prev = JSON.parse(lsGet(BUBBLE_WEATHER_KEY) || 'null'); } catch (e) {}
+                var todayStr = careDayStr(new Date());
+                var ydayTemp = null;
+                if (prev && typeof prev.ydayTemp === 'number') ydayTemp = prev.ydayTemp;
+                if (prev && prev.day && prev.day !== todayStr && prev.data && typeof prev.data.temp === 'number') ydayTemp = prev.data.temp;
+                lsSet(BUBBLE_WEATHER_KEY, JSON.stringify({ at: Date.now(), data: data, day: todayStr, ydayTemp: ydayTemp }));
                 if (bubbleCat === 'weather') renderBubble();
             }).catch(function () { bubbleWeatherFetching = false; });
         }
+        /* 關心類節制：一天最多 3 次（v2.12.12） */
+        function careDayStr(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+        function careCountToday() {
+            try {
+                var c = JSON.parse(lsGet(CARE_KEY) || 'null');
+                if (c && c.day === careDayStr(new Date()) && typeof c.n === 'number') return c.n;
+            } catch (e) {}
+            return 0;
+        }
+        function bumpCare() { lsSet(CARE_KEY, JSON.stringify({ day: careDayStr(new Date()), n: careCountToday() + 1 })); }
+        function careLeft() { return careCountToday() < CARE_MAX_PER_DAY; }
+        var careBumpedSeq = -1; /* 同一個泡泡只算一次關心（切頁重畫不重算） */
+        function bumpCareOnce() { if (careBumpedSeq !== bubblePickSeq) { careBumpedSeq = bubblePickSeq; bumpCare(); } }
+        /* 記憶開話題：讀正規化的記憶（物件 {t,u,n}），優先用使用者自己說的、不是預設種子的 */
         function userMemories() {
             try {
-                var raw = lsGet(MEM_KEY);
-                if (!raw) return [];
-                var arr = JSON.parse(raw);
-                return Array.isArray(arr) ? arr.filter(function (x) { return typeof x === 'string' && x.trim(); }) : [];
+                var all = loadMemories().map(function (m) { return m.t; });
+                var real = all.filter(function (t) { return DEFAULT_MEMORIES.indexOf(t) === -1; });
+                return real.length ? real : all;
             } catch (e) { return []; }
         }
         function pickBubbleCat() {
+            var nowD = new Date();
+            var hour = nowD.getHours();
+            /* 深夜 23:00–07:00 不主動（v2.12.12）：只顯示早點休息，不換新話題 */
+            if (hour >= 23 || hour < 7) return 'quiet';
             var d = getTodayData();
             var remaining = Math.max(0, d.target - d.mins);
-            var hour = new Date().getHours();
             var w = bubbleWeatherSync();
             var raining = !!(w && (w.pop >= 30 || /雨/.test(w.desc)));
+            var cold = !!(w && w.temp < 18);
+            var drop = !!(w && typeof w.ydayTemp === 'number' && (w.ydayTemp - w.temp) >= 5);
+            var hot = !!(w && w.temp > 33);
+            var weatherCare = raining || cold || drop || hot;
             var cont = bubbleContinuousMins();
             var mems = userMemories();
+            var offWork = (d.mins < d.target) && (remaining <= 60 || hour >= 17);
             var cands = [];
             function add(cat, weight) { if (weight > 0) cands.push({ cat: cat, w: weight }); }
             add('work', 3 + (remaining <= 60 ? 3 : remaining <= 120 ? 1 : 0));
-            if (w) add('weather', 2 + (raining ? 3 : 0));
+            if (w) add('weather', 2 + (weatherCare && careLeft() ? 3 : 0));
             else bubbleWeatherFetch();
-            add('greeting', 2 + (hour < 10 ? 3 : (hour >= 12 && hour < 14) ? 1 : 0));
-            add('care', 2 + (cont >= 120 ? 4 : cont >= 60 ? 2 : 0) + (hour >= 20 ? 2 : 0));
+            add('greeting', 2 + (hour < 10 ? 3 : (hour >= 12 && hour < 14) ? 1 : 0) + (offWork ? 3 : 0));
+            if (careLeft()) add('care', 2 + (cont >= 120 ? 4 : cont >= 60 ? 2 : 0) + (hour >= 20 ? 2 : 0));
             add('humor', 1.5);
             if (mems.length) add('memory', 2);
+            add('life', 1.5);
             var pool = cands.filter(function (c) { return c.cat !== bubbleCat; });
             if (!pool.length) pool = cands;
             if (!pool.length) return 'work';
@@ -19215,16 +19285,35 @@
             for (var i = 0; i < pool.length; i++) { r -= pool[i].w; if (r <= 0) return pool[i].cat; }
             return pool[pool.length - 1].cat;
         }
+
         function bubbleLine(list) { return list[Math.floor(Math.random() * list.length)]; }
         function renderBubble() {
             var el = $('t8BuddyBubble');
             if (!el) return;
             var d = getTodayData();
             el.textContent = '';
+            if (bubbleCat === 'quiet') {
+                el.textContent = '夜深了，早點休息喔 🌙';
+                return;
+            }
             if (bubbleCat === 'weather') {
                 var w = bubbleWeatherSync();
                 if (!w) { bubbleCat = 'work'; return renderBubble(); }
-                var line = (w.pop >= 30 || /雨/.test(w.desc))
+                var raining = (w.pop >= 30 || /雨/.test(w.desc));
+                var cold = w.temp < 18;
+                var drop = (typeof w.ydayTemp === 'number' && (w.ydayTemp - w.temp) >= 5);
+                var hot = w.temp > 33;
+                var isCare = raining || cold || drop || hot;
+                if (isCare && careLeft()) {
+                    bumpCareOnce();
+                    if (raining) el.textContent = '今天 ' + w.temp + '°C 有雨，記得帶傘，路上小心 🌧️';
+                    else if (cold && drop) el.textContent = '今天才 ' + w.temp + '°C，比昨天冷 ' + (w.ydayTemp - w.temp) + ' 度，出門加件外套，別感冒了 🧥';
+                    else if (cold) el.textContent = '今天才 ' + w.temp + '°C，好冷啊，出門記得加件外套 🧥';
+                    else if (drop) el.textContent = '今天 ' + w.temp + '°C，比昨天冷 ' + (w.ydayTemp - w.temp) + ' 度，加件外套再出門 🧥';
+                    else el.textContent = '今天 ' + w.temp + '°C，熱到爆，多喝水、別中暑了 💧';
+                    return;
+                }
+                var line = raining
                     ? '今天 ' + w.temp + '°C 有雨，記得帶傘 ' + (w.icon || '🌧️')
                     : w.temp >= 30
                         ? '今天 ' + w.temp + '°C，記得多喝水 ' + (w.icon || '☀️')
@@ -19234,9 +19323,15 @@
             }
             if (bubbleCat === 'greeting') {
                 var h = new Date().getHours();
-                var g = h < 10 ? ['早安，今天也要加油 ☀️', '早安，我在這裡陪你 🙂']
+                var hm = h * 60 + new Date().getMinutes();
+                var remaining = Math.max(0, d.target - d.mins);
+                if (d.mins < d.target && remaining <= 60) {
+                    el.textContent = bubbleLine(['再一個小時就達標了，辛苦了 💪', '快下班了，今天也辛苦了 🙂']);
+                    return;
+                }
+                var g = (hm >= 690 && hm < 810) ? ['午安，吃飽了嗎？😋', '中午了，休息一下再上工 🙂']
+                    : h < 10 ? ['早安，今天也要加油 ☀️', '早安，我在這裡陪你 🙂']
                     : h < 12 ? ['上午好，慢慢來也沒關係 🙂', '上午了，喝口水再繼續 💧']
-                    : h < 14 ? ['午安，吃飽了嗎？😋', '中午了，休息一下再上工 🙂']
                     : h < 17 ? ['下午好，剩下的我們一起拚 💪', '下午了，別忘了起來動一動 🙂']
                     : h < 19 ? ['快下班了，再撐一下 💪', '傍晚了，今天辛苦了 🙂']
                     : ['晚上好，今天也辛苦了 🌙', '夜深了，早點休息喔 🌙'];
@@ -19244,6 +19339,7 @@
                 return;
             }
             if (bubbleCat === 'care') {
+                bumpCareOnce();
                 el.textContent = bubbleLine(['今天心情怎麼樣？', '累了就跟我說，休息一下也沒關係 🙂', '深呼吸一下，我在這裡陪你。', '肩膀痠嗎？動一動再回來 💪']);
                 return;
             }
@@ -19259,6 +19355,10 @@
                 el.textContent = '上次你說「' + m + '」，我還記得喔 🙂';
                 return;
             }
+            if (bubbleCat === 'life') {
+                el.textContent = bubbleLine(['今天想吃點什麼？我幫你找附近好吃的 😋', '週末想去哪玩？點我聊聊 🚗', '今天有什麼新聞想知道？點我問我 📰', '來聽個冷笑話嗎？點我 😄', '最近有沒有什麼煩心事？跟我說說 🙂']);
+                return;
+            }
             /* work（預設）：跟主畫面同一份數字 */
             if (!d.records.length && d.mins <= 0) { el.textContent = '今天還沒打卡，我陪你。'; return; }
             if (d.mins >= d.target) { el.textContent = '今天達標了，辛苦了。'; return; }
@@ -19268,11 +19368,13 @@
             el.appendChild(b);
             el.appendChild(document.createTextNode('，我陪你。'));
         }
+
         function refreshBubble() {
             var now = Date.now();
             if (!bubbleCat || now - bubbleCatAt > BUBBLE_ROTATE_MS) {
                 bubbleCat = pickBubbleCat();
                 bubbleCatAt = now;
+                bubblePickSeq++;
             }
             renderBubble();
         }
@@ -19282,6 +19384,7 @@
                 if (!dock || dock.classList.contains('t8b-hidden')) return;
                 bubbleCat = pickBubbleCat();
                 bubbleCatAt = Date.now();
+                bubblePickSeq++;
                 renderBubble();
             }, BUBBLE_ROTATE_MS);
             setInterval(function () {
@@ -19289,6 +19392,14 @@
                 if (!dock || dock.classList.contains('t8b-hidden')) return;
                 if (bubbleCat === 'work') renderBubble(); /* 只重算工時數字，不換類別 */
             }, BUBBLE_TICK_MS);
+        }
+
+        /* ---- 懸浮夥伴開關（v2.12.12）：設定頁可關掉，關掉就整個藏起來、主動關心也停；記憶提醒工時都不受影響 ---- */
+        function buddyVisible() { return lsGet(VISIBLE_KEY) !== '0'; }
+        function applyBuddyVisibility() {
+            var t = $('t8BuddyVisibleToggle');
+            if (t) t.setAttribute('aria-checked', buddyVisible() ? 'true' : 'false');
+            syncDockVisibility();
         }
 
         /* ---- 只在首頁（今日頁）顯示懸浮鈕 ---- */
@@ -19299,7 +19410,7 @@
             if (!dock) return;
             var onToday = !!(today && today.classList.contains('active'));
             var sheetOpen = !!(sheet && sheet.classList.contains('t8b-open'));
-            if (onToday && !sheetOpen) {
+            if (onToday && !sheetOpen && buddyVisible()) {
                 dock.classList.remove('t8b-hidden');
                 refreshBubble();
                 syncBubbleSide();
@@ -19345,6 +19456,22 @@
                 applyName(v);
                 addMsg('sys', '名字改成了「' + v + '」');
                 setTimeout(function () { addMsg('buddy', '好，我叫「' + v + '」。'); }, 650);
+            });
+            var visToggle = $('t8BuddyVisibleToggle');
+            if (visToggle) {
+                visToggle.setAttribute('aria-checked', buddyVisible() ? 'true' : 'false');
+                visToggle.addEventListener('click', function () {
+                    var on = !buddyVisible();
+                    lsSet(VISIBLE_KEY, on ? '1' : '0');
+                    applyBuddyVisibility();
+                    addMsg('sys', on ? '懸浮夥伴開回來了。' : '懸浮夥伴關掉了，想聊天從設定頁「開啟對話」找我。');
+                });
+            }
+            var openChatBtn = $('t8BuddyOpenChat');
+            if (openChatBtn) openChatBtn.addEventListener('click', function () {
+                var set = $('t8BuddySettings');
+                if (set) set.classList.remove('t8b-open');
+                openSheet();
             });
             var forgetBtn = $('t8BuddyForgetAll');
             if (forgetBtn) forgetBtn.addEventListener('click', function () {
@@ -19441,8 +19568,11 @@
                 detectRealtime: detectRealtime, extractCity: extractCity, extractNewsQuery: extractNewsQuery,
                 formatNewsFacts: formatNewsFacts, formatWeatherFacts: formatWeatherFacts,
                 pickBubbleCat: pickBubbleCat, renderBubble: renderBubble, refreshBubble: refreshBubble,
+                buddyVisible: buddyVisible, setBuddyVisible: function (on) { lsSet(VISIBLE_KEY, on ? '1' : '0'); applyBuddyVisibility(); },
+                careCountToday: careCountToday, careLeft: careLeft, maybeFollowUp: maybeFollowUp, greet: greet,
+                userMemories: userMemories, getCareKey: function () { return CARE_KEY; },
                 bubbleContinuousMins: bubbleContinuousMins, bubbleWeatherSync: bubbleWeatherSync,
-                setBubbleCat: function (c) { bubbleCat = c; bubbleCatAt = Date.now(); },
+                setBubbleCat: function (c) { bubbleCat = c; bubbleCatAt = Date.now(); bubblePickSeq++; },
                 getBubbleCat: function () { return bubbleCat; },
                 getPatterns: function () { return { facts: patterns.facts.slice(), blocked: patterns.blocked.slice() }; },
                 getExtractCount: function () { return extractState.count; },
