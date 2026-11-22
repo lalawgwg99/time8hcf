@@ -1,12 +1,13 @@
-// TIME 8 即時查詢：新聞（Google News RSS）＋天氣（Open-Meteo）＋匯率（ExchangeRate-API），免費、免 key。
+// TIME 8 即時查詢：新聞（Google News RSS）＋天氣（Open-Meteo）＋匯率（ExchangeRate-API）＋台股收盤（證交所 STOCK_DAY），免費、免 key。
 // 只回伺服器端抓到的事實，絕不編造；上游掛了就回通用錯誤，不洩漏細節。
-// 天氣 in-memory 快取 10 分鐘；匯率快取 10 分鐘（牌價一天才變一次）；新聞不快取（RSS 本身就是最新的）。
+// 天氣 in-memory 快取 10 分鐘；匯率快取 10 分鐘（牌價一天才變一次）；台股收盤快取 10 分鐘（收盤價一天只變一次）；新聞不快取（RSS 本身就是最新的）。
 
 const RATE_LIMIT = 60; // 每 IP 每 10 分鐘最多 60 次（v2.12.3：使用者連續測試＋泡泡天氣抓取共用，放寬）
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 10000;
 const WEATHER_CACHE_MS = 10 * 60 * 1000;
 const FX_CACHE_MS = 10 * 60 * 1000;
+const TW_CACHE_MS = 10 * 60 * 1000;
 const FX_BASES = ['USD', 'EUR', 'JPY', 'CNY', 'GBP', 'HKD', 'AUD', 'KRW', 'SGD', 'CAD', 'THB', 'NZD', 'CHF', 'PHP', 'VND', 'MYR', 'IDR', 'TWD'];
 const FX_KEEP = ['TWD', 'USD', 'JPY', 'EUR', 'CNY', 'GBP', 'HKD', 'AUD', 'KRW', 'SGD', 'CAD', 'THB', 'NZD', 'CHF', 'PHP', 'VND', 'MYR', 'IDR'];
 const NEWS_MAX = 8;
@@ -34,6 +35,7 @@ const WMO = {
 const hits = new Map(); // ip -> [timestamps]，isolate 內 best-effort 限流
 const weatherCache = new Map(); // city -> { at, body }
 const fxCache = new Map(); // base -> { at, body }
+const twCache = new Map(); // symbol -> { at, body }
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -206,11 +208,73 @@ async function fetchFx(base) {
   return body;
 }
 
+/* ---- 台股收盤（v2.12.34）：證交所 STOCK_DAY 官方 API，免費免 key；取當月最後一筆＝最近交易日收盤 ---- */
+function tpeYearMonth(offsetMonths) {
+  const now = new Date(Date.now() + 8 * 60 * 60 * 1000); // 台北時間
+  let y = now.getUTCFullYear(), m = now.getUTCMonth() + 1 + offsetMonths;
+  while (m < 1) { m += 12; y -= 1; }
+  while (m > 12) { m -= 12; y += 1; }
+  return { y, m };
+}
+function twNum(v) {
+  if (typeof v !== 'string') return NaN;
+  const n = parseFloat(v.replace(/,/g, '').trim());
+  return isFinite(n) ? n : NaN;
+}
+async function fetchTwstockMonth(symbol, y, m) {
+  const date = String(y) + String(m).padStart(2, '0') + '01';
+  const url = 'https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=' + date + '&stockNo=' + symbol + '&response=json';
+  const res = await fetch(url, { headers: { 'User-Agent': NEWS_UA }, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+  if (!res.ok) throw new Error('twse upstream ' + res.status);
+  const d = await res.json();
+  if (!d || d.stat !== 'OK' || !Array.isArray(d.data) || !d.data.length) return null;
+  return d;
+}
+async function fetchTwstock(symbol) {
+  const cached = twCache.get(symbol);
+  if (cached && Date.now() - cached.at < TW_CACHE_MS) return cached.body;
+  let d = null;
+  for (let off = 0; off >= -1; off--) {
+    const ym = tpeYearMonth(off);
+    try { d = await fetchTwstockMonth(symbol, ym.y, ym.m); } catch (e) { d = null; }
+    if (d) break; // 當月還沒開市（月初）才退到上個月；代號錯誤兩月都拿不到，最後丟錯
+  }
+  if (!d) throw new Error('twse no data');
+  const row = d.data[d.data.length - 1];
+  const close = twNum(row[6]), change = twNum(row[7]);
+  if (!isFinite(close) || !isFinite(change)) throw new Error('twse bad row');
+  const roc = (row[0] || '').split('/');
+  const date = roc.length === 3 ? (Number(roc[0]) + 1911) + '-' + roc[1].padStart(2, '0') + '-' + roc[2].padStart(2, '0') : '';
+  let name = '';
+  const tm = (d.title || '').match(new RegExp(symbol + '\\s+(\\S+)'));
+  if (tm) name = tm[1];
+  const prev = close - change;
+  const body = {
+    kind: 'twstock',
+    symbol,
+    name,
+    date,
+    open: twNum(row[3]),
+    high: twNum(row[4]),
+    low: twNum(row[5]),
+    close,
+    change,
+    changePct: prev ? Math.round(change / prev * 10000) / 100 : 0,
+    volume: twNum(row[1]),
+    turnover: twNum(row[2]),
+    trades: twNum(row[8]),
+    source: '臺灣證券交易所',
+    fetchedAt: new Date().toISOString(),
+  };
+  twCache.set(symbol, { at: Date.now(), body });
+  return body;
+}
+
 export async function onRequestGet(context) {
   const { request } = context;
   const url = new URL(request.url);
   const kind = url.searchParams.get('kind') || '';
-  if (kind !== 'news' && kind !== 'weather' && kind !== 'fx') return json({ error: 'kind 必須是 news、weather 或 fx' }, 400);
+  if (kind !== 'news' && kind !== 'weather' && kind !== 'fx' && kind !== 'twstock') return json({ error: 'kind 必須是 news、weather、fx 或 twstock' }, 400);
 
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (rateLimited(ip)) return json({ error: '問太快了，休息一下再問' }, 429);
@@ -225,6 +289,11 @@ export async function onRequestGet(context) {
       const base = (url.searchParams.get('base') || 'USD').trim().toUpperCase();
       const b = FX_BASES.indexOf(base) !== -1 ? base : 'USD';
       return json(await fetchFx(b));
+    }
+    if (kind === 'twstock') {
+      const symbol = (url.searchParams.get('symbol') || '').trim().toUpperCase();
+      if (!/^[0-9]{4,6}[A-Z]?$/.test(symbol)) return json({ error: 'symbol 必須是 4～6 碼股票代號' }, 400);
+      return json(await fetchTwstock(symbol));
     }
     const city = (url.searchParams.get('city') || '高雄').trim();
     const name = CITIES[city] ? city : '高雄';

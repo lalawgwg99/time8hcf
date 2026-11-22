@@ -6251,11 +6251,11 @@
                     </div>
                     <div style="padding:12px 16px; border-bottom:0.5px solid var(--separator);">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">💬 什麼都能問 · 數字算準</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">問工時、新聞、天氣、匯率、美食、旅遊、事業；工時用真實打卡算，新聞天氣匯率查真資料，查不到老實說不編。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">問工時、新聞、天氣、匯率、台股收盤、美食、旅遊、事業；工時用真實打卡算，新聞天氣匯率台股查真資料，查不到老實說不編。</div>
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">🧠 記憶在背景 · 聊天指令</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。聊天打「提醒我 18:00 ……」還能排提醒，到時間 App 會跳通知（App 要開著）。聊天打「記一筆：……」可以隨手記帳記事，打「我記了什麼」查看、「刪筆記：內容」刪掉。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。聊天打「提醒我 18:00 ……」還能排提醒，到時間 App 會跳通知（App 要開著）。聊天打「記一筆：……」可以隨手記帳記事，打「我記了什麼」查看、「刪筆記：內容」刪掉。聊天打「台積電今天收多少？」查台股收盤價（證交所最新交易日收盤，盤中還沒收盤時給的是前一個交易日）。</div>
                     </div>
                 </div>
 
@@ -17176,6 +17176,7 @@
             { cat: '新聞', label: '今天有什麼新聞？', q: '今天有什麼新聞？', kind: 'news' },
             { cat: '生活', label: '明天天氣如何？', q: '明天天氣如何？', kind: 'weather' },
             { cat: '生活', label: '100 美金多少台幣？', q: '100 美金多少台幣？', kind: 'fx' },
+            { cat: '生活', label: '台積電今天收多少？', q: '台積電今天收多少？', kind: 'twstock' },
             { cat: '生活', label: '附近有什麼好吃的？', q: '附近有什麼好吃的？', kind: 'food' },
             { cat: '生活', label: '我有點累了', q: '我有點累了', kind: 'tired' },
             { cat: '生活', label: '教他記一件事', q: '記住：我下班後要先去買杏仁茶', kind: 'memory' },
@@ -17190,6 +17191,7 @@
         var NEWS_FAIL = '即時新聞現在連不上，我查不到今天最新的消息，我不會亂編。等一下再問我一次。';
         var WEATHER_FAIL = '即時天氣現在連不上，我查不到準確天氣，亂報會害你淋雨。等一下再問我一次。';
         var FX_FAIL = '即時匯率現在連不上，我查不到最新匯率，亂報會害你換錯錢。等一下再問我一次。';
+        var TW_FAIL = '台股收盤現在連不上，我查不到最新收盤價，亂報會害你看錯價。等一下再問我一次。';
         var ERR_FRIENDLY = '夥伴現在有點累，連不上——等一下再問我一次。';
         var ERR_FAST = '問太快了，休息一下再問我，等一下就能問了。';
 
@@ -17412,10 +17414,13 @@
             if (kind === 'news') return { kind: 'news', q: extractNewsQuery(text) };
             if (kind === 'weather') return { kind: 'weather', city: extractCity(text) };
             if (kind === 'fx') return { kind: 'fx', fx: extractFx(text) };
+            if (kind === 'twstock') { var tws = extractTwstock(text); return tws ? { kind: 'twstock', symbol: tws.symbol } : null; }
             if (/新聞|頭條|今天發生|最新消息|發生什麼事/.test(text)) return { kind: 'news', q: extractNewsQuery(text) };
             if (/天氣|下雨|氣溫|會冷嗎|明天天氣/.test(text)) return { kind: 'weather', city: extractCity(text) };
             var fxd = detectFx(text);
             if (fxd) return { kind: 'fx', fx: fxd };
+            var twd = detectTwstock(text);
+            if (twd) return twd;
             return null;
         }
         function fmtTpeTime(iso) {
@@ -17500,6 +17505,56 @@
             if (fx.amount !== 1) s += fmtNum(fx.amount, 0) + ' ' + baseName + ' = ' + fmtNum(fx.amount * rate, 2) + ' ' + targetName + '；';
             s += '反過來 1 ' + targetName + ' = ' + fmtNum(1 / rate, 4) + ' ' + baseName + '。';
             return s + '請只根據這些數字回答，註明來源與時間；沒有的事不要編。';
+        }
+        /* ---- 台股收盤查詢（v2.12.34）：先抓證交所事實再問模型，絕不編；只認具名股票或 4～6 碼代號，大盤不猜 ---- */
+        var TW_STOCKS = [
+            { code: '2330', names: ['台積電'] },
+            { code: '0050', names: ['元大台灣50', '台灣50'] },
+            { code: '00631L', names: ['台灣50正2', '00631L'] },
+            { code: '00646', names: ['00646'] },
+            { code: '00935', names: ['00935'] },
+            { code: '2454', names: ['聯發科'] },
+            { code: '2317', names: ['鴻海'] },
+            { code: '2308', names: ['台達電'] },
+            { code: '2382', names: ['廣達'] },
+            { code: '2412', names: ['中華電'] },
+            { code: '2002', names: ['中鋼'] },
+            { code: '2603', names: ['長榮'] },
+            { code: '2881', names: ['富邦金'] },
+            { code: '2882', names: ['國泰金'] },
+            { code: '1301', names: ['台塑'] },
+            { code: '3008', names: ['大立光'] },
+            { code: '2303', names: ['聯電'] }
+        ];
+        function extractTwstock(text) {
+            var best = null, bestLen = 0;
+            TW_STOCKS.forEach(function (s) {
+                s.names.forEach(function (n) {
+                    if (n.length > bestLen && text.indexOf(n) !== -1) { best = s; bestLen = n.length; }
+                });
+            });
+            if (best) return { symbol: best.code };
+            var m = text.match(/(?:^|[^0-9A-Z])([0-9]{4,6}[A-Z]?)(?![0-9A-Z])/);
+            if (m) {
+                var after = text.slice(text.indexOf(m[1]) + m[1].length, text.indexOf(m[1]) + m[1].length + 1);
+                if (after !== '年') return { symbol: m[1] };
+            }
+            return null;
+        }
+        function detectTwstock(text) {
+            if (!/收盤|股價|漲|跌|行情|價格|台股|收多少|現在多少|今天多少/.test(text)) return null;
+            var s = extractTwstock(text);
+            return s ? { kind: 'twstock', symbol: s.symbol } : null;
+        }
+        function formatTwstockFacts(data) {
+            if (!data || typeof data.close !== 'number') return '';
+            var chg = (data.change >= 0 ? '+' : '') + fmtNum(data.change, 2);
+            var pct = (data.changePct >= 0 ? '+' : '') + Number(data.changePct).toFixed(2) + '%';
+            var s = '[即時台股事實｜來源：臺灣證券交易所，' + fmtTpeTime(data.fetchedAt) + ' 抓取] '
+                + data.symbol + ' ' + (data.name || '') + ' ' + data.date + ' 收盤價 ' + fmtNum(data.close, 2) + ' 元，'
+                + '漲跌 ' + chg + ' 元（' + pct + '），開盤 ' + fmtNum(data.open, 2) + '／最高 ' + fmtNum(data.high, 2) + '／最低 ' + fmtNum(data.low, 2)
+                + '，成交量 ' + fmtNum(data.volume / 1000, 0) + ' 張，成交金額 ' + fmtNum(data.turnover / 100000000, 1) + ' 億元，成交筆數 ' + fmtNum(data.trades, 0) + ' 筆。';
+            return s + '這是最近一個交易日的收盤價，請務必註明日期（' + data.date + '）；今天還沒收盤或今天休市時，不要說成今天的收盤價。沒有的事不要編。';
         }
 
         /* ---- 學習迴圈 1：工作規律（從真實打卡數據歸納，不是猜的） ---- */
@@ -18126,7 +18181,8 @@
             var url = '/api/realtime?kind=' + rt.kind
                 + (rt.kind === 'news' && rt.q ? '&q=' + encodeURIComponent(rt.q) : '')
                 + (rt.kind === 'weather' ? '&city=' + encodeURIComponent(rt.city) : '')
-                + (rt.kind === 'fx' ? '&base=' + encodeURIComponent(rt.fx.base) : '');
+                + (rt.kind === 'fx' ? '&base=' + encodeURIComponent(rt.fx.base) : '')
+                + (rt.kind === 'twstock' ? '&symbol=' + encodeURIComponent(rt.symbol) : '');
             var ctrl = null;
             try { ctrl = new AbortController(); } catch (e) {}
             var timer = setTimeout(function () { try { if (ctrl) ctrl.abort(); } catch (e) {} }, 15000);
@@ -18137,7 +18193,7 @@
                 if (!r.ok) { var err = new Error('http ' + r.status); err.status = r.status; throw err; }
                 return r.json();
             }).then(function (d) {
-                var facts = rt.kind === 'news' ? formatNewsFacts(d) : rt.kind === 'weather' ? formatWeatherFacts(d) : formatFxFacts(d, rt.fx);
+                var facts = rt.kind === 'news' ? formatNewsFacts(d) : rt.kind === 'weather' ? formatWeatherFacts(d) : rt.kind === 'twstock' ? formatTwstockFacts(d) : formatFxFacts(d, rt.fx);
                 if (!facts) throw new Error('empty');
                 fetchingRealtime = false;
                 hideTyping();
@@ -18163,7 +18219,7 @@
                     var fb = cachedWeatherFacts();
                     if (fb) { sendToAi(text, rt.kind, fb); return; }
                 }
-                var msg = rt.kind === 'news' ? NEWS_FAIL : rt.kind === 'weather' ? WEATHER_FAIL : FX_FAIL;
+                var msg = rt.kind === 'news' ? NEWS_FAIL : rt.kind === 'weather' ? WEATHER_FAIL : rt.kind === 'twstock' ? TW_FAIL : FX_FAIL;
                 addMsg('buddy', msg);
                 setMood(msg);
                 pushHistory(text, msg);
