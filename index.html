@@ -6255,7 +6255,7 @@
                     </div>
                     <div style="padding:12px 16px;">
                         <div style="font-size:13.5px; font-weight:600; color:var(--label);">🧠 記憶在背景 · 聊天指令</div>
-                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。聊天打「提醒我 18:00 ……」還能排提醒，到時間 App 會跳通知（App 要開著）。聊天打「記一筆：……」可以隨手記帳記事，打「我記了什麼」查看、「刪筆記：內容」刪掉。聊天打「台積電今天收多少？」查台股收盤價（證交所最新交易日收盤，盤中還沒收盤時給的是前一個交易日）。</div>
+                        <div style="font-size:12px; color:var(--label-secondary); margin-top:2px;">設定頁只留名字、沒有個性與記憶欄；記憶在背景記住，聊天打「記住：……」「忘掉：……」「忘掉全部」「你記得我什麼？」管理，設定裡也有「全部忘掉」按鈕。聊天打「提醒我 18:00 ……」還能排提醒，到時間 App 會跳通知（App 要開著）。聊天打「記一筆：……」可以隨手記帳記事，打「我記了什麼」查看、「刪筆記：內容」刪掉。聊天打「台積電今天收多少？」查台股收盤價（證交所最新交易日收盤，盤中還沒收盤時給的是前一個交易日）。早上 7–10 點第一次開 App，泡泡會先講一句早安簡報（今天天氣、還差多久、本週加班多少），一天一次。</div>
                     </div>
                 </div>
 
@@ -18693,11 +18693,54 @@
                 return real.length ? real : all;
             } catch (e) { return []; }
         }
+        /* ---- 早上主動關心：早安簡報（v2.12.35）---- */
+        /* 早上開 App 第一句講有用的——今天天氣＋今天進度＋本週加班狀況，不是罐頭問候；一天只講一次 */
+        var MORNING_KEY = 'time8-buddy-morning-v1'; /* {day}：早安簡報當天講過沒 */
+        function morningShownToday() {
+            try {
+                var s = JSON.parse(lsGet(MORNING_KEY) || 'null');
+                return !!(s && s.day === careDayStr(new Date()));
+            } catch (e) { return false; }
+        }
+        function markMorningShown() { lsSet(MORNING_KEY, JSON.stringify({ day: careDayStr(new Date()) })); }
+        function weekOvertimeMins() {
+            var now = new Date();
+            var dow = (now.getDay() + 6) % 7; /* 週一=0 */
+            var target = (typeof getTargetMinutes === 'function') ? getTargetMinutes() : 480;
+            var total = 0, ot = 0;
+            for (var i = 0; i <= dow; i++) {
+                var d = new Date(now); d.setDate(now.getDate() - (dow - i));
+                var m = Math.round(dayTotal(dayKeyOf(d)));
+                total += m;
+                ot += Math.max(0, m - target);
+            }
+            return { total: total, overtime: ot };
+        }
+        function morningBriefing() {
+            var h = new Date().getHours();
+            if (h < 7 || h >= 10) return null; /* 只在早上 07:00–10:00 講 */
+            var d = getTodayData();
+            var w = bubbleWeatherSync();
+            var wk = weekOvertimeMins();
+            var parts = [];
+            if (w) {
+                var raining = (w.pop >= 30 || /雨/.test(w.desc));
+                parts.push('今天 ' + w.temp + '°C' + (raining ? '有雨' : (w.desc ? w.desc : '')));
+            }
+            if (!d.records.length && d.mins <= 0) parts.push('還沒打卡，目標 ' + fmtHM(d.target));
+            else if (d.mins >= d.target) parts.push('今天已達標 ' + fmtHM(d.mins));
+            else parts.push('已上 ' + fmtHM(d.mins) + '，還差 ' + fmtHM(d.target - d.mins));
+            if (wk.overtime > 0) parts.push('本週加班 ' + fmtHM(wk.overtime));
+            if (!parts.length) return null;
+            return '早安☀️' + parts.join('，') + '。';
+        }
         function pickBubbleCat() {
             var nowD = new Date();
             var hour = nowD.getHours();
             /* 深夜 23:00–07:00 不主動（v2.12.12）：只顯示早點休息，不換新話題 */
             if (hour >= 23 || hour < 7) return 'quiet';
+            /* 早上 07:00–10:00：早安簡報還沒講過，先講簡報再輪別的（v2.12.35） */
+            if (hour >= 7 && hour < 10 && !morningShownToday()) return 'greeting';
             var d = getTodayData();
             var remaining = Math.max(0, d.target - d.mins);
             var w = bubbleWeatherSync();
@@ -18768,6 +18811,11 @@
                 var h = new Date().getHours();
                 var hm = h * 60 + new Date().getMinutes();
                 var remaining = Math.max(0, d.target - d.mins);
+                /* 早安簡報（v2.12.35）：早上第一句講有用的，一天一次；講不出來就回罐頭問候 */
+                if (h < 10 && !morningShownToday()) {
+                    var brief = morningBriefing();
+                    if (brief) { markMorningShown(); el.textContent = brief; return; }
+                }
                 if (d.mins < d.target && remaining <= 60) {
                     el.textContent = bubbleLine(['再一個小時就達標了，辛苦了 💪', '快下班了，今天也辛苦了 🙂']);
                     return;
@@ -19030,6 +19078,8 @@
                 careCountToday: careCountToday, careLeft: careLeft, maybeFollowUp: maybeFollowUp, greet: greet,
                 userMemories: userMemories, getCareKey: function () { return CARE_KEY; },
                 bubbleContinuousMins: bubbleContinuousMins, bubbleWeatherSync: bubbleWeatherSync,
+                morningBriefing: morningBriefing, weekOvertimeMins: weekOvertimeMins,
+                morningShownToday: morningShownToday, markMorningShown: markMorningShown,
                 setBubbleCat: function (c) { bubbleCat = c; bubbleCatAt = Date.now(); bubblePickSeq++; },
                 getBubbleCat: function () { return bubbleCat; },
                 getPatterns: function () { return { facts: patterns.facts.slice(), blocked: patterns.blocked.slice() }; },
