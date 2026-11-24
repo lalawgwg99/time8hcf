@@ -17534,10 +17534,14 @@
                 });
             });
             if (best) return { symbol: best.code };
-            var m = text.match(/(?:^|[^0-9A-Z])([0-9]{4,6}[A-Z]?)(?![0-9A-Z])/);
-            if (m) {
-                var after = text.slice(text.indexOf(m[1]) + m[1].length, text.indexOf(m[1]) + m[1].length + 1);
-                if (after !== '年') return { symbol: m[1] };
+            /* 逐個掃描 4～6 碼候選：年份／日期的一部分（後面接 年／月／日／/）就跳過找下一個，
+               不要第一個就放棄（v2.12.36：舊版在「2026年 2454 收多少」直接回 null、
+               「2026/11/25 2330 收多少」誤把 2026 當代號；m.index 取代 indexOf，同一數字出現兩次也不會算錯位置） */
+            var re = /(?:^|[^0-9A-Z])([0-9]{4,6}[A-Z]?)(?![0-9A-Z])/g, m;
+            while ((m = re.exec(text)) !== null) {
+                var after = text.slice(m.index + m[0].length, m.index + m[0].length + 1);
+                if (after === '年' || after === '月' || after === '日' || after === '/') continue;
+                return { symbol: m[1] };
             }
             return null;
         }
